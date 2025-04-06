@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Search } from "lucide-react";
+import { Search, Filter } from "lucide-react";
 import { formatPrice } from '@/lib/formatters';
 
 // Define our product type
@@ -52,6 +52,7 @@ const ProductCatalog: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedManufacturer, setSelectedManufacturer] = useState('all');
   const [selectedExpiryDate, setSelectedExpiryDate] = useState('all');
+  const [showFilters, setShowFilters] = useState(false);
   
   // Get unique manufacturers and expiry dates for filter options
   const manufacturers = Array.from(new Set(products.map(product => product.manufacturer)));
@@ -78,101 +79,136 @@ const ProductCatalog: React.FC = () => {
       <CardHeader className="bg-blue-50">
         <CardTitle className="text-2xl font-bold text-center">Каталог Морепродуктов</CardTitle>
         
-        <div className="flex flex-col md:flex-row gap-4 items-center mt-4">
-          {/* Search box */}
-          <div className="relative flex-1">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-            <input
-              type="text"
-              placeholder="Поиск по названию..."
-              className="pl-8 pr-4 py-2 w-full border rounded"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+        <div className="flex flex-col gap-4 mt-4">
+          <div className="flex flex-col md:flex-row gap-4 items-center">
+            {/* Search box */}
+            <div className="relative flex-1">
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+              <input
+                type="text"
+                placeholder="Поиск по названию..."
+                className="pl-8 pr-4 py-2 w-full border rounded"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            
+            {/* Filter toggle button */}
+            <Button 
+              variant="outline" 
+              onClick={() => setShowFilters(!showFilters)}
+              className="w-full md:w-auto flex items-center gap-2"
+            >
+              <Filter size={16} />
+              {showFilters ? 'Скрыть фильтры' : 'Показать фильтры'}
+            </Button>
+            
+            {/* Reset button */}
+            <Button 
+              variant="outline" 
+              onClick={handleResetFilters}
+              className="w-full md:w-auto"
+            >
+              Сбросить фильтры
+            </Button>
           </div>
           
-          {/* Manufacturer filter */}
-          <div className="w-full md:w-60">
-            <Select value={selectedManufacturer} onValueChange={setSelectedManufacturer}>
-              <SelectTrigger>
-                <SelectValue placeholder="Производитель" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Все производители</SelectItem>
-                {manufacturers.map((manufacturer) => (
-                  <SelectItem key={manufacturer} value={manufacturer}>
-                    {manufacturer}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          
-          {/* Expiry date filter */}
-          <div className="w-full md:w-60">
-            <Select value={selectedExpiryDate} onValueChange={setSelectedExpiryDate}>
-              <SelectTrigger>
-                <SelectValue placeholder="Срок годности" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Все сроки</SelectItem>
-                {expiryDates.map((date) => (
-                  <SelectItem key={date} value={date}>
-                    {date}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-          
-          {/* Reset button */}
-          <Button 
-            variant="outline" 
-            onClick={handleResetFilters}
-            className="w-full md:w-auto"
-          >
-            Сбросить фильтры
-          </Button>
+          {/* Filters */}
+          {showFilters && (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Manufacturer filter */}
+              <div>
+                <label className="block mb-1 text-sm font-medium">Производитель:</label>
+                <Select value={selectedManufacturer} onValueChange={setSelectedManufacturer}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Производитель" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Все производители</SelectItem>
+                    {manufacturers.map((manufacturer) => (
+                      <SelectItem key={manufacturer} value={manufacturer}>
+                        {manufacturer}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {/* Expiry date filter */}
+              <div>
+                <label className="block mb-1 text-sm font-medium">Срок годности:</label>
+                <Select value={selectedExpiryDate} onValueChange={setSelectedExpiryDate}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Срок годности" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Все сроки</SelectItem>
+                    {expiryDates.map((date) => (
+                      <SelectItem key={date} value={date}>
+                        {date}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+          )}
         </div>
       </CardHeader>
       
-      <CardContent className="px-0 py-2">
-        <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-gray-100">
-                <th className="px-4 py-3 text-left font-semibold">Наименование</th>
-                <th className="px-4 py-3 text-left font-semibold">Размер</th>
-                <th className="px-4 py-3 text-left font-semibold">Срок годности</th>
-                <th className="px-4 py-3 text-left font-semibold">Производитель</th>
-                <th className="px-4 py-3 text-left font-semibold">Упаковка</th>
-                <th className="px-4 py-3 text-right font-semibold">Цена</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filteredProducts.map((product) => (
-                <tr key={product.id} className="border-t hover:bg-gray-50">
-                  <td className="px-4 py-3 font-medium">{product.name}</td>
-                  <td className="px-4 py-3">{product.size}</td>
-                  <td className="px-4 py-3">{product.expiryDate}</td>
-                  <td className="px-4 py-3">{product.manufacturer}</td>
-                  <td className="px-4 py-3">{product.packaging}</td>
-                  <td className="px-4 py-3 text-right font-bold">{formatPrice(product.price)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-        
-        {filteredProducts.length === 0 && (
+      <CardContent className="px-4 py-6">
+        {filteredProducts.length === 0 ? (
           <div className="text-center py-10 text-gray-500">
             Товары не найдены. Пожалуйста, измените параметры поиска.
           </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {filteredProducts.map((product) => (
+                <Card key={product.id} className="overflow-hidden hover:shadow-lg transition-shadow">
+                  <div className="h-40 bg-blue-100 flex items-center justify-center">
+                    <div className="text-6xl text-blue-300">🐟</div>
+                  </div>
+                  <CardContent className="p-4">
+                    <h3 className="font-bold line-clamp-2 h-12 mb-2" title={product.name}>
+                      {product.name}
+                    </h3>
+                    <div className="space-y-1 text-sm mb-4">
+                      {product.size && (
+                        <div className="flex justify-between">
+                          <span className="text-gray-500">Размер:</span>
+                          <span className="font-medium">{product.size}</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">Срок годности:</span>
+                        <span className="font-medium">{product.expiryDate}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">Производитель:</span>
+                        <span className="font-medium">{product.manufacturer}</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-gray-500">Упаковка:</span>
+                        <span className="font-medium">{product.packaging}</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center mt-4">
+                      <div className="text-lg font-bold text-blue-800">
+                        {formatPrice(product.price)}
+                      </div>
+                      <Button size="sm">Заказать</Button>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            
+            <div className="mt-6 text-right text-sm text-gray-500">
+              Всего товаров: {filteredProducts.length}
+            </div>
+          </>
         )}
-        
-        <div className="text-right p-4 text-sm text-gray-500">
-          Всего товаров: {filteredProducts.length}
-        </div>
       </CardContent>
     </Card>
   );

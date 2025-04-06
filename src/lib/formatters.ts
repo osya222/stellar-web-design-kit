@@ -12,5 +12,9 @@ export function formatPrice(price: number | string, currency: string = '₽'): s
     return 'N/A';
   }
   
-  return `${priceNumber.toLocaleString('ru-RU')} ${currency}`;
+  // Форматируем число с пробелом в качестве разделителя тысяч
+  const formattedPrice = priceNumber.toLocaleString('ru-RU');
+  
+  // Возвращаем отформатированную цену с валютой
+  return `${formattedPrice} ${currency}`;
 }
