@@ -50,8 +50,8 @@ const ProductCatalog: React.FC = () => {
   ];
   
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedManufacturer, setSelectedManufacturer] = useState('');
-  const [selectedExpiryDate, setSelectedExpiryDate] = useState('');
+  const [selectedManufacturer, setSelectedManufacturer] = useState('all');
+  const [selectedExpiryDate, setSelectedExpiryDate] = useState('all');
   
   // Get unique manufacturers and expiry dates for filter options
   const manufacturers = Array.from(new Set(products.map(product => product.manufacturer)));
@@ -61,16 +61,16 @@ const ProductCatalog: React.FC = () => {
   const filteredProducts = products.filter(product => {
     return (
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (selectedManufacturer === '' || product.manufacturer === selectedManufacturer) &&
-      (selectedExpiryDate === '' || product.expiryDate === selectedExpiryDate)
+      (selectedManufacturer === 'all' || product.manufacturer === selectedManufacturer) &&
+      (selectedExpiryDate === 'all' || product.expiryDate === selectedExpiryDate)
     );
   });
   
   // Reset filters
   const handleResetFilters = () => {
     setSearchTerm('');
-    setSelectedManufacturer('');
-    setSelectedExpiryDate('');
+    setSelectedManufacturer('all');
+    setSelectedExpiryDate('all');
   };
   
   return (
@@ -98,7 +98,7 @@ const ProductCatalog: React.FC = () => {
                 <SelectValue placeholder="Производитель" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Все производители</SelectItem>
+                <SelectItem value="all">Все производители</SelectItem>
                 {manufacturers.map((manufacturer) => (
                   <SelectItem key={manufacturer} value={manufacturer}>
                     {manufacturer}
@@ -115,7 +115,7 @@ const ProductCatalog: React.FC = () => {
                 <SelectValue placeholder="Срок годности" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">Все сроки</SelectItem>
+                <SelectItem value="all">Все сроки</SelectItem>
                 {expiryDates.map((date) => (
                   <SelectItem key={date} value={date}>
                     {date}
