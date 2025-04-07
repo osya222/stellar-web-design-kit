@@ -36,6 +36,16 @@ const ProductShowcase: React.FC = () => {
     }
   };
 
+  const handleCategoryClick = (categoryId: string) => {
+    // Add a small delay to ensure the DOM has been updated
+    setTimeout(() => {
+      const element = document.getElementById(`catalog-${categoryId}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }, 100);
+  };
+
   return (
     <section className="py-12 bg-white">
       <div className="container mx-auto px-4">
@@ -63,12 +73,13 @@ const ProductShowcase: React.FC = () => {
               </div>
               <div className="p-4">
                 <p className="text-gray-600 mb-4">{category.description}</p>
-                <Link 
-                  to={`/#catalog-${category.id}`} 
-                  className="text-blue-600 hover:text-blue-800 font-medium flex items-center"
+                <a 
+                  href={`#catalog-${category.id}`}
+                  onClick={() => handleCategoryClick(category.id)} 
+                  className="text-blue-600 hover:text-blue-800 font-medium flex items-center cursor-pointer"
                 >
                   Подробнее <ArrowRight className="ml-1 h-4 w-4" />
-                </Link>
+                </a>
               </div>
             </div>
           ))}
@@ -109,7 +120,7 @@ const ProductShowcase: React.FC = () => {
         
         <div className="mt-10 text-center">
           <Button size="lg" asChild>
-            <Link to="/#catalog">Смотреть весь каталог</Link>
+            <a href="#catalog">Смотреть весь каталог</a>
           </Button>
         </div>
       </div>
