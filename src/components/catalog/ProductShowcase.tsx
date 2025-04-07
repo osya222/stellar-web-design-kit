@@ -63,7 +63,10 @@ const ProductShowcase: React.FC = () => {
               </div>
               <div className="p-4">
                 <p className="text-gray-600 mb-4">{category.description}</p>
-                <Link to="/#catalog" className="text-blue-600 hover:text-blue-800 font-medium flex items-center">
+                <Link 
+                  to={`/#catalog-${category.id}`} 
+                  className="text-blue-600 hover:text-blue-800 font-medium flex items-center"
+                >
                   Подробнее <ArrowRight className="ml-1 h-4 w-4" />
                 </Link>
               </div>

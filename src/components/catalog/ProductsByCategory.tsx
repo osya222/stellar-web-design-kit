@@ -3,6 +3,7 @@ import React from 'react';
 import ProductCard from './ProductCard';
 import { Product } from '@/types/product';
 import { Fish, ShellIcon, Soup, ChefHat, Egg, Package, Utensils } from "lucide-react";
+import { getCategoryByName } from '@/data/products';
 
 interface ProductsByCategoryProps {
   category: string;
@@ -11,6 +12,9 @@ interface ProductsByCategoryProps {
 
 const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({ category, products }) => {
   if (products.length === 0) return null;
+  
+  const categoryData = getCategoryByName(category);
+  const categoryId = categoryData?.id || category.toLowerCase().replace(/\s+/g, '-');
   
   // Функция для выбора иконки в зависимости от категории
   const getCategoryIcon = (category: string) => {
@@ -35,7 +39,7 @@ const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({ category, produ
   };
   
   return (
-    <div className="mb-10">
+    <div className="mb-10" id={`catalog-${categoryId}`}>
       <h2 className="text-2xl font-bold mb-4 pb-2 border-b border-gray-200 flex items-center">
         {getCategoryIcon(category)}
         <span>{category}</span>
