@@ -146,7 +146,7 @@ export const otherFishProducts: Product[] = [
   },
   { 
     id: 28, 
-    name: "МИНТА�� б/г потр. штуч", 
+    name: "МИНТАЙ б/г потр. штуч", 
     category: "Другие виды рыбы",
     size: "25+", 
     packaging: "13", 
@@ -289,7 +289,7 @@ export const otherFishProducts: Product[] = [
   },
   { 
     id: 50, 
-    name: "Гре��адер-тушка", 
+    name: "Гренадер-тушка", 
     category: "Другие виды рыбы",
     size: "500-1500 гр", 
     packaging: "вес", 
@@ -338,6 +338,7 @@ export const otherFishProducts: Product[] = [
     packaging: "10 кг", 
     catchDate: "Июнь, 24",
     manufacturer: "Эквадор", 
+    image: "https://storage.delikateska.ru/cache/d/a/a5d6ffc4-86eb-4b9f-a6fd-691dbc107d9c.jpg/w400h400.webp",
     prices: {
       smallWholesale: 330,
       mediumWholesale: undefined,
