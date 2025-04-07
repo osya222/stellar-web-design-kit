@@ -1,3 +1,4 @@
+
 import { Product } from '@/types/product';
 
 // Другие виды рыбы products
@@ -377,6 +378,7 @@ export const otherFishProducts: Product[] = [
     packaging: "15 кг", 
     catchDate: "Декабрь, 24",
     manufacturer: "«Балт Иней»", 
+    image: "https://main-cdn.sbermegamarket.ru/big1/hlr-system/288/225/654/117/212/3/100029691550b0.jpg",
     prices: {
       smallWholesale: 192,
       mediumWholesale: undefined,
