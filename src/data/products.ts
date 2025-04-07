@@ -75,3 +75,24 @@ export const products: Product[] = [
     }
   }
 ];
+
+// Категории продуктов
+export const productCategories = [
+  {
+    id: "lososs-chili",
+    name: "Лосось (Чили)",
+    description: "Свежемороженый лосось прямыми поставками из Чили",
+    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
+  },
+  {
+    id: "forel-turkey",
+    name: "Форель (Турция)",
+    description: "Свежемороженая форель морская высшего качества",
+    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
+  }
+];
+
+// Функция для получения категории по имени
+export function getCategoryByName(categoryName: string) {
+  return productCategories.find(category => category.name === categoryName);
+}

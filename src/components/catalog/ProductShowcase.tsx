@@ -11,45 +11,12 @@ import {
   CarouselPrevious
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
+import { productCategories, products } from "@/data/products";
+import { getProductImage } from "@/data/productImages";
 
 const ProductShowcase: React.FC = () => {
-  // Featured categories
-  const featuredCategories = [
-    { 
-      category: "Лосось (Чили)", 
-      title: "Лосось премиум качества",
-      icon: <Fish className="w-16 h-16 text-blue-600" />,
-      description: "Свежемороженый лосось прямыми поставками из Чили"
-    },
-    { 
-      category: "Креветки и морепродукты", 
-      title: "Королевские креветки",
-      icon: <ShellIcon className="w-16 h-16 text-pink-500" />,
-      description: "Отборные морепродукты высшего качества"
-    },
-    { 
-      category: "Икра", 
-      title: "Икра красная",
-      icon: <Egg className="w-16 h-16 text-red-500" />,
-      description: "Икра лососевых рыб, высший сорт"
-    },
-    { 
-      category: "Деликатесы", 
-      title: "Рыбные деликатесы",
-      icon: <Utensils className="w-16 h-16 text-purple-500" />,
-      description: "Изысканные деликатесы из морепродуктов"
-    }
-  ];
-
-  // Featured products for carousel
-  const popularProducts = [
-    { name: "Лосось с/м", category: "Лосось (Чили)" },
-    { name: "Форель охлажденная", category: "Форель (Турция)" },
-    { name: "Креветка тигровая", category: "Креветки и морепродукты" },
-    { name: "Икра красная", category: "Икра" },
-    { name: "Копченый лосось", category: "Деликатесы" },
-    { name: "Филе трески", category: "Другие виды рыбы" }
-  ];
+  // Получаем популярные продукты из основных категорий
+  const popularProducts = products.slice(0, 6);
 
   // Иконки для категорий
   const getCategoryIcon = (category: string) => {
@@ -74,20 +41,28 @@ const ProductShowcase: React.FC = () => {
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold mb-8 text-center">Наша продукция</h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredCategories.map((item, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+          {productCategories.map((category, index) => (
             <div key={index} className="overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow">
               <div className="relative h-60 bg-blue-50 flex items-center justify-center">
-                {item.icon}
+                {category.image ? (
+                  <img 
+                    src={category.image} 
+                    alt={category.name} 
+                    className="object-cover w-full h-full"
+                  />
+                ) : (
+                  getCategoryIcon(category.name)
+                )}
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent py-4">
                   <div className="p-4 text-white">
-                    <p className="text-sm font-medium opacity-75">{item.category}</p>
-                    <h3 className="text-xl font-bold">{item.title}</h3>
+                    <h3 className="text-xl font-bold">{category.name}</h3>
+                    <p className="text-sm font-medium opacity-75">{category.description}</p>
                   </div>
                 </div>
               </div>
               <div className="p-4">
-                <p className="text-gray-600 mb-4">{item.description}</p>
+                <p className="text-gray-600 mb-4">{category.description}</p>
                 <Link to="/#catalog" className="text-blue-600 hover:text-blue-800 font-medium flex items-center">
                   Подробнее <ArrowRight className="ml-1 h-4 w-4" />
                 </Link>
@@ -105,7 +80,15 @@ const ProductShowcase: React.FC = () => {
                   <Card className="border-0 shadow-md">
                     <CardContent className="p-0">
                       <div className="relative h-64 bg-blue-50 flex items-center justify-center">
-                        {getCategoryIcon(product.category)}
+                        {getProductImage(product) ? (
+                          <img 
+                            src={getProductImage(product)} 
+                            alt={product.name} 
+                            className="object-cover w-full h-full"
+                          />
+                        ) : (
+                          getCategoryIcon(product.category)
+                        )}
                         <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
                           <h4 className="text-white font-semibold">{product.name}</h4>
                           <p className="text-white/70 text-sm">{product.category}</p>

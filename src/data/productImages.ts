@@ -1,26 +1,34 @@
 
-// Empty images map to be populated one by one
+// Изображения продуктов по категориям
 export const productImages: Record<string, Record<string, string>> = {
-  "Лосось (Чили)": {},
-  "Форель (Турция)": {}
+  "Лосось (Чили)": {
+    "default": "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
+  },
+  "Форель (Турция)": {
+    "default": "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
+  }
 };
 
-// Function to get the appropriate image URL for a product - will return undefined until images are added
+// Функция для получения изображения продукта
 export function getProductImage(product: { category: string; name: string; size?: string }): string | undefined {
   if (!productImages[product.category]) {
     return undefined;
   }
   
-  // Try to get specific image by name
+  // Попытка получить изображение по названию продукта
   if (productImages[product.category][product.name]) {
     return productImages[product.category][product.name];
   }
   
-  // If no specific image, return undefined
+  // Если нет изображения для конкретного продукта, используем изображение категории по умолчанию
+  if (productImages[product.category]["default"]) {
+    return productImages[product.category]["default"];
+  }
+  
   return undefined;
 }
 
-// Helper function to check if an image URL is valid (can be used client-side)
+// Вспомогательная функция для проверки валидности URL изображения
 export async function isImageUrlValid(url: string): Promise<boolean> {
   return new Promise((resolve) => {
     const img = new Image();
