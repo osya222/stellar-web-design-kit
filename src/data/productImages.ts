@@ -1,3 +1,4 @@
+
 // Изображения продуктов по категориям
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
@@ -13,10 +14,13 @@ export const productImages: Record<string, Record<string, string>> = {
     "КРЕВЕТКА ваннамей свежая в панцире б/г": "https://pervie.ru/files/product/images/l_490aa4dc6e26f10efa27fb0848ffddc6.webp",
     "Креветка северная": "https://pervie.ru/files/product/images/l_44c69d0e814f419793796f561114da7a.webp",
     "Креветка Королевская Ваннамей (Глазурь)": "https://cdn.ikramore.com/wp-content/uploads/2023/09/langustiny_c0_2kg_bez_golovy.jpg",
+    "Креветка с/м очищенная": "https://static.tildacdn.com/tild3738-6538-4161-a439-396361653137/photo.jpg",
+    "Креветки (лангустины": "https://avatars.mds.yandex.net/get-eda/3583862/1b4c7c8626996d399641ca390a2dc126/orig",
+    "Креветка Королевская Ваннамей (14%)": "https://cdn.rf-sp.ru/72/7f/727f26e191096f73d3048c1daee8c3b9.jpg",
     "Лангустины": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "ЛАНГУСТИНЫ с/м L 2": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "ЛАНГУСТИНЫ с/м L 1": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
-    "ЛАНГУСТИНЫ с/м C 2": "https://cache3.youla.io/files/images/720_720_out/5d/2b/5d2b498fc15ae3b0064dc204.jpg"
+    "ЛАНГУСТИНЫ с/м C 2": "https://fishinhome.ru/upload/iblock/15c/15cd9e35a5fe16c763477948bdd83279.jpeg"
   },
   "Мидии": {
     "default": "https://100foto.club/uploads/posts/2022-06/1655751628_1-100foto-club-p-golubie-midii-1.jpg"
