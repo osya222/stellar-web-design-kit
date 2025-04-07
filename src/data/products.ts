@@ -525,6 +525,7 @@ export const products: Product[] = [
     packaging: "10 кг", 
     catchDate: "Апрель, 24",
     manufacturer: "Эквадор", 
+    image: "https://i0.wp.com/xn--80agnucfc0a.xn--p1ai/wp-content/uploads/2018/10/vomer___.jpg?fit=600%2C518&ssl=1",
     prices: {
       smallWholesale: 280,
       mediumWholesale: undefined,
@@ -539,6 +540,7 @@ export const products: Product[] = [
     packaging: "10 кг", 
     catchDate: "Апрель, 24",
     manufacturer: "Эквадор", 
+    image: "https://i0.wp.com/xn--80agnucfc0a.xn--p1ai/wp-content/uploads/2018/10/vomer___.jpg?fit=600%2C518&ssl=1",
     prices: {
       smallWholesale: 335,
       mediumWholesale: undefined,
@@ -553,6 +555,7 @@ export const products: Product[] = [
     packaging: "10 кг", 
     catchDate: "Апрель, 24",
     manufacturer: "Эквадор", 
+    image: "https://i0.wp.com/xn--80agnucfc0a.xn--p1ai/wp-content/uploads/2018/10/vomer___.jpg?fit=600%2C518&ssl=1",
     prices: {
       smallWholesale: 425,
       mediumWholesale: undefined,
