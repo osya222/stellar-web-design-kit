@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Fish, ShellIcon, Shell, ExternalLink } from "lucide-react";
@@ -99,6 +98,11 @@ const ProductShowcase: React.FC = () => {
     }));
   };
 
+  // Modified function to get product image
+  const getProductImageWithFallback = (product) => {
+    return product.image || getProductImage(product);
+  };
+
   return (
     <section className="py-20 bg-white">
       <div className="container-custom">
@@ -147,9 +151,9 @@ const ProductShowcase: React.FC = () => {
                   <Card className="border-0 shadow-md rounded-xl overflow-hidden card-hover">
                     <CardContent className="p-0">
                       <div className="relative h-64 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
-                        {getProductImage(product) && !imageErrors[index] ? (
+                        {getProductImageWithFallback(product) && !imageErrors[index] ? (
                           <img 
-                            src={getProductImage(product)} 
+                            src={getProductImageWithFallback(product)} 
                             alt={product.name} 
                             className="object-cover w-full h-full"
                             onError={() => handleImageError(index)}

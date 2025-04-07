@@ -29,7 +29,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     setImageError(true);
   };
 
-  const productImage = getProductImage(product);
+  // Use product image URL directly if available, otherwise fall back to getProductImage
+  const productImage = product.image || getProductImage(product);
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">

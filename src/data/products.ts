@@ -1,4 +1,3 @@
-
 import { Product } from '@/types/product';
 
 // Данные о продуктах
@@ -226,6 +225,7 @@ export const products: Product[] = [
     packaging: "9,2", 
     catchDate: "Май",
     manufacturer: "Чили", 
+    image: "https://www.raft.ru/upload/iblock/d1c/4l41ta5k9y2ts839xdzsq78kgfr1ndp9.jpg",
     prices: {
       smallWholesale: 520.9,
       mediumWholesale: 512.9,
@@ -240,6 +240,7 @@ export const products: Product[] = [
     packaging: "9,2", 
     catchDate: "Май",
     manufacturer: "Чили", 
+    image: "https://www.raft.ru/upload/iblock/d1c/4l41ta5k9y2ts839xdzsq78kgfr1ndp9.jpg",
     prices: {
       smallWholesale: 509.9,
       mediumWholesale: 501.9,
@@ -642,7 +643,7 @@ export const products: Product[] = [
   { 
     id: 54, 
     name: "Икра сельди в ястыках", 
-    category: "Другие виды рыбы",  // Changed from "Деликатесы" to "Другие виды рыбы"
+    category: "Другие виды рыбы",
     packaging: "12 кг", 
     catchDate: "Апрель, 24",
     manufacturer: "Ряжская РПК", 
