@@ -42,6 +42,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     addToCart(product);
   };
 
+  const resetImageError = () => {
+    setImageError(false);
+  };
+
   // Get appropriate image for this product
   const productImageUrl = getProductImage(product);
 
@@ -53,7 +57,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             src={productImageUrl}
             alt={product.name}
             className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
-            onError={() => setImageError(true)}
+            onError={(e) => {
+              console.log('Image failed to load:', productImageUrl);
+              setImageError(true);
+              // Try to reload the image once after a delay
+              setTimeout(() => {
+                const target = e.target as HTMLImageElement;
+                const newUrl = `${productImageUrl}?retry=${Date.now()}`;
+                target.src = newUrl;
+              }, 1000);
+            }}
+            onLoad={resetImageError}
           />
         ) : (
           <div className="flex flex-col items-center justify-center w-full h-full">

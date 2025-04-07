@@ -88,24 +88,36 @@ export const productImages = {
 
 // Function to get the appropriate image URL for a product
 export function getProductImage(product: { category: string; name: string; size?: string }): string {
+  // Safe category access with type checking
   const categoryImages = productImages[product.category as keyof typeof productImages];
   
   if (!categoryImages) {
+    console.log(`No images found for category: ${product.category}`);
     return "https://seafood-shop.ru/upload/iblock/1bd/1bd80fbcb91dcd25486672e2cc4db623.jpg"; // Default fallback
   }
 
   // Check for specific product name matches
   for (const [key, url] of Object.entries(categoryImages)) {
-    if (key !== 'default' && product.name.includes(key)) {
-      return url;
+    if (key !== 'default' && product.name.toLowerCase().includes(key.toLowerCase())) {
+      return url as string;
     }
   }
   
   // Check for size match if available
   if (product.size && categoryImages[product.size as keyof typeof categoryImages]) {
-    return categoryImages[product.size as keyof typeof categoryImages];
+    return categoryImages[product.size as keyof typeof categoryImages] as string;
   }
 
   // Return default category image
-  return categoryImages.default;
+  return categoryImages.default as string;
+}
+
+// Helper function to check if an image URL is valid (can be used client-side)
+export async function isImageUrlValid(url: string): Promise<boolean> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => resolve(true);
+    img.onerror = () => resolve(false);
+    img.src = url;
+  });
 }
