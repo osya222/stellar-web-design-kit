@@ -1,12 +1,11 @@
-
 // Map of product images for different categories and product types
 export const productImages = {
   // Лосось
   "Лосось (Чили)": {
-    default: "https://seafood-shop.ru/upload/iblock/d73/d731e748e1c243318344595e7dd2cafa.jpg",
-    "5-6 кг": "https://seafood-shop.ru/upload/iblock/a05/a05a00e3d0694e0db39b2df0108e5b81.jpg",
-    "6-7 кг": "https://seafood-shop.ru/upload/iblock/b69/b69515f7c09743a4a10e93604b8c63df.jpg",
-    "7-8 кг": "https://seafood-shop.ru/upload/iblock/3af/3af3f0cd2a1226c292e5b908b3da7d20.jpg",
+    default: "https://ribnaya-baza.ru/upload/iblock/782/hgpc16db56z0bcgnsh6aytum7msk7dqj.jpeg",
+    "5-6 кг": "https://ribnaya-baza.ru/upload/iblock/782/hgpc16db56z0bcgnsh6aytum7msk7dqj.jpeg",
+    "6-7 кг": "https://ribnaya-baza.ru/upload/iblock/782/hgpc16db56z0bcgnsh6aytum7msk7dqj.jpeg",
+    "7-8 кг": "https://ribnaya-baza.ru/upload/iblock/782/hgpc16db56z0bcgnsh6aytum7msk7dqj.jpeg",
     "Филе лосося": "https://seafood-shop.ru/upload/iblock/5c2/5c2e7f25ff014661a34057a7635fa1e4.jpg"
   },
   // Форель
@@ -74,7 +73,7 @@ export const productImages = {
   "Консервы": {
     default: "https://seafood-shop.ru/upload/iblock/f4a/f4a2a391ebd2bf951beb2f4ac78024f4.jpg",
     "Тунец": "https://seafood-shop.ru/upload/iblock/07b/07b2ee780cd9e51f6d2654cfb9e5993d.jpg",
-    "Сардины": "https://seafood-shop.ru/upload/iblock/5ad/5ad7fe3c48b91bb1bd867a6b6a2d6e8c.jpg",
+    "Сардины": "https://seafood-shop.ru/upload/iblock/5ad/5ad7fe3c48b91bb1bb1bd867a6b6a2d6e8c.jpg",
     "Шпроты": "https://seafood-shop.ru/upload/iblock/9bc/9bc34853ac0a2031eca8acf0752bb384.jpg"
   },
   // Деликатесы

@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { productImages } from '@/data/productImages';
 import { Button } from "@/components/ui/button";
@@ -19,7 +18,7 @@ const ProductShowcase: React.FC = () => {
     { 
       category: "Лосось (Чили)", 
       title: "Лосось премиум качества", 
-      image: productImages["Лосось (Чили)"].default,
+      image: "https://ribnaya-baza.ru/upload/iblock/782/hgpc16db56z0bcgnsh6aytum7msk7dqj.jpeg",
       description: "Свежемороженый лосось прямыми поставками из Чили"
     },
     { 
