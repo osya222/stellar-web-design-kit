@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Fish, ShellIcon, Utensils, Shell } from "lucide-react";
+import { ArrowRight, Fish, ShellIcon, Shell, ExternalLink } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -12,6 +12,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { products } from "@/data/products";
 import { getProductImage } from "@/data/productImages";
+import { formatPrice } from "@/lib/formatters";
 
 const ProductShowcase: React.FC = () => {
   // Получаем популярные продукты из основных категорий
@@ -36,13 +37,13 @@ const ProductShowcase: React.FC = () => {
       case 'Форель (Турция)':
       case 'Другие виды рыбы':
       case 'Филе рыбы':
-        return <Fish className="w-12 h-12 text-black" />;
+        return <Fish className="w-16 h-16 text-blue-800 opacity-80" />;
       case 'Креветки и морепродукты':
-        return <ShellIcon className="w-12 h-12 text-black" />;
+        return <ShellIcon className="w-16 h-16 text-blue-800 opacity-80" />;
       case 'Мидии':
-        return <Shell className="w-12 h-12 text-black" />;
+        return <Shell className="w-16 h-16 text-blue-800 opacity-80" />;
       default:
-        return <Fish className="w-12 h-12 text-black" />;
+        return <Fish className="w-16 h-16 text-blue-800 opacity-80" />;
     }
   };
 
@@ -53,7 +54,7 @@ const ProductShowcase: React.FC = () => {
   };
 
   const handleCategoryClick = (categoryId: string, event: React.MouseEvent) => {
-    event.preventDefault(); // Prevent default anchor behavior
+    event.preventDefault();
     
     // Wait for next tick to ensure proper navigation
     setTimeout(() => {
@@ -99,14 +100,15 @@ const ProductShowcase: React.FC = () => {
   };
 
   return (
-    <section className="py-12 bg-white">
-      <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-8 text-center text-black">Наша продукция</h2>
+    <section className="py-20 bg-white">
+      <div className="container-custom">
+        <h2 className="text-3xl font-bold mb-2 text-center text-blue-800">Наша продукция</h2>
+        <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Широкий выбор свежих морепродуктов от проверенных поставщиков для вашего бизнеса</p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {productCategories.map((category, index) => (
-            <div key={index} className="overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow bg-white">
-              <div className="relative h-60 bg-white flex items-center justify-center">
+            <div key={index} className="overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 bg-white card-hover">
+              <div className="relative h-60 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
                 {getCategoryImage(category.name) && !categoryImageErrors[category.name] ? (
                   <img 
                     src={getCategoryImage(category.name)} 
@@ -115,37 +117,36 @@ const ProductShowcase: React.FC = () => {
                     onError={() => handleCategoryImageError(category.name)}
                   />
                 ) : (
-                  getCategoryIcon(category.name)
-                )}
-                <div className="absolute inset-x-0 bottom-0 bg-white/80 py-4 border-t">
-                  <div className="p-4 text-black">
-                    <h3 className="text-xl font-bold">{category.name}</h3>
+                  <div className="flex items-center justify-center h-full w-full bg-gradient-to-br from-blue-50 to-blue-100">
+                    {getCategoryIcon(category.name)}
                   </div>
-                </div>
+                )}
               </div>
-              <div className="p-4">
-                <p className="text-black mb-4">{category.description}</p>
+              <div className="p-6">
+                <h3 className="text-xl font-bold text-blue-800 mb-2">{category.name}</h3>
+                <p className="text-gray-600 mb-4">{category.description}</p>
                 <a 
                   href={`#catalog-${category.id}`}
                   onClick={(e) => handleCategoryClick(category.id, e)}
-                  className="text-black font-medium flex items-center cursor-pointer"
+                  className="text-blue-600 font-medium flex items-center hover:text-blue-800 transition-colors"
                 >
-                  Подробнее <ArrowRight className="ml-1 h-4 w-4" />
+                  Подробнее <ArrowRight className="ml-2 h-4 w-4" />
                 </a>
               </div>
             </div>
           ))}
         </div>
         
-        <div className="mt-16">
-          <h3 className="text-2xl font-bold mb-6 text-center text-black">Популярные товары</h3>
-          <Carousel className="mx-auto max-w-5xl">
+        <div className="mt-20">
+          <h3 className="text-2xl font-bold mb-2 text-center text-blue-800">Популярные товары</h3>
+          <p className="text-center text-gray-600 mb-8">Наиболее востребованные позиции у наших клиентов</p>
+          <Carousel className="mx-auto max-w-6xl">
             <CarouselContent>
               {popularProducts.map((product, index) => (
-                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                  <Card className="border shadow-md">
+                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 p-2">
+                  <Card className="border-0 shadow-md rounded-xl overflow-hidden card-hover">
                     <CardContent className="p-0">
-                      <div className="relative h-64 bg-white flex items-center justify-center">
+                      <div className="relative h-64 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
                         {getProductImage(product) && !imageErrors[index] ? (
                           <img 
                             src={getProductImage(product)} 
@@ -154,25 +155,42 @@ const ProductShowcase: React.FC = () => {
                             onError={() => handleImageError(index)}
                           />
                         ) : (
-                          getCategoryIcon(product.category)
+                          <div className="flex items-center justify-center h-full w-full">
+                            {getCategoryIcon(product.category)}
+                          </div>
                         )}
                       </div>
-                      <div className="bg-white p-4 border-t">
-                        <h4 className="text-black font-semibold">{product.name}</h4>
-                        <p className="text-black/70 text-sm">{product.category}</p>
+                      <div className="p-5">
+                        <p className="text-blue-600 text-sm font-medium mb-1">{product.category}</p>
+                        <h4 className="text-gray-800 font-semibold mb-2 line-clamp-2">{product.name}</h4>
+                        <div className="flex justify-between items-center">
+                          <p className="text-gray-600 text-sm">
+                            {product.manufacturer && `${product.manufacturer}`}
+                          </p>
+                          {product.prices.smallWholesale && (
+                            <p className="text-blue-800 font-semibold">
+                              от {formatPrice(product.prices.smallWholesale)} ₽
+                            </p>
+                          )}
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="left-1" />
-            <CarouselNext className="right-1" />
+            <CarouselPrevious className="left-1 bg-white/80 hover:bg-white" />
+            <CarouselNext className="right-1 bg-white/80 hover:bg-white" />
           </Carousel>
         </div>
         
-        <div className="mt-10 text-center">
-          <Button size="lg" onClick={handleViewAllCatalog} className="bg-black text-white hover:bg-gray-800">
+        <div className="mt-12 text-center">
+          <Button 
+            size="lg" 
+            onClick={handleViewAllCatalog} 
+            className="bg-blue-700 hover:bg-blue-800 text-white font-medium px-8 py-6 h-auto rounded-xl shadow-md"
+          >
+            <ExternalLink className="mr-2 h-5 w-5" />
             Смотреть весь каталог
           </Button>
         </div>

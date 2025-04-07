@@ -38,9 +38,10 @@ const ProductCatalog: React.FC = () => {
   };
   
   return (
-    <Card>
-      <CardHeader className="bg-blue-50">
-        <CardTitle className="text-2xl font-bold text-center">Каталог Морепродуктов</CardTitle>
+    <Card className="border-0 shadow-lg rounded-xl overflow-hidden">
+      <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 py-8">
+        <CardTitle className="text-3xl font-bold text-center text-blue-800 mb-2">Каталог Морепродуктов</CardTitle>
+        <p className="text-center text-gray-600 mb-6">Выберите категорию или воспользуйтесь поиском для подбора продукции</p>
         
         <ProductFilters
           searchTerm={searchTerm}
@@ -57,7 +58,7 @@ const ProductCatalog: React.FC = () => {
         />
       </CardHeader>
       
-      <CardContent className="px-4 py-6">
+      <CardContent className="px-4 py-8">
         <ProductListing 
           selectedCategory={selectedCategory}
           filteredProducts={filteredProducts}
