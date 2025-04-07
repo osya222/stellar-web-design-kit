@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Fish, ShellIcon, Egg, Utensils, Shell } from "lucide-react";
@@ -9,7 +10,7 @@ import {
   CarouselPrevious
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
-import { productCategories, products } from "@/data/products";
+import { products } from "@/data/products";
 import { getProductImage } from "@/data/productImages";
 
 const ProductShowcase: React.FC = () => {
@@ -17,6 +18,15 @@ const ProductShowcase: React.FC = () => {
   const popularProducts = products.slice(0, 6);
   const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
   const [categoryImageErrors, setCategoryImageErrors] = useState<Record<string, boolean>>({});
+
+  // Extract unique categories from products array to replace productCategories
+  const productCategories = Array.from(
+    new Set(products.map(product => product.category))
+  ).map(name => ({ 
+    id: name.toLowerCase().replace(/\s+/g, '-'), 
+    name,
+    description: `Высококачественная продукция категории "${name}"`
+  })).filter(category => category.name !== "Полуфабрикаты").slice(0, 6);
 
   // Иконки для категорий
   const getCategoryIcon = (category: string) => {
@@ -97,7 +107,7 @@ const ProductShowcase: React.FC = () => {
         <h2 className="text-3xl font-bold mb-8 text-center text-black">Наша продукция</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {productCategories.slice(0, 6).map((category, index) => (
+          {productCategories.map((category, index) => (
             <div key={index} className="overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow bg-white">
               <div className="relative h-60 bg-white flex items-center justify-center">
                 {getCategoryImage(category.name) && !categoryImageErrors[category.name] ? (
