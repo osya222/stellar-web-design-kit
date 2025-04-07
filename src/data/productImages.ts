@@ -17,6 +17,9 @@ export const productImages: Record<string, Record<string, string>> = {
   },
   "Мидии": {
     "default": "https://100foto.club/uploads/posts/2022-06/1655751628_1-100foto-club-p-golubie-midii-1.jpg"
+  },
+  "Другие виды рыбы": {
+    "default": "https://cdnstatic.rg.ru/uploads/images/123/81/13/26.jpg"
   }
 };
 
