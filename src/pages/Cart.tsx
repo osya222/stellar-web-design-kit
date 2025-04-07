@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from "@/components/ui/button";
@@ -19,7 +18,6 @@ const Cart = () => {
   } = useCart();
 
   const handleCheckout = () => {
-    // В будущем здесь может быть перенаправление на страницу оформления заказа
     alert('Функция оформления заказа будет доступна скоро!');
   };
 
@@ -71,7 +69,6 @@ const Cart = () => {
             ) : (
               <div className="space-y-6">
                 {items.map((item) => {
-                  // Выбираем цену для отображения (берем первую доступную)
                   const price = item.product.prices.smallWholesale || 
                                 item.product.prices.mediumWholesale || 
                                 item.product.prices.largeWholesale || 0;
@@ -171,16 +168,10 @@ const Cart = () => {
       {/* Footer */}
       <footer className="bg-blue-900 text-white py-8 mt-auto">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
               <h3 className="text-xl font-bold mb-4">МореПродукт</h3>
-              <p>Поставки морепродуктов высшего качества с 2010 года. Работаем со всеми регионами России.</p>
-            </div>
-            <div>
-              <h3 className="text-xl font-bold mb-4">Контакты</h3>
-              <p>Адрес: г. Москва, ул. Морская, 123</p>
-              <p>Телефон: +7 (495) 123-45-67</p>
-              <p>Email: info@moreproduct.ru</p>
+              <p>Москва</p>
             </div>
             <div>
               <h3 className="text-xl font-bold mb-4">Время работы</h3>
@@ -198,7 +189,6 @@ const Cart = () => {
   );
 };
 
-// Функция для отображения иконок товаров
 const renderProductIcon = (category: string) => {
   switch (category) {
     case 'Лосось (Чили)':
