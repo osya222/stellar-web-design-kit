@@ -4,8 +4,8 @@ export interface Product {
   id: number;
   name: string;
   category: string;
-  size: string;
-  packaging: string;
+  size?: string;
+  packaging?: string;
   catchDate?: string;
   manufacturer: string;
   expiryDate?: string;
