@@ -6,6 +6,7 @@ import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
 import { Fish, ShellIcon, Soup, GanttChart, ShoppingCart } from "lucide-react";
 import { useCart } from '@/context/CartContext';
+import { getProductImage } from '@/data/productImages';
 
 interface ProductCardProps {
   product: Product;
@@ -34,10 +35,31 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     addToCart(product);
   };
 
+  // Get appropriate image for this product
+  const productImageUrl = getProductImage(product);
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-      <div className="h-40 bg-blue-50 flex items-center justify-center">
-        {renderProductIcon(product.category)}
+      <div className="h-40 bg-blue-50 flex items-center justify-center relative">
+        {/* Product Image */}
+        <img 
+          src={productImageUrl}
+          alt={product.name}
+          className="h-full w-full object-cover"
+          onError={(e) => {
+            // If image fails to load, show icon as fallback
+            e.currentTarget.style.display = 'none';
+            const iconContainer = e.currentTarget.parentElement;
+            if (iconContainer) {
+              iconContainer.classList.add('flex', 'items-center', 'justify-center');
+              const iconElement = document.createElement('div');
+              iconContainer.appendChild(iconElement);
+              // We can't directly render React components here, so we'll just show a background
+              iconContainer.style.backgroundColor = '#EFF6FF'; // bg-blue-50
+            }
+          }}
+        />
+        {/* Icon backup will be shown by onError handler if image fails to load */}
       </div>
       <CardContent className="p-4">
         <h3 className="font-bold line-clamp-2 h-12 mb-2" title={product.name}>
