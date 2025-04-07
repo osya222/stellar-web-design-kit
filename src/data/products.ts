@@ -285,6 +285,7 @@ export const products: Product[] = [
     packaging: "5", 
     catchDate: "Июль",
     manufacturer: "Турция", 
+    image: "https://fish-or-meat.ru/d/051a4437.jpg",
     prices: {
       smallWholesale: 828.9,
       mediumWholesale: 823.9,
