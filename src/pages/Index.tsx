@@ -5,6 +5,8 @@ import { toast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 import { ShoppingCart } from "lucide-react";
+import { products } from "@/data/products";
+import { formatPrice } from "@/lib/formatters";
 
 const Index = () => {
   const { getTotalItems } = useCart();
@@ -13,6 +15,52 @@ const Index = () => {
     toast({
       title: "Спасибо за интерес!",
       description: "Наш менеджер свяжется с вами в ближайшее время.",
+    });
+  };
+
+  const handleDownloadPriceList = () => {
+    // Создаем содержимое CSV файла
+    let csvContent = "Наименование,Категория,Производитель,Малый опт,Средний опт,Крупный опт\n";
+    
+    products.forEach(product => {
+      // Формируем строку для каждого товара
+      const row = [
+        // Экранирование кавычек в названии для правильного CSV-формата
+        `"${product.name.replace(/"/g, '""')}"`,
+        `"${product.category}"`,
+        `"${product.manufacturer || ''}"`,
+        formatPrice(product.prices.smallWholesale || 0).replace(/\s/g, ""),
+        formatPrice(product.prices.mediumWholesale || 0).replace(/\s/g, ""),
+        formatPrice(product.prices.largeWholesale || 0).replace(/\s/g, "")
+      ];
+      csvContent += row.join(",") + "\n";
+    });
+    
+    // Создаем Blob с содержимым CSV
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    
+    // Создаем ссылку для скачивания
+    const link = document.createElement('a');
+    
+    // Используем URL.createObjectURL для создания ссылки на Blob
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'МореПродукт-Прайс-лист.csv');
+    
+    // Добавляем ссылку в DOM, эмулируем клик и удаляем ссылку
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Освобождаем URL
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+    }, 100);
+    
+    // Показываем уведомление
+    toast({
+      title: "Прайс-лист загружается",
+      description: "Файл сохранен в формате CSV",
     });
   };
 
@@ -64,6 +112,7 @@ const Index = () => {
             <Button 
               variant="outline" 
               size="lg"
+              onClick={handleDownloadPriceList}
             >
               Скачать прайс-лист
             </Button>
