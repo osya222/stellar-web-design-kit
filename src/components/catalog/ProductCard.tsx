@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProductPrices from './ProductPrices';
@@ -14,6 +14,7 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
+  const [imageError, setImageError] = useState(false);
   
   // Функция для выбора иконки в зависимости от категории товара
   const renderProductIcon = () => {
@@ -24,16 +25,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     addToCart(product);
   };
 
+  const handleImageError = () => {
+    setImageError(true);
+  };
+
   const productImage = getProductImage(product);
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
       <div className="h-48 bg-white flex items-center justify-center relative overflow-hidden">
-        {productImage ? (
+        {productImage && !imageError ? (
           <img 
             src={productImage} 
             alt={product.name} 
             className="object-cover w-full h-full"
+            onError={handleImageError}
           />
         ) : (
           <div className="flex flex-col items-center justify-center w-full h-full">

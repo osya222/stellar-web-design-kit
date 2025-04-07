@@ -1,5 +1,4 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Fish, ShellIcon, Egg, Utensils, ChefHat, Shell } from "lucide-react";
 import {
@@ -16,6 +15,7 @@ import { getProductImage } from "@/data/productImages";
 const ProductShowcase: React.FC = () => {
   // Получаем популярные продукты из основных категорий
   const popularProducts = products.slice(0, 6);
+  const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
 
   // Иконки для категорий
   const getCategoryIcon = (category: string) => {
@@ -72,6 +72,13 @@ const ProductShowcase: React.FC = () => {
     }, 100);
   };
 
+  const handleImageError = (index: number) => {
+    setImageErrors(prev => ({
+      ...prev,
+      [index]: true
+    }));
+  };
+
   return (
     <section className="py-12 bg-white">
       <div className="container mx-auto px-4">
@@ -112,11 +119,12 @@ const ProductShowcase: React.FC = () => {
                   <Card className="border shadow-md">
                     <CardContent className="p-0">
                       <div className="relative h-64 bg-white flex items-center justify-center">
-                        {getProductImage(product) ? (
+                        {getProductImage(product) && !imageErrors[index] ? (
                           <img 
                             src={getProductImage(product)} 
                             alt={product.name} 
                             className="object-cover w-full h-full"
+                            onError={() => handleImageError(index)}
                           />
                         ) : (
                           getCategoryIcon(product.category)

@@ -30,10 +30,17 @@ export function getProductImage(product: { category: string; name: string; size?
 
 // Вспомогательная функция для проверки валидности URL изображения
 export async function isImageUrlValid(url: string): Promise<boolean> {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload = () => resolve(true);
-    img.onerror = () => resolve(false);
-    img.src = url;
-  });
+  // Если URL является относительным путем к локальному файлу, считаем его валидным
+  if (url.startsWith('/')) {
+    return true;
+  }
+  
+  // Для внешних URL проверяем доступность
+  try {
+    const response = await fetch(url, { method: 'HEAD', mode: 'no-cors' });
+    return true; // При использовании no-cors мы не можем проверить статус, поэтому предполагаем, что URL валиден
+  } catch (error) {
+    console.error('Error checking image URL:', error);
+    return false;
+  }
 }
