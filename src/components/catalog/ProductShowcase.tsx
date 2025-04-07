@@ -90,10 +90,10 @@ const ProductShowcase: React.FC = () => {
                 ) : (
                   getCategoryIcon(category.name)
                 )}
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent py-4">
+                <div className="absolute inset-x-0 bottom-0 bg-blue-600/80 py-4">
                   <div className="p-4 text-white">
                     <h3 className="text-xl font-bold">{category.name}</h3>
-                    <p className="text-sm font-medium opacity-75">{category.description}</p>
+                    <p className="text-sm font-medium opacity-90">{category.description}</p>
                   </div>
                 </div>
               </div>
@@ -129,9 +129,9 @@ const ProductShowcase: React.FC = () => {
                         ) : (
                           getCategoryIcon(product.category)
                         )}
-                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
+                        <div className="absolute bottom-0 left-0 right-0 bg-blue-600/80 p-4">
                           <h4 className="text-white font-semibold">{product.name}</h4>
-                          <p className="text-white/70 text-sm">{product.category}</p>
+                          <p className="text-white/90 text-sm">{product.category}</p>
                         </div>
                       </div>
                     </CardContent>
