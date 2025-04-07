@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import ProductCatalog from "@/components/ProductCatalog";
 import { toast } from "@/hooks/use-toast";
@@ -65,8 +66,8 @@ const Index = () => {
             <nav>
               <ul className="flex gap-6">
                 <li><a href="#" className="hover:underline">Главная</a></li>
-                <li><a href="#" className="hover:underline">Каталог</a></li>
-                <li><a href="#" className="hover:underline">О нас</a></li>
+                <li><a href="#catalog" className="hover:underline">Каталог</a></li>
+                <li><a href="#about" className="hover:underline">О нас</a></li>
                 <li><a href="#" className="hover:underline">Контакты</a></li>
                 <li>
                   <Link to="/cart" className="flex items-center hover:underline">
@@ -118,6 +119,21 @@ const Index = () => {
       <section className="py-12" id="catalog">
         <div className="container mx-auto px-4">
           <ProductCatalog />
+        </div>
+      </section>
+
+      {/* About Us Section - NEWLY ADDED */}
+      <section className="py-12 bg-blue-50" id="about">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold mb-6 text-center">О нас</h2>
+          <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-md">
+            <p className="text-lg text-gray-700 mb-4">
+              Наша компания работает напрямую с заказчиком, что существенно влияет на стоимость продукции. Нам не нужно тратить денежные средства на содержание розничного магазина и выплату заработной платы продавцам и грузчикам.
+            </p>
+            <p className="text-lg text-gray-700">
+              Сотрудничество с нами позволяет вам не только экономить на любимых деликатесах, но и получать продукцию в свежем виде.
+            </p>
+          </div>
         </div>
       </section>
 
