@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Fish, ShellIcon, Egg, Utensils } from "lucide-react";
@@ -51,13 +52,19 @@ const ProductShowcase: React.FC = () => {
 
   const handleViewAllCatalog = (event: React.MouseEvent) => {
     event.preventDefault();
-    const catalogElement = document.getElementById('catalog');
-    if (catalogElement) {
-      catalogElement.scrollIntoView({ 
-        behavior: 'smooth',
-        block: 'start'
-      });
-    }
+    
+    // Wait for next tick to ensure proper navigation
+    setTimeout(() => {
+      const catalogElement = document.getElementById('catalog');
+      if (catalogElement) {
+        catalogElement.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      } else {
+        console.error('Catalog element not found');
+      }
+    }, 100);
   };
 
   return (
@@ -133,8 +140,8 @@ const ProductShowcase: React.FC = () => {
         </div>
         
         <div className="mt-10 text-center">
-          <Button size="lg">
-            <a href="#catalog" onClick={handleViewAllCatalog}>Смотреть весь каталог</a>
+          <Button size="lg" onClick={handleViewAllCatalog}>
+            Смотреть весь каталог
           </Button>
         </div>
       </div>
