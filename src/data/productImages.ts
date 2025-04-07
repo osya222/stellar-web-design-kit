@@ -1,4 +1,5 @@
 
+
 // Изображения продуктов по категориям
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
@@ -9,7 +10,8 @@ export const productImages: Record<string, Record<string, string>> = {
   },
   "Креветки и морепродукты": {
     "default": "https://oyster.market/upload/iblock/b8a/wq2knk7y2aefoupgczo0aciug191by5c.jpeg",
-    "Креветка Ваномэй": "https://oyster.market/upload/iblock/b8a/wq2knk7y2aefoupgczo0aciug191by5c.jpeg"
+    "Креветка Ваномэй": "https://oyster.market/upload/iblock/b8a/wq2knk7y2aefoupgczo0aciug191by5c.jpeg",
+    "Лангустины": "https://ribanadom.ru/thumb/2/K0X138vzmcgtfurGlrffMQ/r/d/langustiny-s-golovoj.jpg"
   }
 };
 
@@ -48,3 +50,4 @@ export async function isImageUrlValid(url: string): Promise<boolean> {
     return false;
   }
 }
+
