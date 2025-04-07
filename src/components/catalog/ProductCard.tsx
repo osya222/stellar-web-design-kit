@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
-import { Fish, Crab, GanttChart, Soup } from "lucide-react";
+import { Fish, ShellIcon, Soup, GanttChart } from "lucide-react";
 
 interface ProductCardProps {
   product: Product;
@@ -19,7 +19,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       case 'Другие виды рыбы':
         return <Fish className="w-16 h-16 text-blue-600" />;
       case 'Креветки и морепродукты':
-        return <Crab className="w-16 h-16 text-pink-500" />;
+        return <ShellIcon className="w-16 h-16 text-pink-500" />;
       case 'Полуфабрикаты':
         return <Soup className="w-16 h-16 text-orange-500" />;
       default:
