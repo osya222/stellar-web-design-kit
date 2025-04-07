@@ -17,7 +17,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   
   // Функция для выбора иконки в зависимости от категории товара
   const renderProductIcon = () => {
-    return <Fish className="w-16 h-16 text-blue-600" />;
+    return <Fish className="w-16 h-16 text-gray-600" />;
   };
 
   const handleAddToCart = () => {

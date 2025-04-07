@@ -23,7 +23,7 @@ const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({ category, produ
       case 'Форель (Турция)':
       case 'Другие виды рыбы':
       case 'Филе рыбы':
-        return <Fish className="w-6 h-6 mr-2 inline-block text-blue-600" />;
+        return <Fish className="w-6 h-6 mr-2 inline-block text-gray-600" />;
       case 'Креветки и морепродукты':
         return <ShellIcon className="w-6 h-6 mr-2 inline-block text-pink-500" />;
       case 'Мидии':
@@ -37,7 +37,7 @@ const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({ category, produ
       case 'Деликатесы':
         return <Utensils className="w-6 h-6 mr-2 inline-block text-purple-500" />;
       default:
-        return <Soup className="w-6 h-6 mr-2 inline-block text-blue-300" />;
+        return <Soup className="w-6 h-6 mr-2 inline-block text-gray-500" />;
     }
   };
   

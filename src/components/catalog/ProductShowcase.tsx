@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Fish, ShellIcon, Egg, Utensils, ChefHat, Shell } from "lucide-react";
@@ -23,7 +24,7 @@ const ProductShowcase: React.FC = () => {
       case 'Форель (Турция)':
       case 'Другие виды рыбы':
       case 'Филе рыбы':
-        return <Fish className="w-12 h-12 text-blue-600" />;
+        return <Fish className="w-12 h-12 text-gray-600" />;
       case 'Креветки и морепродукты':
         return <ShellIcon className="w-12 h-12 text-pink-500" />;
       case 'Мидии':
@@ -35,7 +36,7 @@ const ProductShowcase: React.FC = () => {
       case 'Деликатесы':
         return <Utensils className="w-12 h-12 text-purple-500" />;
       default:
-        return <Fish className="w-12 h-12 text-blue-300" />;
+        return <Fish className="w-12 h-12 text-gray-500" />;
     }
   };
 
@@ -81,7 +82,7 @@ const ProductShowcase: React.FC = () => {
             <div key={index} className="overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow">
               <div className="relative h-60 bg-white flex items-center justify-center">
                 {getCategoryIcon(category.name)}
-                <div className="absolute inset-x-0 bottom-0 bg-blue-600/80 py-4">
+                <div className="absolute inset-x-0 bottom-0 bg-gray-700/90 py-4">
                   <div className="p-4 text-white">
                     <h3 className="text-xl font-bold">{category.name}</h3>
                     <p className="text-sm font-medium opacity-90">{category.description}</p>
@@ -93,7 +94,7 @@ const ProductShowcase: React.FC = () => {
                 <a 
                   href={`#catalog-${category.id}`}
                   onClick={(e) => handleCategoryClick(category.id, e)}
-                  className="text-blue-600 hover:text-blue-800 font-medium flex items-center cursor-pointer"
+                  className="text-gray-700 hover:text-gray-900 font-medium flex items-center cursor-pointer"
                 >
                   Подробнее <ArrowRight className="ml-1 h-4 w-4" />
                 </a>
@@ -120,7 +121,7 @@ const ProductShowcase: React.FC = () => {
                         ) : (
                           getCategoryIcon(product.category)
                         )}
-                        <div className="absolute bottom-0 left-0 right-0 bg-blue-600/80 p-4">
+                        <div className="absolute bottom-0 left-0 right-0 bg-gray-700/90 p-4">
                           <h4 className="text-white font-semibold">{product.name}</h4>
                           <p className="text-white/90 text-sm">{product.category}</p>
                         </div>
