@@ -2,8 +2,13 @@
 import { Button } from "@/components/ui/button";
 import ProductCatalog from "@/components/ProductCatalog";
 import { toast } from "@/hooks/use-toast";
+import { Link } from "react-router-dom";
+import { useCart } from "@/context/CartContext";
+import { ShoppingCart } from "lucide-react";
 
 const Index = () => {
+  const { getTotalItems } = useCart();
+  
   const handleContactUs = () => {
     toast({
       title: "Спасибо за интерес!",
@@ -24,6 +29,17 @@ const Index = () => {
                 <li><a href="#" className="hover:underline">Каталог</a></li>
                 <li><a href="#" className="hover:underline">О нас</a></li>
                 <li><a href="#" className="hover:underline">Контакты</a></li>
+                <li>
+                  <Link to="/cart" className="flex items-center hover:underline">
+                    <ShoppingCart className="w-4 h-4 mr-1" />
+                    Корзина
+                    {getTotalItems() > 0 && (
+                      <span className="ml-1 bg-white text-blue-900 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+                        {getTotalItems()}
+                      </span>
+                    )}
+                  </Link>
+                </li>
               </ul>
             </nav>
           </div>

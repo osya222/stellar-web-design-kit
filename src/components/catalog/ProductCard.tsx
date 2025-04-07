@@ -4,13 +4,16 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
-import { Fish, ShellIcon, Soup, GanttChart } from "lucide-react";
+import { Fish, ShellIcon, Soup, GanttChart, ShoppingCart } from "lucide-react";
+import { useCart } from '@/context/CartContext';
 
 interface ProductCardProps {
   product: Product;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const { addToCart } = useCart();
+  
   // Функция для выбора иконки в зависимости от категории товара
   const renderProductIcon = (category: string) => {
     switch (category) {
@@ -25,6 +28,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       default:
         return <GanttChart className="w-16 h-16 text-blue-300" />;
     }
+  };
+
+  const handleAddToCart = () => {
+    addToCart(product);
   };
 
   return (
@@ -66,7 +73,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <ProductPrices prices={product.prices} />
         </div>
         <div className="flex justify-end items-center mt-4">
-          <Button size="sm">Заказать</Button>
+          <Button size="sm" onClick={handleAddToCart}>
+            <ShoppingCart className="w-4 h-4 mr-1" />
+            В корзину
+          </Button>
         </div>
       </CardContent>
     </Card>
