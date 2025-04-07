@@ -24,7 +24,8 @@ export const productImages: Record<string, Record<string, string>> = {
     "default": "https://cdnstatic.rg.ru/uploads/images/123/81/13/26.jpg",
     "Сельдь н/р": "https://ekorfish.com/upload/iblock/88e/nl9m3axc369helmz7z5earvk8c5rqtip.jpg",
     "Сардина (иваси) н/р": "https://istokfish.ru/upload/iblock/32c/lo0wi17c70zt1xnaqhz6dlfoyk5cbx6k/DSC_0163.JPG",
-    "ДОРАДО н/р": "https://agromp.ru/wp-content/uploads/2022/03/str015.jpeg"
+    "ДОРАДО н/р": "https://agromp.ru/wp-content/uploads/2022/03/str015.jpeg",
+    "СКУМБРИЯ н/р": "https://ruikra.ru/image/cache/webp/catalog/products-new/svezhemorozhenaya-ryba/skumbriya-nr/skumbriya-nr-3-1500x1000.webp"
   },
   "Филе рыбы": {
     "default": "https://avatars.mds.yandex.net/get-mpic/5242010/img_id4824576176666087310.jpeg/900x1200"
