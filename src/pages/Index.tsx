@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import ProductCatalog from "@/components/ProductCatalog";
 import { toast } from "@/hooks/use-toast";
@@ -7,6 +6,7 @@ import { useCart } from "@/context/CartContext";
 import { ShoppingCart } from "lucide-react";
 import { products } from "@/data/products";
 import { formatPrice } from "@/lib/formatters";
+import ProductShowcase from "@/components/catalog/ProductShowcase";
 
 const Index = () => {
   const { getTotalItems } = useCart();
@@ -19,13 +19,10 @@ const Index = () => {
   };
 
   const handleDownloadPriceList = () => {
-    // Создаем содержимое CSV файла
     let csvContent = "Наименование,Категория,Производитель,Малый опт,Средний опт,Крупный опт\n";
     
     products.forEach(product => {
-      // Формируем строку для каждого товара
       const row = [
-        // Экранирование кавычек в названии для правильного CSV-формата
         `"${product.name.replace(/"/g, '""')}"`,
         `"${product.category}"`,
         `"${product.manufacturer || ''}"`,
@@ -36,28 +33,22 @@ const Index = () => {
       csvContent += row.join(",") + "\n";
     });
     
-    // Создаем Blob с содержимым CSV
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     
-    // Создаем ссылку для скачивания
     const link = document.createElement('a');
     
-    // Используем URL.createObjectURL для создания ссылки на Blob
     const url = URL.createObjectURL(blob);
     link.setAttribute('href', url);
     link.setAttribute('download', 'МореПродукт-Прайс-лист.csv');
     
-    // Добавляем ссылку в DOM, эмулируем клик и удаляем ссылку
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
     
-    // Освобождаем URL
     setTimeout(() => {
       URL.revokeObjectURL(url);
     }, 100);
     
-    // Показываем уведомление
     toast({
       title: "Прайс-лист загружается",
       description: "Файл сохранен в формате CSV",
@@ -120,8 +111,11 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Product Showcase - NEW SECTION */}
+      <ProductShowcase />
+      
       {/* Product catalog section */}
-      <section className="py-12">
+      <section className="py-12" id="catalog">
         <div className="container mx-auto px-4">
           <ProductCatalog />
         </div>

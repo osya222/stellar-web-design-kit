@@ -46,13 +46,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const productImageUrl = getProductImage(product);
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-      <div className="h-40 bg-blue-50 flex items-center justify-center relative">
+    <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
+      <div className="h-48 bg-blue-50 flex items-center justify-center relative overflow-hidden">
         {!imageError ? (
           <img 
             src={productImageUrl}
             alt={product.name}
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
             onError={() => setImageError(true)}
           />
         ) : (
@@ -65,11 +65,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
         )}
       </div>
-      <CardContent className="p-4">
+      <CardContent className="p-4 flex flex-col flex-grow">
         <h3 className="font-bold line-clamp-2 h-12 mb-2" title={product.name}>
           {product.name}
         </h3>
-        <div className="space-y-1 text-sm mb-4">
+        <div className="space-y-1 text-sm mb-4 flex-grow">
           {product.size && (
             <div className="flex justify-between">
               <span className="text-gray-500">Размер:</span>
@@ -95,14 +95,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </div>
           )}
         </div>
-        <div className="mt-4">
+        <div className="mt-auto">
           <ProductPrices prices={product.prices} />
-        </div>
-        <div className="flex justify-end items-center mt-4">
-          <Button size="sm" onClick={handleAddToCart}>
-            <ShoppingCart className="w-4 h-4 mr-1" />
-            В корзину
-          </Button>
+          <div className="flex justify-end items-center mt-4">
+            <Button size="sm" onClick={handleAddToCart}>
+              <ShoppingCart className="w-4 h-4 mr-1" />
+              В корзину
+            </Button>
+          </div>
         </div>
       </CardContent>
     </Card>

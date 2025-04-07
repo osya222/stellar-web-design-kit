@@ -18,19 +18,19 @@ const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({ category, produ
       case 'Лосось (Чили)':
       case 'Форель (Турция)':
       case 'Другие виды рыбы':
-        return <Fish className="w-6 h-6 mr-2 inline-block" />;
+        return <Fish className="w-6 h-6 mr-2 inline-block text-blue-600" />;
       case 'Креветки и морепродукты':
-        return <ShellIcon className="w-6 h-6 mr-2 inline-block" />;
+        return <ShellIcon className="w-6 h-6 mr-2 inline-block text-pink-500" />;
       case 'Полуфабрикаты':
-        return <ChefHat className="w-6 h-6 mr-2 inline-block" />;
+        return <ChefHat className="w-6 h-6 mr-2 inline-block text-orange-500" />;
       case 'Икра':
-        return <Egg className="w-6 h-6 mr-2 inline-block" />;
+        return <Egg className="w-6 h-6 mr-2 inline-block text-red-500" />;
       case 'Консервы':
-        return <Package className="w-6 h-6 mr-2 inline-block" />;
+        return <Package className="w-6 h-6 mr-2 inline-block text-amber-600" />;
       case 'Деликатесы':
-        return <Utensils className="w-6 h-6 mr-2 inline-block" />;
+        return <Utensils className="w-6 h-6 mr-2 inline-block text-purple-500" />;
       default:
-        return <Soup className="w-6 h-6 mr-2 inline-block" />;
+        return <Soup className="w-6 h-6 mr-2 inline-block text-blue-300" />;
     }
   };
   
