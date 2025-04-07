@@ -134,21 +134,5 @@
   .container-custom {
     @apply container mx-auto px-4 md:px-8;
   }
-  
-  /* Улучшенные фоновые изображения */
-  .bg-image-fixed {
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
-
-  .backdrop-blur {
-    backdrop-filter: blur(4px);
-  }
-  
-  /* Плавные переходы */
-  .transition-all-ease {
-    transition: all 0.3s ease-in-out;
-  }
 }
+

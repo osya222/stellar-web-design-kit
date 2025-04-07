@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import ProductCatalog from "@/components/ProductCatalog";
 import { toast } from "@/hooks/use-toast";
@@ -93,23 +92,20 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Hero section with improved background */}
-      <section className="relative bg-gradient-to-br from-blue-50 to-blue-100 py-20 overflow-hidden">
-        {/* Overlay with solid color to make text more readable */}
-        <div className="absolute inset-0 bg-blue-50/70 z-0"></div>
-        
-        {/* Background image with better positioning and no opacity filter */}
-        <div className="absolute inset-0 z-0">
+      {/* Hero section with better background */}
+      <section className="relative py-24">
+        {/* Full-width background image */}
+        <div className="absolute inset-0 bg-gradient-to-b from-blue-100 to-white z-0">
           <img 
             src="/lovable-uploads/0fd3ac43-ec30-425b-b149-fd187b22e947.png" 
             alt="Морепродукты фон" 
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover opacity-30"
           />
         </div>
         
         <div className="container-custom text-center relative z-10">
-          <h2 className="text-5xl font-bold mb-8 text-blue-800">Свежие морепродукты оптом</h2>
-          <p className="text-xl text-gray-700 mb-10 max-w-3xl mx-auto leading-relaxed bg-white/70 p-4 rounded-xl backdrop-blur-sm">
+          <h2 className="text-4xl md:text-5xl font-bold mb-8 text-blue-800 drop-shadow-sm">Свежие морепродукты оптом</h2>
+          <p className="text-xl text-gray-800 mb-10 max-w-3xl mx-auto leading-relaxed bg-white/80 p-5 rounded-xl shadow-sm">
             Широкий ассортимент качественной морской продукции с доставкой по всей России.
             Работаем с ресторанами, магазинами и оптовыми покупателями.
           </p>
@@ -126,7 +122,7 @@ const Index = () => {
               variant="outline" 
               size="lg"
               onClick={handleDownloadPriceList}
-              className="border-blue-600 text-blue-700 hover:bg-blue-50 bg-white/90 text-lg px-8 py-6 h-auto rounded-xl shadow-md backdrop-blur-sm"
+              className="border-blue-600 text-blue-700 hover:bg-blue-50 bg-white text-lg px-8 py-6 h-auto rounded-xl shadow-md"
             >
               <Download className="mr-2 h-5 w-5" />
               Скачать прайс-лист
@@ -151,7 +147,7 @@ const Index = () => {
           <h2 className="text-3xl font-bold mb-8 text-center text-blue-800">О нас</h2>
           <div className="max-w-4xl mx-auto bg-white p-8 rounded-2xl shadow-lg">
             <p className="text-lg text-gray-700 mb-6 leading-relaxed">
-              Наша компания работает напрямую с заказчиком, что существенно влияет на стоимость продукции. Нам не нужно тратить денежные средства на содержание розничного магазина и выплату заработной платы продавцам и грузчикам.
+              Наша компания работает напрямую с заказчиком, что существенно влияет на стоимость продукции. Нам не нужно тратить денежные средства на содержание розничного магазина и выплату заработной плату продавцам и грузчикам.
             </p>
             <p className="text-lg text-gray-700 leading-relaxed">
               Сотрудничество с нами позволяет вам не только экономить на любимых деликатесах, но и получать продукцию в свежем виде.
