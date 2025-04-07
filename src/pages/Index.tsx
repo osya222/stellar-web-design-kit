@@ -86,9 +86,16 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Hero section */}
-      <section className="bg-gradient-to-br from-blue-50 to-blue-100 py-20">
-        <div className="container-custom text-center">
+      {/* Hero section with fish background image */}
+      <section className="relative bg-gradient-to-br from-blue-50 to-blue-100 py-20 overflow-hidden">
+        <div className="absolute inset-0 z-0 opacity-20">
+          <img 
+            src="/lovable-uploads/0a745aa0-fdc0-4662-ad63-068c846bdb43.png" 
+            alt="Морепродукты фон" 
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div className="container-custom text-center relative z-10">
           <h2 className="text-4xl font-bold mb-6 text-blue-800">Свежие морепродукты оптом</h2>
           <p className="text-xl text-gray-700 mb-10 max-w-3xl mx-auto leading-relaxed">
             Широкий ассортимент качественной морской продукции с доставкой по всей России.
@@ -155,7 +162,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Contacts section - NEW */}
+      {/* Contacts section */}
       <section className="section-padding bg-white" id="contacts">
         <div className="container-custom">
           <h2 className="text-3xl font-bold mb-8 text-center text-blue-800">Контакты</h2>
