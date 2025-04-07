@@ -408,6 +408,7 @@ export const otherFishProducts: Product[] = [
     packaging: "вес", 
     catchDate: "Август, 24",
     manufacturer: "Чили", 
+    image: "https://biomore.ru/upload/iblock/659/pcj7nol0d5uusgeukbdayvx28gxtdgno.jpg",
     prices: {
       smallWholesale: 1185,
       mediumWholesale: undefined,
@@ -422,6 +423,7 @@ export const otherFishProducts: Product[] = [
     packaging: "вес", 
     catchDate: "Август, 24",
     manufacturer: "Чили", 
+    image: "https://biomore.ru/upload/iblock/659/pcj7nol0d5uusgeukbdayvx28gxtdgno.jpg",
     prices: {
       smallWholesale: 1240,
       mediumWholesale: undefined,
