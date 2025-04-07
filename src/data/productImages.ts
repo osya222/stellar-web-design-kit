@@ -23,9 +23,9 @@ export const productImages: Record<string, Record<string, string>> = {
     "ЛАНГУСТИНЫ с/м C 2": "https://fishinhome.ru/upload/iblock/15c/15cd9e35a5fe16c763477948bdd83279.jpeg"
   },
   "Мидии": {
-    "default": "https://cdn.rf-sp.ru/20/4d/204de0ee9a99ba30acc7c61466b0389d.jpg",
-    "МИДИИ раковина в собственном соку": "https://cdn.rf-sp.ru/20/4d/204de0ee9a99ba30acc7c61466b0389d.jpg",
-    "МИДИИ раковина сливки-чеснок/томат-чеснок/вино": "https://cdn.rf-sp.ru/20/4d/204de0ee9a99ba30acc7c61466b0389d.jpg"
+    "default": "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png",
+    "МИДИИ раковина в собственном соку": "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png",
+    "МИДИИ раковина сливки-чеснок/томат-чеснок/вино": "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png"
   },
   "Другие виды рыбы": {
     "default": "https://cdnstatic.rg.ru/uploads/images/123/81/13/26.jpg",
