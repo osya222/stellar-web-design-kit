@@ -363,6 +363,7 @@ export const otherFishProducts: Product[] = [
     packaging: "20 кг", 
     catchDate: "Март, 24",
     manufacturer: "Норд Вест", 
+    image: "https://rybexpert.ru/wp-content/uploads/2023/12/kambala-1.jpg",
     prices: {
       smallWholesale: 282,
       mediumWholesale: undefined,

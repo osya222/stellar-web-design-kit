@@ -33,7 +33,9 @@ export const productImages: Record<string, Record<string, string>> = {
     "ДОРАДО н/р": "https://agromp.ru/wp-content/uploads/2022/03/str015.jpeg",
     "СКУМБРИЯ н/р": "https://ruikra.ru/image/cache/webp/catalog/products-new/svezhemorozhenaya-ryba/skumbriya-nr/skumbriya-nr-3-1500x1000.webp",
     "СИБАС н/р": "https://fish-or-meat.ru/d/051a4437.jpg",
-    "Вомер н/р": "https://i0.wp.com/xn--80agnucfc0a.xn--p1ai/wp-content/uploads/2018/10/vomer___.jpg?fit=600%2C518&ssl=1"
+    "Вомер н/р": "https://i0.wp.com/xn--80agnucfc0a.xn--p1ai/wp-content/uploads/2018/10/vomer___.jpg?fit=600%2C518&ssl=1",
+    "Камбала б/г IQF": "https://rybexpert.ru/wp-content/uploads/2023/12/kambala-1.jpg",
+    "КАМБАЛА б/г штучная": "https://rybexpert.ru/wp-content/uploads/2023/12/kambala-1.jpg"
   },
   "Филе рыбы": {
     "default": "https://avatars.mds.yandex.net/get-mpic/5242010/img_id4824576176666087310.jpeg/900x1200"
@@ -46,7 +48,7 @@ export function getProductImage(product: { category: string; name: string; size?
     return undefined;
   }
   
-  // Попытка получить изображение по названию продукта
+  // Попытка получить изображение по названию про��укта
   if (productImages[product.category][product.name]) {
     return productImages[product.category][product.name];
   }
