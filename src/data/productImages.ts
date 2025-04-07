@@ -11,7 +11,7 @@ export const productImages: Record<string, Record<string, string>> = {
     "default": "https://delikatesy72.ru/wp-content/uploads/2023/04/1646782757_1-vostorg-buzz-p-moreprodukti-zamorozhennie-4.jpg",
     "Креветка Ваномэй": "/lovable-uploads/d231c5c4-a1ac-424c-9e44-4c4f4ccae778.png",
     "КРЕВЕТКА ваннамей свежая очищенная б/г": "https://fish-express.ru/upload/iblock/fc2/geazqhk08azb2j0z6gui9grv1jk3clnz/28969_1.jpg",
-    "КРЕВЕТКА ваннамей свежая в панцире б/г": "https://pervie.ru/files/product/images/l_490aa4dc6e26f10efa27fb0848ffddc6.webp",
+    "КРЕВЕТКА ваннамей свежая в панцире б/г": "https://sibifood.ru/image/cachewebp/catalog/foto-white/krevetka_tigrovaja%282%29-800x533.webp",
     "Креветка северная": "https://pervie.ru/files/product/images/l_44c69d0e814f419793796f561114da7a.webp",
     "Креветка Королевская Ваннамей (Глазурь)": "https://cdn.ikramore.com/wp-content/uploads/2023/09/langustiny_c0_2kg_bez_golovy.jpg",
     "Креветка с/м очищенная": "https://static.tildacdn.com/tild3738-6538-4161-a439-396361653137/photo.jpg",
@@ -34,6 +34,9 @@ export const productImages: Record<string, Record<string, string>> = {
   },
   "Филе рыбы": {
     "default": "https://avatars.mds.yandex.net/get-mpic/5242010/img_id4824576176666087310.jpeg/900x1200"
+  },
+  "Деликатесы": {
+    "default": "https://пищеваяпромышленность.рф/upload/iblock/4c5/1-1.jpg"
   }
 };
 
