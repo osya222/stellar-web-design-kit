@@ -1,3 +1,4 @@
+
 // Изображения продуктов по категориям
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
@@ -42,7 +43,9 @@ export const productImages: Record<string, Record<string, string>> = {
     "Кижуч б/г (10+)": "https://biomore.ru/upload/iblock/659/pcj7nol0d5uusgeukbdayvx28gxtdgno.jpg",
     "Дори Б/Г": "https://cdn1.ozone.ru/s3/multimedia-c/c600/6069702384.jpg",
     "ОКУНЬ б/г потр. 4*6,5": "https://food-chain.ru/upload/iblock/247/5pjgm2v89cbynecfhmxzula4884zryai.png",
-    "Игла н/р": "https://storage.delikateska.ru/cache/d/a/a5d6ffc4-86eb-4b9f-a6fd-691dbc107d9c.jpg/w400h400.webp"
+    "Игла н/р": "https://storage.delikateska.ru/cache/d/a/a5d6ffc4-86eb-4b9f-a6fd-691dbc107d9c.jpg/w400h400.webp",
+    "МИНТАЙ б/г потр.": "https://cdn.metro-cc.ru/ru/ru_pim_123122001001_01.png",
+    "МИНТАЙ б/г потр. штуч": "https://cdn.metro-cc.ru/ru/ru_pim_123122001001_01.png"
   },
   "Филе рыбы": {
     "default": "https://avatars.mds.yandex.net/get-mpic/5242010/img_id4824576176666087310.jpeg/900x1200"

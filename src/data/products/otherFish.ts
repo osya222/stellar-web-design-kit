@@ -152,6 +152,7 @@ export const otherFishProducts: Product[] = [
     packaging: "13", 
     catchDate: "Август",
     manufacturer: "Русский минтай", 
+    image: "https://cdn.metro-cc.ru/ru/ru_pim_123122001001_01.png",
     prices: {
       smallWholesale: undefined, // ожидаем
       mediumWholesale: undefined, // ожидаем
@@ -166,6 +167,7 @@ export const otherFishProducts: Product[] = [
     packaging: "22", 
     catchDate: "Май",
     manufacturer: "ОКРФ", 
+    image: "https://cdn.metro-cc.ru/ru/ru_pim_123122001001_01.png",
     prices: {
       smallWholesale: 185.9,
       mediumWholesale: 181.9,
@@ -180,6 +182,7 @@ export const otherFishProducts: Product[] = [
     packaging: "24", 
     catchDate: "Октябрь",
     manufacturer: "ПК РКЗ", 
+    image: "https://cdn.metro-cc.ru/ru/ru_pim_123122001001_01.png",
     prices: {
       smallWholesale: 185.9,
       mediumWholesale: 181.9,
@@ -280,7 +283,7 @@ export const otherFishProducts: Product[] = [
     size: "200-500 гр", 
     packaging: "вес", 
     catchDate: "Июль, 24",
-    manufacturer: "Аргентина", 
+    manufacturer: "Аргентин��", 
     prices: {
       smallWholesale: 225,
       mediumWholesale: undefined,
