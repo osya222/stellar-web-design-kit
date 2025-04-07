@@ -92,23 +92,11 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Hero section with improved readability */}
-      <section className="relative bg-gradient-to-br from-blue-600/30 to-blue-800/30 py-20 overflow-hidden">
-        {/* Dark overlay for better text contrast */}
-        <div className="absolute inset-0 bg-blue-900/40 z-0"></div>
-        
-        {/* Background image */}
-        <div className="absolute inset-0 z-0">
-          <img 
-            src="/lovable-uploads/0fd3ac43-ec30-425b-b149-fd187b22e947.png" 
-            alt="Морепродукты фон" 
-            className="w-full h-full object-cover object-center opacity-50"
-          />
-        </div>
-        
-        <div className="container-custom text-center relative z-10">
-          <h2 className="text-5xl font-bold mb-8 text-white drop-shadow-lg">Свежие морепродукты оптом</h2>
-          <div className="bg-white/85 backdrop-blur-sm p-6 rounded-xl shadow-lg max-w-3xl mx-auto">
+      {/* Hero section without background image */}
+      <section className="relative bg-gradient-to-br from-blue-600 to-blue-800 py-20">        
+        <div className="container-custom text-center">
+          <h2 className="text-5xl font-bold mb-8 text-white text-shadow-lg">Свежие морепродукты оптом</h2>
+          <div className="bg-white/90 backdrop-blur-sm p-6 rounded-xl shadow-lg max-w-3xl mx-auto">
             <p className="text-xl text-gray-800 leading-relaxed">
               Широкий ассортимент качественной морской продукции с доставкой по всей России.
               Работаем с ресторанами, магазинами и оптовыми покупателями.
@@ -128,7 +116,7 @@ const Index = () => {
               variant="outline" 
               size="lg"
               onClick={handleDownloadPriceList}
-              className="border-2 border-white text-white hover:bg-white/20 bg-transparent text-lg px-8 py-6 h-auto rounded-xl shadow-md backdrop-blur-sm"
+              className="border-2 border-white text-white hover:bg-white/20 bg-transparent text-lg px-8 py-6 h-auto rounded-xl shadow-md"
             >
               <Download className="mr-2 h-5 w-5" />
               Скачать прайс-лист
