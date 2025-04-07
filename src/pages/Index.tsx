@@ -62,7 +62,14 @@ const Index = () => {
       <header className="bg-gradient-to-r from-blue-800 to-blue-600 text-white py-6 sticky top-0 z-50 shadow-md">
         <div className="container-custom">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <h1 className="text-3xl font-bold tracking-tight">МореПродукт</h1>
+            <div className="flex items-center">
+              <img 
+                src="/lovable-uploads/9ae097fc-d5b2-4b02-a072-3d1aeb8c211f.png" 
+                alt="МореПродукт логотип" 
+                className="h-12 mr-3"
+              />
+              <h1 className="text-3xl font-bold tracking-tight">МореПродукт</h1>
+            </div>
             <nav>
               <ul className="flex gap-8 font-medium">
                 <li><a href="#" className="hover:text-blue-200 transition-colors">Главная</a></li>
@@ -209,9 +216,16 @@ const Index = () => {
       <footer className="bg-gradient-to-r from-blue-800 to-blue-600 text-white py-12 mt-auto">
         <div className="container-custom">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-            <div>
-              <h3 className="text-2xl font-bold mb-4">МореПродукт</h3>
-              <p className="text-blue-100">Качественные морепродукты оптом с доставкой по всей России</p>
+            <div className="flex items-center">
+              <img 
+                src="/lovable-uploads/9ae097fc-d5b2-4b02-a072-3d1aeb8c211f.png" 
+                alt="МореПродукт логотип" 
+                className="h-10 mr-3"
+              />
+              <div>
+                <h3 className="text-2xl font-bold mb-4">МореПродукт</h3>
+                <p className="text-blue-100">Качественные морепродукты оптом с доставкой по всей России</p>
+              </div>
             </div>
             <div>
               <h4 className="text-lg font-medium mb-4">Навигация</h4>
