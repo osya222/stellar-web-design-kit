@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import ProductFilters from './catalog/ProductFilters';
 import ProductListing from './catalog/ProductListing';
-import { products } from '@/data/products';
+import { products } from '@/data/products/index';
 import { Product } from '@/types/product';
 
 const ProductCatalog: React.FC = () => {

@@ -1,10 +1,11 @@
+
 import { Button } from "@/components/ui/button";
 import ProductCatalog from "@/components/ProductCatalog";
 import { toast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
 import { Download, ShoppingCart, Mail, Phone, MapPin } from "lucide-react";
-import { products } from "@/data/products";
+import { products } from "@/data/products/index";
 import { formatPrice } from "@/lib/formatters";
 import ProductShowcase from "@/components/catalog/ProductShowcase";
 import Logo from "@/components/layout/Logo";

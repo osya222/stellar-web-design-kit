@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Fish, ShellIcon, Shell, ExternalLink } from "lucide-react";
@@ -9,7 +10,7 @@ import {
   CarouselPrevious
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
-import { products } from "@/data/products";
+import { products } from "@/data/products/index";
 import { getProductImage } from "@/data/productImages";
 import { formatPrice } from "@/lib/formatters";
 
