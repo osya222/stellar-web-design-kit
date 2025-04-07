@@ -1,5 +1,4 @@
 
-
 // Изображения продуктов по категориям
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
@@ -50,4 +49,3 @@ export async function isImageUrlValid(url: string): Promise<boolean> {
     return false;
   }
 }
-
