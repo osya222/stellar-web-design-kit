@@ -1,4 +1,3 @@
-
 import { Product } from '@/types/product';
 
 // Другие виды рыбы products
@@ -123,6 +122,7 @@ export const otherFishProducts: Product[] = [
     packaging: "20", 
     catchDate: "Июль",
     manufacturer: "Норд Вест", 
+    image: "https://rybexpert.ru/wp-content/uploads/2023/12/kambala-1.jpg",
     prices: {
       smallWholesale: undefined, // ожидаем
       mediumWholesale: undefined, // ожидаем
@@ -145,7 +145,7 @@ export const otherFishProducts: Product[] = [
   },
   { 
     id: 28, 
-    name: "МИНТАЙ б/г потр. штуч", 
+    name: "МИНТА�� б/г потр. штуч", 
     category: "Другие виды рыбы",
     size: "25+", 
     packaging: "13", 
@@ -288,7 +288,7 @@ export const otherFishProducts: Product[] = [
   },
   { 
     id: 50, 
-    name: "Гренадер-тушка", 
+    name: "Гре��адер-тушка", 
     category: "Другие виды рыбы",
     size: "500-1500 гр", 
     packaging: "вес", 
