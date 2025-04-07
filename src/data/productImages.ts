@@ -1,4 +1,3 @@
-
 // Изображения продуктов по категориям
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
@@ -12,6 +11,8 @@ export const productImages: Record<string, Record<string, string>> = {
     "Креветка Ваномэй": "/lovable-uploads/d231c5c4-a1ac-424c-9e44-4c4f4ccae778.png",
     "КРЕВЕТКА ваннамей свежая очищенная б/г": "https://fish-express.ru/upload/iblock/fc2/geazqhk08azb2j0z6gui9grv1jk3clnz/28969_1.jpg",
     "КРЕВЕТКА ваннамей свежая в панцире б/г": "https://pervie.ru/files/product/images/l_490aa4dc6e26f10efa27fb0848ffddc6.webp",
+    "Креветка северная": "https://pervie.ru/files/product/images/l_44c69d0e814f419793796f561114da7a.webp",
+    "Креветка Королевская Ваннамей (Глазурь)": "https://cdn.ikramore.com/wp-content/uploads/2023/09/langustiny_c0_2kg_bez_golovy.jpg",
     "Лангустины": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "ЛАНГУСТИНЫ с/м L 2": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "ЛАНГУСТИНЫ с/м L 1": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
