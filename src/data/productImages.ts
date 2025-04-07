@@ -10,10 +10,10 @@ export const productImages: Record<string, Record<string, string>> = {
   "Креветки и морепродукты": {
     "default": "https://oyster.market/upload/iblock/b8a/wq2knk7y2aefoupgczo0aciug191by5c.jpeg",
     "Креветка Ваномэй": "https://oyster.market/upload/iblock/b8a/wq2knk7y2aefoupgczo0aciug191by5c.jpeg",
-    "Лангустины": "/lovable-uploads/de983f8f-acb9-417a-9ba8-54b8f3c696ad.png",
-    "ЛАНГУСТИНЫ с/м L 2": "/lovable-uploads/de983f8f-acb9-417a-9ba8-54b8f3c696ad.png",
-    "ЛАНГУСТИНЫ с/м L 1": "/lovable-uploads/de983f8f-acb9-417a-9ba8-54b8f3c696ad.png",
-    "ЛАНГУСТИНЫ с/м C 2": "/lovable-uploads/de983f8f-acb9-417a-9ba8-54b8f3c696ad.png"
+    "Лангустины": "https://lovable.dev/projects/74713fb0-ff7b-4c64-b340-917792fa2979",
+    "ЛАНГУСТИНЫ с/м L 2": "https://lovable.dev/projects/74713fb0-ff7b-4c64-b340-917792fa2979",
+    "ЛАНГУСТИНЫ с/м L 1": "https://lovable.dev/projects/74713fb0-ff7b-4c64-b340-917792fa2979",
+    "ЛАНГУСТИНЫ с/м C 2": "https://lovable.dev/projects/74713fb0-ff7b-4c64-b340-917792fa2979"
   }
 };
 
