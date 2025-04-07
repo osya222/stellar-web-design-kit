@@ -11,7 +11,7 @@ export const musselProducts: Product[] = [
     packaging: "10*1", 
     catchDate: "Июнь-август",
     manufacturer: "Чили", 
-    image: "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png",
+    image: "https://cdn.rf-sp.ru/20/4d/204de0ee9a99ba30acc7c61466b0389d.jpg",
     prices: {
       smallWholesale: 391.9,
       mediumWholesale: 387.9,
