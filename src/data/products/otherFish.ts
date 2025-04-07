@@ -137,6 +137,7 @@ export const otherFishProducts: Product[] = [
     packaging: "26", 
     catchDate: "Июль",
     manufacturer: "ФОР", 
+    image: "https://food-chain.ru/upload/iblock/247/5pjgm2v89cbynecfhmxzula4884zryai.png",
     prices: {
       smallWholesale: 307.9,
       mediumWholesale: 299.9,
