@@ -1,4 +1,3 @@
-
 // Изображения продуктов по категориям
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
@@ -23,7 +22,7 @@ export const productImages: Record<string, Record<string, string>> = {
     "ЛАНГУСТИНЫ с/м C 2": "https://fishinhome.ru/upload/iblock/15c/15cd9e35a5fe16c763477948bdd83279.jpeg"
   },
   "Мидии": {
-    "default": "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png",
+    "default": "https://excelercomercial.com.br/wp-content/uploads/2014/03/mariscos.jpg",
     "МИДИИ раковина в собственном соку": "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png",
     "МИДИИ раковина сливки-чеснок/томат-чеснок/вино": "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png"
   },
