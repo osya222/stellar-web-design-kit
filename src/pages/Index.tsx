@@ -93,18 +93,23 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Hero section with fish background image */}
+      {/* Hero section with improved background */}
       <section className="relative bg-gradient-to-br from-blue-50 to-blue-100 py-20 overflow-hidden">
-        <div className="absolute inset-0 z-0 opacity-20">
+        {/* Overlay with solid color to make text more readable */}
+        <div className="absolute inset-0 bg-blue-50/70 z-0"></div>
+        
+        {/* Background image with better positioning and no opacity filter */}
+        <div className="absolute inset-0 z-0">
           <img 
-            src="/lovable-uploads/0a745aa0-fdc0-4662-ad63-068c846bdb43.png" 
+            src="/lovable-uploads/0fd3ac43-ec30-425b-b149-fd187b22e947.png" 
             alt="Морепродукты фон" 
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover object-center"
           />
         </div>
+        
         <div className="container-custom text-center relative z-10">
-          <h2 className="text-4xl font-bold mb-6 text-blue-800">Свежие морепродукты оптом</h2>
-          <p className="text-xl text-gray-700 mb-10 max-w-3xl mx-auto leading-relaxed">
+          <h2 className="text-5xl font-bold mb-8 text-blue-800">Свежие морепродукты оптом</h2>
+          <p className="text-xl text-gray-700 mb-10 max-w-3xl mx-auto leading-relaxed bg-white/70 p-4 rounded-xl backdrop-blur-sm">
             Широкий ассортимент качественной морской продукции с доставкой по всей России.
             Работаем с ресторанами, магазинами и оптовыми покупателями.
           </p>
@@ -121,7 +126,7 @@ const Index = () => {
               variant="outline" 
               size="lg"
               onClick={handleDownloadPriceList}
-              className="border-blue-600 text-blue-700 hover:bg-blue-50 text-lg px-8 py-6 h-auto rounded-xl shadow-md"
+              className="border-blue-600 text-blue-700 hover:bg-blue-50 bg-white/90 text-lg px-8 py-6 h-auto rounded-xl shadow-md backdrop-blur-sm"
             >
               <Download className="mr-2 h-5 w-5" />
               Скачать прайс-лист
