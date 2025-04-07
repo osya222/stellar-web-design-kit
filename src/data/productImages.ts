@@ -8,7 +8,7 @@ export const productImages: Record<string, Record<string, string>> = {
     "default": "https://halalmsk.ru/wp-content/uploads/2021/03/morskaya-forel-4-6-kg.jpg"
   },
   "Креветки и морепродукты": {
-    "default": "https://oyster.market/upload/iblock/b8a/wq2knk7y2aefoupgczo0aciug191by5c.jpeg",
+    "default": "https://delikatesy72.ru/wp-content/uploads/2023/04/1646782757_1-vostorg-buzz-p-moreprodukti-zamorozhennie-4.jpg",
     "Креветка Ваномэй": "https://oyster.market/upload/iblock/b8a/wq2knk7y2aefoupgczo0aciug191by5c.jpeg",
     "Лангустины": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "ЛАНГУСТИНЫ с/м L 2": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
