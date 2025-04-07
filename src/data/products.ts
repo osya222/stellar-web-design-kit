@@ -1,3 +1,4 @@
+
 import { Product } from '@/types/product';
 
 // Данные о продуктах
@@ -641,7 +642,7 @@ export const products: Product[] = [
   { 
     id: 54, 
     name: "Икра сельди в ястыках", 
-    category: "Деликатесы",  // Changed from "Икра" to "Деликатесы"
+    category: "Другие виды рыбы",  // Changed from "Деликатесы" to "Другие виды рыбы"
     packaging: "12 кг", 
     catchDate: "Апрель, 24",
     manufacturer: "Ряжская РПК", 

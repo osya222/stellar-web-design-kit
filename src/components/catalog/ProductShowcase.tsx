@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Fish, ShellIcon, Utensils, Shell } from "lucide-react";
@@ -19,13 +20,14 @@ const ProductShowcase: React.FC = () => {
   const [categoryImageErrors, setCategoryImageErrors] = useState<Record<string, boolean>>({});
 
   // Extract unique categories from products array to replace productCategories
+  // Filter out the "Деликатесы" category
   const productCategories = Array.from(
     new Set(products.map(product => product.category))
   ).map(name => ({ 
     id: name.toLowerCase().replace(/\s+/g, '-'), 
     name,
     description: `Высококачественная продукция категории "${name}"`
-  })).filter(category => category.name !== "Полуфабрикаты" && category.name !== "Икра").slice(0, 6);
+  })).filter(category => category.name !== "Полуфабрикаты" && category.name !== "Икра" && category.name !== "Деликатесы").slice(0, 6);
 
   // Иконки для категорий
   const getCategoryIcon = (category: string) => {
@@ -39,8 +41,6 @@ const ProductShowcase: React.FC = () => {
         return <ShellIcon className="w-12 h-12 text-black" />;
       case 'Мидии':
         return <Shell className="w-12 h-12 text-black" />;
-      case 'Деликатесы':
-        return <Utensils className="w-12 h-12 text-black" />;
       default:
         return <Fish className="w-12 h-12 text-black" />;
     }

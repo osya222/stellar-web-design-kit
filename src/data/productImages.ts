@@ -34,9 +34,6 @@ export const productImages: Record<string, Record<string, string>> = {
   },
   "Филе рыбы": {
     "default": "https://avatars.mds.yandex.net/get-mpic/5242010/img_id4824576176666087310.jpeg/900x1200"
-  },
-  "Деликатесы": {
-    "default": "https://пищеваяпромышленность.рф/upload/iblock/4c5/1-1.jpg"
   }
 };
 
