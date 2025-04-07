@@ -121,10 +121,10 @@ const ProductShowcase: React.FC = () => {
                         ) : (
                           getCategoryIcon(product.category)
                         )}
-                        <div className="absolute bottom-0 left-0 right-0 bg-white p-4 border-t">
-                          <h4 className="text-black font-semibold">{product.name}</h4>
-                          <p className="text-black/70 text-sm">{product.category}</p>
-                        </div>
+                      </div>
+                      <div className="bg-white p-4 border-t">
+                        <h4 className="text-black font-semibold">{product.name}</h4>
+                        <p className="text-black/70 text-sm">{product.category}</p>
                       </div>
                     </CardContent>
                   </Card>

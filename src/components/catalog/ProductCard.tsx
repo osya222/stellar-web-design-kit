@@ -29,12 +29,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
       <div className="h-48 bg-white flex items-center justify-center relative overflow-hidden">
-        <div className="flex flex-col items-center justify-center w-full h-full">
-          {renderProductIcon()}
-          <span className="text-sm text-gray-500 mt-2">
-            {product.category}
-          </span>
-        </div>
+        {productImage ? (
+          <img 
+            src={productImage} 
+            alt={product.name} 
+            className="object-cover w-full h-full"
+          />
+        ) : (
+          <div className="flex flex-col items-center justify-center w-full h-full">
+            {renderProductIcon()}
+          </div>
+        )}
       </div>
       <CardContent className="p-4 flex flex-col flex-grow">
         <h3 className="font-bold line-clamp-2 h-12 mb-2" title={product.name}>
