@@ -2,7 +2,7 @@
 // Изображения продуктов по категориям
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
-    "default": "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
+    "default": "https://oyster.market/upload/iblock/f7c/tz4brucz8x8itkxex47fto6zejlfh4wt.jpg"
   },
   "Форель (Турция)": {
     "default": "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
