@@ -3,10 +3,11 @@ import ProductCatalog from "@/components/ProductCatalog";
 import { toast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import { useCart } from "@/context/CartContext";
-import { AnchorIcon, Download, ShoppingCart, Mail, Phone, MapPin } from "lucide-react";
+import { Download, ShoppingCart, Mail, Phone, MapPin } from "lucide-react";
 import { products } from "@/data/products";
 import { formatPrice } from "@/lib/formatters";
 import ProductShowcase from "@/components/catalog/ProductShowcase";
+import Logo from "@/components/layout/Logo";
 
 const Index = () => {
   const { getTotalItems } = useCart();
@@ -61,14 +62,7 @@ const Index = () => {
       <header className="bg-gradient-to-r from-blue-800 to-blue-600 text-white py-6 sticky top-0 z-50 shadow-md">
         <div className="container-custom">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="flex items-center">
-              <img 
-                src="/lovable-uploads/9ae097fc-d5b2-4b02-a072-3d1aeb8c211f.png" 
-                alt="МореПродукт логотип" 
-                className="h-12 mr-3"
-              />
-              <h1 className="text-3xl font-bold tracking-tight">МореПродукт</h1>
-            </div>
+            <Logo size="lg" />
             <nav>
               <ul className="flex gap-8 font-medium">
                 <li><a href="#" className="hover:text-blue-200 transition-colors">Главная</a></li>
@@ -212,13 +206,8 @@ const Index = () => {
         <div className="container-custom">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
             <div className="flex items-center">
-              <img 
-                src="/lovable-uploads/9ae097fc-d5b2-4b02-a072-3d1aeb8c211f.png" 
-                alt="МореПродукт логотип" 
-                className="h-10 mr-3"
-              />
-              <div>
-                <h3 className="text-2xl font-bold mb-4">МореПродукт</h3>
+              <Logo size="md" />
+              <div className="ml-4">
                 <p className="text-blue-100">Качественные морепродукты оптом с доставкой по всей России</p>
               </div>
             </div>
