@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Fish, ShellIcon, Egg, Utensils } from "lucide-react";
@@ -35,8 +34,8 @@ const ProductShowcase: React.FC = () => {
     }
   };
 
-  const handleCategoryClick = (categoryId: string) => {
-    event?.preventDefault(); // Prevent default anchor behavior
+  const handleCategoryClick = (categoryId: string, event: React.MouseEvent) => {
+    event.preventDefault(); // Prevent default anchor behavior
     
     // Wait for next tick to ensure proper navigation
     setTimeout(() => {
@@ -90,7 +89,7 @@ const ProductShowcase: React.FC = () => {
                 <p className="text-gray-600 mb-4">{category.description}</p>
                 <a 
                   href={`#catalog-${category.id}`}
-                  onClick={() => handleCategoryClick(category.id)}
+                  onClick={(e) => handleCategoryClick(category.id, e)}
                   className="text-blue-600 hover:text-blue-800 font-medium flex items-center cursor-pointer"
                 >
                   Подробнее <ArrowRight className="ml-1 h-4 w-4" />
@@ -134,8 +133,8 @@ const ProductShowcase: React.FC = () => {
         </div>
         
         <div className="mt-10 text-center">
-          <Button size="lg" onClick={handleViewAllCatalog}>
-            <a href="#catalog">Смотреть весь каталог</a>
+          <Button size="lg">
+            <a href="#catalog" onClick={handleViewAllCatalog}>Смотреть весь каталог</a>
           </Button>
         </div>
       </div>
