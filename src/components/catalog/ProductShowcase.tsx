@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Fish, ShellIcon, Egg, Utensils, ChefHat, Shell } from "lucide-react";
@@ -16,6 +17,7 @@ const ProductShowcase: React.FC = () => {
   // Получаем популярные продукты из основных категорий
   const popularProducts = products.slice(0, 6);
   const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
+  const [categoryImageErrors, setCategoryImageErrors] = useState<Record<string, boolean>>({});
 
   // Иконки для категорий
   const getCategoryIcon = (category: string) => {
@@ -38,6 +40,12 @@ const ProductShowcase: React.FC = () => {
       default:
         return <Fish className="w-12 h-12 text-black" />;
     }
+  };
+
+  // Получение изображения для категории
+  const getCategoryImage = (categoryName: string) => {
+    const mockProduct = { category: categoryName, name: 'default' };
+    return getProductImage(mockProduct);
   };
 
   const handleCategoryClick = (categoryId: string, event: React.MouseEvent) => {
@@ -79,6 +87,13 @@ const ProductShowcase: React.FC = () => {
     }));
   };
 
+  const handleCategoryImageError = (categoryName: string) => {
+    setCategoryImageErrors(prev => ({
+      ...prev,
+      [categoryName]: true
+    }));
+  };
+
   return (
     <section className="py-12 bg-white">
       <div className="container mx-auto px-4">
@@ -88,8 +103,17 @@ const ProductShowcase: React.FC = () => {
           {productCategories.slice(0, 6).map((category, index) => (
             <div key={index} className="overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow bg-white">
               <div className="relative h-60 bg-white flex items-center justify-center">
-                {getCategoryIcon(category.name)}
-                <div className="absolute inset-x-0 bottom-0 bg-white py-4 border-t">
+                {getCategoryImage(category.name) && !categoryImageErrors[category.name] ? (
+                  <img 
+                    src={getCategoryImage(category.name)} 
+                    alt={category.name} 
+                    className="object-cover w-full h-full"
+                    onError={() => handleCategoryImageError(category.name)}
+                  />
+                ) : (
+                  getCategoryIcon(category.name)
+                )}
+                <div className="absolute inset-x-0 bottom-0 bg-white/80 py-4 border-t">
                   <div className="p-4 text-black">
                     <h3 className="text-xl font-bold">{category.name}</h3>
                     <p className="text-sm font-medium">{category.description}</p>
