@@ -10,6 +10,7 @@ export const productImages: Record<string, Record<string, string>> = {
   "Креветки и морепродукты": {
     "default": "https://delikatesy72.ru/wp-content/uploads/2023/04/1646782757_1-vostorg-buzz-p-moreprodukti-zamorozhennie-4.jpg",
     "Креветка Ваномэй": "/lovable-uploads/d231c5c4-a1ac-424c-9e44-4c4f4ccae778.png",
+    "КРЕВЕТКА ваннамей свежая очищенная б/г": "/lovable-uploads/d231c5c4-a1ac-424c-9e44-4c4f4ccae778.png",
     "Лангустины": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "ЛАНГУСТИНЫ с/м L 2": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "ЛАНГУСТИНЫ с/м L 1": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
