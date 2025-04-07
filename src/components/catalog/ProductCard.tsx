@@ -28,7 +28,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
-      <div className="h-48 bg-blue-50 flex items-center justify-center relative overflow-hidden">
+      <div className="h-48 bg-white flex items-center justify-center relative overflow-hidden">
         <div className="flex flex-col items-center justify-center w-full h-full">
           {renderProductIcon()}
           <span className="text-sm text-gray-500 mt-2">

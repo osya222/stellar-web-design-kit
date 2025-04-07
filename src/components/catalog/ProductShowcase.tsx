@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Fish, ShellIcon, Egg, Utensils, ChefHat, Shell } from "lucide-react";
@@ -80,16 +79,8 @@ const ProductShowcase: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {productCategories.slice(0, 6).map((category, index) => (
             <div key={index} className="overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-              <div className="relative h-60 bg-blue-50 flex items-center justify-center">
-                {category.image ? (
-                  <img 
-                    src={category.image} 
-                    alt={category.name} 
-                    className="object-cover w-full h-full"
-                  />
-                ) : (
-                  getCategoryIcon(category.name)
-                )}
+              <div className="relative h-60 bg-white flex items-center justify-center">
+                {getCategoryIcon(category.name)}
                 <div className="absolute inset-x-0 bottom-0 bg-blue-600/80 py-4">
                   <div className="p-4 text-white">
                     <h3 className="text-xl font-bold">{category.name}</h3>
@@ -119,7 +110,7 @@ const ProductShowcase: React.FC = () => {
                 <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
                   <Card className="border-0 shadow-md">
                     <CardContent className="p-0">
-                      <div className="relative h-64 bg-blue-50 flex items-center justify-center">
+                      <div className="relative h-64 bg-white flex items-center justify-center">
                         {getProductImage(product) ? (
                           <img 
                             src={getProductImage(product)} 
