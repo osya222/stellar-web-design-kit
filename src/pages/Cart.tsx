@@ -3,7 +3,7 @@ import React from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ShoppingCart, Trash2, Plus, Minus, ArrowLeft } from "lucide-react";
+import { ShoppingCart, Trash2, Plus, Minus, ArrowLeft, Fish, ShellIcon, Soup, GanttChart } from "lucide-react";
 import { formatPrice } from '@/lib/formatters';
 import { Link } from 'react-router-dom';
 
@@ -200,8 +200,6 @@ const Cart = () => {
 
 // Функция для отображения иконок товаров
 const renderProductIcon = (category: string) => {
-  const { Fish, ShellIcon, Soup, GanttChart } = require("lucide-react");
-  
   switch (category) {
     case 'Лосось (Чили)':
     case 'Форель (Турция)':
