@@ -2,7 +2,6 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Fish, ShellIcon, Egg, Utensils } from "lucide-react";
-import { Link } from "react-router-dom";
 import {
   Carousel,
   CarouselContent,
@@ -37,13 +36,29 @@ const ProductShowcase: React.FC = () => {
   };
 
   const handleCategoryClick = (categoryId: string) => {
-    // Add a small delay to ensure the DOM has been updated
+    event?.preventDefault(); // Prevent default anchor behavior
+    
+    // Wait for next tick to ensure proper navigation
     setTimeout(() => {
       const element = document.getElementById(`catalog-${categoryId}`);
       if (element) {
-        element.scrollIntoView({ behavior: 'smooth' });
+        element.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
       }
     }, 100);
+  };
+
+  const handleViewAllCatalog = (event: React.MouseEvent) => {
+    event.preventDefault();
+    const catalogElement = document.getElementById('catalog');
+    if (catalogElement) {
+      catalogElement.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'start'
+      });
+    }
   };
 
   return (
@@ -75,7 +90,7 @@ const ProductShowcase: React.FC = () => {
                 <p className="text-gray-600 mb-4">{category.description}</p>
                 <a 
                   href={`#catalog-${category.id}`}
-                  onClick={() => handleCategoryClick(category.id)} 
+                  onClick={() => handleCategoryClick(category.id)}
                   className="text-blue-600 hover:text-blue-800 font-medium flex items-center cursor-pointer"
                 >
                   Подробнее <ArrowRight className="ml-1 h-4 w-4" />
@@ -119,7 +134,7 @@ const ProductShowcase: React.FC = () => {
         </div>
         
         <div className="mt-10 text-center">
-          <Button size="lg" asChild>
+          <Button size="lg" onClick={handleViewAllCatalog}>
             <a href="#catalog">Смотреть весь каталог</a>
           </Button>
         </div>
