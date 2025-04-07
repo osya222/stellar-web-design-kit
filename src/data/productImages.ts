@@ -10,7 +10,7 @@ export const productImages: Record<string, Record<string, string>> = {
   "Креветки и морепродукты": {
     "default": "https://oyster.market/upload/iblock/b8a/wq2knk7y2aefoupgczo0aciug191by5c.jpeg",
     "Креветка Ваномэй": "https://oyster.market/upload/iblock/b8a/wq2knk7y2aefoupgczo0aciug191by5c.jpeg",
-    "Лангустины": "https://ribanadom.ru/thumb/2/K0X138vzmcgtfurGlrffMQ/r/d/langustiny-s-golovoj.jpg"
+    "Лангустины": "https://moroshka.ru/upload/iblock/9af/Bez-nazvaniya-_5_.png"
   }
 };
 
