@@ -4,16 +4,33 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
+import { Fish, Crab, GanttChart, Soup } from "lucide-react";
 
 interface ProductCardProps {
   product: Product;
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  // Функция для выбора иконки в зависимости от категории товара
+  const renderProductIcon = (category: string) => {
+    switch (category) {
+      case 'Лосось (Чили)':
+      case 'Форель (Турция)':
+      case 'Другие виды рыбы':
+        return <Fish className="w-16 h-16 text-blue-600" />;
+      case 'Креветки и морепродукты':
+        return <Crab className="w-16 h-16 text-pink-500" />;
+      case 'Полуфабрикаты':
+        return <Soup className="w-16 h-16 text-orange-500" />;
+      default:
+        return <GanttChart className="w-16 h-16 text-blue-300" />;
+    }
+  };
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow">
-      <div className="h-40 bg-blue-100 flex items-center justify-center">
-        <div className="text-6xl text-blue-300">🐟</div>
+      <div className="h-40 bg-blue-50 flex items-center justify-center">
+        {renderProductIcon(product.category)}
       </div>
       <CardContent className="p-4">
         <h3 className="font-bold line-clamp-2 h-12 mb-2" title={product.name}>
