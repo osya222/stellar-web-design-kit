@@ -116,7 +116,6 @@ const ProductShowcase: React.FC = () => {
                 <div className="absolute inset-x-0 bottom-0 bg-white/80 py-4 border-t">
                   <div className="p-4 text-black">
                     <h3 className="text-xl font-bold">{category.name}</h3>
-                    <p className="text-sm font-medium">{category.description}</p>
                   </div>
                 </div>
               </div>
