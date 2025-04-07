@@ -197,6 +197,7 @@ export const products: Product[] = [
     packaging: "10*1", 
     catchDate: "Июнь-август",
     manufacturer: "Чили", 
+    image: "https://cdn.rf-sp.ru/20/4d/204de0ee9a99ba30acc7c61466b0389d.jpg",
     prices: {
       smallWholesale: 391.9,
       mediumWholesale: 387.9,
@@ -211,6 +212,7 @@ export const products: Product[] = [
     packaging: "10*0,5", 
     catchDate: "Апрель/май/ноябрь",
     manufacturer: "Чили", 
+    image: "https://cdn.rf-sp.ru/20/4d/204de0ee9a99ba30acc7c61466b0389d.jpg",
     prices: {
       smallWholesale: 483.9,
       mediumWholesale: 479.9,
