@@ -2,7 +2,7 @@
 import React from 'react';
 import ProductCard from './ProductCard';
 import { Product } from '@/types/product';
-import { Fish, ShellIcon, Soup, ChefHat, Egg, Package, Utensils } from "lucide-react";
+import { Fish, ShellIcon, Soup, ChefHat, Egg, Package, Utensils, Crab } from "lucide-react";
 import { getCategoryByName } from '@/data/products';
 
 interface ProductsByCategoryProps {
@@ -22,9 +22,12 @@ const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({ category, produ
       case 'Лосось (Чили)':
       case 'Форель (Турция)':
       case 'Другие виды рыбы':
+      case 'Филе рыбы':
         return <Fish className="w-6 h-6 mr-2 inline-block text-blue-600" />;
       case 'Креветки и морепродукты':
         return <ShellIcon className="w-6 h-6 mr-2 inline-block text-pink-500" />;
+      case 'Мидии':
+        return <Crab className="w-6 h-6 mr-2 inline-block text-amber-600" />;
       case 'Полуфабрикаты':
         return <ChefHat className="w-6 h-6 mr-2 inline-block text-orange-500" />;
       case 'Икра':

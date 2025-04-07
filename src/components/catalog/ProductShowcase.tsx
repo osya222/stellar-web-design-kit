@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Fish, ShellIcon, Egg, Utensils } from "lucide-react";
+import { ArrowRight, Fish, ShellIcon, Egg, Utensils, ChefHat, Crab } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -23,9 +23,14 @@ const ProductShowcase: React.FC = () => {
       case 'Лосось (Чили)':
       case 'Форель (Турция)':
       case 'Другие виды рыбы':
+      case 'Филе рыбы':
         return <Fish className="w-12 h-12 text-blue-600" />;
       case 'Креветки и морепродукты':
         return <ShellIcon className="w-12 h-12 text-pink-500" />;
+      case 'Мидии':
+        return <Crab className="w-12 h-12 text-amber-600" />;
+      case 'Полуфабрикаты':
+        return <ChefHat className="w-12 h-12 text-orange-500" />;
       case 'Икра':
         return <Egg className="w-12 h-12 text-red-500" />;
       case 'Деликатесы':
@@ -72,8 +77,8 @@ const ProductShowcase: React.FC = () => {
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold mb-8 text-center">Наша продукция</h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
-          {productCategories.map((category, index) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {productCategories.slice(0, 6).map((category, index) => (
             <div key={index} className="overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow">
               <div className="relative h-60 bg-blue-50 flex items-center justify-center">
                 {category.image ? (
