@@ -1,12 +1,11 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
-import { Fish, ShellIcon, Soup, GanttChart, ShoppingCart, ImageOff, Egg, Package, Utensils } from "lucide-react";
+import { Fish, ShellIcon, Soup, GanttChart, ShoppingCart, Egg, Package, Utensils } from "lucide-react";
 import { useCart } from '@/context/CartContext';
-import { getProductImage } from '@/data/productImages';
 
 interface ProductCardProps {
   product: Product;
@@ -14,7 +13,6 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
-  const [imageError, setImageError] = useState(false);
   
   // Функция для выбора иконки в зависимости от категории товара
   const renderProductIcon = (category: string) => {
@@ -42,35 +40,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     addToCart(product);
   };
 
-  const fallbackImage = "https://shopprodukt.ru/upload/iblock/acd/acdf4783cc62ac6819d55dc029479800.jpg";
-
-  // Get appropriate image for this product or use the default one
-  const productImageUrl = getProductImage(product) || fallbackImage;
-
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
       <div className="h-48 bg-blue-50 flex items-center justify-center relative overflow-hidden">
-        {!imageError ? (
-          <img 
-            src={productImageUrl}
-            alt={product.name}
-            className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
-            onError={(e) => {
-              setImageError(true);
-              const target = e.target as HTMLImageElement;
-              target.onerror = null; // Prevent infinite error loops
-              target.src = fallbackImage;
-            }}
-          />
-        ) : (
-          <div className="flex flex-col items-center justify-center w-full h-full">
-            {renderProductIcon(product.category)}
-            <span className="text-xs text-gray-500 mt-2">
-              <ImageOff className="w-4 h-4 inline mr-1" />
-              Изображение недоступно
-            </span>
-          </div>
-        )}
+        <div className="flex flex-col items-center justify-center w-full h-full">
+          {renderProductIcon(product.category)}
+          <span className="text-sm text-gray-500 mt-2">
+            {product.category}
+          </span>
+        </div>
       </div>
       <CardContent className="p-4 flex flex-col flex-grow">
         <h3 className="font-bold line-clamp-2 h-12 mb-2" title={product.name}>

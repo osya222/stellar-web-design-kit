@@ -1,8 +1,7 @@
 
 import React from 'react';
-import { productImages } from '@/data/productImages';
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Fish, ShellIcon, Egg, Utensils } from "lucide-react";
 import { Link } from "react-router-dom";
 import {
   Carousel,
@@ -14,36 +13,61 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 
 const ProductShowcase: React.FC = () => {
-  // Fallback image that we know works
-  const fallbackImage = "https://ribnaya-baza.ru/upload/iblock/782/hgpc16db56z0bcgnsh6aytum7msk7dqj.jpeg";
-  
-  // Extract some featured images from our product images collection
-  const featuredImages = [
+  // Featured categories
+  const featuredCategories = [
     { 
       category: "Лосось (Чили)", 
-      title: "Лосось премиум качества", 
-      image: "https://ribnaya-baza.ru/upload/iblock/782/hgpc16db56z0bcgnsh6aytum7msk7dqj.jpeg",
+      title: "Лосось премиум качества",
+      icon: <Fish className="w-16 h-16 text-blue-600" />,
       description: "Свежемороженый лосось прямыми поставками из Чили"
     },
     { 
       category: "Креветки и морепродукты", 
-      title: "Королевские креветки", 
-      image: productImages["Креветки и морепродукты"]["Креветка"] || fallbackImage,
+      title: "Королевские креветки",
+      icon: <ShellIcon className="w-16 h-16 text-pink-500" />,
       description: "Отборные морепродукты высшего качества"
     },
     { 
       category: "Икра", 
-      title: "Икра красная", 
-      image: productImages["Икра"]["Икра красная"] || fallbackImage,
+      title: "Икра красная",
+      icon: <Egg className="w-16 h-16 text-red-500" />,
       description: "Икра лососевых рыб, высший сорт"
     },
     { 
       category: "Деликатесы", 
-      title: "Рыбные деликатесы", 
-      image: productImages["Деликатесы"]["Копченый лосось"] || fallbackImage,
+      title: "Рыбные деликатесы",
+      icon: <Utensils className="w-16 h-16 text-purple-500" />,
       description: "Изысканные деликатесы из морепродуктов"
     }
   ];
+
+  // Featured products for carousel
+  const popularProducts = [
+    { name: "Лосось с/м", category: "Лосось (Чили)" },
+    { name: "Форель охлажденная", category: "Форель (Турция)" },
+    { name: "Креветка тигровая", category: "Креветки и морепродукты" },
+    { name: "Икра красная", category: "Икра" },
+    { name: "Копченый лосось", category: "Деликатесы" },
+    { name: "Филе трески", category: "Другие виды рыбы" }
+  ];
+
+  // Иконки для категорий
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'Лосось (Чили)':
+      case 'Форель (Турция)':
+      case 'Другие виды рыбы':
+        return <Fish className="w-12 h-12 text-blue-600" />;
+      case 'Креветки и морепродукты':
+        return <ShellIcon className="w-12 h-12 text-pink-500" />;
+      case 'Икра':
+        return <Egg className="w-12 h-12 text-red-500" />;
+      case 'Деликатесы':
+        return <Utensils className="w-12 h-12 text-purple-500" />;
+      default:
+        return <Fish className="w-12 h-12 text-blue-300" />;
+    }
+  };
 
   return (
     <section className="py-12 bg-white">
@@ -51,20 +75,11 @@ const ProductShowcase: React.FC = () => {
         <h2 className="text-3xl font-bold mb-8 text-center">Наша продукция</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {featuredImages.map((item, index) => (
+          {featuredCategories.map((item, index) => (
             <div key={index} className="overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-              <div className="relative h-60 overflow-hidden">
-                <img 
-                  src={item.image} 
-                  alt={item.title} 
-                  className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.onerror = null;
-                    target.src = fallbackImage;
-                  }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
+              <div className="relative h-60 bg-blue-50 flex items-center justify-center">
+                {item.icon}
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent py-4">
                   <div className="p-4 text-white">
                     <p className="text-sm font-medium opacity-75">{item.category}</p>
                     <h3 className="text-xl font-bold">{item.title}</h3>
@@ -85,35 +100,21 @@ const ProductShowcase: React.FC = () => {
           <h3 className="text-2xl font-bold mb-6 text-center">Популярные товары</h3>
           <Carousel className="mx-auto max-w-5xl">
             <CarouselContent>
-              {Object.entries(productImages).flatMap(([category, images]) => 
-                Object.entries(images)
-                  .filter(([key]) => key !== 'default')
-                  .slice(0, 2)
-                  .map(([name, url]) => (
-                    <CarouselItem key={`${category}-${name}`} className="md:basis-1/2 lg:basis-1/3">
-                      <Card className="border-0 shadow-md">
-                        <CardContent className="p-0">
-                          <div className="relative h-64 overflow-hidden">
-                            <img 
-                              src={url as string} 
-                              alt={name} 
-                              className="w-full h-full object-cover transition-all hover:scale-110"
-                              onError={(e) => {
-                                const target = e.target as HTMLImageElement;
-                                target.onerror = null;
-                                target.src = fallbackImage;
-                              }}
-                            />
-                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
-                              <h4 className="text-white font-semibold">{name}</h4>
-                              <p className="text-white/70 text-sm">{category}</p>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </CarouselItem>
-                  ))
-              )}
+              {popularProducts.map((product, index) => (
+                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
+                  <Card className="border-0 shadow-md">
+                    <CardContent className="p-0">
+                      <div className="relative h-64 bg-blue-50 flex items-center justify-center">
+                        {getCategoryIcon(product.category)}
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
+                          <h4 className="text-white font-semibold">{product.name}</h4>
+                          <p className="text-white/70 text-sm">{product.category}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </CarouselItem>
+              ))}
             </CarouselContent>
             <CarouselPrevious className="left-1" />
             <CarouselNext className="right-1" />
