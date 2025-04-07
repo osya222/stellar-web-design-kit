@@ -42,7 +42,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     addToCart(product);
   };
 
-  const fallbackImage = "https://ribnaya-baza.ru/upload/iblock/782/hgpc16db56z0bcgnsh6aytum7msk7dqj.jpeg";
+  const fallbackImage = "https://shopprodukt.ru/upload/iblock/acd/acdf4783cc62ac6819d55dc029479800.jpg";
 
   // Get appropriate image for this product or use the default one
   const productImageUrl = getProductImage(product) || fallbackImage;

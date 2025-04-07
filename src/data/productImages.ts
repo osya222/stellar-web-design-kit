@@ -1,87 +1,88 @@
+
 // Map of product images for different categories and product types
 export const productImages = {
   // Лосось
   "Лосось (Чили)": {
-    default: "https://ribnaya-baza.ru/upload/iblock/782/hgpc16db56z0bcgnsh6aytum7msk7dqj.jpeg",
-    "5-6 кг": "https://ribnaya-baza.ru/upload/iblock/782/hgpc16db56z0bcgnsh6aytum7msk7dqj.jpeg",
-    "6-7 кг": "https://ribnaya-baza.ru/upload/iblock/782/hgpc16db56z0bcgnsh6aytum7msk7dqj.jpeg",
-    "7-8 кг": "https://ribnaya-baza.ru/upload/iblock/782/hgpc16db56z0bcgnsh6aytum7msk7dqj.jpeg",
-    "Филе лосося": "https://seafood-shop.ru/upload/iblock/5c2/5c2e7f25ff014661a34057a7635fa1e4.jpg"
+    default: "https://shopprodukt.ru/upload/iblock/acd/acdf4783cc62ac6819d55dc029479800.jpg",
+    "5-6 кг": "https://shopprodukt.ru/upload/iblock/acd/acdf4783cc62ac6819d55dc029479800.jpg",
+    "6-7 кг": "https://shopprodukt.ru/upload/iblock/acd/acdf4783cc62ac6819d55dc029479800.jpg",
+    "7-8 кг": "https://shopprodukt.ru/upload/iblock/acd/acdf4783cc62ac6819d55dc029479800.jpg",
+    "Филе лосося": "https://shopprodukt.ru/upload/iblock/778/778c00d53a2ddf7242fc8ad3fb01029a.jpg"
   },
   // Форель
   "Форель (Турция)": {
-    default: "https://seafood-shop.ru/upload/iblock/08a/08a4c6a935a0ed33e08e3fb9f5d747e5.jpg",
-    "1,3-1,8 кг": "https://seafood-shop.ru/upload/iblock/6e5/6e57e5309211a61d21d48da7a2d58692.jpg",
-    "1,8-2,7 кг": "https://seafood-shop.ru/upload/iblock/f3f/f3fa1460bfd7fc3aeb04af303b5c6c86.jpg",
-    "2,7-3,6 кг": "https://seafood-shop.ru/upload/iblock/636/636548f92485413e287573c669d66149.jpg",
-    "Стейк форели": "https://seafood-shop.ru/upload/iblock/ba3/ba3427fc93a2b41fa33413a661f4e443.jpg",
-    "Филе форели": "https://seafood-shop.ru/upload/iblock/6ce/6ce8db7a0b1873ef0ec3ad620968a760.jpg"
+    default: "https://shopprodukt.ru/upload/iblock/737/7377ffdd0f22e5cfb9182cb5d74064a7.jpg",
+    "1,3-1,8 кг": "https://shopprodukt.ru/upload/iblock/737/7377ffdd0f22e5cfb9182cb5d74064a7.jpg",
+    "1,8-2,7 кг": "https://shopprodukt.ru/upload/iblock/737/7377ffdd0f22e5cfb9182cb5d74064a7.jpg",
+    "2,7-3,6 кг": "https://shopprodukt.ru/upload/iblock/737/7377ffdd0f22e5cfb9182cb5d74064a7.jpg",
+    "Стейк форели": "https://shopprodukt.ru/upload/iblock/018/0184cc12645c3d0b6edb887e74d2b3d8.jpg",
+    "Филе форели": "https://shopprodukt.ru/upload/iblock/279/2795f8c53be2f93c0c3051711485cfdb.jpg"
   },
   // Креветки
   "Креветки и морепродукты": {
-    default: "https://seafood-shop.ru/upload/iblock/987/9874bfea750650f5d75486521c639dc8.jpg",
-    "Креветка": "https://seafood-shop.ru/upload/iblock/0c8/0c854481ee957e11c2f5cc7dedfa2c47.jpg",
-    "Лангустины": "https://seafood-shop.ru/upload/iblock/c7f/c7fcb114ba98928da95897b89a393bfc.jpg",
-    "Медальоны": "https://seafood-shop.ru/upload/iblock/5ad/5ad807ab1b18497ae80af0b36779cd26.jpg",
-    "Мясо мидий": "https://seafood-shop.ru/upload/iblock/e2f/e2f607016c778d4a0a55aa6726d1dd96.jpg",
-    "Осьминог": "https://seafood-shop.ru/upload/iblock/88b/88b29e4eebf061cd9d439b4ec76ff5e7.jpg",
-    "Кальмары": "https://seafood-shop.ru/upload/iblock/443/443f9261702b49c5cc5305a3fbd91f13.jpg",
-    "Мидии": "https://seafood-shop.ru/upload/iblock/ab2/ab2466c1b1dfbf02ba37c9fcc0e66fdc.jpg",
-    "Устрицы": "https://seafood-shop.ru/upload/iblock/08e/08ef22cb55883199d63b5b7531a4adf4.jpg",
-    "Гребешки": "https://seafood-shop.ru/upload/iblock/bb9/bb9dbe29e2c6156623d107d3cfb50c86.jpg",
-    "Раки": "https://seafood-shop.ru/upload/iblock/e85/e85a0481ad2b13ccbbb2304a0e11792f.jpg"
+    default: "https://shopprodukt.ru/upload/iblock/26e/26e293e587b37abd59f202cabf8c07a2.png",
+    "Креветка": "https://shopprodukt.ru/upload/iblock/26e/26e293e587b37abd59f202cabf8c07a2.png",
+    "Лангустины": "https://shopprodukt.ru/upload/iblock/8cd/8cd5909349808e4098538714e92cf0de.jpg",
+    "Медальоны": "https://shopprodukt.ru/upload/iblock/156/156af1204def413d85e0a4ae1b26b51f.jpg",
+    "Мясо мидий": "https://shopprodukt.ru/upload/iblock/9a4/9a448d2696ae921ae0b801eff324046f.jpg",
+    "Осьминог": "https://shopprodukt.ru/upload/iblock/517/517027fee7542c9f49c1601afa5e05cf.jpg",
+    "Кальмары": "https://shopprodukt.ru/upload/iblock/3e2/3e2841f2ae4219414bc696de36502061.jpg",
+    "Мидии": "https://shopprodukt.ru/upload/iblock/9a4/9a448d2696ae921ae0b801eff324046f.jpg",
+    "Устрицы": "https://shopprodukt.ru/upload/iblock/558/5583a3f16c4732890dc379b184534c79.jpg",
+    "Гребешки": "https://shopprodukt.ru/upload/iblock/d8a/d8a558498dd7a0dae85e3d243a436099.jpg", 
+    "Раки": "https://shopprodukt.ru/upload/iblock/46c/46c2347ca0c4874b2ca9270df5c20b30.jpg"
   },
   // Другие виды рыбы
   "Другие виды рыбы": {
-    default: "https://seafood-shop.ru/upload/iblock/1bd/1bd80fbcb91dcd25486672e2cc4db623.jpg",
-    "Сорадо": "https://seafood-shop.ru/upload/iblock/be1/be141ca6c863b66578fc045a346984a5.jpg",
-    "Сибас": "https://seafood-shop.ru/upload/iblock/937/937666e672a74365b4b31072b7ec6904.jpg",
-    "Сельдь": "https://seafood-shop.ru/upload/iblock/330/33064abbad488701de9c4763bbe01788.jpg",
-    "Скумбрия": "https://seafood-shop.ru/upload/iblock/b69/b6911f809aabcbf82a7d514472a8130c.jpg",
-    "Кек тунца": "https://seafood-shop.ru/upload/iblock/e94/e947083d52fe417bd131a9c9e962d911.jpg",
-    "Камбала": "https://seafood-shop.ru/upload/iblock/f24/f247f7dc1a19650064d650891b558aae.jpg",
-    "Окунь": "https://seafood-shop.ru/upload/iblock/603/6033c4d0ebad2b7be8c0e13626e4fc30.jpg",
-    "Минтай": "https://seafood-shop.ru/upload/iblock/35a/35a6c5e8f69ed8c5561ddd8e5aead19d.jpg",
-    "Тунец": "https://seafood-shop.ru/upload/iblock/db5/db5ab1eb0f639dd6ea8d7ff7e9ccb06a.jpg",
-    "Филе пангасиуса": "https://seafood-shop.ru/upload/iblock/9c4/9c491ad84e940bd87d3495f3fc22973d.jpg",
-    "Филе тилапии": "https://seafood-shop.ru/upload/iblock/e84/e84ac32af551ed543de8d9577cb2293a.jpg",
-    "Филе трески": "https://seafood-shop.ru/upload/iblock/cbe/cbedb1ccf416a6384d16ec202f2c4670.jpg",
-    "Филе пикши": "https://seafood-shop.ru/upload/iblock/0f7/0f77094866b33e9b48152d68497fa7ef.jpg",
-    "Дорадо": "https://seafood-shop.ru/upload/iblock/9ea/9eabef9b95301650befcc9380d3ea2c4.jpg",
-    "Палтус": "https://seafood-shop.ru/upload/iblock/1c1/1c15435ac9ab49713d3d1c0d7cbabe22.jpg",
-    "Карп": "https://seafood-shop.ru/upload/iblock/489/489a506537c659c5af778a0d29bfe30c.jpg",
-    "Щука": "https://seafood-shop.ru/upload/iblock/5ce/5cee29979bd0c3bd4d8e685c05808d14.jpg"
+    default: "https://shopprodukt.ru/upload/iblock/b82/b822fe5773a655c22045e123be08523d.jpg",
+    "Сорадо": "https://shopprodukt.ru/upload/iblock/e8f/e8fcd1979e9d3a9a90d01901172b4cb6.jpg",
+    "Сибас": "https://shopprodukt.ru/upload/iblock/e8f/e8fcd1979e9d3a9a90d01901172b4cb6.jpg",
+    "Сельдь": "https://shopprodukt.ru/upload/iblock/a05/a0581750ce9b0280240f4a26ad718b5e.jpg",
+    "Скумбрия": "https://shopprodukt.ru/upload/iblock/c75/c75da782030ec301db8c244e112f435a.jpg",
+    "Кек тунца": "https://shopprodukt.ru/upload/iblock/270/270f64ed0a574cf432b3af39a9fb94c9.jpg",
+    "Камбала": "https://shopprodukt.ru/upload/iblock/fef/fef70245f8dc8f76f455450edeb1f887.jpg",
+    "Окунь": "https://shopprodukt.ru/upload/iblock/d93/d93ce0fbbb6edcf70696d9b781a207b4.jpg",
+    "Минтай": "https://shopprodukt.ru/upload/iblock/c86/c8623854985a0a357f8fb6f3670b7c16.jpg",
+    "Тунец": "https://shopprodukt.ru/upload/iblock/270/270f64ed0a574cf432b3af39a9fb94c9.jpg",
+    "Филе пангасиуса": "https://shopprodukt.ru/upload/iblock/b82/b822fe5773a655c22045e123be08523d.jpg",
+    "Филе тилапии": "https://shopprodukt.ru/upload/iblock/4ce/4ce8b45cd00776a0612e954d57cc4978.jpg",
+    "Филе трески": "https://shopprodukt.ru/upload/iblock/2ef/2ef6530f6e73d883cd271e984675a340.jpg",
+    "Филе пикши": "https://shopprodukt.ru/upload/iblock/e53/e53f539665a8c445bb2dc701792f0e9c.jpg",
+    "Дорадо": "https://shopprodukt.ru/upload/iblock/c03/c0361a28d382d6bfc99d767f856ae86e.jpg",
+    "Палтус": "https://shopprodukt.ru/upload/iblock/28c/28c7bdb6f2e1983a2d6dc3d48a7e37db.jpg",
+    "Карп": "https://shopprodukt.ru/upload/iblock/6df/6df081f7f780eb2bb4dff0faa4db1051.jpg",
+    "Щука": "https://shopprodukt.ru/upload/iblock/b22/b22672278ffc9073eb3dbf357eb1db2a.jpg"
   },
   // Полуфабрикаты
   "Полуфабрикаты": {
-    default: "https://seafood-shop.ru/upload/iblock/174/1749b3d9d1a7edf79b3b3a7981390a29.jpg",
-    "Котлеты": "https://seafood-shop.ru/upload/iblock/309/3096cd33f0a21e3b53d60dcaaabf2857.jpg",
-    "Пельмени": "https://seafood-shop.ru/upload/iblock/6d2/6d2ce6cb5256054df565893b614767c6.jpg",
-    "Палочки": "https://seafood-shop.ru/upload/iblock/384/38490503e46a5c32da85f07667305af0.jpg",
-    "Рыбные биточки": "https://seafood-shop.ru/upload/iblock/18a/18a23d707120eb52fe155f374d364315.jpg",
-    "Рыбные наггетсы": "https://seafood-shop.ru/upload/iblock/2ca/2ca8d3438dfa112dc199bd649b2d51cc.jpg",
-    "Рыбные фрикадельки": "https://seafood-shop.ru/upload/iblock/9fc/9fc4416b17b60aae3132f8173f95e263.jpg"
+    default: "https://shopprodukt.ru/upload/iblock/577/5772fd747e3b4a0f31b117e96cb595ae.jpg",
+    "Котлеты": "https://shopprodukt.ru/upload/iblock/577/5772fd747e3b4a0f31b117e96cb595ae.jpg",
+    "Пельмени": "https://shopprodukt.ru/upload/iblock/6b6/6b60e9a2683517eb6fbd9c6fc5293bf2.jpg",
+    "Палочки": "https://shopprodukt.ru/upload/iblock/bca/bca991cfa3e7b715f08d606d4b8006ec.jpg",
+    "Рыбные биточки": "https://shopprodukt.ru/upload/iblock/577/5772fd747e3b4a0f31b117e96cb595ae.jpg",
+    "Рыбные наггетсы": "https://shopprodukt.ru/upload/iblock/3b1/3b1d5ae3f20bb3dec05eb44c5898440c.jpg",
+    "Рыбные фрикадельки": "https://shopprodukt.ru/upload/iblock/b49/b49e4a5a6e31a095a207cb27ee704dca.jpg"
   },
   // Икра
   "Икра": {
-    default: "https://seafood-shop.ru/upload/iblock/fe6/fe6d5ceb2d9b4285b5b0364269bcd985.jpg",
-    "Икра красная": "https://seafood-shop.ru/upload/iblock/d7a/d7a05307bac8c760f35acefde3d6dbd3.jpg",
-    "Икра черная": "https://seafood-shop.ru/upload/iblock/38d/38dc164b5ef17232c9b253a93f3dba8b.jpg",
-    "Икра щучья": "https://seafood-shop.ru/upload/iblock/599/599a354c21d6cc60c05c24f8ea7f2f9c.jpg"
+    default: "https://shopprodukt.ru/upload/iblock/ff3/ff37e79de7210be647e82e399c66b12d.jpg",
+    "Икра красная": "https://shopprodukt.ru/upload/iblock/ff3/ff37e79de7210be647e82e399c66b12d.jpg",
+    "Икра черная": "https://shopprodukt.ru/upload/iblock/c31/c31a063bf88ecd94fe87a49e17f43a7c.jpg",
+    "Икра щучья": "https://shopprodukt.ru/upload/iblock/b57/b57a6a5fa90c1b4c8d5171a009a711af.jpg"
   },
   // Консервы
   "Консервы": {
-    default: "https://seafood-shop.ru/upload/iblock/f4a/f4a2a391ebd2bf951beb2f4ac78024f4.jpg",
-    "Тунец": "https://seafood-shop.ru/upload/iblock/07b/07b2ee780cd9e51f6d2654cfb9e5993d.jpg",
-    "Сардины": "https://seafood-shop.ru/upload/iblock/5ad/5ad7fe3c48b91bb1bb1bd867a6b6a2d6e8c.jpg",
-    "Шпроты": "https://seafood-shop.ru/upload/iblock/9bc/9bc34853ac0a2031eca8acf0752bb384.jpg"
+    default: "https://shopprodukt.ru/upload/iblock/b9c/b9c1d31c7f6fd15b624ad3ac9e193b40.jpg",
+    "Тунец": "https://shopprodukt.ru/upload/iblock/619/619bdcc94925120c1094da8d9c653735.jpg",
+    "Сардины": "https://shopprodukt.ru/upload/iblock/9d2/9d2de508c9318de7aa910a8ab4162aec.jpg",
+    "Шпроты": "https://shopprodukt.ru/upload/iblock/b9c/b9c1d31c7f6fd15b624ad3ac9e193b40.jpg"
   },
   // Деликатесы
   "Деликатесы": {
-    default: "https://seafood-shop.ru/upload/iblock/ec8/ec87e9b5ca4e50fe28b3a0affd7b891c.jpg",
-    "Копченый лосось": "https://seafood-shop.ru/upload/iblock/1d8/1d8119ea9ebbac956fa990535807e270.jpg",
-    "Вяленая рыба": "https://seafood-shop.ru/upload/iblock/ae8/ae807f2cdd100a20af425d64352196c3.jpg",
-    "Балык": "https://seafood-shop.ru/upload/iblock/cda/cdaceeef243b0c4c213fe65bcefd02e1.jpg"
+    default: "https://shopprodukt.ru/upload/iblock/f1e/f1ebef656209d974d65239a547b57518.jpg",
+    "Копченый лосось": "https://shopprodukt.ru/upload/iblock/f1e/f1ebef656209d974d65239a547b57518.jpg",
+    "Вяленая рыба": "https://shopprodukt.ru/upload/iblock/8d5/8d5f75f7d6468b5aa47698e05cb36e59.jpg",
+    "Балык": "https://shopprodukt.ru/upload/iblock/f1e/f1ebef656209d974d65239a547b57518.jpg"
   }
 };
 
@@ -92,7 +93,7 @@ export function getProductImage(product: { category: string; name: string; size?
   
   if (!categoryImages) {
     console.log(`No images found for category: ${product.category}`);
-    return "https://seafood-shop.ru/upload/iblock/1bd/1bd80fbcb91dcd25486672e2cc4db623.jpg"; // Default fallback
+    return "https://shopprodukt.ru/upload/iblock/acd/acdf4783cc62ac6819d55dc029479800.jpg"; // Default fallback
   }
 
   // Check for specific product name matches
