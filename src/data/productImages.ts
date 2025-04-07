@@ -15,7 +15,7 @@ export const productImages: Record<string, Record<string, string>> = {
     "Лангустины": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "ЛАНГУСТИНЫ с/м L 2": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "ЛАНГУСТИНЫ с/м L 1": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
-    "ЛАНГУСТИНЫ с/м C 2": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png"
+    "ЛАНГУСТИНЫ с/м C 2": "https://cache3.youla.io/files/images/720_720_out/5d/2b/5d2b498fc15ae3b0064dc204.jpg"
   },
   "Мидии": {
     "default": "https://100foto.club/uploads/posts/2022-06/1655751628_1-100foto-club-p-golubie-midii-1.jpg"
