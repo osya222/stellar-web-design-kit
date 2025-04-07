@@ -87,11 +87,14 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Hero section without background image */}
-      <section className="relative bg-gradient-to-br from-blue-600 to-blue-800 py-20">        
+      {/* Hero section with Logo component instead of background gradient */}
+      <section className="relative py-20 bg-white">        
         <div className="container-custom text-center">
-          <h2 className="text-5xl font-bold mb-8 text-white text-shadow-lg">Свежие морепродукты оптом</h2>
-          <div className="bg-white/90 backdrop-blur-sm p-6 rounded-xl shadow-lg max-w-3xl mx-auto">
+          <div className="flex justify-center mb-12">
+            <Logo size="lg" />
+          </div>
+          <h2 className="text-5xl font-bold mb-8 text-blue-800">Свежие морепродукты оптом</h2>
+          <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl shadow-lg max-w-3xl mx-auto">
             <p className="text-xl text-gray-800 leading-relaxed">
               Широкий ассортимент качественной морской продукции с доставкой по всей России.
               Работаем с ресторанами, магазинами и оптовыми покупателями.
@@ -111,7 +114,7 @@ const Index = () => {
               variant="outline" 
               size="lg"
               onClick={handleDownloadPriceList}
-              className="border-2 border-white text-white hover:bg-white/20 bg-transparent text-lg px-8 py-6 h-auto rounded-xl shadow-md"
+              className="border-2 border-blue-700 text-blue-700 hover:bg-blue-50 bg-transparent text-lg px-8 py-6 h-auto rounded-xl shadow-md"
             >
               <Download className="mr-2 h-5 w-5" />
               Скачать прайс-лист
