@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Fish, ShellIcon, Egg, Utensils, ChefHat, Shell } from "lucide-react";
+import { ArrowRight, Fish, ShellIcon, Egg, Utensils, Shell } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -31,8 +30,6 @@ const ProductShowcase: React.FC = () => {
         return <ShellIcon className="w-12 h-12 text-black" />;
       case 'Мидии':
         return <Shell className="w-12 h-12 text-black" />;
-      case 'Полуфабрикаты':
-        return <ChefHat className="w-12 h-12 text-black" />;
       case 'Икра':
         return <Egg className="w-12 h-12 text-black" />;
       case 'Деликатесы':

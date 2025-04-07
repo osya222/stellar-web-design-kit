@@ -1,8 +1,7 @@
-
 import React from 'react';
 import ProductCard from './ProductCard';
 import { Product } from '@/types/product';
-import { Fish, ShellIcon, Soup, ChefHat, Egg, Package, Utensils, Shell } from "lucide-react";
+import { Fish, ShellIcon, Soup, Egg, Package, Utensils, Shell } from "lucide-react";
 import { getCategoryByName } from '@/data/products';
 
 interface ProductsByCategoryProps {
@@ -28,8 +27,6 @@ const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({ category, produ
         return <ShellIcon className="w-6 h-6 mr-2 inline-block text-black" />;
       case 'Мидии':
         return <Shell className="w-6 h-6 mr-2 inline-block text-black" />;
-      case 'Полуфабрикаты':
-        return <ChefHat className="w-6 h-6 mr-2 inline-block text-black" />;
       case 'Икра':
         return <Egg className="w-6 h-6 mr-2 inline-block text-black" />;
       case 'Консервы':
