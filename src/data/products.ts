@@ -497,119 +497,6 @@ export const products: Product[] = [
       largeWholesale: 484.9
     }
   },
-  // --- Полуфабрикаты ---
-  { 
-    id: 36, 
-    name: "КОТЛЕТЫ из горбуши", 
-    category: "Полуфабрикаты",
-    packaging: "7*0,45", 
-    weight: "3,15",
-    catchDate: "Декабрь",
-    manufacturer: "Уральские п/фабрикаты", 
-    prices: {
-      smallWholesale: 400.9,
-      mediumWholesale: 396.9,
-      largeWholesale: 392.9
-    }
-  },
-  { 
-    id: 37, 
-    name: "КОТЛЕТЫ из щуки", 
-    category: "Полуфабрикаты",
-    packaging: "7*0,45", 
-    weight: "3,15",
-    catchDate: "Декабрь",
-    manufacturer: "Уральские п/фабрикаты", 
-    prices: {
-      smallWholesale: 400.9,
-      mediumWholesale: 396.9,
-      largeWholesale: 392.9
-    }
-  },
-  { 
-    id: 38, 
-    name: "КОТЛЕТЫ из трески", 
-    category: "Полуфабрикаты",
-    packaging: "7*0,45", 
-    weight: "3,15",
-    catchDate: "Декабрь",
-    manufacturer: "Уральские п/фабрикаты", 
-    prices: {
-      smallWholesale: 400.9,
-      mediumWholesale: 396.9,
-      largeWholesale: 392.9
-    }
-  },
-  { 
-    id: 39, 
-    name: "ПАЛОЧКИ с МОЦАРЕЛЛОЙ", 
-    category: "Полуфабрикаты",
-    packaging: "10*1", 
-    weight: "10",
-    catchDate: "Ноябрь",
-    manufacturer: "Водный мир", 
-    prices: {
-      smallWholesale: 477.9,
-      mediumWholesale: 475.9,
-      largeWholesale: 471.9
-    }
-  },
-  { 
-    id: 40, 
-    name: "ПЕЛЬМЕНИ креветка/кальм", 
-    category: "Полуфабрикаты",
-    packaging: "7*0,45", 
-    weight: "3,15",
-    catchDate: "Ноябрь",
-    manufacturer: "Уральские п/фабрикаты", 
-    prices: {
-      smallWholesale: 471.9,
-      mediumWholesale: 463.9,
-      largeWholesale: 459.9
-    }
-  },
-  { 
-    id: 41, 
-    name: "ПЕЛЬМЕНИ с семгой", 
-    category: "Полуфабрикаты",
-    packaging: "7*0,45", 
-    weight: "3,15",
-    catchDate: "Ноябрь",
-    manufacturer: "Уральские п/фабрикаты", 
-    prices: {
-      smallWholesale: 401.9,
-      mediumWholesale: 393.9,
-      largeWholesale: 389.9
-    }
-  },
-  { 
-    id: 42, 
-    name: "ПЕЛЬМЕНИ с треской", 
-    category: "Полуфабрикаты",
-    packaging: "7*0,45", 
-    weight: "3,15",
-    catchDate: "Ноябрь",
-    manufacturer: "Уральские п/фабрикаты", 
-    prices: {
-      smallWholesale: 330.9,
-      mediumWholesale: 322.9,
-      largeWholesale: 318.9
-    }
-  },
-  { 
-    id: 43, 
-    name: "ПЕЛЬМЕНИ со щукой", 
-    category: "Полуфабрикаты",
-    packaging: "7*0,45", 
-    weight: "3,15",
-    catchDate: "Ноябрь",
-    manufacturer: "Уральские п/фабрикаты", 
-    prices: {
-      smallWholesale: 383.9,
-      mediumWholesale: 379.9,
-      largeWholesale: 375.9
-    }
-  },
   // --- Новые продукты ---
   { 
     id: 44, 
@@ -832,46 +719,11 @@ export const products: Product[] = [
       mediumWholesale: undefined,
       largeWholesale: undefined
     }
-  },
-  { 
-    id: 60, 
-    name: "Котлеты кальмаровые", 
-    category: "Полуфабрикаты",
-    packaging: "5 кг", 
-    catchDate: "Сентябрь, 24",
-    manufacturer: "«Юниант»", 
-    prices: {
-      smallWholesale: 255,
-      mediumWholesale: undefined,
-      largeWholesale: undefined
-    }
-  },
-  { 
-    id: 61, 
-    name: "Котлеты куриные", 
-    category: "Полуфабрикаты",
-    packaging: "10,5 кг", 
-    catchDate: "Сентябрь, 24",
-    manufacturer: "«Юниант»", 
-    prices: {
-      smallWholesale: 400,
-      mediumWholesale: undefined,
-      largeWholesale: undefined
-    }
-  },
-  { 
-    id: 62, 
-    name: "Котлеты лососевые", 
-    category: "Полуфабрикаты",
-    packaging: "5 кг", 
-    catchDate: "Июль, 24",
-    manufacturer: "«Юниант»", 
-    prices: {
-      smallWholesale: 240,
-      mediumWholesale: undefined,
-      largeWholesale: undefined
-    }
-  },
-  { 
-    id: 63, 
-    name: "Котлеты тресковые",
+  }
+];
+
+// Helper function to get category by name
+export const getCategoryByName = (name: string) => {
+  // Add any category-specific info here if needed
+  return { id: name.toLowerCase().replace(/\s+/g, '-') };
+};
