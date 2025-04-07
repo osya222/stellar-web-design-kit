@@ -1,4 +1,3 @@
-
 import { Product } from '@/types/product';
 
 // Другие виды рыбы products
@@ -323,6 +322,7 @@ export const otherFishProducts: Product[] = [
     packaging: "Вес", 
     catchDate: "Сент-окт, 23",
     manufacturer: "Н.Зеландия", 
+    image: "https://cdn1.ozone.ru/s3/multimedia-c/c600/6069702384.jpg",
     prices: {
       smallWholesale: 565,
       mediumWholesale: undefined,

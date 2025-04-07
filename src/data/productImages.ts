@@ -40,7 +40,8 @@ export const productImages: Record<string, Record<string, string>> = {
     "Килька с/м IQF": "https://main-cdn.sbermegamarket.ru/big1/hlr-system/288/225/654/117/212/3/100029691550b0.jpg",
     "Кижуч б/г (6-8)": "https://sun1-26.userapi.com/s/v1/ig2/D8R-fACvTmyqmghGZcQEHe8m4VIWeghxEygbT9u1UEG8OyPOJVYVIvAMITPjSTD9d39ZIOTlmYN1lJxsQTdT8Vkm.jpg",
     "Кижуч б/г (8-10)": "https://biomore.ru/upload/iblock/659/pcj7nol0d5uusgeukbdayvx28gxtdgno.jpg",
-    "Кижуч б/г (10+)": "https://biomore.ru/upload/iblock/659/pcj7nol0d5uusgeukbdayvx28gxtdgno.jpg"
+    "Кижуч б/г (10+)": "https://biomore.ru/upload/iblock/659/pcj7nol0d5uusgeukbdayvx28gxtdgno.jpg",
+    "Дори Б/Г": "https://cdn1.ozone.ru/s3/multimedia-c/c600/6069702384.jpg"
   },
   "Филе рыбы": {
     "default": "https://avatars.mds.yandex.net/get-mpic/5242010/img_id4824576176666087310.jpeg/900x1200"
