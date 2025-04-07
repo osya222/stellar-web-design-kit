@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Fish, ShellIcon, Egg, Utensils, Shell } from "lucide-react";
+import { ArrowRight, Fish, ShellIcon, Utensils, Shell } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -26,7 +25,7 @@ const ProductShowcase: React.FC = () => {
     id: name.toLowerCase().replace(/\s+/g, '-'), 
     name,
     description: `Высококачественная продукция категории "${name}"`
-  })).filter(category => category.name !== "Полуфабрикаты").slice(0, 6);
+  })).filter(category => category.name !== "Полуфабрикаты" && category.name !== "Икра").slice(0, 6);
 
   // Иконки для категорий
   const getCategoryIcon = (category: string) => {
@@ -40,8 +39,6 @@ const ProductShowcase: React.FC = () => {
         return <ShellIcon className="w-12 h-12 text-black" />;
       case 'Мидии':
         return <Shell className="w-12 h-12 text-black" />;
-      case 'Икра':
-        return <Egg className="w-12 h-12 text-black" />;
       case 'Деликатесы':
         return <Utensils className="w-12 h-12 text-black" />;
       default:

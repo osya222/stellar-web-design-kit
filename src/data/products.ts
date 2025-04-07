@@ -641,7 +641,7 @@ export const products: Product[] = [
   { 
     id: 54, 
     name: "Икра сельди в ястыках", 
-    category: "Икра",
+    category: "Деликатесы",  // Changed from "Икра" to "Деликатесы"
     packaging: "12 кг", 
     catchDate: "Апрель, 24",
     manufacturer: "Ряжская РПК", 
