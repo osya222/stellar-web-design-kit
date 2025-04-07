@@ -37,7 +37,8 @@ export const productImages: Record<string, Record<string, string>> = {
     "Вомер н/р": "https://i0.wp.com/xn--80agnucfc0a.xn--p1ai/wp-content/uploads/2018/10/vomer___.jpg?fit=600%2C518&ssl=1",
     "Камбала б/г IQF": "https://rybexpert.ru/wp-content/uploads/2023/12/kambala-1.jpg",
     "КАМБАЛА б/г штучная": "https://rybexpert.ru/wp-content/uploads/2023/12/kambala-1.jpg",
-    "Килька с/м IQF": "https://main-cdn.sbermegamarket.ru/big1/hlr-system/288/225/654/117/212/3/100029691550b0.jpg"
+    "Килька с/м IQF": "https://main-cdn.sbermegamarket.ru/big1/hlr-system/288/225/654/117/212/3/100029691550b0.jpg",
+    "Кижуч б/г (6-8)": "https://sun1-26.userapi.com/s/v1/ig2/D8R-fACvTmyqmghGZcQEHe8m4VIWeghxEygbT9u1UEG8OyPOJVYVIvAMITPjSTD9d39ZIOTlmYN1lJxsQTdT8Vkm.jpg"
   },
   "Филе рыбы": {
     "default": "https://avatars.mds.yandex.net/get-mpic/5242010/img_id4824576176666087310.jpeg/900x1200"

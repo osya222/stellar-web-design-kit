@@ -393,6 +393,7 @@ export const otherFishProducts: Product[] = [
     packaging: "вес", 
     catchDate: "Август, 24",
     manufacturer: "Чили", 
+    image: "https://sun1-26.userapi.com/s/v1/ig2/D8R-fACvTmyqmghGZcQEHe8m4VIWeghxEygbT9u1UEG8OyPOJVYVIvAMITPjSTD9d39ZIOTlmYN1lJxsQTdT8Vkm.jpg",
     prices: {
       smallWholesale: 1140,
       mediumWholesale: undefined,
