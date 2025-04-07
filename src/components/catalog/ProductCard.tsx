@@ -42,12 +42,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     addToCart(product);
   };
 
-  const resetImageError = () => {
-    setImageError(false);
-  };
+  const fallbackImage = "https://ribnaya-baza.ru/upload/iblock/782/hgpc16db56z0bcgnsh6aytum7msk7dqj.jpeg";
 
-  // Get appropriate image for this product
-  const productImageUrl = getProductImage(product);
+  // Get appropriate image for this product or use the default one
+  const productImageUrl = getProductImage(product) || fallbackImage;
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
@@ -58,16 +56,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             alt={product.name}
             className="h-full w-full object-cover transition-transform duration-300 hover:scale-105"
             onError={(e) => {
-              console.log('Image failed to load:', productImageUrl);
               setImageError(true);
-              // Try to reload the image once after a delay
-              setTimeout(() => {
-                const target = e.target as HTMLImageElement;
-                const newUrl = `${productImageUrl}?retry=${Date.now()}`;
-                target.src = newUrl;
-              }, 1000);
+              const target = e.target as HTMLImageElement;
+              target.onerror = null; // Prevent infinite error loops
+              target.src = fallbackImage;
             }}
-            onLoad={resetImageError}
           />
         ) : (
           <div className="flex flex-col items-center justify-center w-full h-full">

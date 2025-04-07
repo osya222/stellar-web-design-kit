@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { productImages } from '@/data/productImages';
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,9 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 
 const ProductShowcase: React.FC = () => {
+  // Fallback image that we know works
+  const fallbackImage = "https://ribnaya-baza.ru/upload/iblock/782/hgpc16db56z0bcgnsh6aytum7msk7dqj.jpeg";
+  
   // Extract some featured images from our product images collection
   const featuredImages = [
     { 
@@ -24,19 +28,19 @@ const ProductShowcase: React.FC = () => {
     { 
       category: "Креветки и морепродукты", 
       title: "Королевские креветки", 
-      image: productImages["Креветки и морепродукты"]["Креветка"],
+      image: productImages["Креветки и морепродукты"]["Креветка"] || fallbackImage,
       description: "Отборные морепродукты высшего качества"
     },
     { 
       category: "Икра", 
       title: "Икра красная", 
-      image: productImages["Икра"]["Икра красная"],
+      image: productImages["Икра"]["Икра красная"] || fallbackImage,
       description: "Икра лососевых рыб, высший сорт"
     },
     { 
       category: "Деликатесы", 
       title: "Рыбные деликатесы", 
-      image: productImages["Деликатесы"]["Копченый лосось"],
+      image: productImages["Деликатесы"]["Копченый лосось"] || fallbackImage,
       description: "Изысканные деликатесы из морепродуктов"
     }
   ];
@@ -57,7 +61,7 @@ const ProductShowcase: React.FC = () => {
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.onerror = null;
-                    target.src = "https://seafood-shop.ru/upload/iblock/1bd/1bd80fbcb91dcd25486672e2cc4db623.jpg";
+                    target.src = fallbackImage;
                   }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end">
@@ -97,7 +101,7 @@ const ProductShowcase: React.FC = () => {
                               onError={(e) => {
                                 const target = e.target as HTMLImageElement;
                                 target.onerror = null;
-                                target.src = "https://seafood-shop.ru/upload/iblock/1bd/1bd80fbcb91dcd25486672e2cc4db623.jpg";
+                                target.src = fallbackImage;
                               }}
                             />
                             <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent p-4">
