@@ -1,4 +1,3 @@
-
 // Изображения продуктов по категориям
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
@@ -21,7 +20,8 @@ export const productImages: Record<string, Record<string, string>> = {
     "default": "https://100foto.club/uploads/posts/2022-06/1655751628_1-100foto-club-p-golubie-midii-1.jpg"
   },
   "Другие виды рыбы": {
-    "default": "https://cdnstatic.rg.ru/uploads/images/123/81/13/26.jpg"
+    "default": "https://cdnstatic.rg.ru/uploads/images/123/81/13/26.jpg",
+    "Сельдь н/р": "https://ekorfish.com/upload/iblock/88e/nl9m3axc369helmz7z5earvk8c5rqtip.jpg"
   },
   "Филе рыбы": {
     "default": "https://avatars.mds.yandex.net/get-mpic/5242010/img_id4824576176666087310.jpeg/900x1200"
