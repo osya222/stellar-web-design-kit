@@ -20,6 +20,9 @@ export const productImages: Record<string, Record<string, string>> = {
   },
   "Другие виды рыбы": {
     "default": "https://cdnstatic.rg.ru/uploads/images/123/81/13/26.jpg"
+  },
+  "Филе рыбы": {
+    "default": "https://avatars.mds.yandex.net/get-mpic/5242010/img_id4824576176666087310.jpeg/900x1200"
   }
 };
 
