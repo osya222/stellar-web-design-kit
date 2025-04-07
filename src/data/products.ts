@@ -1,4 +1,3 @@
-
 import { Product } from '@/types/product';
 
 // Данные о продуктах
@@ -610,56 +609,269 @@ export const products: Product[] = [
       mediumWholesale: 379.9,
       largeWholesale: 375.9
     }
-  }
-];
-
-// Категории продуктов
-export const productCategories = [
-  {
-    id: "lososs-chili",
-    name: "Лосось (Чили)",
-    description: "Свежемороженый лосось прямыми поставками из Чили",
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
   },
-  {
-    id: "forel-turkey",
-    name: "Форель (Турция)",
-    description: "Свежемороженая форель морская высшего качества",
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
+  // --- Новые продукты ---
+  { 
+    id: 44, 
+    name: "Барабулька н/р", 
+    category: "Другие виды рыбы",
+    size: "100 гр+", 
+    packaging: "вес", 
+    catchDate: "Апрель, 24",
+    manufacturer: "Мавритания", 
+    prices: {
+      smallWholesale: 350,
+      mediumWholesale: undefined,
+      largeWholesale: undefined
+    }
   },
-  {
-    id: "krevetki-i-moreprodukty",
-    name: "Креветки и морепродукты",
-    description: "Широкий ассортимент свежих и замороженных креветок и морепродуктов",
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
+  { 
+    id: 45, 
+    name: "Вомер н/р", 
+    category: "Другие виды рыбы",
+    size: "100-150 гр", 
+    packaging: "10 кг", 
+    catchDate: "Апрель, 24",
+    manufacturer: "Эквадор", 
+    prices: {
+      smallWholesale: 280,
+      mediumWholesale: undefined,
+      largeWholesale: undefined
+    }
   },
-  {
-    id: "midii",
-    name: "Мидии",
-    description: "Вкусные и полезные мидии в различных видах",
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
+  { 
+    id: 46, 
+    name: "Вомер н/р", 
+    category: "Другие виды рыбы",
+    size: "150-200 гр", 
+    packaging: "10 кг", 
+    catchDate: "Апрель, 24",
+    manufacturer: "Эквадор", 
+    prices: {
+      smallWholesale: 335,
+      mediumWholesale: undefined,
+      largeWholesale: undefined
+    }
   },
-  {
-    id: "drugie-vidy-ryby",
-    name: "Другие виды рыбы",
-    description: "Разнообразие свежемороженой рыбы высокого качества",
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
+  { 
+    id: 47, 
+    name: "Вомер н/р", 
+    category: "Другие виды рыбы",
+    size: "200-300 гр", 
+    packaging: "10 кг", 
+    catchDate: "Апрель, 24",
+    manufacturer: "Эквадор", 
+    prices: {
+      smallWholesale: 425,
+      mediumWholesale: undefined,
+      largeWholesale: undefined
+    }
   },
-  {
-    id: "file-ryby",
-    name: "Филе рыбы",
-    description: "Филе различных видов рыб, готовое к приготовлению",
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
+  { 
+    id: 48, 
+    name: "Горбуша б/г", 
+    category: "Другие виды рыбы",
+    size: "1 кг+", 
+    packaging: "22 кг", 
+    catchDate: "Июль, 24",
+    manufacturer: "Океан", 
+    prices: {
+      smallWholesale: 458,
+      mediumWholesale: undefined,
+      largeWholesale: undefined
+    }
   },
-  {
-    id: "polufabrikaty",
-    name: "Полуфабрикаты",
-    description: "Готовые рыбные полуфабрикаты для быстрого приготовления",
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
-  }
-];
-
-// Функция для получения категории по имени
-export function getCategoryByName(categoryName: string) {
-  return productCategories.find(category => category.name === categoryName);
-}
+  { 
+    id: 49, 
+    name: "Гренадер-тушка", 
+    category: "Другие виды рыбы",
+    size: "200-500 гр", 
+    packaging: "вес", 
+    catchDate: "Июль, 24",
+    manufacturer: "Аргентина", 
+    prices: {
+      smallWholesale: 225,
+      mediumWholesale: undefined,
+      largeWholesale: undefined
+    }
+  },
+  { 
+    id: 50, 
+    name: "Гренадер-тушка", 
+    category: "Другие виды рыбы",
+    size: "500-1500 гр", 
+    packaging: "вес", 
+    catchDate: "Июль, 24",
+    manufacturer: "Аргентина", 
+    prices: {
+      smallWholesale: 265,
+      mediumWholesale: undefined,
+      largeWholesale: undefined
+    }
+  },
+  { 
+    id: 51, 
+    name: "Дорадо н/р", 
+    category: "Другие виды рыбы",
+    size: "400-600 гр", 
+    packaging: "5 кг", 
+    catchDate: "Май, 24",
+    manufacturer: "Турция", 
+    prices: {
+      smallWholesale: 880,
+      mediumWholesale: undefined,
+      largeWholesale: undefined
+    }
+  },
+  { 
+    id: 52, 
+    name: "Дори Б/Г", 
+    category: "Другие виды рыбы",
+    size: "420 гр+", 
+    packaging: "Вес", 
+    catchDate: "Сент-окт, 23",
+    manufacturer: "Н.Зеландия", 
+    prices: {
+      smallWholesale: 565,
+      mediumWholesale: undefined,
+      largeWholesale: undefined
+    }
+  },
+  { 
+    id: 53, 
+    name: "Игла н/р", 
+    category: "Другие виды рыбы",
+    size: "300-500 гр", 
+    packaging: "10 кг", 
+    catchDate: "Июнь, 24",
+    manufacturer: "Эквадор", 
+    prices: {
+      smallWholesale: 330,
+      mediumWholesale: undefined,
+      largeWholesale: undefined
+    }
+  },
+  { 
+    id: 54, 
+    name: "Икра сельди в ястыках", 
+    category: "Икра",
+    packaging: "12 кг", 
+    catchDate: "Апрель, 24",
+    manufacturer: "Ряжская РПК", 
+    prices: {
+      smallWholesale: 455,
+      mediumWholesale: undefined,
+      largeWholesale: undefined
+    }
+  },
+  { 
+    id: 55, 
+    name: "Камбала б/г IQF", 
+    category: "Другие виды рыбы",
+    size: "500-1000 гр", 
+    packaging: "20 кг", 
+    catchDate: "Март, 24",
+    manufacturer: "Норд Вест", 
+    prices: {
+      smallWholesale: 282,
+      mediumWholesale: undefined,
+      largeWholesale: undefined
+    }
+  },
+  { 
+    id: 56, 
+    name: "Килька с/м IQF", 
+    category: "Другие виды рыбы",
+    packaging: "15 кг", 
+    catchDate: "Декабрь, 24",
+    manufacturer: "«Балт Иней»", 
+    prices: {
+      smallWholesale: 192,
+      mediumWholesale: undefined,
+      largeWholesale: undefined
+    }
+  },
+  { 
+    id: 57, 
+    name: "Кижуч б/г (6-8)", 
+    category: "Другие виды рыбы",
+    size: "2,7-3,6 кг", 
+    packaging: "вес", 
+    catchDate: "Август, 24",
+    manufacturer: "Чили", 
+    prices: {
+      smallWholesale: 1140,
+      mediumWholesale: undefined,
+      largeWholesale: undefined
+    }
+  },
+  { 
+    id: 58, 
+    name: "Кижуч б/г (8-10)", 
+    category: "Другие виды рыбы",
+    size: "3,6 кг+", 
+    packaging: "вес", 
+    catchDate: "Август, 24",
+    manufacturer: "Чили", 
+    prices: {
+      smallWholesale: 1185,
+      mediumWholesale: undefined,
+      largeWholesale: undefined
+    }
+  },
+  { 
+    id: 59, 
+    name: "Кижуч б/г (10+)", 
+    category: "Другие виды рыбы",
+    size: "4,5 кг+", 
+    packaging: "вес", 
+    catchDate: "Август, 24",
+    manufacturer: "Чили", 
+    prices: {
+      smallWholesale: 1240,
+      mediumWholesale: undefined,
+      largeWholesale: undefined
+    }
+  },
+  { 
+    id: 60, 
+    name: "Котлеты кальмаровые", 
+    category: "Полуфабрикаты",
+    packaging: "5 кг", 
+    catchDate: "Сентябрь, 24",
+    manufacturer: "«Юниант»", 
+    prices: {
+      smallWholesale: 255,
+      mediumWholesale: undefined,
+      largeWholesale: undefined
+    }
+  },
+  { 
+    id: 61, 
+    name: "Котлеты куриные", 
+    category: "Полуфабрикаты",
+    packaging: "10,5 кг", 
+    catchDate: "Сентябрь, 24",
+    manufacturer: "«Юниант»", 
+    prices: {
+      smallWholesale: 400,
+      mediumWholesale: undefined,
+      largeWholesale: undefined
+    }
+  },
+  { 
+    id: 62, 
+    name: "Котлеты лососевые", 
+    category: "Полуфабрикаты",
+    packaging: "5 кг", 
+    catchDate: "Июль, 24",
+    manufacturer: "«Юниант»", 
+    prices: {
+      smallWholesale: 240,
+      mediumWholesale: undefined,
+      largeWholesale: undefined
+    }
+  },
+  { 
+    id: 63, 
+    name: "Котлеты тресковые",
