@@ -3,84 +3,86 @@
 export const productImages = {
   // Лосось
   "Лосось (Чили)": {
-    default: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?q=80&w=1000&auto=format&fit=crop",
-    "5-6 кг": "https://images.unsplash.com/photo-1599084993091-1cb5c0721cc6?q=80&w=1000&auto=format&fit=crop",
-    "6-7 кг": "https://images.unsplash.com/photo-1574070677033-fbc62e644ff5?q=80&w=1000&auto=format&fit=crop",
-    "7-8 кг": "https://images.unsplash.com/photo-1615141982883-c7ad0e69fd62?q=80&w=1000&auto=format&fit=crop",
-    "Филе лосося": "https://images.unsplash.com/photo-1485921325833-c519f76c4927?q=80&w=1000&auto=format&fit=crop"
+    default: "https://seafood-shop.ru/upload/iblock/d73/d731e748e1c243318344595e7dd2cafa.jpg",
+    "5-6 кг": "https://seafood-shop.ru/upload/iblock/a05/a05a00e3d0694e0db39b2df0108e5b81.jpg",
+    "6-7 кг": "https://seafood-shop.ru/upload/iblock/b69/b69515f7c09743a4a10e93604b8c63df.jpg",
+    "7-8 кг": "https://seafood-shop.ru/upload/iblock/3af/3af3f0cd2a1226c292e5b908b3da7d20.jpg",
+    "Филе лосося": "https://seafood-shop.ru/upload/iblock/5c2/5c2e7f25ff014661a34057a7635fa1e4.jpg"
   },
   // Форель
   "Форель (Турция)": {
-    default: "https://images.unsplash.com/photo-1611171711912-e3f6b536f532?q=80&w=1000&auto=format&fit=crop",
-    "1,3-1,8 кг": "https://images.unsplash.com/photo-1580376259349-5f4b7db4c39f?q=80&w=1000&auto=format&fit=crop",
-    "1,8-2,7 кг": "https://images.unsplash.com/photo-1559717865-a99cac1c95d8?q=80&w=1000&auto=format&fit=crop",
-    "2,7-3,6 кг": "https://images.unsplash.com/photo-1595456982104-14257450c06b?q=80&w=1000&auto=format&fit=crop",
-    "Стейк форели": "https://images.unsplash.com/photo-1467003909585-2f8a72700288?q=80&w=1000&auto=format&fit=crop",
-    "Филе форели": "https://images.unsplash.com/photo-1626255081854-1f1641bb7d5a?q=80&w=1000&auto=format&fit=crop"
+    default: "https://seafood-shop.ru/upload/iblock/08a/08a4c6a935a0ed33e08e3fb9f5d747e5.jpg",
+    "1,3-1,8 кг": "https://seafood-shop.ru/upload/iblock/6e5/6e57e5309211a61d21d48da7a2d58692.jpg",
+    "1,8-2,7 кг": "https://seafood-shop.ru/upload/iblock/f3f/f3fa1460bfd7fc3aeb04af303b5c6c86.jpg",
+    "2,7-3,6 кг": "https://seafood-shop.ru/upload/iblock/636/636548f92485413e287573c669d66149.jpg",
+    "Стейк форели": "https://seafood-shop.ru/upload/iblock/ba3/ba3427fc93a2b41fa33413a661f4e443.jpg",
+    "Филе форели": "https://seafood-shop.ru/upload/iblock/6ce/6ce8db7a0b1873ef0ec3ad620968a760.jpg"
   },
   // Креветки
   "Креветки и морепродукты": {
-    default: "https://images.unsplash.com/photo-1565680018434-b513d5e5fd47?q=80&w=1000&auto=format&fit=crop",
-    "Креветка": "https://images.unsplash.com/photo-1623341214825-9f4f963727da?q=80&w=1000&auto=format&fit=crop",
-    "Лангустины": "https://images.unsplash.com/photo-1567773613334-c6c47692d899?q=80&w=1000&auto=format&fit=crop",
-    "Медальоны": "https://images.unsplash.com/photo-1551248429-40975aa4de74?q=80&w=1000&auto=format&fit=crop",
-    "Мясо мидий": "https://images.unsplash.com/photo-1635346619936-8706500f36fe?q=80&w=1000&auto=format&fit=crop",
-    "Осьминог": "https://images.unsplash.com/photo-1545809074-59472b3f5ecc?q=80&w=1000&auto=format&fit=crop",
-    "Кальмары": "https://images.unsplash.com/photo-1604952184838-4e32f34cddb1?q=80&w=1000&auto=format&fit=crop",
-    "Мидии": "https://images.unsplash.com/photo-1466553556096-7e2c4ca6a4c7?q=80&w=1000&auto=format&fit=crop",
-    "Устрицы": "https://images.unsplash.com/photo-1572715825424-4221e58116d9?q=80&w=1000&auto=format&fit=crop",
-    "Гребешки": "https://images.unsplash.com/photo-1576646252559-6d465dec0d7e?q=80&w=1000&auto=format&fit=crop",
-    "Раки": "https://images.unsplash.com/photo-1519869491916-8ca6f615d6bd?q=80&w=1000&auto=format&fit=crop"
+    default: "https://seafood-shop.ru/upload/iblock/987/9874bfea750650f5d75486521c639dc8.jpg",
+    "Креветка": "https://seafood-shop.ru/upload/iblock/0c8/0c854481ee957e11c2f5cc7dedfa2c47.jpg",
+    "Лангустины": "https://seafood-shop.ru/upload/iblock/c7f/c7fcb114ba98928da95897b89a393bfc.jpg",
+    "Медальоны": "https://seafood-shop.ru/upload/iblock/5ad/5ad807ab1b18497ae80af0b36779cd26.jpg",
+    "Мясо мидий": "https://seafood-shop.ru/upload/iblock/e2f/e2f607016c778d4a0a55aa6726d1dd96.jpg",
+    "Осьминог": "https://seafood-shop.ru/upload/iblock/88b/88b29e4eebf061cd9d439b4ec76ff5e7.jpg",
+    "Кальмары": "https://seafood-shop.ru/upload/iblock/443/443f9261702b49c5cc5305a3fbd91f13.jpg",
+    "Мидии": "https://seafood-shop.ru/upload/iblock/ab2/ab2466c1b1dfbf02ba37c9fcc0e66fdc.jpg",
+    "Устрицы": "https://seafood-shop.ru/upload/iblock/08e/08ef22cb55883199d63b5b7531a4adf4.jpg",
+    "Гребешки": "https://seafood-shop.ru/upload/iblock/bb9/bb9dbe29e2c6156623d107d3cfb50c86.jpg",
+    "Раки": "https://seafood-shop.ru/upload/iblock/e85/e85a0481ad2b13ccbbb2304a0e11792f.jpg"
   },
   // Другие виды рыбы
   "Другие виды рыбы": {
-    default: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=1000&auto=format&fit=crop",
-    "Сорадо": "https://images.unsplash.com/photo-1510130387422-82bed34b37e9?q=80&w=1000&auto=format&fit=crop",
-    "Сибас": "https://images.unsplash.com/photo-1498654077810-12c21d4d6dc3?q=80&w=1000&auto=format&fit=crop",
-    "Сельдь": "https://images.unsplash.com/photo-1583471883156-9750cb5fdbb1?q=80&w=1000&auto=format&fit=crop",
-    "Скумбрия": "https://images.unsplash.com/photo-1531850039645-c8fde54c8f38?q=80&w=1000&auto=format&fit=crop",
-    "Кек тунца": "https://images.unsplash.com/photo-1501243282513-b5bf25674386?q=80&w=1000&auto=format&fit=crop",
-    "Камбала": "https://images.unsplash.com/photo-1504171833288-3cda76c88ad6?q=80&w=1000&auto=format&fit=crop",
-    "Окунь": "https://images.unsplash.com/photo-1583471883099-18261cac3300?q=80&w=1000&auto=format&fit=crop",
-    "Минтай": "https://images.unsplash.com/photo-1594322141406-588db26caf32?q=80&w=1000&auto=format&fit=crop",
-    "Тунец": "https://images.unsplash.com/photo-1594324587718-9a1e97232782?q=80&w=1000&auto=format&fit=crop",
-    "Филе пангасиуса": "https://images.unsplash.com/photo-1574781330855-d0db8cc6a79c?q=80&w=1000&auto=format&fit=crop",
-    "Филе тилапии": "https://images.unsplash.com/photo-1513415438302-e2e100572a48?q=80&w=1000&auto=format&fit=crop",
-    "Филе трески": "https://images.unsplash.com/photo-1494346480775-936a9f0d0877?q=80&w=1000&auto=format&fit=crop",
-    "Филе пикши": "https://images.unsplash.com/photo-1603073163308-9654c3fb70b5?q=80&w=1000&auto=format&fit=crop",
-    "Дорадо": "https://images.unsplash.com/photo-1535400255456-979b7d7296aa?q=80&w=1000&auto=format&fit=crop",
-    "Палтус": "https://images.unsplash.com/photo-1546964124-0cce460f38ef?q=80&w=1000&auto=format&fit=crop",
-    "Карп": "https://images.unsplash.com/photo-1584742361724-d79ebaec4795?q=80&w=1000&auto=format&fit=crop",
-    "Щука": "https://images.unsplash.com/photo-1574492543172-b7895ef752b5?q=80&w=1000&auto=format&fit=crop"
+    default: "https://seafood-shop.ru/upload/iblock/1bd/1bd80fbcb91dcd25486672e2cc4db623.jpg",
+    "Сорадо": "https://seafood-shop.ru/upload/iblock/be1/be141ca6c863b66578fc045a346984a5.jpg",
+    "Сибас": "https://seafood-shop.ru/upload/iblock/937/937666e672a74365b4b31072b7ec6904.jpg",
+    "Сельдь": "https://seafood-shop.ru/upload/iblock/330/33064abbad488701de9c4763bbe01788.jpg",
+    "Скумбрия": "https://seafood-shop.ru/upload/iblock/b69/b6911f809aabcbf82a7d514472a8130c.jpg",
+    "Кек тунца": "https://seafood-shop.ru/upload/iblock/e94/e947083d52fe417bd131a9c9e962d911.jpg",
+    "Камбала": "https://seafood-shop.ru/upload/iblock/f24/f247f7dc1a19650064d650891b558aae.jpg",
+    "Окунь": "https://seafood-shop.ru/upload/iblock/603/6033c4d0ebad2b7be8c0e13626e4fc30.jpg",
+    "Минтай": "https://seafood-shop.ru/upload/iblock/35a/35a6c5e8f69ed8c5561ddd8e5aead19d.jpg",
+    "Тунец": "https://seafood-shop.ru/upload/iblock/db5/db5ab1eb0f639dd6ea8d7ff7e9ccb06a.jpg",
+    "Филе пангасиуса": "https://seafood-shop.ru/upload/iblock/9c4/9c491ad84e940bd87d3495f3fc22973d.jpg",
+    "Филе тилапии": "https://seafood-shop.ru/upload/iblock/e84/e84ac32af551ed543de8d9577cb2293a.jpg",
+    "Филе трески": "https://seafood-shop.ru/upload/iblock/cbe/cbedb1ccf416a6384d16ec202f2c4670.jpg",
+    "Филе пикши": "https://seafood-shop.ru/upload/iblock/0f7/0f77094866b33e9b48152d68497fa7ef.jpg",
+    "Дорадо": "https://seafood-shop.ru/upload/iblock/9ea/9eabef9b95301650befcc9380d3ea2c4.jpg",
+    "Палтус": "https://seafood-shop.ru/upload/iblock/1c1/1c15435ac9ab49713d3d1c0d7cbabe22.jpg",
+    "Карп": "https://seafood-shop.ru/upload/iblock/489/489a506537c659c5af778a0d29bfe30c.jpg",
+    "Щука": "https://seafood-shop.ru/upload/iblock/5ce/5cee29979bd0c3bd4d8e685c05808d14.jpg"
   },
   // Полуфабрикаты
   "Полуфабрикаты": {
-    default: "https://images.unsplash.com/photo-1563379926898-05f4575a45d8?q=80&w=1000&auto=format&fit=crop",
-    "Котлеты": "https://images.unsplash.com/photo-1661793561004-87856a0b5899?q=80&w=1000&auto=format&fit=crop",
-    "Пельмени": "https://images.unsplash.com/photo-1605349064096-2b11380ac0d1?q=80&w=1000&auto=format&fit=crop",
-    "Палочки": "https://images.unsplash.com/photo-1542803293-cde7da05c348?q=80&w=1000&auto=format&fit=crop",
-    "Рыбные биточки": "https://images.unsplash.com/photo-1580217665626-c5e8dd99abc5?q=80&w=1000&auto=format&fit=crop",
-    "Рыбные наггетсы": "https://images.unsplash.com/photo-1577906096429-f73c2c312435?q=80&w=1000&auto=format&fit=crop",
-    "Рыбные фрикадельки": "https://images.unsplash.com/photo-1533622597524-a1215e26c0a2?q=80&w=1000&auto=format&fit=crop"
+    default: "https://seafood-shop.ru/upload/iblock/174/1749b3d9d1a7edf79b3b3a7981390a29.jpg",
+    "Котлеты": "https://seafood-shop.ru/upload/iblock/309/3096cd33f0a21e3b53d60dcaaabf2857.jpg",
+    "Пельмени": "https://seafood-shop.ru/upload/iblock/6d2/6d2ce6cb5256054df565893b614767c6.jpg",
+    "Палочки": "https://seafood-shop.ru/upload/iblock/384/38490503e46a5c32da85f07667305af0.jpg",
+    "Рыбные биточки": "https://seafood-shop.ru/upload/iblock/18a/18a23d707120eb52fe155f374d364315.jpg",
+    "Рыбные наггетсы": "https://seafood-shop.ru/upload/iblock/2ca/2ca8d3438dfa112dc199bd649b2d51cc.jpg",
+    "Рыбные фрикадельки": "https://seafood-shop.ru/upload/iblock/9fc/9fc4416b17b60aae3132f8173f95e263.jpg"
   },
-  // Новые категории
+  // Икра
   "Икра": {
-    default: "https://images.unsplash.com/photo-1516684442886-eba31670d799?q=80&w=1000&auto=format&fit=crop",
-    "Икра красная": "https://images.unsplash.com/photo-1574046194937-1240b4d28f17?q=80&w=1000&auto=format&fit=crop",
-    "Икра черная": "https://images.unsplash.com/photo-1559114650-550d42531c6f?q=80&w=1000&auto=format&fit=crop",
-    "Икра щучья": "https://images.unsplash.com/photo-1562376552-0d160a2f35d6?q=80&w=1000&auto=format&fit=crop"
+    default: "https://seafood-shop.ru/upload/iblock/fe6/fe6d5ceb2d9b4285b5b0364269bcd985.jpg",
+    "Икра красная": "https://seafood-shop.ru/upload/iblock/d7a/d7a05307bac8c760f35acefde3d6dbd3.jpg",
+    "Икра черная": "https://seafood-shop.ru/upload/iblock/38d/38dc164b5ef17232c9b253a93f3dba8b.jpg",
+    "Икра щучья": "https://seafood-shop.ru/upload/iblock/599/599a354c21d6cc60c05c24f8ea7f2f9c.jpg"
   },
+  // Консервы
   "Консервы": {
-    default: "https://images.unsplash.com/photo-1604335398980-eda9600805a0?q=80&w=1000&auto=format&fit=crop",
-    "Тунец": "https://images.unsplash.com/photo-1614119068601-147807fb0324?q=80&w=1000&auto=format&fit=crop",
-    "Сардины": "https://images.unsplash.com/photo-1604335399405-7366f314a933?q=80&w=1000&auto=format&fit=crop",
-    "Шпроты": "https://images.unsplash.com/photo-1626202854382-9b25aa5e24d3?q=80&w=1000&auto=format&fit=crop"
+    default: "https://seafood-shop.ru/upload/iblock/f4a/f4a2a391ebd2bf951beb2f4ac78024f4.jpg",
+    "Тунец": "https://seafood-shop.ru/upload/iblock/07b/07b2ee780cd9e51f6d2654cfb9e5993d.jpg",
+    "Сардины": "https://seafood-shop.ru/upload/iblock/5ad/5ad7fe3c48b91bb1bd867a6b6a2d6e8c.jpg",
+    "Шпроты": "https://seafood-shop.ru/upload/iblock/9bc/9bc34853ac0a2031eca8acf0752bb384.jpg"
   },
+  // Деликатесы
   "Деликатесы": {
-    default: "https://images.unsplash.com/photo-1626393707273-074a1284c8f8?q=80&w=1000&auto=format&fit=crop",
-    "Копченый лосось": "https://images.unsplash.com/photo-1569050939336-615ce75bccff?q=80&w=1000&auto=format&fit=crop",
-    "Вяленая рыба": "https://images.unsplash.com/photo-1512058564366-18510be2db19?q=80&w=1000&auto=format&fit=crop",
-    "Балык": "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1000&auto=format&fit=crop"
+    default: "https://seafood-shop.ru/upload/iblock/ec8/ec87e9b5ca4e50fe28b3a0affd7b891c.jpg",
+    "Копченый лосось": "https://seafood-shop.ru/upload/iblock/1d8/1d8119ea9ebbac956fa990535807e270.jpg",
+    "Вяленая рыба": "https://seafood-shop.ru/upload/iblock/ae8/ae807f2cdd100a20af425d64352196c3.jpg",
+    "Балык": "https://seafood-shop.ru/upload/iblock/cda/cdaceeef243b0c4c213fe65bcefd02e1.jpg"
   }
 };
 
@@ -89,7 +91,7 @@ export function getProductImage(product: { category: string; name: string; size?
   const categoryImages = productImages[product.category as keyof typeof productImages];
   
   if (!categoryImages) {
-    return "https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=1000&auto=format&fit=crop"; // Default fallback
+    return "https://seafood-shop.ru/upload/iblock/1bd/1bd80fbcb91dcd25486672e2cc4db623.jpg"; // Default fallback
   }
 
   // Check for specific product name matches

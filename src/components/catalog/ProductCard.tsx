@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
-import { Fish, ShellIcon, Soup, GanttChart, ShoppingCart, ImageOff } from "lucide-react";
+import { Fish, ShellIcon, Soup, GanttChart, ShoppingCart, ImageOff, Egg, Package, Utensils } from "lucide-react";
 import { useCart } from '@/context/CartContext';
 import { getProductImage } from '@/data/productImages';
 
@@ -27,6 +27,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         return <ShellIcon className="w-16 h-16 text-pink-500" />;
       case 'Полуфабрикаты':
         return <Soup className="w-16 h-16 text-orange-500" />;
+      case 'Икра':
+        return <Egg className="w-16 h-16 text-red-500" />;
+      case 'Консервы':
+        return <Package className="w-16 h-16 text-amber-600" />;
+      case 'Деликатесы':
+        return <Utensils className="w-16 h-16 text-purple-500" />;
       default:
         return <GanttChart className="w-16 h-16 text-blue-300" />;
     }
