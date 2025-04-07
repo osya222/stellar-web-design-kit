@@ -1,3 +1,4 @@
+
 // Изображения продуктов по категориям
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
@@ -28,7 +29,7 @@ export const productImages: Record<string, Record<string, string>> = {
   },
   "Другие виды рыбы": {
     "default": "https://cdnstatic.rg.ru/uploads/images/123/81/13/26.jpg",
-    "Сельдь н/р": "https://ekorfish.com/upload/iblock/88e/nl9m3axc369helmz7z5earvk8c5rqtip.jpg",
+    "Сельдь н/р": "https://nau54.ru/2/tradeboardkbqU37_img.jpg",
     "Сардина (иваси) н/р": "https://istokfish.ru/upload/iblock/32c/lo0wi17c70zt1xnaqhz6dlfoyk5cbx6k/DSC_0163.JPG",
     "ДОРАДО н/р": "https://agromp.ru/wp-content/uploads/2022/03/str015.jpeg",
     "СКУМБРИЯ н/р": "https://ruikra.ru/image/cache/webp/catalog/products-new/svezhemorozhenaya-ryba/skumbriya-nr/skumbriya-nr-3-1500x1000.webp",

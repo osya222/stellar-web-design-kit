@@ -53,6 +53,7 @@ export const otherFishProducts: Product[] = [
     packaging: "28", 
     catchDate: "Ноябрь 24",
     manufacturer: "Фарерские о-ва", 
+    image: "https://nau54.ru/2/tradeboardkbqU37_img.jpg",
     prices: {
       smallWholesale: 266.9,
       mediumWholesale: 262.9,
