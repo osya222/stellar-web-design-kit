@@ -98,6 +98,7 @@
 
   body {
     @apply bg-background text-foreground;
-    background-image: linear-gradient(109.6deg, rgba(240,240,240,1) 11.2%, rgba(250,250,250,1) 91.1%);
+    background-image: none;
+    background-color: #FFFFFF;
   }
 }

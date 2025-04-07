@@ -24,19 +24,19 @@ const ProductShowcase: React.FC = () => {
       case 'Форель (Турция)':
       case 'Другие виды рыбы':
       case 'Филе рыбы':
-        return <Fish className="w-12 h-12 text-gray-600" />;
+        return <Fish className="w-12 h-12 text-black" />;
       case 'Креветки и морепродукты':
-        return <ShellIcon className="w-12 h-12 text-pink-500" />;
+        return <ShellIcon className="w-12 h-12 text-black" />;
       case 'Мидии':
-        return <Shell className="w-12 h-12 text-amber-600" />;
+        return <Shell className="w-12 h-12 text-black" />;
       case 'Полуфабрикаты':
-        return <ChefHat className="w-12 h-12 text-orange-500" />;
+        return <ChefHat className="w-12 h-12 text-black" />;
       case 'Икра':
-        return <Egg className="w-12 h-12 text-red-500" />;
+        return <Egg className="w-12 h-12 text-black" />;
       case 'Деликатесы':
-        return <Utensils className="w-12 h-12 text-purple-500" />;
+        return <Utensils className="w-12 h-12 text-black" />;
       default:
-        return <Fish className="w-12 h-12 text-gray-500" />;
+        return <Fish className="w-12 h-12 text-black" />;
     }
   };
 
@@ -75,26 +75,26 @@ const ProductShowcase: React.FC = () => {
   return (
     <section className="py-12 bg-white">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold mb-8 text-center">Наша продукция</h2>
+        <h2 className="text-3xl font-bold mb-8 text-center text-black">Наша продукция</h2>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {productCategories.slice(0, 6).map((category, index) => (
-            <div key={index} className="overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+            <div key={index} className="overflow-hidden rounded-lg shadow-lg hover:shadow-xl transition-shadow bg-white">
               <div className="relative h-60 bg-white flex items-center justify-center">
                 {getCategoryIcon(category.name)}
-                <div className="absolute inset-x-0 bottom-0 bg-gray-700/90 py-4">
-                  <div className="p-4 text-white">
+                <div className="absolute inset-x-0 bottom-0 bg-white py-4 border-t">
+                  <div className="p-4 text-black">
                     <h3 className="text-xl font-bold">{category.name}</h3>
-                    <p className="text-sm font-medium opacity-90">{category.description}</p>
+                    <p className="text-sm font-medium">{category.description}</p>
                   </div>
                 </div>
               </div>
               <div className="p-4">
-                <p className="text-gray-600 mb-4">{category.description}</p>
+                <p className="text-black mb-4">{category.description}</p>
                 <a 
                   href={`#catalog-${category.id}`}
                   onClick={(e) => handleCategoryClick(category.id, e)}
-                  className="text-gray-700 hover:text-gray-900 font-medium flex items-center cursor-pointer"
+                  className="text-black font-medium flex items-center cursor-pointer"
                 >
                   Подробнее <ArrowRight className="ml-1 h-4 w-4" />
                 </a>
@@ -104,12 +104,12 @@ const ProductShowcase: React.FC = () => {
         </div>
         
         <div className="mt-16">
-          <h3 className="text-2xl font-bold mb-6 text-center">Популярные товары</h3>
+          <h3 className="text-2xl font-bold mb-6 text-center text-black">Популярные товары</h3>
           <Carousel className="mx-auto max-w-5xl">
             <CarouselContent>
               {popularProducts.map((product, index) => (
                 <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3">
-                  <Card className="border-0 shadow-md">
+                  <Card className="border shadow-md">
                     <CardContent className="p-0">
                       <div className="relative h-64 bg-white flex items-center justify-center">
                         {getProductImage(product) ? (
@@ -121,9 +121,9 @@ const ProductShowcase: React.FC = () => {
                         ) : (
                           getCategoryIcon(product.category)
                         )}
-                        <div className="absolute bottom-0 left-0 right-0 bg-gray-700/90 p-4">
-                          <h4 className="text-white font-semibold">{product.name}</h4>
-                          <p className="text-white/90 text-sm">{product.category}</p>
+                        <div className="absolute bottom-0 left-0 right-0 bg-white p-4 border-t">
+                          <h4 className="text-black font-semibold">{product.name}</h4>
+                          <p className="text-black/70 text-sm">{product.category}</p>
                         </div>
                       </div>
                     </CardContent>
@@ -137,7 +137,7 @@ const ProductShowcase: React.FC = () => {
         </div>
         
         <div className="mt-10 text-center">
-          <Button size="lg" onClick={handleViewAllCatalog}>
+          <Button size="lg" onClick={handleViewAllCatalog} className="bg-black text-white hover:bg-gray-800">
             Смотреть весь каталог
           </Button>
         </div>

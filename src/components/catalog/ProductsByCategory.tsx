@@ -23,27 +23,27 @@ const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({ category, produ
       case 'Форель (Турция)':
       case 'Другие виды рыбы':
       case 'Филе рыбы':
-        return <Fish className="w-6 h-6 mr-2 inline-block text-gray-600" />;
+        return <Fish className="w-6 h-6 mr-2 inline-block text-black" />;
       case 'Креветки и морепродукты':
-        return <ShellIcon className="w-6 h-6 mr-2 inline-block text-pink-500" />;
+        return <ShellIcon className="w-6 h-6 mr-2 inline-block text-black" />;
       case 'Мидии':
-        return <Shell className="w-6 h-6 mr-2 inline-block text-amber-600" />;
+        return <Shell className="w-6 h-6 mr-2 inline-block text-black" />;
       case 'Полуфабрикаты':
-        return <ChefHat className="w-6 h-6 mr-2 inline-block text-orange-500" />;
+        return <ChefHat className="w-6 h-6 mr-2 inline-block text-black" />;
       case 'Икра':
-        return <Egg className="w-6 h-6 mr-2 inline-block text-red-500" />;
+        return <Egg className="w-6 h-6 mr-2 inline-block text-black" />;
       case 'Консервы':
-        return <Package className="w-6 h-6 mr-2 inline-block text-amber-600" />;
+        return <Package className="w-6 h-6 mr-2 inline-block text-black" />;
       case 'Деликатесы':
-        return <Utensils className="w-6 h-6 mr-2 inline-block text-purple-500" />;
+        return <Utensils className="w-6 h-6 mr-2 inline-block text-black" />;
       default:
-        return <Soup className="w-6 h-6 mr-2 inline-block text-gray-500" />;
+        return <Soup className="w-6 h-6 mr-2 inline-block text-black" />;
     }
   };
   
   return (
     <div className="mb-10" id={`catalog-${categoryId}`}>
-      <h2 className="text-2xl font-bold mb-4 pb-2 border-b border-gray-200 flex items-center">
+      <h2 className="text-2xl font-bold mb-4 pb-2 border-b border-gray-200 flex items-center text-black">
         {getCategoryIcon(category)}
         <span>{category}</span>
       </h2>
