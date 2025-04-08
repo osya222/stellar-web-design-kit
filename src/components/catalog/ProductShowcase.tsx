@@ -13,12 +13,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { products } from "@/data/products/index";
 import { getProductImage } from "@/data/productImages";
 import { formatPrice } from "@/lib/formatters";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const ProductShowcase: React.FC = () => {
-  // Получаем популярные продукты из основных категорий
+  // Get popular products from main categories
   const popularProducts = products.slice(0, 6);
   const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
   const [categoryImageErrors, setCategoryImageErrors] = useState<Record<string, boolean>>({});
+  const isMobile = useIsMobile();
 
   // Extract unique categories from products array to replace productCategories
   // Filter out the "Деликатесы" category
@@ -105,15 +107,15 @@ const ProductShowcase: React.FC = () => {
   };
 
   return (
-    <section className="py-20 bg-white">
+    <section className="py-10 md:py-20 bg-white">
       <div className="container-custom">
-        <h2 className="text-3xl font-bold mb-2 text-center text-blue-800">Наша продукция</h2>
-        <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">Широкий выбор свежих морепродуктов от проверенных поставщиков для вашего бизнеса</p>
+        <h2 className="text-2xl md:text-3xl font-bold mb-2 text-center text-blue-800">Наша продукция</h2>
+        <p className="text-center text-gray-600 mb-8 md:mb-12 max-w-2xl mx-auto px-4">Широкий выбор свежих морепродуктов от проверенных поставщиков для вашего бизнеса</p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
           {productCategories.map((category, index) => (
             <div key={index} className="overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 bg-white card-hover">
-              <div className="relative h-60 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
+              <div className="relative h-40 md:h-60 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
                 {getCategoryImage(category.name) && !categoryImageErrors[category.name] ? (
                   <img 
                     src={getCategoryImage(category.name)} 
@@ -127,9 +129,9 @@ const ProductShowcase: React.FC = () => {
                   </div>
                 )}
               </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-blue-800 mb-2">{category.name}</h3>
-                <p className="text-gray-600 mb-4">{category.description}</p>
+              <div className="p-4 md:p-6">
+                <h3 className="text-lg md:text-xl font-bold text-blue-800 mb-1 md:mb-2">{category.name}</h3>
+                <p className="text-sm md:text-base text-gray-600 mb-3 md:mb-4">{category.description}</p>
                 <a 
                   href={`#catalog-${category.id}`}
                   onClick={(e) => handleCategoryClick(category.id, e)}
@@ -142,16 +144,16 @@ const ProductShowcase: React.FC = () => {
           ))}
         </div>
         
-        <div className="mt-20">
-          <h3 className="text-2xl font-bold mb-2 text-center text-blue-800">Популярные товары</h3>
-          <p className="text-center text-gray-600 mb-8">Наиболее востребованные позиции у наших клиентов</p>
+        <div className="mt-12 md:mt-20">
+          <h3 className="text-xl md:text-2xl font-bold mb-2 text-center text-blue-800">Популярные товары</h3>
+          <p className="text-center text-gray-600 mb-6 md:mb-8 px-4">Наиболее востребованные позиции у наших клиентов</p>
           <Carousel className="mx-auto max-w-6xl">
             <CarouselContent>
               {popularProducts.map((product, index) => (
                 <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 p-2">
                   <Card className="border-0 shadow-md rounded-xl overflow-hidden card-hover">
                     <CardContent className="p-0">
-                      <div className="relative h-64 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
+                      <div className="relative h-48 md:h-64 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
                         {getProductImageWithFallback(product) && !imageErrors[index] ? (
                           <img 
                             src={getProductImageWithFallback(product)} 
@@ -165,15 +167,15 @@ const ProductShowcase: React.FC = () => {
                           </div>
                         )}
                       </div>
-                      <div className="p-5">
-                        <p className="text-blue-600 text-sm font-medium mb-1">{product.category}</p>
-                        <h4 className="text-gray-800 font-semibold mb-2 line-clamp-2">{product.name}</h4>
+                      <div className="p-3 md:p-5">
+                        <p className="text-blue-600 text-xs md:text-sm font-medium mb-1">{product.category}</p>
+                        <h4 className="text-gray-800 font-semibold mb-2 line-clamp-2 text-sm md:text-base">{product.name}</h4>
                         <div className="flex justify-between items-center">
-                          <p className="text-gray-600 text-sm">
+                          <p className="text-gray-600 text-xs md:text-sm">
                             {product.manufacturer && `${product.manufacturer}`}
                           </p>
                           {product.prices.smallWholesale && (
-                            <p className="text-blue-800 font-semibold">
+                            <p className="text-blue-800 font-semibold text-sm md:text-base">
                               от {formatPrice(product.prices.smallWholesale)} ₽
                             </p>
                           )}
@@ -184,18 +186,18 @@ const ProductShowcase: React.FC = () => {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            <CarouselPrevious className="left-1 bg-white/80 hover:bg-white" />
-            <CarouselNext className="right-1 bg-white/80 hover:bg-white" />
+            <CarouselPrevious className="left-1 bg-white/80 hover:bg-white hidden sm:flex" />
+            <CarouselNext className="right-1 bg-white/80 hover:bg-white hidden sm:flex" />
           </Carousel>
         </div>
         
-        <div className="mt-12 text-center">
+        <div className="mt-10 md:mt-12 text-center">
           <Button 
             size="lg" 
             onClick={handleViewAllCatalog} 
-            className="bg-blue-700 hover:bg-blue-800 text-white font-medium px-8 py-6 h-auto rounded-xl shadow-md"
+            className="bg-blue-700 hover:bg-blue-800 text-white font-medium px-6 py-5 md:px-8 md:py-6 h-auto rounded-xl shadow-md text-sm md:text-base"
           >
-            <ExternalLink className="mr-2 h-5 w-5" />
+            <ExternalLink className="mr-2 h-4 w-4 md:h-5 md:w-5" />
             Смотреть весь каталог
           </Button>
         </div>

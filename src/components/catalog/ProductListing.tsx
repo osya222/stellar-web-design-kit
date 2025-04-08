@@ -3,6 +3,7 @@ import React from 'react';
 import ProductCard from './ProductCard';
 import ProductsByCategory from './ProductsByCategory';
 import { Product } from '@/types/product';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ProductListingProps {
   selectedCategory: string;
@@ -15,6 +16,8 @@ const ProductListing: React.FC<ProductListingProps> = ({
   filteredProducts, 
   categories 
 }) => {
+  const isMobile = useIsMobile();
+  
   if (filteredProducts.length === 0) {
     return (
       <div className="text-center py-10 text-gray-500">
@@ -33,7 +36,7 @@ const ProductListing: React.FC<ProductListingProps> = ({
         })
       ) : (
         // Если выбрана конкретная категория, показываем только товары этой категории
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
           {filteredProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
