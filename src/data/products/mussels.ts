@@ -11,7 +11,7 @@ export const musselProducts: Product[] = [
     packaging: "10*1", 
     catchDate: "Июнь-август",
     manufacturer: "Чили", 
-    image: "https://cdn.rf-sp.ru/20/4d/204de0ee9a99ba30acc7c61466b0389d.jpg",
+    image: "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png",
     price: 391.9
   },
   { 
@@ -22,7 +22,7 @@ export const musselProducts: Product[] = [
     packaging: "10*0,5", 
     catchDate: "Апрель/май/ноябрь",
     manufacturer: "Чили", 
-    image: "https://st17.stpulscen.ru/images/product/373/946/258_big.jpg",
+    image: "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png",
     price: 483.9
   },
   { 
@@ -33,7 +33,7 @@ export const musselProducts: Product[] = [
     packaging: "9,2", 
     catchDate: "Май",
     manufacturer: "Чили", 
-    image: "https://www.raft.ru/upload/iblock/d1c/4l41ta5k9y2ts839xdzsq78kgfr1ndp9.jpg",
+    image: "/images/mussel-meat.jpg",
     price: 520.9
   },
   { 
@@ -44,7 +44,7 @@ export const musselProducts: Product[] = [
     packaging: "9,2", 
     catchDate: "Май",
     manufacturer: "Чили", 
-    image: "https://www.raft.ru/upload/iblock/d1c/4l41ta5k9y2ts839xdzsq78kgfr1ndp9.jpg",
+    image: "/images/mussel-meat.jpg",
     price: 509.9
   },
 ];

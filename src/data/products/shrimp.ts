@@ -11,6 +11,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Апрель/май",
     manufacturer: "Индия", 
+    image: "/images/shrimp-shell.webp",
     price: 1002.9
   },
   { 
@@ -21,6 +22,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Май",
     manufacturer: "Индия", 
+    image: "/images/shrimp-peeled.jpg",
     price: 1004.9
   },
   { 
@@ -31,6 +33,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Июль",
     manufacturer: "Индия", 
+    image: "/images/shrimp-peeled.jpg",
     price: 1071.9
   },
   { 
@@ -41,6 +44,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Апрель",
     manufacturer: "Индия", 
+    image: "/images/cooked-shrimp.jpg",
     price: 1240.9
   },
   { 
@@ -73,6 +77,7 @@ export const shrimpProducts: Product[] = [
     packaging: "6*2 кг", 
     catchDate: "Январь",
     manufacturer: "Аргентина", 
+    image: "/images/langoustines-c2.jpeg",
     price: 1022.9
   },
   { 
@@ -84,6 +89,7 @@ export const shrimpProducts: Product[] = [
     weight: "9,6",
     catchDate: "Июль",
     manufacturer: "Китай", 
+    image: "/images/shrimp-medallions.jpg",
     price: 1192.9
   },
 ];

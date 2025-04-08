@@ -1,4 +1,3 @@
-
 import { Product } from '@/types/product';
 
 // Другие виды рыбы products
@@ -10,6 +9,7 @@ export const otherFishProducts: Product[] = [
     size: "300-400", 
     packaging: "5", 
     manufacturer: "Турция", 
+    image: "/images/dorado.jpeg",
     price: undefined // ожидаем
   },
   { 
@@ -20,6 +20,7 @@ export const otherFishProducts: Product[] = [
     packaging: "5", 
     catchDate: "Сентябрь",
     manufacturer: "Турция", 
+    image: "/images/dorado.jpeg",
     price: 895.9
   },
   { 
@@ -30,7 +31,7 @@ export const otherFishProducts: Product[] = [
     packaging: "5", 
     catchDate: "Июль",
     manufacturer: "Турция", 
-    image: "https://fish-or-meat.ru/d/051a4437.jpg",
+    image: "/images/seabass.jpg",
     price: 828.9
   },
   { 
@@ -41,7 +42,7 @@ export const otherFishProducts: Product[] = [
     packaging: "28", 
     catchDate: "Ноябрь 24",
     manufacturer: "Фарерские о-ва", 
-    image: "https://nau54.ru/2/tradeboardkbqU37_img.jpg",
+    image: "/images/herring.jpg",
     price: 266.9
   },
   { 
@@ -52,6 +53,7 @@ export const otherFishProducts: Product[] = [
     packaging: "25", 
     catchDate: "Октябрь 24",
     manufacturer: "Фарерские о-ва", 
+    image: "/images/mackerel.webp",
     price: 399.9
   },
   { 
@@ -62,6 +64,7 @@ export const otherFishProducts: Product[] = [
     packaging: "25", 
     catchDate: "Сентябрь 24",
     manufacturer: "Фарерские о-ва", 
+    image: "/images/mackerel.webp",
     price: 414.9
   },
   { 
@@ -72,6 +75,7 @@ export const otherFishProducts: Product[] = [
     packaging: "25", 
     catchDate: "Февраль 25",
     manufacturer: "Фарерские о-ва", 
+    image: "/images/mackerel.webp",
     price: 429.9
   },
   { 
@@ -81,6 +85,7 @@ export const otherFishProducts: Product[] = [
     size: "150-250", 
     catchDate: "Январь",
     manufacturer: "Аргентина", 
+    image: "/images/hake.jpg",
     price: 341.9
   },
   { 
@@ -91,7 +96,7 @@ export const otherFishProducts: Product[] = [
     packaging: "20", 
     catchDate: "Июль",
     manufacturer: "Норд Вест", 
-    image: "https://rybexpert.ru/wp-content/uploads/2023/12/kambala-1.jpg",
+    image: "/images/flounder.jpg",
     price: undefined // ожидаем
   },
   { 
@@ -102,7 +107,7 @@ export const otherFishProducts: Product[] = [
     packaging: "26", 
     catchDate: "Июль",
     manufacturer: "ФОР", 
-    image: "https://food-chain.ru/upload/iblock/247/5pjgm2v89cbynecfhmxzula4884zryai.png",
+    image: "/images/perch.png",
     price: 307.9
   },
   { 
@@ -113,7 +118,7 @@ export const otherFishProducts: Product[] = [
     packaging: "13", 
     catchDate: "Август",
     manufacturer: "Русский минтай", 
-    image: "https://cdn.metro-cc.ru/ru/ru_pim_123122001001_01.png",
+    image: "/images/pollock.png",
     price: undefined // ожидаем
   },
   { 
@@ -124,7 +129,7 @@ export const otherFishProducts: Product[] = [
     packaging: "22", 
     catchDate: "Май",
     manufacturer: "ОКРФ", 
-    image: "https://cdn.metro-cc.ru/ru/ru_pim_123122001001_01.png",
+    image: "/images/pollock.png",
     price: 185.9
   },
   { 
@@ -135,7 +140,7 @@ export const otherFishProducts: Product[] = [
     packaging: "24", 
     catchDate: "Октябрь",
     manufacturer: "ПК РКЗ", 
-    image: "https://cdn.metro-cc.ru/ru/ru_pim_123122001001_01.png",
+    image: "/images/pollock.png",
     price: 185.9
   },
   { 
@@ -146,6 +151,7 @@ export const otherFishProducts: Product[] = [
     packaging: "0,5", 
     catchDate: "Март",
     manufacturer: "Китай", 
+    image: "/images/tuna.jpg",
     price: 417.9
   },
   { 
@@ -156,6 +162,7 @@ export const otherFishProducts: Product[] = [
     packaging: "вес", 
     catchDate: "Апрель, 24",
     manufacturer: "Мавритания", 
+    image: "/images/red-mullet.jpg",
     price: 350
   },
   { 
@@ -166,7 +173,7 @@ export const otherFishProducts: Product[] = [
     packaging: "10 кг", 
     catchDate: "Апрель, 24",
     manufacturer: "Эквадор",
-    image: "https://i0.wp.com/xn--80agnucfc0a.xn--p1ai/wp-content/uploads/2018/10/vomer___.jpg?fit=600%2C518&ssl=1", 
+    image: "/images/vomer.jpg", 
     price: 280
   },
   { 
@@ -177,7 +184,7 @@ export const otherFishProducts: Product[] = [
     packaging: "10 кг", 
     catchDate: "Апрель, 24",
     manufacturer: "Эквадор", 
-    image: "https://i0.wp.com/xn--80agnucfc0a.xn--p1ai/wp-content/uploads/2018/10/vomer___.jpg?fit=600%2C518&ssl=1",
+    image: "/images/vomer.jpg",
     price: 335
   },
   { 
@@ -188,7 +195,7 @@ export const otherFishProducts: Product[] = [
     packaging: "10 кг", 
     catchDate: "Апрель, 24",
     manufacturer: "Эквадор", 
-    image: "https://i0.wp.com/xn--80agnucfc0a.xn--p1ai/wp-content/uploads/2018/10/vomer___.jpg?fit=600%2C518&ssl=1",
+    image: "/images/vomer.jpg",
     price: 425
   },
   { 
@@ -199,6 +206,7 @@ export const otherFishProducts: Product[] = [
     packaging: "22 кг", 
     catchDate: "Июль, 24",
     manufacturer: "Океан", 
+    image: "/images/pink-salmon.jpg",
     price: 458
   },
   { 
@@ -209,6 +217,7 @@ export const otherFishProducts: Product[] = [
     packaging: "вес", 
     catchDate: "Июль, 24",
     manufacturer: "Аргентина", 
+    image: "/images/grenadier.jpg",
     price: 225
   },
   { 
@@ -219,6 +228,7 @@ export const otherFishProducts: Product[] = [
     packaging: "вес", 
     catchDate: "Июль, 24",
     manufacturer: "Аргентина", 
+    image: "/images/grenadier.jpg",
     price: 265
   },
   { 
@@ -229,6 +239,7 @@ export const otherFishProducts: Product[] = [
     packaging: "5 кг", 
     catchDate: "Май, 24",
     manufacturer: "Турция", 
+    image: "/images/dorado.jpeg",
     price: 880
   },
   { 
@@ -239,7 +250,7 @@ export const otherFishProducts: Product[] = [
     packaging: "Вес", 
     catchDate: "Сент-окт, 23",
     manufacturer: "Н.Зеландия", 
-    image: "https://cdn1.ozone.ru/s3/multimedia-c/c600/6069702384.jpg",
+    image: "/images/john-dory.jpg",
     price: 565
   },
   { 
@@ -250,7 +261,7 @@ export const otherFishProducts: Product[] = [
     packaging: "10 кг", 
     catchDate: "Июнь, 24",
     manufacturer: "Эквадор", 
-    image: "https://storage.delikateska.ru/cache/d/a/a5d6ffc4-86eb-4b9f-a6fd-691dbc107d9c.jpg/w400h400.webp",
+    image: "/images/needlefish.webp",
     price: 330
   },
   { 
@@ -260,6 +271,7 @@ export const otherFishProducts: Product[] = [
     packaging: "12 кг", 
     catchDate: "Апрель, 24",
     manufacturer: "Ряжская РПК", 
+    image: "/images/herring-roe.jpg",
     price: 455
   },
   { 
@@ -270,7 +282,7 @@ export const otherFishProducts: Product[] = [
     packaging: "20 кг", 
     catchDate: "Март, 24",
     manufacturer: "Норд Вест", 
-    image: "https://rybexpert.ru/wp-content/uploads/2023/12/kambala-1.jpg",
+    image: "/images/flounder.jpg",
     price: 282
   },
   { 
@@ -280,7 +292,7 @@ export const otherFishProducts: Product[] = [
     packaging: "15 кг", 
     catchDate: "Декабрь, 24",
     manufacturer: "«Балт Иней»", 
-    image: "https://main-cdn.sbermegamarket.ru/big1/hlr-system/288/225/654/117/212/3/100029691550b0.jpg",
+    image: "/images/sprat.jpg",
     price: 192
   },
   { 
@@ -291,7 +303,7 @@ export const otherFishProducts: Product[] = [
     packaging: "вес", 
     catchDate: "Август, 24",
     manufacturer: "Чили", 
-    image: "https://sun1-26.userapi.com/s/v1/ig2/D8R-fACvTmyqmghGZcQEHe8m4VIWeghxEygbT9u1UEG8OyPOJVYVIvAMITPjSTD9d39ZIOTlmYN1lJxsQTdT8Vkm.jpg",
+    image: "/images/coho-salmon-1.jpg",
     price: 1140
   },
   { 
@@ -302,7 +314,7 @@ export const otherFishProducts: Product[] = [
     packaging: "вес", 
     catchDate: "Август, 24",
     manufacturer: "Чили", 
-    image: "https://biomore.ru/upload/iblock/659/pcj7nol0d5uusgeukbdayvx28gxtdgno.jpg",
+    image: "/images/coho-salmon-2.jpg",
     price: 1185
   },
   { 
@@ -313,7 +325,7 @@ export const otherFishProducts: Product[] = [
     packaging: "вес", 
     catchDate: "Август, 24",
     manufacturer: "Чили", 
-    image: "https://biomore.ru/upload/iblock/659/pcj7nol0d5uusgeukbdayvx28gxtdgno.jpg",
+    image: "/images/coho-salmon-2.jpg",
     price: 1240
   }
 ];
