@@ -11,11 +11,7 @@ export const troutProducts: Product[] = [
     packaging: "25 кг", 
     catchDate: "Июнь",
     manufacturer: "Турция", 
-    prices: {
-      smallWholesale: 1014.9,
-      mediumWholesale: 1009.9,
-      largeWholesale: 1004.9
-    }
+    price: 1014.9
   },
   { 
     id: 4, 
@@ -25,11 +21,7 @@ export const troutProducts: Product[] = [
     packaging: "25 кг", 
     catchDate: "Июль",
     manufacturer: "Турция", 
-    prices: {
-      smallWholesale: 1064.9,
-      mediumWholesale: 1059.9,
-      largeWholesale: 1054.9
-    }
+    price: 1064.9
   },
   { 
     id: 5, 
@@ -39,10 +31,6 @@ export const troutProducts: Product[] = [
     packaging: "25 кг", 
     catchDate: "Июнь",
     manufacturer: "Турция", 
-    prices: {
-      smallWholesale: 1166.9,
-      mediumWholesale: 1161.9,
-      largeWholesale: 1156.9
-    }
+    price: 1166.9
   },
 ];

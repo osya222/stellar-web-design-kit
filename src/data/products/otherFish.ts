@@ -1,3 +1,4 @@
+
 import { Product } from '@/types/product';
 
 // Другие виды рыбы products
@@ -9,11 +10,7 @@ export const otherFishProducts: Product[] = [
     size: "300-400", 
     packaging: "5", 
     manufacturer: "Турция", 
-    prices: {
-      smallWholesale: undefined, // ожидаем
-      mediumWholesale: undefined, // ожидаем
-      largeWholesale: undefined // ожидаем
-    }
+    price: undefined // ожидаем
   },
   { 
     id: 19, 
@@ -23,11 +20,7 @@ export const otherFishProducts: Product[] = [
     packaging: "5", 
     catchDate: "Сентябрь",
     manufacturer: "Турция", 
-    prices: {
-      smallWholesale: 895.9,
-      mediumWholesale: 895.9,
-      largeWholesale: 891.9
-    }
+    price: 895.9
   },
   { 
     id: 20, 
@@ -38,11 +31,7 @@ export const otherFishProducts: Product[] = [
     catchDate: "Июль",
     manufacturer: "Турция", 
     image: "https://fish-or-meat.ru/d/051a4437.jpg",
-    prices: {
-      smallWholesale: 828.9,
-      mediumWholesale: 823.9,
-      largeWholesale: 818.9
-    }
+    price: 828.9
   },
   { 
     id: 21, 
@@ -53,11 +42,7 @@ export const otherFishProducts: Product[] = [
     catchDate: "Ноябрь 24",
     manufacturer: "Фарерские о-ва", 
     image: "https://nau54.ru/2/tradeboardkbqU37_img.jpg",
-    prices: {
-      smallWholesale: 266.9,
-      mediumWholesale: 262.9,
-      largeWholesale: 260.9
-    }
+    price: 266.9
   },
   { 
     id: 22, 
@@ -67,11 +52,7 @@ export const otherFishProducts: Product[] = [
     packaging: "25", 
     catchDate: "Октябрь 24",
     manufacturer: "Фарерские о-ва", 
-    prices: {
-      smallWholesale: 399.9,
-      mediumWholesale: 393.9,
-      largeWholesale: 389.9
-    }
+    price: 399.9
   },
   { 
     id: 23, 
@@ -81,11 +62,7 @@ export const otherFishProducts: Product[] = [
     packaging: "25", 
     catchDate: "Сентябрь 24",
     manufacturer: "Фарерские о-ва", 
-    prices: {
-      smallWholesale: 414.9,
-      mediumWholesale: 410.9,
-      largeWholesale: 406.9
-    }
+    price: 414.9
   },
   { 
     id: 24, 
@@ -95,11 +72,7 @@ export const otherFishProducts: Product[] = [
     packaging: "25", 
     catchDate: "Февраль 25",
     manufacturer: "Фарерские о-ва", 
-    prices: {
-      smallWholesale: 429.9,
-      mediumWholesale: 423.9,
-      largeWholesale: 419.9
-    }
+    price: 429.9
   },
   { 
     id: 25, 
@@ -108,11 +81,7 @@ export const otherFishProducts: Product[] = [
     size: "150-250", 
     catchDate: "Январь",
     manufacturer: "Аргентина", 
-    prices: {
-      smallWholesale: 341.9,
-      mediumWholesale: 333.9,
-      largeWholesale: 327.9
-    }
+    price: 341.9
   },
   { 
     id: 26, 
@@ -123,11 +92,7 @@ export const otherFishProducts: Product[] = [
     catchDate: "Июль",
     manufacturer: "Норд Вест", 
     image: "https://rybexpert.ru/wp-content/uploads/2023/12/kambala-1.jpg",
-    prices: {
-      smallWholesale: undefined, // ожидаем
-      mediumWholesale: undefined, // ожидаем
-      largeWholesale: undefined // ожидаем
-    }
+    price: undefined // ожидаем
   },
   { 
     id: 27, 
@@ -138,11 +103,7 @@ export const otherFishProducts: Product[] = [
     catchDate: "Июль",
     manufacturer: "ФОР", 
     image: "https://food-chain.ru/upload/iblock/247/5pjgm2v89cbynecfhmxzula4884zryai.png",
-    prices: {
-      smallWholesale: 307.9,
-      mediumWholesale: 299.9,
-      largeWholesale: 296.9
-    }
+    price: 307.9
   },
   { 
     id: 28, 
@@ -153,11 +114,7 @@ export const otherFishProducts: Product[] = [
     catchDate: "Август",
     manufacturer: "Русский минтай", 
     image: "https://cdn.metro-cc.ru/ru/ru_pim_123122001001_01.png",
-    prices: {
-      smallWholesale: undefined, // ожидаем
-      mediumWholesale: undefined, // ожидаем
-      largeWholesale: undefined // ожидаем
-    }
+    price: undefined // ожидаем
   },
   { 
     id: 29, 
@@ -168,11 +125,7 @@ export const otherFishProducts: Product[] = [
     catchDate: "Май",
     manufacturer: "ОКРФ", 
     image: "https://cdn.metro-cc.ru/ru/ru_pim_123122001001_01.png",
-    prices: {
-      smallWholesale: 185.9,
-      mediumWholesale: 181.9,
-      largeWholesale: 178.9
-    }
+    price: 185.9
   },
   { 
     id: 30, 
@@ -183,11 +136,7 @@ export const otherFishProducts: Product[] = [
     catchDate: "Октябрь",
     manufacturer: "ПК РКЗ", 
     image: "https://cdn.metro-cc.ru/ru/ru_pim_123122001001_01.png",
-    prices: {
-      smallWholesale: 185.9,
-      mediumWholesale: 181.9,
-      largeWholesale: 178.9
-    }
+    price: 185.9
   },
   { 
     id: 31, 
@@ -197,11 +146,7 @@ export const otherFishProducts: Product[] = [
     packaging: "0,5", 
     catchDate: "Март",
     manufacturer: "Китай", 
-    prices: {
-      smallWholesale: 417.9,
-      mediumWholesale: 417.9,
-      largeWholesale: 417.9
-    }
+    price: 417.9
   },
   { 
     id: 44, 
@@ -211,11 +156,7 @@ export const otherFishProducts: Product[] = [
     packaging: "вес", 
     catchDate: "Апрель, 24",
     manufacturer: "Мавритания", 
-    prices: {
-      smallWholesale: 350,
-      mediumWholesale: undefined,
-      largeWholesale: undefined
-    }
+    price: 350
   },
   { 
     id: 45, 
@@ -226,11 +167,7 @@ export const otherFishProducts: Product[] = [
     catchDate: "Апрель, 24",
     manufacturer: "Эквадор",
     image: "https://i0.wp.com/xn--80agnucfc0a.xn--p1ai/wp-content/uploads/2018/10/vomer___.jpg?fit=600%2C518&ssl=1", 
-    prices: {
-      smallWholesale: 280,
-      mediumWholesale: undefined,
-      largeWholesale: undefined
-    }
+    price: 280
   },
   { 
     id: 46, 
@@ -241,11 +178,7 @@ export const otherFishProducts: Product[] = [
     catchDate: "Апрель, 24",
     manufacturer: "Эквадор", 
     image: "https://i0.wp.com/xn--80agnucfc0a.xn--p1ai/wp-content/uploads/2018/10/vomer___.jpg?fit=600%2C518&ssl=1",
-    prices: {
-      smallWholesale: 335,
-      mediumWholesale: undefined,
-      largeWholesale: undefined
-    }
+    price: 335
   },
   { 
     id: 47, 
@@ -256,11 +189,7 @@ export const otherFishProducts: Product[] = [
     catchDate: "Апрель, 24",
     manufacturer: "Эквадор", 
     image: "https://i0.wp.com/xn--80agnucfc0a.xn--p1ai/wp-content/uploads/2018/10/vomer___.jpg?fit=600%2C518&ssl=1",
-    prices: {
-      smallWholesale: 425,
-      mediumWholesale: undefined,
-      largeWholesale: undefined
-    }
+    price: 425
   },
   { 
     id: 48, 
@@ -270,11 +199,7 @@ export const otherFishProducts: Product[] = [
     packaging: "22 кг", 
     catchDate: "Июль, 24",
     manufacturer: "Океан", 
-    prices: {
-      smallWholesale: 458,
-      mediumWholesale: undefined,
-      largeWholesale: undefined
-    }
+    price: 458
   },
   { 
     id: 49, 
@@ -283,12 +208,8 @@ export const otherFishProducts: Product[] = [
     size: "200-500 гр", 
     packaging: "вес", 
     catchDate: "Июль, 24",
-    manufacturer: "Аргентин��", 
-    prices: {
-      smallWholesale: 225,
-      mediumWholesale: undefined,
-      largeWholesale: undefined
-    }
+    manufacturer: "Аргентина", 
+    price: 225
   },
   { 
     id: 50, 
@@ -298,11 +219,7 @@ export const otherFishProducts: Product[] = [
     packaging: "вес", 
     catchDate: "Июль, 24",
     manufacturer: "Аргентина", 
-    prices: {
-      smallWholesale: 265,
-      mediumWholesale: undefined,
-      largeWholesale: undefined
-    }
+    price: 265
   },
   { 
     id: 51, 
@@ -312,11 +229,7 @@ export const otherFishProducts: Product[] = [
     packaging: "5 кг", 
     catchDate: "Май, 24",
     manufacturer: "Турция", 
-    prices: {
-      smallWholesale: 880,
-      mediumWholesale: undefined,
-      largeWholesale: undefined
-    }
+    price: 880
   },
   { 
     id: 52, 
@@ -327,11 +240,7 @@ export const otherFishProducts: Product[] = [
     catchDate: "Сент-окт, 23",
     manufacturer: "Н.Зеландия", 
     image: "https://cdn1.ozone.ru/s3/multimedia-c/c600/6069702384.jpg",
-    prices: {
-      smallWholesale: 565,
-      mediumWholesale: undefined,
-      largeWholesale: undefined
-    }
+    price: 565
   },
   { 
     id: 53, 
@@ -342,11 +251,7 @@ export const otherFishProducts: Product[] = [
     catchDate: "Июнь, 24",
     manufacturer: "Эквадор", 
     image: "https://storage.delikateska.ru/cache/d/a/a5d6ffc4-86eb-4b9f-a6fd-691dbc107d9c.jpg/w400h400.webp",
-    prices: {
-      smallWholesale: 330,
-      mediumWholesale: undefined,
-      largeWholesale: undefined
-    }
+    price: 330
   },
   { 
     id: 54, 
@@ -355,11 +260,7 @@ export const otherFishProducts: Product[] = [
     packaging: "12 кг", 
     catchDate: "Апрель, 24",
     manufacturer: "Ряжская РПК", 
-    prices: {
-      smallWholesale: 455,
-      mediumWholesale: undefined,
-      largeWholesale: undefined
-    }
+    price: 455
   },
   { 
     id: 55, 
@@ -370,11 +271,7 @@ export const otherFishProducts: Product[] = [
     catchDate: "Март, 24",
     manufacturer: "Норд Вест", 
     image: "https://rybexpert.ru/wp-content/uploads/2023/12/kambala-1.jpg",
-    prices: {
-      smallWholesale: 282,
-      mediumWholesale: undefined,
-      largeWholesale: undefined
-    }
+    price: 282
   },
   { 
     id: 56, 
@@ -384,11 +281,7 @@ export const otherFishProducts: Product[] = [
     catchDate: "Декабрь, 24",
     manufacturer: "«Балт Иней»", 
     image: "https://main-cdn.sbermegamarket.ru/big1/hlr-system/288/225/654/117/212/3/100029691550b0.jpg",
-    prices: {
-      smallWholesale: 192,
-      mediumWholesale: undefined,
-      largeWholesale: undefined
-    }
+    price: 192
   },
   { 
     id: 57, 
@@ -399,11 +292,7 @@ export const otherFishProducts: Product[] = [
     catchDate: "Август, 24",
     manufacturer: "Чили", 
     image: "https://sun1-26.userapi.com/s/v1/ig2/D8R-fACvTmyqmghGZcQEHe8m4VIWeghxEygbT9u1UEG8OyPOJVYVIvAMITPjSTD9d39ZIOTlmYN1lJxsQTdT8Vkm.jpg",
-    prices: {
-      smallWholesale: 1140,
-      mediumWholesale: undefined,
-      largeWholesale: undefined
-    }
+    price: 1140
   },
   { 
     id: 58, 
@@ -414,11 +303,7 @@ export const otherFishProducts: Product[] = [
     catchDate: "Август, 24",
     manufacturer: "Чили", 
     image: "https://biomore.ru/upload/iblock/659/pcj7nol0d5uusgeukbdayvx28gxtdgno.jpg",
-    prices: {
-      smallWholesale: 1185,
-      mediumWholesale: undefined,
-      largeWholesale: undefined
-    }
+    price: 1185
   },
   { 
     id: 59, 
@@ -429,10 +314,6 @@ export const otherFishProducts: Product[] = [
     catchDate: "Август, 24",
     manufacturer: "Чили", 
     image: "https://biomore.ru/upload/iblock/659/pcj7nol0d5uusgeukbdayvx28gxtdgno.jpg",
-    prices: {
-      smallWholesale: 1240,
-      mediumWholesale: undefined,
-      largeWholesale: undefined
-    }
+    price: 1240
   }
 ];

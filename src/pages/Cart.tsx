@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from "@/components/ui/button";
@@ -69,9 +70,7 @@ const Cart = () => {
             ) : (
               <div className="space-y-6">
                 {items.map((item) => {
-                  const price = item.product.prices.smallWholesale || 
-                                item.product.prices.mediumWholesale || 
-                                item.product.prices.largeWholesale || 0;
+                  const price = item.product.price || 0;
                   
                   return (
                     <div key={item.product.id} className="flex flex-col sm:flex-row justify-between border-b pb-4">

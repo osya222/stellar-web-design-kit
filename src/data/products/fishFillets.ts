@@ -11,11 +11,7 @@ export const fishFilletProducts: Product[] = [
     packaging: "10", 
     catchDate: "Июнь/июль",
     manufacturer: "Вьетнам", 
-    prices: {
-      smallWholesale: 252.9,
-      mediumWholesale: 247.9,
-      largeWholesale: 245.9
-    }
+    price: 252.9
   },
   { 
     id: 33, 
@@ -25,11 +21,7 @@ export const fishFilletProducts: Product[] = [
     packaging: "10", 
     catchDate: "Сентябрь",
     manufacturer: "Вьетнам", 
-    prices: {
-      smallWholesale: 609.9,
-      mediumWholesale: 598.9,
-      largeWholesale: 593.9
-    }
+    price: 609.9
   },
   { 
     id: 34, 
@@ -39,11 +31,7 @@ export const fishFilletProducts: Product[] = [
     packaging: "5*1 кг", 
     catchDate: "Декабрь",
     manufacturer: "Норд Вест/Мурманск", 
-    prices: {
-      smallWholesale: 722.9,
-      mediumWholesale: 722.9,
-      largeWholesale: 722.9
-    }
+    price: 722.9
   },
   { 
     id: 35, 
@@ -53,10 +41,6 @@ export const fishFilletProducts: Product[] = [
     packaging: "~ 12", 
     catchDate: "Август",
     manufacturer: "Аргентина", 
-    prices: {
-      smallWholesale: 497.9,
-      mediumWholesale: 490.9,
-      largeWholesale: 484.9
-    }
+    price: 497.9
   },
 ];

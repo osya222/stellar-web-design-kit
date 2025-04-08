@@ -174,9 +174,9 @@ const ProductShowcase: React.FC = () => {
                           <p className="text-gray-600 text-xs md:text-sm">
                             {product.manufacturer && `${product.manufacturer}`}
                           </p>
-                          {product.prices.smallWholesale && (
+                          {product.price && (
                             <p className="text-blue-800 font-semibold text-sm md:text-base">
-                              от {formatPrice(product.prices.smallWholesale)} ₽
+                              {formatPrice(product.price)} ₽
                             </p>
                           )}
                         </div>

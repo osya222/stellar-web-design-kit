@@ -11,11 +11,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Апрель/май",
     manufacturer: "Индия", 
-    prices: {
-      smallWholesale: 1002.9,
-      mediumWholesale: 997.9,
-      largeWholesale: 992.9
-    }
+    price: 1002.9
   },
   { 
     id: 7, 
@@ -25,11 +21,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Май",
     manufacturer: "Индия", 
-    prices: {
-      smallWholesale: 1004.9,
-      mediumWholesale: 999.9,
-      largeWholesale: 994.9
-    }
+    price: 1004.9
   },
   { 
     id: 8, 
@@ -39,11 +31,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Июль",
     manufacturer: "Индия", 
-    prices: {
-      smallWholesale: 1071.9,
-      mediumWholesale: 1066.9,
-      largeWholesale: 1061.9
-    }
+    price: 1071.9
   },
   { 
     id: 9, 
@@ -53,11 +41,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Апрель",
     manufacturer: "Индия", 
-    prices: {
-      smallWholesale: 1240.9,
-      mediumWholesale: undefined, // обсуждаем
-      largeWholesale: undefined  // обсуждаем
-    }
+    price: 1240.9
   },
   { 
     id: 10, 
@@ -68,11 +52,7 @@ export const shrimpProducts: Product[] = [
     catchDate: "Июль",
     manufacturer: "Аргентина",
     image: "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
-    prices: {
-      smallWholesale: 795.9,
-      mediumWholesale: 790.9,
-      largeWholesale: 785.9
-    }
+    price: 795.9
   },
   { 
     id: 11, 
@@ -83,11 +63,7 @@ export const shrimpProducts: Product[] = [
     catchDate: "Январь/апрель",
     manufacturer: "Аргентина",
     image: "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
-    prices: {
-      smallWholesale: 884.9,
-      mediumWholesale: 878.9,
-      largeWholesale: 873.9
-    }
+    price: 884.9
   },
   { 
     id: 12, 
@@ -97,11 +73,7 @@ export const shrimpProducts: Product[] = [
     packaging: "6*2 кг", 
     catchDate: "Январь",
     manufacturer: "Аргентина", 
-    prices: {
-      smallWholesale: 1022.9,
-      mediumWholesale: 1017.9,
-      largeWholesale: 1012.9
-    }
+    price: 1022.9
   },
   { 
     id: 13, 
@@ -112,10 +84,6 @@ export const shrimpProducts: Product[] = [
     weight: "9,6",
     catchDate: "Июль",
     manufacturer: "Китай", 
-    prices: {
-      smallWholesale: 1192.9,
-      mediumWholesale: 1189.9,
-      largeWholesale: 1184.9
-    }
+    price: 1192.9
   },
 ];
