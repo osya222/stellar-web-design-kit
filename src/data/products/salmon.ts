@@ -11,11 +11,7 @@ export const salmonProducts: Product[] = [
     packaging: "27 кг", 
     catchDate: "Сентябрь",
     manufacturer: "Чили Premium", 
-    prices: {
-      smallWholesale: 1413.9,
-      mediumWholesale: undefined, // штучный
-      largeWholesale: undefined // штучный
-    }
+    price: 1413.9
   },
   { 
     id: 2, 
@@ -25,10 +21,6 @@ export const salmonProducts: Product[] = [
     packaging: "27 кг", 
     catchDate: "Август",
     manufacturer: "Чили Premium", 
-    prices: {
-      smallWholesale: 1457.9,
-      mediumWholesale: 1452.9,
-      largeWholesale: 1447.9
-    }
+    price: 1457.9
   },
 ];

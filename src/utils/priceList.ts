@@ -4,16 +4,14 @@ import { products } from "@/data/products/index";
 import { toast } from "@/hooks/use-toast";
 
 export const downloadPriceList = () => {
-  let csvContent = "Наименование,Категория,Производитель,Малый опт,Средний опт,Крупный опт\n";
+  let csvContent = "Наименование,Категория,Производитель,Цена\n";
   
   products.forEach(product => {
     const row = [
       `"${product.name.replace(/"/g, '""')}"`,
       `"${product.category}"`,
       `"${product.manufacturer || ''}"`,
-      formatPrice(product.prices.smallWholesale || 0).replace(/\s/g, ""),
-      formatPrice(product.prices.mediumWholesale || 0).replace(/\s/g, ""),
-      formatPrice(product.prices.largeWholesale || 0).replace(/\s/g, "")
+      formatPrice(product.price || 0).replace(/\s/g, "")
     ];
     csvContent += row.join(",") + "\n";
   });

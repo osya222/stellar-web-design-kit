@@ -1,5 +1,4 @@
 
-
 /**
  * Format a price with currency symbol
  * @param price - The price to format
@@ -24,4 +23,3 @@ export function formatPrice(price: number | string | undefined, currency: string
   // Возвращаем отформатированную цену с валютой
   return `${formattedPrice} ${currency}`;
 }
-

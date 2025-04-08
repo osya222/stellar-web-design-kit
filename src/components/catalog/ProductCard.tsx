@@ -79,7 +79,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           )}
         </div>
         <div className="mt-auto">
-          <ProductPrices prices={product.prices} />
+          <ProductPrices price={product.price} />
           <div className="flex justify-end items-center mt-4">
             <Button size="sm" onClick={handleAddToCart}>
               <ShoppingCart className="w-4 h-4 mr-1" />

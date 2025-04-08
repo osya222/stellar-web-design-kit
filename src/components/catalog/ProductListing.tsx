@@ -32,7 +32,10 @@ const ProductListing: React.FC<ProductListingProps> = ({
         // Если не выбрана конкретная категория, группируем товары по категориям
         categories.map(category => {
           const categoryProducts = filteredProducts.filter(p => p.category === category);
-          return <ProductsByCategory key={category} category={category} products={categoryProducts} />;
+          if (categoryProducts.length > 0) {
+            return <ProductsByCategory key={category} category={category} products={categoryProducts} />;
+          }
+          return null;
         })
       ) : (
         // Если выбрана конкретная категория, показываем только товары этой категории

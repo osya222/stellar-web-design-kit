@@ -104,10 +104,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const getTotalPrice = () => {
     return items.reduce((total, item) => {
-      // Берем первую доступную цену для товара (мелкооптовая, если есть)
-      const price = item.product.prices.smallWholesale || 
-                    item.product.prices.mediumWholesale || 
-                    item.product.prices.largeWholesale || 0;
+      // Берем розничную цену товара (или 0, если не указана)
+      const price = item.product.price || 0;
       return total + (price * item.quantity);
     }, 0);
   };

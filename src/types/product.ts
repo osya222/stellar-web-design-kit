@@ -11,9 +11,5 @@ export interface Product {
   expiryDate?: string;
   weight?: string;
   image?: string; // New field for product images
-  prices: {
-    smallWholesale?: number;
-    mediumWholesale?: number;
-    largeWholesale?: number;
-  };
+  price?: number; // Single retail price
 }
