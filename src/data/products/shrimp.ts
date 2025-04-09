@@ -55,7 +55,7 @@ export const shrimpProducts: Product[] = [
     packaging: "6*2 кг", 
     catchDate: "Июль",
     manufacturer: "Аргентина",
-    image: "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
+    image: "/images/langoustines.jpg",
     price: 795.9
   },
   { 
@@ -66,7 +66,7 @@ export const shrimpProducts: Product[] = [
     packaging: "6*2 кг", 
     catchDate: "Январь/апрель",
     manufacturer: "Аргентина",
-    image: "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
+    image: "/images/langoustines.jpg",
     price: 884.9
   },
   { 

@@ -26,6 +26,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   const handleImageError = () => {
+    console.log(`Image error loading: ${product.image}`);
     setImageError(true);
   };
 
