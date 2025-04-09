@@ -8,7 +8,7 @@ export const productImages: Record<string, Record<string, string>> = {
     "default": "/lovable-uploads/7f979307-fd86-4fd7-a28a-428c30583726.png"
   },
   "Креветки и морепродукты": {
-    "default": "/images/seafood-default.jpg",
+    "default": "/lovable-uploads/9d283ac4-5a1a-45f8-b15b-f6e5d2812d1b.png",
   },
   "Мидии": {
     "default": "/images/mussels-default.jpg",
