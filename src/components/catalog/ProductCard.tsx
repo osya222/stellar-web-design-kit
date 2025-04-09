@@ -29,15 +29,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     setImageError(true);
   };
 
-  // Just use the product image URL directly if available
-  const productImage = product.image;
-
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
       <div className="h-48 bg-white flex items-center justify-center relative overflow-hidden">
-        {productImage && !imageError ? (
+        {product.image && !imageError ? (
           <img 
-            src={productImage} 
+            src={product.image} 
             alt={product.name} 
             className="object-cover w-full h-full"
             onError={handleImageError}
