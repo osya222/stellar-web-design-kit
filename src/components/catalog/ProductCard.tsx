@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
-import { Fish, ShoppingCart } from "lucide-react";
+import { Fish, ShoppingCart, ShellIcon, Shell } from "lucide-react";
 import { useCart } from '@/context/CartContext';
 
 interface ProductCardProps {
@@ -17,7 +17,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   
   // Функция для выбора иконки в зависимости от категории товара
   const renderProductIcon = () => {
-    return <Fish className="w-16 h-16 text-gray-600" />;
+    switch (product.category) {
+      case 'Лосось (Чили)':
+      case 'Форель (Турция)':
+      case 'Другие виды рыбы':
+      case 'Филе рыбы':
+        return <Fish className="w-16 h-16 text-gray-600" />;
+      case 'Креветки и морепродукты':
+        return <ShellIcon className="w-16 h-16 text-gray-600" />;
+      case 'Мидии':
+        return <Shell className="w-16 h-16 text-gray-600" />;
+      default:
+        return <Fish className="w-16 h-16 text-gray-600" />;
+    }
   };
 
   const handleAddToCart = () => {

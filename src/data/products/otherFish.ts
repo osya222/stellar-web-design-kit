@@ -10,7 +10,7 @@ export const otherFishProducts: Product[] = [
     size: "300-400", 
     packaging: "5", 
     manufacturer: "Турция", 
-    image: "/lovable-uploads/0fd3ac43-ec30-425b-b149-fd187b22e947.png",
+    image: "/images/dorado-1.jpg",
     price: undefined // ожидаем
   },
   { 
@@ -21,7 +21,7 @@ export const otherFishProducts: Product[] = [
     packaging: "5", 
     catchDate: "Сентябрь",
     manufacturer: "Турция", 
-    image: "/lovable-uploads/0fd3ac43-ec30-425b-b149-fd187b22e947.png",
+    image: "/images/dorado-2.jpg",
     price: 895.9
   },
   { 
@@ -32,7 +32,7 @@ export const otherFishProducts: Product[] = [
     packaging: "5", 
     catchDate: "Июль",
     manufacturer: "Турция", 
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png",
+    image: "/images/seabass-1.jpg",
     price: 828.9
   },
   { 
@@ -43,7 +43,7 @@ export const otherFishProducts: Product[] = [
     packaging: "28", 
     catchDate: "Ноябрь 24",
     manufacturer: "Фарерские о-ва", 
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png",
+    image: "/images/herring.jpg",
     price: 266.9
   },
   { 
@@ -54,7 +54,7 @@ export const otherFishProducts: Product[] = [
     packaging: "25", 
     catchDate: "Октябрь 24",
     manufacturer: "Фарерские о-ва", 
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png",
+    image: "/images/mackerel-1.jpg",
     price: 399.9
   },
   { 
@@ -65,7 +65,7 @@ export const otherFishProducts: Product[] = [
     packaging: "25", 
     catchDate: "Сентябрь 24",
     manufacturer: "Фарерские о-ва", 
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png",
+    image: "/images/mackerel-2.jpg",
     price: 414.9
   },
   { 
@@ -76,7 +76,7 @@ export const otherFishProducts: Product[] = [
     packaging: "25", 
     catchDate: "Февраль 25",
     manufacturer: "Фарерские о-ва", 
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png",
+    image: "/images/mackerel-3.jpg",
     price: 429.9
   },
   { 
@@ -86,7 +86,7 @@ export const otherFishProducts: Product[] = [
     size: "150-250", 
     catchDate: "Январь",
     manufacturer: "Аргентина", 
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png",
+    image: "/images/hake.jpg",
     price: 341.9
   },
   { 
@@ -97,7 +97,7 @@ export const otherFishProducts: Product[] = [
     packaging: "20", 
     catchDate: "Июль",
     manufacturer: "Норд Вест", 
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png",
+    image: "/images/flounder.jpg",
     price: undefined // ожидаем
   },
   { 
@@ -108,7 +108,7 @@ export const otherFishProducts: Product[] = [
     packaging: "26", 
     catchDate: "Июль",
     manufacturer: "ФОР", 
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png",
+    image: "/images/perch.jpg",
     price: 307.9
   },
   { 
@@ -119,7 +119,7 @@ export const otherFishProducts: Product[] = [
     packaging: "13", 
     catchDate: "Август",
     manufacturer: "Русский минтай", 
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png",
+    image: "/images/pollock-1.jpg",
     price: undefined // ожидаем
   },
   { 
@@ -130,7 +130,7 @@ export const otherFishProducts: Product[] = [
     packaging: "22", 
     catchDate: "Май",
     manufacturer: "ОКРФ", 
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png",
+    image: "/images/pollock-2.jpg",
     price: 185.9
   },
   { 
@@ -141,7 +141,7 @@ export const otherFishProducts: Product[] = [
     packaging: "24", 
     catchDate: "Октябрь",
     manufacturer: "ПК РКЗ", 
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png",
+    image: "/images/pollock-3.jpg",
     price: 185.9
   },
   { 
@@ -152,7 +152,7 @@ export const otherFishProducts: Product[] = [
     packaging: "0,5", 
     catchDate: "Март",
     manufacturer: "Китай", 
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png",
+    image: "/images/tuna.jpg",
     price: 417.9
   },
   // Для остальных продуктов в этой категории также используем доступное изображение

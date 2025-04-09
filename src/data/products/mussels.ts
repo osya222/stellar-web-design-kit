@@ -11,7 +11,7 @@ export const musselProducts: Product[] = [
     packaging: "10*1", 
     catchDate: "Июнь-август",
     manufacturer: "Чили", 
-    image: "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png",
+    image: "/images/mussels-shell-1.jpg",
     price: 391.9
   },
   { 
@@ -22,7 +22,7 @@ export const musselProducts: Product[] = [
     packaging: "10*0,5", 
     catchDate: "Апрель/май/ноябрь",
     manufacturer: "Чили", 
-    image: "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png",
+    image: "/images/mussels-shell-2.jpg",
     price: 483.9
   },
   { 
@@ -33,7 +33,7 @@ export const musselProducts: Product[] = [
     packaging: "9,2", 
     catchDate: "Май",
     manufacturer: "Чили", 
-    image: "/lovable-uploads/5a441a58-1636-4325-82e2-cee49ad20585.png",
+    image: "/images/mussels-meat-1.jpg",
     price: 520.9
   },
   { 
@@ -44,7 +44,7 @@ export const musselProducts: Product[] = [
     packaging: "9,2", 
     catchDate: "Май",
     manufacturer: "Чили", 
-    image: "/lovable-uploads/5a441a58-1636-4325-82e2-cee49ad20585.png",
+    image: "/images/mussels-meat-2.jpg",
     price: 509.9
   },
 ];

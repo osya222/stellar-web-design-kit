@@ -11,7 +11,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Апрель/май",
     manufacturer: "Индия", 
-    image: "/lovable-uploads/0a745aa0-fdc0-4662-ad63-068c846bdb43.png",
+    image: "/images/shrimp-1.jpg",
     price: 1002.9
   },
   { 
@@ -22,7 +22,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Май",
     manufacturer: "Индия", 
-    image: "/lovable-uploads/0a745aa0-fdc0-4662-ad63-068c846bdb43.png",
+    image: "/images/shrimp-2.jpg",
     price: 1004.9
   },
   { 
@@ -33,7 +33,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Июль",
     manufacturer: "Индия", 
-    image: "/lovable-uploads/0a745aa0-fdc0-4662-ad63-068c846bdb43.png",
+    image: "/images/shrimp-3.jpg",
     price: 1071.9
   },
   { 
@@ -44,7 +44,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Апрель",
     manufacturer: "Индия", 
-    image: "/lovable-uploads/de983f8f-acb9-417a-9ba8-54b8f3c696ad.png",
+    image: "/images/shrimp-cooked.jpg",
     price: 1240.9
   },
   { 
@@ -55,7 +55,7 @@ export const shrimpProducts: Product[] = [
     packaging: "6*2 кг", 
     catchDate: "Июль",
     manufacturer: "Аргентина",
-    image: "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
+    image: "/images/langoustine-1.jpg",
     price: 795.9
   },
   { 
@@ -66,7 +66,7 @@ export const shrimpProducts: Product[] = [
     packaging: "6*2 кг", 
     catchDate: "Январь/апрель",
     manufacturer: "Аргентина",
-    image: "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
+    image: "/images/langoustine-2.jpg",
     price: 884.9
   },
   { 
@@ -77,7 +77,7 @@ export const shrimpProducts: Product[] = [
     packaging: "6*2 кг", 
     catchDate: "Январь",
     manufacturer: "Аргентина", 
-    image: "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
+    image: "/images/langoustine-3.jpg",
     price: 1022.9
   },
   { 
@@ -89,7 +89,7 @@ export const shrimpProducts: Product[] = [
     weight: "9,6",
     catchDate: "Июль",
     manufacturer: "Китай", 
-    image: "/lovable-uploads/9ae097fc-d5b2-4b02-a072-3d1aeb8c211f.png",
+    image: "/images/shrimp-medallions.jpg",
     price: 1192.9
   },
 ];
