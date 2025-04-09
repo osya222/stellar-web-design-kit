@@ -9,23 +9,23 @@ export const productImages: Record<string, Record<string, string>> = {
   },
   "Креветки и морепродукты": {
     "default": "/images/seafood-default.jpg",
-    "Креветка Ваномэй": "/lovable-uploads/d231c5c4-a1ac-424c-9e44-4c4f4ccae778.png",
+    "Креветка Ваномэй": "/images/shrimp-vannamei.jpg",
     "КРЕВЕТКА ваннамей свежая очищенная б/г": "/images/shrimp-peeled.jpg",
     "КРЕВЕТКА ваннамей свежая в панцире б/г": "/images/shrimp-shell.webp",
     "Креветка северная": "/images/northern-shrimp.webp",
     "Креветка Королевская Ваннамей (Глазурь)": "/images/king-shrimp.jpg",
     "Креветка с/м очищенная": "/images/frozen-peeled-shrimp.jpg",
-    "Креветки (лангустины": "/images/langoustines.jpg",
+    "Креветки (лангустины)": "/images/langoustines.jpg",
     "Креветка Королевская Ваннамей (14%)": "/images/king-shrimp-glazed.jpg",
-    "Лангустины": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
-    "ЛАНГУСТИНЫ с/м L 2": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
-    "ЛАНГУСТИНЫ с/м L 1": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
+    "Лангустины": "/images/langoustines.jpg",
+    "ЛАНГУСТИНЫ с/м L 2": "/images/langoustines.jpg",
+    "ЛАНГУСТИНЫ с/м L 1": "/images/langoustines.jpg",
     "ЛАНГУСТИНЫ с/м C 2": "/images/langoustines-c2.jpeg"
   },
   "Мидии": {
     "default": "/images/mussels-default.jpg",
-    "МИДИИ раковина в собственном соку": "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png",
-    "МИДИИ раковина сливки-чеснок/томат-чеснок/вино": "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png"
+    "МИДИИ раковина в собственном соку": "/images/mussels-in-juice.jpg",
+    "МИДИИ раковина сливки-чеснок/томат-чеснок/вино": "/images/mussels-garlic.jpg"
   },
   "Другие виды рыбы": {
     "default": "/images/other-fish-default.jpg",

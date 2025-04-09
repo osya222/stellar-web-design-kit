@@ -11,6 +11,7 @@ export const troutProducts: Product[] = [
     packaging: "25 кг", 
     catchDate: "Июнь",
     manufacturer: "Турция", 
+    image: "/images/trout-1.jpg",
     price: 1014.9
   },
   { 
@@ -21,6 +22,7 @@ export const troutProducts: Product[] = [
     packaging: "25 кг", 
     catchDate: "Июль",
     manufacturer: "Турция", 
+    image: "/images/trout-2.jpg", 
     price: 1064.9
   },
   { 
@@ -31,6 +33,7 @@ export const troutProducts: Product[] = [
     packaging: "25 кг", 
     catchDate: "Июнь",
     manufacturer: "Турция", 
+    image: "/images/trout-3.jpg",
     price: 1166.9
   },
 ];
