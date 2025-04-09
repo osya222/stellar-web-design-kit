@@ -17,19 +17,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   
   // Функция для выбора иконки в зависимости от категории товара
   const renderProductIcon = () => {
-    switch (product.category) {
-      case 'Лосось (Чили)':
-      case 'Форель (Турция)':
-      case 'Другие виды рыбы':
-      case 'Филе рыбы':
-        return <Fish className="w-16 h-16 text-gray-600" />;
-      case 'Креветки и морепродукты':
-        return <ShellIcon className="w-16 h-16 text-gray-600" />;
-      case 'Мидии':
-        return <Shell className="w-16 h-16 text-gray-600" />;
-      default:
-        return <Fish className="w-16 h-16 text-gray-600" />;
-    }
+    return (
+      <img 
+        src="/lovable-uploads/02eda944-c8e4-4ddc-b061-5b197c2c118a.png" 
+        alt="Fish icon" 
+        className="w-16 h-16 opacity-70"
+      />
+    );
   };
 
   const handleAddToCart = () => {

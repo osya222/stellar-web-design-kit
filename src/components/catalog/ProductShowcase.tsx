@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Fish, ShellIcon, Shell, ExternalLink } from "lucide-react";
+import { ArrowRight, ExternalLink } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -30,21 +31,15 @@ const ProductShowcase: React.FC = () => {
     description: `Высококачественная продукция категории "${name}"`
   })).filter(category => category.name !== "Полуфабрикаты" && category.name !== "Икра" && category.name !== "Деликатесы").slice(0, 6);
 
-  // Иконки для категорий
-  const getCategoryIcon = (category: string) => {
-    switch (category) {
-      case 'Лосось (Чили)':
-      case 'Форель (Турция)':
-      case 'Другие виды рыбы':
-      case 'Филе рыбы':
-        return <Fish className="w-16 h-16 text-blue-800 opacity-80" />;
-      case 'Креветки и морепродукты':
-        return <ShellIcon className="w-16 h-16 text-blue-800 opacity-80" />;
-      case 'Мидии':
-        return <Shell className="w-16 h-16 text-blue-800 opacity-80" />;
-      default:
-        return <Fish className="w-16 h-16 text-blue-800 opacity-80" />;
-    }
+  // Рендер иконки рыбы для всех категорий
+  const renderFishIcon = () => {
+    return (
+      <img 
+        src="/lovable-uploads/02eda944-c8e4-4ddc-b061-5b197c2c118a.png" 
+        alt="Fish icon" 
+        className="w-16 h-16 opacity-70"
+      />
+    );
   };
 
   // Получение изображения для категории
@@ -119,7 +114,7 @@ const ProductShowcase: React.FC = () => {
                   />
                 ) : (
                   <div className="flex items-center justify-center h-full w-full bg-gradient-to-br from-blue-50 to-blue-100">
-                    {getCategoryIcon(category.name)}
+                    {renderFishIcon()}
                   </div>
                 )}
               </div>
@@ -157,7 +152,7 @@ const ProductShowcase: React.FC = () => {
                           />
                         ) : (
                           <div className="flex items-center justify-center h-full w-full">
-                            {getCategoryIcon(product.category)}
+                            {renderFishIcon()}
                           </div>
                         )}
                       </div>
