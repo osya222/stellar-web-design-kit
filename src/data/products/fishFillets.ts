@@ -11,6 +11,7 @@ export const fishFilletProducts: Product[] = [
     packaging: "10", 
     catchDate: "Июнь/июль",
     manufacturer: "Вьетнам", 
+    image: "/lovable-uploads/d231c5c4-a1ac-424c-9e44-4c4f4ccae778.png",
     price: 252.9
   },
   { 
@@ -21,6 +22,7 @@ export const fishFilletProducts: Product[] = [
     packaging: "10", 
     catchDate: "Сентябрь",
     manufacturer: "Вьетнам", 
+    image: "/lovable-uploads/d231c5c4-a1ac-424c-9e44-4c4f4ccae778.png",
     price: 609.9
   },
   { 
@@ -31,6 +33,7 @@ export const fishFilletProducts: Product[] = [
     packaging: "5*1 кг", 
     catchDate: "Декабрь",
     manufacturer: "Норд Вест/Мурманск", 
+    image: "/lovable-uploads/d231c5c4-a1ac-424c-9e44-4c4f4ccae778.png",
     price: 722.9
   },
   { 
@@ -41,6 +44,7 @@ export const fishFilletProducts: Product[] = [
     packaging: "~ 12", 
     catchDate: "Август",
     manufacturer: "Аргентина", 
+    image: "/lovable-uploads/d231c5c4-a1ac-424c-9e44-4c4f4ccae778.png",
     price: 497.9
   },
 ];

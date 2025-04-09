@@ -11,7 +11,7 @@ export const salmonProducts: Product[] = [
     packaging: "27 кг", 
     catchDate: "Сентябрь",
     manufacturer: "Чили Premium", 
-    image: "/images/salmon-1.jpg",
+    image: "/lovable-uploads/35f921ad-7bc0-4f9b-91a7-c8b68ca8e7fa.png",
     price: 1413.9
   },
   { 
@@ -22,7 +22,7 @@ export const salmonProducts: Product[] = [
     packaging: "27 кг", 
     catchDate: "Август",
     manufacturer: "Чили Premium", 
-    image: "/images/salmon-2.jpg",
+    image: "/lovable-uploads/35f921ad-7bc0-4f9b-91a7-c8b68ca8e7fa.png",
     price: 1457.9
   },
 ];

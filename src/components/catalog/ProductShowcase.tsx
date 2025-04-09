@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Fish, ShellIcon, Shell, ExternalLink } from "lucide-react";
@@ -11,7 +10,6 @@ import {
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import { products } from "@/data/products/index";
-import { getProductImage } from "@/data/productImages";
 import { formatPrice } from "@/lib/formatters";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -51,8 +49,9 @@ const ProductShowcase: React.FC = () => {
 
   // Получение изображения для категории
   const getCategoryImage = (categoryName: string) => {
-    const mockProduct = { category: categoryName, name: 'default' };
-    return getProductImage(mockProduct);
+    // Find a product in this category to use its image
+    const categoryProduct = products.find(p => p.category === categoryName && p.image);
+    return categoryProduct?.image;
   };
 
   const handleCategoryClick = (categoryId: string, event: React.MouseEvent) => {
@@ -99,11 +98,6 @@ const ProductShowcase: React.FC = () => {
       ...prev,
       [categoryName]: true
     }));
-  };
-
-  // Modified function to get product image
-  const getProductImageWithFallback = (product) => {
-    return product.image || getProductImage(product);
   };
 
   return (
@@ -154,9 +148,9 @@ const ProductShowcase: React.FC = () => {
                   <Card className="border-0 shadow-md rounded-xl overflow-hidden card-hover">
                     <CardContent className="p-0">
                       <div className="relative h-48 md:h-64 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
-                        {getProductImageWithFallback(product) && !imageErrors[index] ? (
+                        {product.image && !imageErrors[index] ? (
                           <img 
-                            src={getProductImageWithFallback(product)} 
+                            src={product.image} 
                             alt={product.name} 
                             className="object-cover w-full h-full"
                             onError={() => handleImageError(index)}

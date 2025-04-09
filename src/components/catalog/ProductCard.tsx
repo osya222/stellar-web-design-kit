@@ -6,7 +6,6 @@ import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
 import { Fish, ShoppingCart } from "lucide-react";
 import { useCart } from '@/context/CartContext';
-import { getProductImage } from '@/data/productImages';
 
 interface ProductCardProps {
   product: Product;
@@ -30,8 +29,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     setImageError(true);
   };
 
-  // Use product image URL directly if available, otherwise fall back to getProductImage
-  const productImage = product.image || getProductImage(product);
+  // Just use the product image URL directly if available
+  const productImage = product.image;
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">

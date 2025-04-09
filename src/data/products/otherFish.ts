@@ -1,3 +1,4 @@
+
 import { Product } from '@/types/product';
 
 // Другие виды рыбы products
@@ -9,7 +10,7 @@ export const otherFishProducts: Product[] = [
     size: "300-400", 
     packaging: "5", 
     manufacturer: "Турция", 
-    image: "/images/dorado.jpeg",
+    image: "/lovable-uploads/0fd3ac43-ec30-425b-b149-fd187b22e947.png",
     price: undefined // ожидаем
   },
   { 
@@ -20,7 +21,7 @@ export const otherFishProducts: Product[] = [
     packaging: "5", 
     catchDate: "Сентябрь",
     manufacturer: "Турция", 
-    image: "/images/dorado.jpeg",
+    image: "/lovable-uploads/0fd3ac43-ec30-425b-b149-fd187b22e947.png",
     price: 895.9
   },
   { 
@@ -31,7 +32,7 @@ export const otherFishProducts: Product[] = [
     packaging: "5", 
     catchDate: "Июль",
     manufacturer: "Турция", 
-    image: "/images/seabass.jpg",
+    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png",
     price: 828.9
   },
   { 
@@ -42,7 +43,7 @@ export const otherFishProducts: Product[] = [
     packaging: "28", 
     catchDate: "Ноябрь 24",
     manufacturer: "Фарерские о-ва", 
-    image: "/images/herring.jpg",
+    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png",
     price: 266.9
   },
   { 
@@ -53,7 +54,7 @@ export const otherFishProducts: Product[] = [
     packaging: "25", 
     catchDate: "Октябрь 24",
     manufacturer: "Фарерские о-ва", 
-    image: "/images/mackerel.webp",
+    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png",
     price: 399.9
   },
   { 
