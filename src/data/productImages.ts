@@ -2,10 +2,10 @@
 // Product image paths by category and product name
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
-    "default": "/images/salmon-default.jpg"
+    "default": "/lovable-uploads/0d6e972e-0353-45aa-907b-5f193220c4bb.png"
   },
   "Форель (Турция)": {
-    "default": "/images/trout-default.jpg"
+    "default": "/lovable-uploads/7f979307-fd86-4fd7-a28a-428c30583726.png"
   },
   "Креветки и морепродукты": {
     "default": "/images/seafood-default.jpg",
