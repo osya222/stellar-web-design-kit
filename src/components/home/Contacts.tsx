@@ -1,5 +1,5 @@
 
-import { Phone, Mail, MapPin } from "lucide-react";
+import { Phone, Mail, MapPin, Building } from "lucide-react";
 
 const Contacts = () => {
   return (
@@ -14,21 +14,30 @@ const Contacts = () => {
                 <Phone className="w-5 h-5 text-blue-600 mr-3 mt-1" />
                 <div>
                   <p className="font-medium">Телефон:</p>
-                  <p className="text-lg">+7 (000) 000-00-00</p>
+                  <p className="text-lg">+7 925 264-13-41</p>
                 </div>
               </div>
               <div className="flex items-start mb-4">
                 <Mail className="w-5 h-5 text-blue-600 mr-3 mt-1" />
                 <div>
                   <p className="font-medium">Электронная почта:</p>
-                  <p className="text-lg">info@moreproduct.ru</p>
+                  <p className="text-lg">Statiy.info@bk.ru</p>
                 </div>
               </div>
-              <div className="flex items-start">
+              <div className="flex items-start mb-4">
                 <MapPin className="w-5 h-5 text-blue-600 mr-3 mt-1" />
                 <div>
                   <p className="font-medium">Адрес:</p>
-                  <p className="text-lg">г. Москва, ул. Примерная, 123</p>
+                  <p className="text-lg">111123, г. Москва, Электродный проезд, д. 6 стр. 1, помещ. 3/1</p>
+                </div>
+              </div>
+              <div className="flex items-start">
+                <Building className="w-5 h-5 text-blue-600 mr-3 mt-1" />
+                <div>
+                  <p className="font-medium">Юридическая информация:</p>
+                  <p className="text-lg">ООО "СИТЕКС"</p>
+                  <p className="text-sm text-gray-600">ИНН 7720939157</p>
+                  <p className="text-sm text-gray-600">Генеральный директор: Статий Владислав Николаевич</p>
                 </div>
               </div>
             </div>

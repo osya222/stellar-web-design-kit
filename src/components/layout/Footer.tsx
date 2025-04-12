@@ -1,6 +1,6 @@
 
 import Logo from "@/components/layout/Logo";
-import { Phone, Mail } from "lucide-react";
+import { Phone, Mail, Building } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -26,16 +26,21 @@ const Footer = () => {
             <h4 className="text-lg font-medium mb-4">Контакты</h4>
             <p className="flex items-center mb-2">
               <Phone className="w-4 h-4 mr-2" />
-              +7 (000) 000-00-00
+              +7 925 264-13-41
+            </p>
+            <p className="flex items-center mb-2">
+              <Mail className="w-4 h-4 mr-2" />
+              Statiy.info@bk.ru
             </p>
             <p className="flex items-center">
-              <Mail className="w-4 h-4 mr-2" />
-              info@moreproduct.ru
+              <Building className="w-4 h-4 mr-2" />
+              111123, г. Москва, Электродный проезд, д. 6 стр. 1, помещ. 3/1
             </p>
           </div>
         </div>
-        <div className="pt-6 border-t border-blue-700 text-center">
-          <p>&copy; {new Date().getFullYear()} МореПродукт. Все права защищены.</p>
+        <div className="pt-6 border-t border-blue-700 text-center md:text-left">
+          <p className="mb-1">&copy; {new Date().getFullYear()} ООО "СИТЕКС". Все права защищены.</p>
+          <p className="text-sm text-blue-200">ИНН 7720939157 | Генеральный директор: Статий Владислав Николаевич</p>
         </div>
       </div>
     </footer>
