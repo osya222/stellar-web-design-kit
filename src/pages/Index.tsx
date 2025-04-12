@@ -7,20 +7,15 @@ import Footer from "@/components/layout/Footer";
 import Hero from "@/components/home/Hero";
 import About from "@/components/home/About";
 import Contacts from "@/components/home/Contacts";
-import { downloadPriceList } from "@/utils/priceList";
 
 const Index = () => {
-  const handleDownloadPriceList = () => {
-    downloadPriceList();
-  };
-
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
       <Header />
 
       {/* Hero section */}
-      <Hero onDownloadPriceList={handleDownloadPriceList} />
+      <Hero />
       
       {/* Product Showcase */}
       <ProductShowcase />
