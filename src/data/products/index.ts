@@ -3,8 +3,6 @@ import { Product } from '@/types/product';
 import { salmonProducts } from './salmon';
 import { troutProducts } from './trout';
 import { shrimpProducts } from './shrimp';
-import { musselProducts } from './mussels';
-import { otherFishProducts } from './otherFish';
 import { fishFilletProducts } from './fishFillets';
 import { getCategoryByName } from './types';
 
@@ -13,8 +11,6 @@ export const products: Product[] = [
   ...salmonProducts,
   ...troutProducts,
   ...shrimpProducts,
-  ...musselProducts,
-  ...otherFishProducts,
   ...fishFilletProducts
 ];
 
@@ -23,8 +19,6 @@ export {
   salmonProducts,
   troutProducts,
   shrimpProducts,
-  musselProducts,
-  otherFishProducts,
   fishFilletProducts,
   getCategoryByName
 };
