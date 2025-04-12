@@ -1,11 +1,13 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ShoppingCart, Trash2, Plus, Minus, ArrowLeft, Fish, ShellIcon, Soup, GanttChart } from "lucide-react";
+import { ShoppingCart, Trash2, Plus, Minus, ArrowLeft, Fish, ShellIcon, Soup, GanttChart, CreditCard } from "lucide-react";
 import { formatPrice } from '@/lib/formatters';
 import { Link } from 'react-router-dom';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { toast } from '@/hooks/use-toast';
 
 const Cart = () => {
   const { 
@@ -17,9 +19,31 @@ const Cart = () => {
     getTotalItems,
     getTotalPrice
   } = useCart();
+  
+  const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
+  const [processingPayment, setProcessingPayment] = useState(false);
 
   const handleCheckout = () => {
-    alert('Функция оформления заказа будет доступна скоро!');
+    setPaymentDialogOpen(true);
+  };
+  
+  const handleProcessPayment = () => {
+    setProcessingPayment(true);
+    
+    // Имитация процесса оплаты
+    setTimeout(() => {
+      setProcessingPayment(false);
+      setPaymentDialogOpen(false);
+      
+      // Показываем уведомление об успешной оплате
+      toast({
+        title: "Заказ оформлен",
+        description: "Ваш заказ успешно оформлен. Мы свяжемся с вами в ближайшее время.",
+      });
+      
+      // Очистка корзины после успешной оплаты
+      clearCart();
+    }, 2000);
   };
 
   return (
@@ -155,7 +179,9 @@ const Cart = () => {
                 <Button 
                   size="lg"
                   onClick={handleCheckout}
+                  className="bg-green-600 hover:bg-green-700"
                 >
+                  <CreditCard className="w-5 h-5 mr-2" />
                   Оформить заказ
                 </Button>
               </div>
@@ -163,6 +189,59 @@ const Cart = () => {
           )}
         </Card>
       </div>
+      
+      {/* Payment Dialog */}
+      <Dialog open={paymentDialogOpen} onOpenChange={setPaymentDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Оформление заказа</DialogTitle>
+            <DialogDescription>
+              Общая сумма заказа: {formatPrice(getTotalPrice())}
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid gap-4 py-4">
+            <div className="space-y-2">
+              <h3 className="font-medium">Информация о доставке</h3>
+              <p className="text-sm text-gray-500">
+                После оформления заказа наш менеджер свяжется с вами для уточнения деталей доставки.
+              </p>
+            </div>
+            
+            <div className="space-y-2">
+              <h3 className="font-medium">Способ оплаты</h3>
+              <div className="flex items-center p-2 border rounded-md">
+                <CreditCard className="w-5 h-5 mr-2 text-blue-500" />
+                <span>Оплата картой при получении</span>
+              </div>
+            </div>
+          </div>
+          
+          <DialogFooter className="sm:justify-between">
+            <Button 
+              variant="outline" 
+              onClick={() => setPaymentDialogOpen(false)}
+            >
+              Отмена
+            </Button>
+            
+            <Button
+              onClick={handleProcessPayment}
+              disabled={processingPayment}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              {processingPayment ? (
+                <>Обработка...</>
+              ) : (
+                <>
+                  <CreditCard className="w-4 h-4 mr-2" />
+                  Подтвердить заказ
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
       
       {/* Footer */}
       <footer className="bg-blue-900 text-white py-8 mt-auto">
