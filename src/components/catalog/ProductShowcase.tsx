@@ -22,14 +22,20 @@ const ProductShowcase: React.FC = () => {
   const isMobile = useIsMobile();
 
   // Extract unique categories from products array to replace productCategories
-  // Filter out the "Деликатесы" category
+  // Filter out the "Деликатесы", "Другие виды рыбы", "Филе рыбы" categories
   const productCategories = Array.from(
     new Set(products.map(product => product.category))
   ).map(name => ({ 
     id: name.toLowerCase().replace(/\s+/g, '-'), 
     name,
     description: `Высококачественная продукция категории "${name}"`
-  })).filter(category => category.name !== "Полуфабрикаты" && category.name !== "Икра" && category.name !== "Деликатесы").slice(0, 6);
+  })).filter(category => 
+    category.name !== "Полуфабрикаты" && 
+    category.name !== "Икра" && 
+    category.name !== "Деликатесы" &&
+    category.name !== "Другие виды рыбы" &&
+    category.name !== "Филе рыбы"
+  ).slice(0, 6);
 
   // Рендер иконки рыбы для всех категорий
   const renderFishIcon = () => {

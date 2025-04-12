@@ -6,6 +6,7 @@ import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
 import { Fish, ShoppingCart, ShellIcon, Shell } from "lucide-react";
 import { useCart } from '@/context/CartContext';
+import ImageUploader from '@/components/common/ImageUploader';
 
 interface ProductCardProps {
   product: Product;
@@ -14,6 +15,7 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
   const [imageError, setImageError] = useState(false);
+  const [customImage, setCustomImage] = useState<string>('');
   
   // Функция для выбора иконки в зависимости от категории товара
   const renderProductIcon = () => {
@@ -27,7 +29,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   const handleAddToCart = () => {
-    addToCart(product);
+    // If we have a custom image, add it to the product before adding to cart
+    const productToAdd = customImage 
+      ? { ...product, image: customImage }
+      : product;
+    
+    addToCart(productToAdd);
   };
 
   const handleImageError = () => {
@@ -35,20 +42,29 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     setImageError(true);
   };
 
+  const handleImageSelect = (imageUrl: string) => {
+    setCustomImage(imageUrl);
+    setImageError(false);
+  };
+
+  // Determine which image to display
+  const displayImage = customImage || (product.image && !imageError ? product.image : null);
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
       <div className="h-48 bg-white flex items-center justify-center relative overflow-hidden">
-        {product.image && !imageError ? (
+        {displayImage ? (
           <img 
-            src={product.image} 
+            src={displayImage} 
             alt={product.name} 
             className="object-cover w-full h-full"
             onError={handleImageError}
           />
         ) : (
-          <div className="flex flex-col items-center justify-center w-full h-full">
-            {renderProductIcon()}
-          </div>
+          <ImageUploader 
+            onImageSelect={handleImageSelect} 
+            className="w-full h-full"
+          />
         )}
       </div>
       <CardContent className="p-4 flex flex-col flex-grow">
@@ -83,8 +99,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         </div>
         <div className="mt-auto">
           <ProductPrices price={product.price} />
-          <div className="flex justify-end items-center mt-4">
-            <Button size="sm" onClick={handleAddToCart}>
+          <div className="flex justify-between items-center mt-4">
+            {!displayImage && (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setImageError(true)} 
+                className="text-blue-500"
+              >
+                <Image className="w-4 h-4 mr-1" />
+                Добавить фото
+              </Button>
+            )}
+            <Button size="sm" onClick={handleAddToCart} className="ml-auto">
               <ShoppingCart className="w-4 h-4 mr-1" />
               В корзину
             </Button>

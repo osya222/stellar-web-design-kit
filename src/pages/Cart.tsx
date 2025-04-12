@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from "@/components/ui/button";
@@ -208,11 +207,18 @@ const Cart = () => {
               </p>
             </div>
             
-            <div className="space-y-2">
+            <div className="space-y-3">
               <h3 className="font-medium">Способ оплаты</h3>
-              <div className="flex items-center p-2 border rounded-md">
-                <CreditCard className="w-5 h-5 mr-2 text-blue-500" />
-                <span>Оплата картой при получении</span>
+              <div className="flex items-center p-3 border rounded-md bg-white">
+                <img 
+                  src="/lovable-uploads/0fa26d3b-9843-48d7-afaf-e69bddbee7b5.png" 
+                  alt="СБП через Альфа-Банк" 
+                  className="h-8 mr-3"
+                />
+                <div>
+                  <div className="font-medium">Оплата СБП через Альфа-Банк</div>
+                  <div className="text-sm text-gray-500">Быстро и безопасно</div>
+                </div>
               </div>
             </div>
           </div>
@@ -228,7 +234,7 @@ const Cart = () => {
             <Button
               onClick={handleProcessPayment}
               disabled={processingPayment}
-              className="bg-blue-600 hover:bg-blue-700"
+              className="bg-green-600 hover:bg-green-700"
             >
               {processingPayment ? (
                 <>Обработка...</>

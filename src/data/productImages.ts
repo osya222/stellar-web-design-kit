@@ -12,12 +12,6 @@ export const productImages: Record<string, Record<string, string>> = {
   },
   "Мидии": {
     "default": "/images/mussels-default.jpg",
-  },
-  "Другие виды рыбы": {
-    "default": "/images/other-fish-default.jpg",
-  },
-  "Филе рыбы": {
-    "default": "/images/fish-fillet-default.jpeg"
   }
 };
 
