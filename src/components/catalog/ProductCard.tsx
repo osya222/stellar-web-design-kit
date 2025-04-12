@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
-import { Fish, ShoppingCart, ShellIcon, Shell } from "lucide-react";
+import { Fish, ShoppingCart, ShellIcon, Shell, ImageIcon } from "lucide-react";
 import { useCart } from '@/context/CartContext';
 import ImageUploader from '@/components/common/ImageUploader';
 
@@ -107,7 +107,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 onClick={() => setImageError(true)} 
                 className="text-blue-500"
               >
-                <Image className="w-4 h-4 mr-1" />
+                <ImageIcon className="w-4 h-4 mr-1" />
                 Добавить фото
               </Button>
             )}

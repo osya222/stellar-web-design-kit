@@ -1,7 +1,7 @@
 
 import React, { useState, useRef } from 'react';
 import { Button } from "@/components/ui/button";
-import { Image, Upload, X } from "lucide-react";
+import { ImageIcon, Upload, X } from "lucide-react";
 
 interface ImageUploaderProps {
   onImageSelect: (imageUrl: string) => void;
@@ -79,7 +79,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({ onImageSelect, currentIma
           variant="outline"
           className="w-full h-full min-h-[120px] flex flex-col items-center justify-center border-dashed border-2 rounded-md"
         >
-          <Image className="h-8 w-8 mb-2 text-blue-500" />
+          <ImageIcon className="h-8 w-8 mb-2 text-blue-500" />
           <span>Загрузить изображение</span>
         </Button>
       )}
