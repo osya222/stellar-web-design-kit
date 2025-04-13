@@ -7,14 +7,11 @@ import { FileText } from "lucide-react";
 const PublicOffer = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
       <Header />
 
-      {/* Main content */}
       <main className="flex-grow bg-slate-50">
         <div className="container-custom py-12">
           <div className="bg-white rounded-lg shadow-md p-6 md:p-8 max-w-4xl mx-auto">
-            {/* Header with icon */}
             <div className="flex items-center mb-6 border-b pb-4">
               <FileText className="h-8 w-8 text-blue-600 mr-3" />
               <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
@@ -22,7 +19,6 @@ const PublicOffer = () => {
               </h1>
             </div>
 
-            {/* Content */}
             <div className="space-y-6 text-gray-700">
               <section>
                 <h2 className="text-xl font-semibold text-gray-800 mb-3">1. Общие положения</h2>
@@ -119,7 +115,6 @@ const PublicOffer = () => {
         </div>
       </main>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
