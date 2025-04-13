@@ -26,8 +26,6 @@ const Cart = () => {
   
   const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
   const [processingPayment, setProcessingPayment] = useState(false);
-  const [promocode, setPromocode] = useState('');
-  const [promocodeApplied, setPromocodeApplied] = useState(false);
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
     phone: '',
@@ -67,29 +65,6 @@ const Cart = () => {
       // Очистка корзины после успешной оплаты
       clearCart();
     }, 2000);
-  };
-
-  const handleApplyPromocode = () => {
-    if (promocode.toLowerCase() === 'скидка10') {
-      setPromocodeApplied(true);
-      toast({
-        description: "Промокод применен! Скидка 10%",
-      });
-    } else {
-      toast({
-        title: "Ошибка",
-        description: "Неверный промокод",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const calculateDiscount = () => {
-    return promocodeApplied ? getTotalPrice() * 0.1 : 0;
-  };
-
-  const calculateFinalPrice = () => {
-    return getTotalPrice() - calculateDiscount();
   };
 
   const handleCustomerInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -248,35 +223,9 @@ const Cart = () => {
                     <span className="font-medium">{formatPrice(getTotalPrice())}</span>
                   </div>
                   
-                  {promocodeApplied && (
-                    <div className="flex justify-between text-green-600">
-                      <span>Скидка по промокоду:</span>
-                      <span>-{formatPrice(calculateDiscount())}</span>
-                    </div>
-                  )}
-                  
                   <div className="flex justify-between pt-2 border-t border-gray-200 text-lg font-bold">
                     <span>Итого:</span>
-                    <span>{formatPrice(calculateFinalPrice())}</span>
-                  </div>
-                  
-                  <div className="pt-2">
-                    <div className="flex gap-2 mb-2">
-                      <Input 
-                        placeholder="Введите промокод" 
-                        value={promocode}
-                        onChange={(e) => setPromocode(e.target.value)}
-                        className="flex-1"
-                      />
-                      <Button 
-                        variant="outline" 
-                        onClick={handleApplyPromocode} 
-                        disabled={promocodeApplied || !promocode}
-                      >
-                        Применить
-                      </Button>
-                    </div>
-                    <p className="text-xs text-gray-500">Попробуйте промокод "скидка10" для демонстрации</p>
+                    <span>{formatPrice(getTotalPrice())}</span>
                   </div>
                 </CardContent>
                 <CardFooter className="p-6 pt-0">
@@ -300,7 +249,7 @@ const Cart = () => {
           <DialogHeader>
             <DialogTitle>Оформление заказа</DialogTitle>
             <DialogDescription>
-              Общая сумма заказа: {formatPrice(calculateFinalPrice())}
+              Общая сумма заказа: {formatPrice(getTotalPrice())}
             </DialogDescription>
           </DialogHeader>
           
