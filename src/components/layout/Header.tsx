@@ -1,6 +1,6 @@
 
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { ShoppingCart, Menu, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import Logo from "@/components/layout/Logo";
@@ -18,15 +18,68 @@ const Header = () => {
   const { getTotalItems } = useCart();
   const isMobile = useIsMobile();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const location = useLocation();
+  
+  // Function to handle anchor link navigation
+  const scrollToSection = (sectionId: string) => {
+    setIsMenuOpen(false);
+    
+    // If we're not on the home page, navigate to home first
+    if (location.pathname !== '/') {
+      return;
+    }
+    
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
   
   // Desktop navigation
   const DesktopNav = () => (
     <nav>
       <ul className="flex gap-8 font-medium">
-        <li><Link to="/" className="hover:text-blue-200 transition-colors">Главная</Link></li>
-        <li><Link to="/#catalog" className="hover:text-blue-200 transition-colors">Каталог</Link></li>
-        <li><Link to="/#about" className="hover:text-blue-200 transition-colors">О нас</Link></li>
-        <li><Link to="/#contacts" className="hover:text-blue-200 transition-colors">Контакты</Link></li>
+        <li>
+          <Link to="/" className="hover:text-blue-200 transition-colors">
+            Главная
+          </Link>
+        </li>
+        <li>
+          <Link 
+            to="/#catalog" 
+            className="hover:text-blue-200 transition-colors"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSection("catalog");
+            }}
+          >
+            Каталог
+          </Link>
+        </li>
+        <li>
+          <Link 
+            to="/#about" 
+            className="hover:text-blue-200 transition-colors"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSection("about");
+            }}
+          >
+            О нас
+          </Link>
+        </li>
+        <li>
+          <Link 
+            to="/#contacts" 
+            className="hover:text-blue-200 transition-colors"
+            onClick={(e) => {
+              e.preventDefault();
+              scrollToSection("contacts");
+            }}
+          >
+            Контакты
+          </Link>
+        </li>
         <li>
           <Link to="/cart" className="flex items-center hover:text-blue-200 transition-colors">
             <ShoppingCart className="w-4 h-4 mr-2" />
@@ -60,19 +113,48 @@ const Header = () => {
         </SheetHeader>
         <div className="mt-6">
           <nav className="flex flex-col gap-6">
-            <Link to="/" className="text-lg font-medium hover:text-blue-200 transition-colors" onClick={() => setIsMenuOpen(false)}>
+            <Link 
+              to="/" 
+              className="text-lg font-medium hover:text-blue-200 transition-colors" 
+              onClick={() => setIsMenuOpen(false)}
+            >
               Главная
             </Link>
-            <Link to="/#catalog" className="text-lg font-medium hover:text-blue-200 transition-colors" onClick={() => setIsMenuOpen(false)}>
+            <Link 
+              to="/#catalog" 
+              className="text-lg font-medium hover:text-blue-200 transition-colors" 
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection("catalog");
+              }}
+            >
               Каталог
             </Link>
-            <Link to="/#about" className="text-lg font-medium hover:text-blue-200 transition-colors" onClick={() => setIsMenuOpen(false)}>
+            <Link 
+              to="/#about" 
+              className="text-lg font-medium hover:text-blue-200 transition-colors" 
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection("about");
+              }}
+            >
               О нас
             </Link>
-            <Link to="/#contacts" className="text-lg font-medium hover:text-blue-200 transition-colors" onClick={() => setIsMenuOpen(false)}>
+            <Link 
+              to="/#contacts" 
+              className="text-lg font-medium hover:text-blue-200 transition-colors" 
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection("contacts");
+              }}
+            >
               Контакты
             </Link>
-            <Link to="/cart" className="flex items-center text-lg font-medium hover:text-blue-200 transition-colors" onClick={() => setIsMenuOpen(false)}>
+            <Link 
+              to="/cart" 
+              className="flex items-center text-lg font-medium hover:text-blue-200 transition-colors" 
+              onClick={() => setIsMenuOpen(false)}
+            >
               <ShoppingCart className="w-5 h-5 mr-2" />
               Корзина
               {getTotalItems() > 0 && (

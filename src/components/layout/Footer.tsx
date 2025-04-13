@@ -1,9 +1,25 @@
 
+import { useLocation } from "react-router-dom";
 import Logo from "@/components/layout/Logo";
 import { Phone, Mail, Building } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
+  const location = useLocation();
+  
+  // Function to handle anchor link navigation
+  const scrollToSection = (sectionId: string) => {
+    // If we're not on the home page, don't try to scroll
+    if (location.pathname !== '/') {
+      return;
+    }
+    
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+  
   return (
     <footer className="bg-gradient-to-r from-blue-800 to-blue-600 text-white py-12 mt-auto">
       <div className="container-custom">
@@ -17,10 +33,47 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-medium mb-4">Навигация</h4>
             <ul className="space-y-2">
-              <li><Link to="/" className="text-blue-200 hover:text-white transition-colors">Главная</Link></li>
-              <li><Link to="/#catalog" className="text-blue-200 hover:text-white transition-colors">Каталог</Link></li>
-              <li><Link to="/#about" className="text-blue-200 hover:text-white transition-colors">О нас</Link></li>
-              <li><Link to="/#contacts" className="text-blue-200 hover:text-white transition-colors">Контакты</Link></li>
+              <li>
+                <Link to="/" className="text-blue-200 hover:text-white transition-colors">
+                  Главная
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/#catalog" 
+                  className="text-blue-200 hover:text-white transition-colors"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToSection("catalog");
+                  }}
+                >
+                  Каталог
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/#about" 
+                  className="text-blue-200 hover:text-white transition-colors"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToSection("about");
+                  }}
+                >
+                  О нас
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/#contacts" 
+                  className="text-blue-200 hover:text-white transition-colors"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToSection("contacts");
+                  }}
+                >
+                  Контакты
+                </Link>
+              </li>
             </ul>
           </div>
           <div>
