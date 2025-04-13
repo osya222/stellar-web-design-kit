@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ShoppingCart, Menu, X } from "lucide-react";
@@ -10,7 +9,8 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetClose
+  SheetClose,
+  SheetTrigger
 } from "@/components/ui/sheet";
 
 const Header = () => {
@@ -20,11 +20,9 @@ const Header = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Function to handle anchor link navigation
   const scrollToSection = (sectionId: string) => {
     setIsMenuOpen(false);
     
-    // If we're not on the home page, navigate to home first
     if (location.pathname !== '/') {
       navigate('/', { state: { scrollTo: sectionId } });
       return;
@@ -36,7 +34,6 @@ const Header = () => {
     }
   };
   
-  // Desktop navigation
   const DesktopNav = () => (
     <nav>
       <ul className="flex gap-8 font-medium">
@@ -84,7 +81,6 @@ const Header = () => {
     </nav>
   );
   
-  // Mobile navigation using Sheet component
   const MobileNav = () => (
     <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
       <SheetTrigger asChild>
