@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ShoppingCart, Menu, X } from "lucide-react";
@@ -34,13 +35,25 @@ const Header = () => {
     }
   };
   
+  const handleHomeClick = () => {
+    setIsMenuOpen(false);
+    if (location.pathname !== '/') {
+      navigate('/');
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+  
   const DesktopNav = () => (
     <nav>
       <ul className="flex gap-8 font-medium">
         <li>
-          <Link to="/" className="hover:text-blue-200 transition-colors">
+          <button 
+            onClick={handleHomeClick}
+            className="hover:text-blue-200 transition-colors bg-transparent border-0 p-0"
+          >
             Главная
-          </Link>
+          </button>
         </li>
         <li>
           <button 
@@ -98,13 +111,12 @@ const Header = () => {
         </SheetHeader>
         <div className="mt-6">
           <nav className="flex flex-col gap-6">
-            <Link 
-              to="/" 
-              className="text-lg font-medium hover:text-blue-200 transition-colors" 
-              onClick={() => setIsMenuOpen(false)}
+            <button 
+              className="text-lg font-medium hover:text-blue-200 transition-colors text-left bg-transparent border-0 p-0" 
+              onClick={handleHomeClick}
             >
               Главная
-            </Link>
+            </button>
             <button 
               className="text-lg font-medium hover:text-blue-200 transition-colors text-left bg-transparent border-0" 
               onClick={() => scrollToSection("catalog")}

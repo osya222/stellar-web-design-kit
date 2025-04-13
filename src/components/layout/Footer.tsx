@@ -8,9 +8,7 @@ const Footer = () => {
   const location = useLocation();
   const navigate = useNavigate();
   
-  // Function to handle anchor link navigation
   const scrollToSection = (sectionId: string) => {
-    // If we're not on the home page, navigate to home first
     if (location.pathname !== '/') {
       navigate('/', { state: { scrollTo: sectionId } });
       return;
@@ -19,6 +17,14 @@ const Footer = () => {
     const element = document.getElementById(sectionId);
     if (element) {
       element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+  
+  const handleHomeClick = () => {
+    if (location.pathname !== '/') {
+      navigate('/');
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
   
@@ -36,9 +42,12 @@ const Footer = () => {
             <h4 className="text-lg font-medium mb-4">Навигация</h4>
             <ul className="space-y-2">
               <li>
-                <Link to="/" className="text-blue-200 hover:text-white transition-colors">
+                <button 
+                  className="text-blue-200 hover:text-white transition-colors bg-transparent border-0 p-0"
+                  onClick={handleHomeClick}
+                >
                   Главная
-                </Link>
+                </button>
               </li>
               <li>
                 <button 
