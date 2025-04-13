@@ -95,7 +95,7 @@ const Footer = () => {
             <h4 className="text-lg font-medium mb-4">Контакты</h4>
             <p className="flex items-center mb-2">
               <Phone className="w-4 h-4 mr-2" />
-              +7 925 264-13-41
+              +7 (925) 264-13-41
             </p>
             <p className="flex items-center mb-2">
               <Mail className="w-4 h-4 mr-2" />
