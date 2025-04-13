@@ -7,14 +7,11 @@ import { Shield, Lock, User } from "lucide-react";
 const PrivacyPolicy = () => {
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
       <Header />
 
-      {/* Main content */}
       <main className="flex-grow bg-slate-50">
         <div className="container-custom py-12">
           <div className="bg-white rounded-lg shadow-md p-6 md:p-8 max-w-4xl mx-auto">
-            {/* Header with icon */}
             <div className="flex items-center mb-6 border-b pb-4">
               <Shield className="h-8 w-8 text-blue-600 mr-3" />
               <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
@@ -22,16 +19,6 @@ const PrivacyPolicy = () => {
               </h1>
             </div>
 
-            {/* Introduction */}
-            <div className="mb-8">
-              <p className="text-gray-700 mb-4">
-                Настоящая Политика конфиденциальности описывает, каким образом интернет-магазин <strong>Рыба Shop</strong> 
-                (далее — «Мы», «Наш», «Нас») собирает, использует, защищает и передает информацию о пользователях 
-                (далее — «Вы», «Ваш») при использовании нашего веб-сайта.
-              </p>
-            </div>
-
-            {/* Sections with icons */}
             <div className="space-y-8">
               <section>
                 <div className="flex items-center mb-3">
@@ -104,7 +91,6 @@ const PrivacyPolicy = () => {
               </section>
             </div>
 
-            {/* Contact information */}
             <div className="mt-10 pt-6 border-t border-gray-200">
               <h2 className="text-xl font-semibold text-gray-800 mb-3">Контактная информация</h2>
               <p className="text-gray-700">
@@ -121,7 +107,6 @@ const PrivacyPolicy = () => {
         </div>
       </main>
 
-      {/* Footer */}
       <Footer />
     </div>
   );
