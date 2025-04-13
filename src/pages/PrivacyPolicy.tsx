@@ -128,7 +128,12 @@ const PrivacyPolicy = () => {
             </div>
 
             <div className="mt-10 pt-6 border-t border-gray-200">
-              <h2 className="text-xl font-semibold text-gray-800 mb-3">Контактная информация</h2>
+              <p className="text-gray-700 italic">
+                Спасибо, что выбрали Рыба Shop (https://рыба.shop/)!<br />
+                Мы ценим ваше доверие и делаем всё возможное, чтобы ваш опыт покупок был безопасным и приятным.
+              </p>
+              
+              <h2 className="text-xl font-semibold text-gray-800 mb-3 mt-6">Контактная информация</h2>
               <p className="text-gray-700">
                 Если у вас возникли вопросы относительно нашей Политики конфиденциальности, 
                 пожалуйста, свяжитесь с нами:
