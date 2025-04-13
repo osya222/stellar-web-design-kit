@@ -1,4 +1,3 @@
-
 import React from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
@@ -18,6 +17,7 @@ const PublicOffer = () => {
                 <TabsTrigger value="offer" className="flex-1">Публичная оферта</TabsTrigger>
                 <TabsTrigger value="privacy" className="flex-1">Политика конфиденциальности</TabsTrigger>
               </TabsList>
+              
               
               <TabsContent value="offer">
                 <div className="flex items-center mb-6 border-b pb-4">
