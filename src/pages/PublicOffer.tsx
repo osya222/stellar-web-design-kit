@@ -129,17 +129,20 @@ const PublicOffer = () => {
                     Политика конфиденциальности и обработки персональных данных
                   </h1>
                 </div>
-                
-                <div className="space-y-6 text-gray-700">
-                  <p>
-                    Настоящая Политика конфиденциальности описывает, каким образом интернет-магазин <strong>Рыба Shop</strong> 
-                    (далее — «Мы», «Наш», «Нас») собирает, использует, защищает и передает информацию о пользователях 
-                    (далее — «Вы», «Ваш») при использовании нашего веб-сайта https://рыба.shop/ (далее — «Сайт»).
-                  </p>
-                  
+
+                <p className="text-gray-700 mb-6">
+                  Настоящая Политика конфиденциальности описывает, каким образом интернет-магазин Рыба Shop 
+                  (далее — «Мы», «Наш», «Нас») собирает, использует, защищает и передает информацию о пользователях 
+                  (далее — «Вы», «Ваш») при использовании нашего веб-сайта https://рыба.shop/ (далее — «Сайт»).
+                </p>
+
+                <div className="space-y-8">
                   <section>
-                    <h2 className="text-xl font-semibold text-gray-800 mb-3">1. Сбор информации</h2>
-                    <div className="ml-4">
+                    <div className="flex items-center mb-3">
+                      <User className="h-5 w-5 text-blue-600 mr-2" />
+                      <h2 className="text-xl font-semibold text-gray-800">1. Сбор информации</h2>
+                    </div>
+                    <div className="text-gray-700 ml-7">
                       <p className="mb-2">Мы можем собирать следующую информацию:</p>
                       <ul className="list-disc ml-6 space-y-2">
                         <li>
@@ -154,10 +157,13 @@ const PublicOffer = () => {
                       </ul>
                     </div>
                   </section>
-                  
+
                   <section>
-                    <h2 className="text-xl font-semibold text-gray-800 mb-3">2. Использование информации</h2>
-                    <div className="ml-4">
+                    <div className="flex items-center mb-3">
+                      <Globe className="h-5 w-5 text-blue-600 mr-2" />
+                      <h2 className="text-xl font-semibold text-gray-800">2. Использование информации</h2>
+                    </div>
+                    <div className="text-gray-700 ml-7">
                       <p className="mb-2">Собранная информация может использоваться для следующих целей:</p>
                       <ul className="list-disc ml-6 space-y-2">
                         <li>Оформление и доставка заказов рыбы и морепродуктов.</li>
@@ -169,10 +175,13 @@ const PublicOffer = () => {
                       </ul>
                     </div>
                   </section>
-                  
+
                   <section>
-                    <h2 className="text-xl font-semibold text-gray-800 mb-3">3. Передача информации третьим лицам</h2>
-                    <div className="ml-4">
+                    <div className="flex items-center mb-3">
+                      <Shield className="h-5 w-5 text-blue-600 mr-2" />
+                      <h2 className="text-xl font-semibold text-gray-800">3. Передача информации третьим лицам</h2>
+                    </div>
+                    <div className="text-gray-700 ml-7">
                       <p className="mb-2">
                         Мы не передаём и не продаём Вашу личную информацию третьим лицам, за исключением следующих случаев:
                       </p>
@@ -187,19 +196,25 @@ const PublicOffer = () => {
                       </ul>
                     </div>
                   </section>
-                  
+
                   <section>
-                    <h2 className="text-xl font-semibold text-gray-800 mb-3">4. Защита информации</h2>
-                    <p className="ml-4">
+                    <div className="flex items-center mb-3">
+                      <Lock className="h-5 w-5 text-blue-600 mr-2" />
+                      <h2 className="text-xl font-semibold text-gray-800">4. Защита информации</h2>
+                    </div>
+                    <p className="text-gray-700 ml-7">
                       Мы используем современные методы защиты информации, включая защищённые соединения (SSL) и ограничение 
                       доступа к персональным данным внутри компании, чтобы исключить возможность утечки, несанкционированного 
                       доступа или потери данных.
                     </p>
                   </section>
-                  
+
                   <section>
-                    <h2 className="text-xl font-semibold text-gray-800 mb-3">5. Ваши права</h2>
-                    <div className="ml-4">
+                    <div className="flex items-center mb-3">
+                      <User className="h-5 w-5 text-blue-600 mr-2" />
+                      <h2 className="text-xl font-semibold text-gray-800">5. Ваши права</h2>
+                    </div>
+                    <div className="text-gray-700 ml-7">
                       <p className="mb-2">Вы имеете право:</p>
                       <ul className="list-disc ml-6 space-y-2">
                         <li>Запросить доступ к Вашим личным данным.</li>
@@ -209,28 +224,36 @@ const PublicOffer = () => {
                       </ul>
                     </div>
                   </section>
-                  
+
                   <section>
-                    <h2 className="text-xl font-semibold text-gray-800 mb-3">6. Изменения в политике</h2>
-                    <p className="ml-4">
+                    <div className="flex items-center mb-3">
+                      <Shield className="h-5 w-5 text-blue-600 mr-2" />
+                      <h2 className="text-xl font-semibold text-gray-800">6. Изменения в политике</h2>
+                    </div>
+                    <p className="text-gray-700 ml-7">
                       Мы оставляем за собой право обновлять настоящую Политику конфиденциальности. 
                       Все изменения будут публиковаться на этой странице с датой вступления в силу. 
                       Рекомендуем периодически проверять эту страницу на предмет актуальности.
                     </p>
                   </section>
+                </div>
+
+                <div className="mt-10 pt-6 border-t border-gray-200">
+                  <p className="text-gray-700 italic">
+                    Спасибо, что выбрали Рыба Shop (https://рыба.shop/)!<br />
+                    Мы ценим ваше доверие и делаем всё возможное, чтобы ваш опыт покупок был безопасным и приятным.
+                  </p>
                   
-                  <div className="mt-6 pt-4 border-t border-gray-200">
-                    <h2 className="text-xl font-semibold text-gray-800 mb-3">Контактная информация</h2>
-                    <p>
-                      Если у вас возникли вопросы относительно нашей Политики конфиденциальности, 
-                      пожалуйста, свяжитесь с нами:
-                    </p>
-                    <ul className="mt-2">
-                      <li>Телефон: +7 925 264-13-41</li>
-                      <li>Email: Statiy.info@bk.ru</li>
-                      <li>Адрес: 111123, г. Москва, Электродный проезд, д. 6 стр. 1, помещ. 3/1</li>
-                    </ul>
-                  </div>
+                  <h2 className="text-xl font-semibold text-gray-800 mb-3 mt-6">Контактная информация</h2>
+                  <p className="text-gray-700">
+                    Если у вас возникли вопросы относительно нашей Политики конфиденциальности, 
+                    пожалуйста, свяжитесь с нами:
+                  </p>
+                  <ul className="mt-2 text-gray-700">
+                    <li>Телефон: +7 925 264-13-41</li>
+                    <li>Email: Statiy.info@bk.ru</li>
+                    <li>Адрес: 111123, г. Москва, Электродный проезд, д. 6 стр. 1, помещ. 3/1</li>
+                  </ul>
                 </div>
               </TabsContent>
             </Tabs>
