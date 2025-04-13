@@ -1,16 +1,18 @@
 
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "@/components/layout/Logo";
 import { Phone, Mail, Building } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   
   // Function to handle anchor link navigation
   const scrollToSection = (sectionId: string) => {
-    // If we're not on the home page, don't try to scroll
+    // If we're not on the home page, navigate to home first
     if (location.pathname !== '/') {
+      navigate('/', { state: { scrollTo: sectionId } });
       return;
     }
     
@@ -39,40 +41,28 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link 
-                  to="/#catalog" 
-                  className="text-blue-200 hover:text-white transition-colors"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollToSection("catalog");
-                  }}
+                <button 
+                  className="text-blue-200 hover:text-white transition-colors bg-transparent border-0 p-0"
+                  onClick={() => scrollToSection("catalog")}
                 >
                   Каталог
-                </Link>
+                </button>
               </li>
               <li>
-                <Link 
-                  to="/#about" 
-                  className="text-blue-200 hover:text-white transition-colors"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollToSection("about");
-                  }}
+                <button 
+                  className="text-blue-200 hover:text-white transition-colors bg-transparent border-0 p-0"
+                  onClick={() => scrollToSection("about")}
                 >
                   О нас
-                </Link>
+                </button>
               </li>
               <li>
-                <Link 
-                  to="/#contacts" 
-                  className="text-blue-200 hover:text-white transition-colors"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    scrollToSection("contacts");
-                  }}
+                <button 
+                  className="text-blue-200 hover:text-white transition-colors bg-transparent border-0 p-0"
+                  onClick={() => scrollToSection("contacts")}
                 >
                   Контакты
-                </Link>
+                </button>
               </li>
             </ul>
           </div>

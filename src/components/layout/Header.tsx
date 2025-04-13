@@ -1,6 +1,6 @@
 
-import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ShoppingCart, Menu, X } from "lucide-react";
 import { useCart } from "@/context/CartContext";
 import Logo from "@/components/layout/Logo";
@@ -10,7 +10,6 @@ import {
   SheetContent,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
   SheetClose
 } from "@/components/ui/sheet";
 
@@ -19,6 +18,7 @@ const Header = () => {
   const isMobile = useIsMobile();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
   
   // Function to handle anchor link navigation
   const scrollToSection = (sectionId: string) => {
@@ -26,6 +26,7 @@ const Header = () => {
     
     // If we're not on the home page, navigate to home first
     if (location.pathname !== '/') {
+      navigate('/', { state: { scrollTo: sectionId } });
       return;
     }
     
@@ -45,40 +46,28 @@ const Header = () => {
           </Link>
         </li>
         <li>
-          <Link 
-            to="/#catalog" 
-            className="hover:text-blue-200 transition-colors"
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToSection("catalog");
-            }}
+          <button 
+            className="hover:text-blue-200 transition-colors bg-transparent border-0"
+            onClick={() => scrollToSection("catalog")}
           >
             Каталог
-          </Link>
+          </button>
         </li>
         <li>
-          <Link 
-            to="/#about" 
-            className="hover:text-blue-200 transition-colors"
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToSection("about");
-            }}
+          <button 
+            className="hover:text-blue-200 transition-colors bg-transparent border-0"
+            onClick={() => scrollToSection("about")}
           >
             О нас
-          </Link>
+          </button>
         </li>
         <li>
-          <Link 
-            to="/#contacts" 
-            className="hover:text-blue-200 transition-colors"
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToSection("contacts");
-            }}
+          <button 
+            className="hover:text-blue-200 transition-colors bg-transparent border-0"
+            onClick={() => scrollToSection("contacts")}
           >
             Контакты
-          </Link>
+          </button>
         </li>
         <li>
           <Link to="/cart" className="flex items-center hover:text-blue-200 transition-colors">
@@ -120,36 +109,24 @@ const Header = () => {
             >
               Главная
             </Link>
-            <Link 
-              to="/#catalog" 
-              className="text-lg font-medium hover:text-blue-200 transition-colors" 
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection("catalog");
-              }}
+            <button 
+              className="text-lg font-medium hover:text-blue-200 transition-colors text-left bg-transparent border-0" 
+              onClick={() => scrollToSection("catalog")}
             >
               Каталог
-            </Link>
-            <Link 
-              to="/#about" 
-              className="text-lg font-medium hover:text-blue-200 transition-colors" 
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection("about");
-              }}
+            </button>
+            <button 
+              className="text-lg font-medium hover:text-blue-200 transition-colors text-left bg-transparent border-0" 
+              onClick={() => scrollToSection("about")}
             >
               О нас
-            </Link>
-            <Link 
-              to="/#contacts" 
-              className="text-lg font-medium hover:text-blue-200 transition-colors" 
-              onClick={(e) => {
-                e.preventDefault();
-                scrollToSection("contacts");
-              }}
+            </button>
+            <button 
+              className="text-lg font-medium hover:text-blue-200 transition-colors text-left bg-transparent border-0" 
+              onClick={() => scrollToSection("contacts")}
             >
               Контакты
-            </Link>
+            </button>
             <Link 
               to="/cart" 
               className="flex items-center text-lg font-medium hover:text-blue-200 transition-colors" 
