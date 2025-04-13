@@ -1,6 +1,7 @@
 
 import Logo from "@/components/layout/Logo";
 import { Phone, Mail, Building } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -16,10 +17,11 @@ const Footer = () => {
           <div>
             <h4 className="text-lg font-medium mb-4">Навигация</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-blue-200 hover:text-white transition-colors">Главная</a></li>
+              <li><Link to="/" className="text-blue-200 hover:text-white transition-colors">Главная</Link></li>
               <li><a href="#catalog" className="text-blue-200 hover:text-white transition-colors">Каталог</a></li>
               <li><a href="#about" className="text-blue-200 hover:text-white transition-colors">О нас</a></li>
               <li><a href="#contacts" className="text-blue-200 hover:text-white transition-colors">Контакты</a></li>
+              <li><Link to="/privacy-policy" className="text-blue-200 hover:text-white transition-colors">Политика конфиденциальности</Link></li>
             </ul>
           </div>
           <div>
