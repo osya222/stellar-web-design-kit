@@ -81,6 +81,14 @@ const Footer = () => {
                   Публичная оферта
                 </Link>
               </li>
+              <li>
+                <Link 
+                  to="/privacy-policy" 
+                  className="text-blue-200 hover:text-white transition-colors"
+                >
+                  Политика конфиденциальности
+                </Link>
+              </li>
             </ul>
           </div>
           <div>
