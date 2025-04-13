@@ -1,12 +1,17 @@
+
 import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
-import { ShoppingCart, Trash2, Plus, Minus, ArrowLeft, Fish, ShellIcon, Soup, GanttChart, CreditCard } from "lucide-react";
+import { ShoppingCart, Trash2, Plus, Minus, ArrowLeft, Fish, ShellIcon, Soup, GanttChart, CreditCard, Phone } from "lucide-react";
 import { formatPrice } from '@/lib/formatters';
 import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { toast } from '@/hooks/use-toast';
+import { getProductImage } from '@/data/productImages';
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 const Cart = () => {
   const { 
@@ -21,12 +26,31 @@ const Cart = () => {
   
   const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
   const [processingPayment, setProcessingPayment] = useState(false);
+  const [promocode, setPromocode] = useState('');
+  const [promocodeApplied, setPromocodeApplied] = useState(false);
+  const [customerInfo, setCustomerInfo] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    address: '',
+    comment: ''
+  });
 
   const handleCheckout = () => {
     setPaymentDialogOpen(true);
   };
   
   const handleProcessPayment = () => {
+    // Валидация полей
+    if (!customerInfo.name || !customerInfo.phone) {
+      toast({
+        title: "Ошибка",
+        description: "Пожалуйста, заполните обязательные поля (имя и телефон)",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setProcessingPayment(true);
     
     // Имитация процесса оплаты
@@ -43,6 +67,37 @@ const Cart = () => {
       // Очистка корзины после успешной оплаты
       clearCart();
     }, 2000);
+  };
+
+  const handleApplyPromocode = () => {
+    if (promocode.toLowerCase() === 'скидка10') {
+      setPromocodeApplied(true);
+      toast({
+        description: "Промокод применен! Скидка 10%",
+      });
+    } else {
+      toast({
+        title: "Ошибка",
+        description: "Неверный промокод",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const calculateDiscount = () => {
+    return promocodeApplied ? getTotalPrice() * 0.1 : 0;
+  };
+
+  const calculateFinalPrice = () => {
+    return getTotalPrice() - calculateDiscount();
+  };
+
+  const handleCustomerInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setCustomerInfo(prev => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
   return (
@@ -74,119 +129,169 @@ const Cart = () => {
           </Link>
         </div>
 
-        <Card>
-          <CardHeader className="bg-blue-50">
-            <CardTitle className="flex items-center">
-              <ShoppingCart className="w-6 h-6 mr-2" />
-              Корзина ({getTotalItems()})
-            </CardTitle>
-          </CardHeader>
-          
-          <CardContent className="p-6">
-            {items.length === 0 ? (
-              <div className="text-center py-10">
-                <p className="text-gray-500 mb-4">Ваша корзина пуста</p>
-                <Link to="/">
-                  <Button>Перейти к каталогу</Button>
-                </Link>
-              </div>
-            ) : (
-              <div className="space-y-6">
-                {items.map((item) => {
-                  const price = item.product.price || 0;
-                  
-                  return (
-                    <div key={item.product.id} className="flex flex-col sm:flex-row justify-between border-b pb-4">
-                      <div className="flex-1">
-                        <div className="flex gap-4 items-center">
-                          <div className="w-16 h-16 bg-blue-50 flex items-center justify-center rounded-md">
-                            {renderProductIcon(item.product.category)}
-                          </div>
-                          <div>
-                            <h3 className="font-medium">{item.product.name}</h3>
-                            <p className="text-sm text-gray-500">{item.product.category}</p>
-                            <p className="text-sm text-gray-500">
-                              {item.product.size && `Размер: ${item.product.size}`}
-                              {item.product.packaging && `, Упаковка: ${item.product.packaging}`}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center gap-4 mt-4 sm:mt-0">
-                        <div className="flex items-center border rounded-md">
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => decreaseQuantity(item.product.id)}
-                            className="h-8 px-2"
-                          >
-                            <Minus className="w-4 h-4" />
-                          </Button>
-                          <span className="px-3">{item.quantity}</span>
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => increaseQuantity(item.product.id)}
-                            className="h-8 px-2"
-                          >
-                            <Plus className="w-4 h-4" />
-                          </Button>
-                        </div>
-                        
-                        <div className="w-24 text-right">
-                          <div className="font-medium">{formatPrice(price)}</div>
-                          <div className="text-sm text-gray-500">за единицу</div>
-                        </div>
-                        
-                        <div className="w-24 text-right">
-                          <div className="font-semibold">{formatPrice(price * item.quantity)}</div>
-                          <div className="text-sm text-gray-500">всего</div>
-                        </div>
-                        
-                        <Button 
-                          variant="ghost" 
-                          size="icon"
-                          onClick={() => removeFromCart(item.product.id)}
-                          className="text-red-500 hover:text-red-700"
-                        >
-                          <Trash2 className="w-5 h-5" />
-                        </Button>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </CardContent>
-          
-          {items.length > 0 && (
-            <CardFooter className="flex flex-col sm:flex-row justify-between gap-4 p-6 bg-gray-50">
-              <Button 
-                variant="outline" 
-                onClick={clearCart}
-              >
-                <Trash2 className="w-4 h-4 mr-2" />
-                Очистить корзину
-              </Button>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="lg:col-span-2">
+            <Card>
+              <CardHeader className="bg-blue-50">
+                <CardTitle className="flex items-center">
+                  <ShoppingCart className="w-6 h-6 mr-2" />
+                  Корзина ({getTotalItems()})
+                </CardTitle>
+              </CardHeader>
               
-              <div className="flex flex-col sm:flex-row items-center gap-4">
-                <div className="text-right">
-                  <div className="text-sm text-gray-500">Итого:</div>
-                  <div className="text-2xl font-bold">{formatPrice(getTotalPrice())}</div>
-                </div>
-                <Button 
-                  size="lg"
-                  onClick={handleCheckout}
-                  className="bg-green-600 hover:bg-green-700"
-                >
-                  <CreditCard className="w-5 h-5 mr-2" />
-                  Оформить заказ
-                </Button>
-              </div>
-            </CardFooter>
+              <CardContent className="p-6">
+                {items.length === 0 ? (
+                  <div className="text-center py-10">
+                    <p className="text-gray-500 mb-4">Ваша корзина пуста</p>
+                    <Link to="/">
+                      <Button>Перейти к каталогу</Button>
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="space-y-6">
+                    {items.map((item) => {
+                      const price = item.product.price || 0;
+                      const productImage = item.product.image || getProductImage(item.product);
+                      
+                      return (
+                        <div key={item.product.id} className="flex flex-col sm:flex-row justify-between border-b pb-4">
+                          <div className="flex-1">
+                            <div className="flex gap-4 items-center">
+                              <div className="w-16 h-16 bg-blue-50 flex items-center justify-center rounded-md overflow-hidden">
+                                {productImage ? (
+                                  <img src={productImage} alt={item.product.name} className="w-full h-full object-cover" />
+                                ) : (
+                                  renderProductIcon(item.product.category)
+                                )}
+                              </div>
+                              <div>
+                                <h3 className="font-medium">{item.product.name}</h3>
+                                <p className="text-sm text-gray-500">{item.product.category}</p>
+                                <p className="text-sm text-gray-500">
+                                  {item.product.size && `Размер: ${item.product.size}`}
+                                  {item.product.packaging && `, Упаковка: ${item.product.packaging}`}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center gap-4 mt-4 sm:mt-0">
+                            <div className="flex items-center border rounded-md">
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                onClick={() => decreaseQuantity(item.product.id)}
+                                className="h-8 px-2"
+                              >
+                                <Minus className="w-4 h-4" />
+                              </Button>
+                              <span className="px-3">{item.quantity}</span>
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                onClick={() => increaseQuantity(item.product.id)}
+                                className="h-8 px-2"
+                              >
+                                <Plus className="w-4 h-4" />
+                              </Button>
+                            </div>
+                            
+                            <div className="w-24 text-right">
+                              <div className="font-medium">{formatPrice(price)}</div>
+                              <div className="text-sm text-gray-500">за единицу</div>
+                            </div>
+                            
+                            <div className="w-24 text-right">
+                              <div className="font-semibold">{formatPrice(price * item.quantity)}</div>
+                              <div className="text-sm text-gray-500">всего</div>
+                            </div>
+                            
+                            <Button 
+                              variant="ghost" 
+                              size="icon"
+                              onClick={() => removeFromCart(item.product.id)}
+                              className="text-red-500 hover:text-red-700"
+                            >
+                              <Trash2 className="w-5 h-5" />
+                            </Button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </CardContent>
+              
+              {items.length > 0 && (
+                <CardFooter className="flex justify-between p-6 bg-gray-50">
+                  <Button 
+                    variant="outline" 
+                    onClick={clearCart}
+                  >
+                    <Trash2 className="w-4 h-4 mr-2" />
+                    Очистить корзину
+                  </Button>
+                </CardFooter>
+              )}
+            </Card>
+          </div>
+
+          {items.length > 0 && (
+            <div className="lg:col-span-1">
+              <Card className="sticky top-24">
+                <CardHeader className="bg-blue-50">
+                  <CardTitle className="text-lg">Сводка заказа</CardTitle>
+                </CardHeader>
+                <CardContent className="p-6 space-y-4">
+                  <div className="flex justify-between">
+                    <span className="text-gray-500">Товары ({getTotalItems()}):</span>
+                    <span className="font-medium">{formatPrice(getTotalPrice())}</span>
+                  </div>
+                  
+                  {promocodeApplied && (
+                    <div className="flex justify-between text-green-600">
+                      <span>Скидка по промокоду:</span>
+                      <span>-{formatPrice(calculateDiscount())}</span>
+                    </div>
+                  )}
+                  
+                  <div className="flex justify-between pt-2 border-t border-gray-200 text-lg font-bold">
+                    <span>Итого:</span>
+                    <span>{formatPrice(calculateFinalPrice())}</span>
+                  </div>
+                  
+                  <div className="pt-2">
+                    <div className="flex gap-2 mb-2">
+                      <Input 
+                        placeholder="Введите промокод" 
+                        value={promocode}
+                        onChange={(e) => setPromocode(e.target.value)}
+                        className="flex-1"
+                      />
+                      <Button 
+                        variant="outline" 
+                        onClick={handleApplyPromocode} 
+                        disabled={promocodeApplied || !promocode}
+                      >
+                        Применить
+                      </Button>
+                    </div>
+                    <p className="text-xs text-gray-500">Попробуйте промокод "скидка10" для демонстрации</p>
+                  </div>
+                </CardContent>
+                <CardFooter className="p-6 pt-0">
+                  <Button 
+                    size="lg" 
+                    className="w-full bg-green-600 hover:bg-green-700"
+                    onClick={handleCheckout}
+                  >
+                    Оформить заказ
+                  </Button>
+                </CardFooter>
+              </Card>
+            </div>
           )}
-        </Card>
+        </div>
       </div>
       
       {/* Payment Dialog */}
@@ -195,16 +300,68 @@ const Cart = () => {
           <DialogHeader>
             <DialogTitle>Оформление заказа</DialogTitle>
             <DialogDescription>
-              Общая сумма заказа: {formatPrice(getTotalPrice())}
+              Общая сумма заказа: {formatPrice(calculateFinalPrice())}
             </DialogDescription>
           </DialogHeader>
           
           <div className="grid gap-4 py-4">
             <div className="space-y-2">
-              <h3 className="font-medium">Информация о доставке</h3>
-              <p className="text-sm text-gray-500">
-                После оформления заказа наш менеджер свяжется с вами для уточнения деталей доставки.
-              </p>
+              <h3 className="font-medium">Контактная информация</h3>
+              <div className="grid gap-3">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Имя*</Label>
+                  <Input 
+                    id="name" 
+                    name="name" 
+                    placeholder="Иван Иванов" 
+                    value={customerInfo.name}
+                    onChange={handleCustomerInfoChange}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Телефон*</Label>
+                  <Input 
+                    id="phone" 
+                    name="phone" 
+                    placeholder="+7 (999) 999-99-99" 
+                    value={customerInfo.phone}
+                    onChange={handleCustomerInfoChange}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email</Label>
+                  <Input 
+                    id="email" 
+                    name="email" 
+                    type="email" 
+                    placeholder="example@mail.ru" 
+                    value={customerInfo.email}
+                    onChange={handleCustomerInfoChange}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="address">Адрес доставки</Label>
+                  <Input 
+                    id="address" 
+                    name="address" 
+                    placeholder="Москва, ул. Примерная, д. 1, кв. 1" 
+                    value={customerInfo.address}
+                    onChange={handleCustomerInfoChange}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="comment">Комментарий к заказу</Label>
+                  <Textarea 
+                    id="comment" 
+                    name="comment" 
+                    placeholder="Дополнительная информация к заказу" 
+                    value={customerInfo.comment}
+                    onChange={handleCustomerInfoChange}
+                  />
+                </div>
+              </div>
             </div>
             
             <div className="space-y-3">
@@ -252,16 +409,25 @@ const Cart = () => {
       {/* Footer */}
       <footer className="bg-blue-900 text-white py-8 mt-auto">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
               <h3 className="text-xl font-bold mb-4">МореПродукт</h3>
               <p>Москва</p>
+              <div className="flex items-center mt-3">
+                <Phone className="w-4 h-4 mr-2" />
+                <a href="tel:+79999999999" className="hover:underline">+7 (999) 999-99-99</a>
+              </div>
             </div>
             <div>
               <h3 className="text-xl font-bold mb-4">Время работы</h3>
               <p>Пн-Пт: 9:00 - 18:00</p>
               <p>Сб: 10:00 - 15:00</p>
               <p>Вс: Выходной</p>
+            </div>
+            <div>
+              <h3 className="text-xl font-bold mb-4">Оплата и доставка</h3>
+              <p>Доставка по Москве и МО</p>
+              <p>Оплата наличными или картой</p>
             </div>
           </div>
           <div className="mt-8 pt-6 border-t border-blue-800 text-center">
@@ -277,7 +443,7 @@ const renderProductIcon = (category: string) => {
   switch (category) {
     case 'Лосось (Чили)':
     case 'Форель (Турция)':
-    case 'Другие виды рыбы':
+    case 'Филе рыбы':
       return <Fish className="w-8 h-8 text-blue-600" />;
     case 'Креветки и морепродукты':
       return <ShellIcon className="w-8 h-8 text-pink-500" />;
