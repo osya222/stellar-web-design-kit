@@ -11,7 +11,7 @@ const PrivacyPolicy = () => {
 
       <main className="flex-grow bg-slate-50">
         <div className="container-custom py-12">
-          <div className="bg-white rounded-lg shadow-md p-6 md:p-8 max-w-4xl mx-auto">
+          <div className="bg-white rounded-lg shadow-md p-6 md:p-8 max-w-4xl mx-auto space-y-6">
             <div className="flex items-center mb-6 border-b pb-4">
               <Shield className="h-8 w-8 text-blue-600 mr-3" />
               <h1 className="text-2xl md:text-3xl font-bold text-gray-800">
