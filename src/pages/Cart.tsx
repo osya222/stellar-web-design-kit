@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from "@/components/ui/button";
@@ -70,12 +69,12 @@ const Cart = () => {
 
     // Send order confirmation to the store owner
     emailjs.send(
-      'service_k9e5z1m', // Service ID (replace with your EmailJS service ID)
-      'template_7nw9cyt', // Template ID (replace with your EmailJS template ID)
+      'service_k9e5z1m', // Service ID
+      'template_7nw9cyt', // Template ID
       orderDetails,
-      'mBo1DspnugkkMgb6x' // Public key (replace with your EmailJS public key)
+      'mBo1DspnugkkMgb6x' // Public key
     )
-    .then(() => {
+    .then((response) => {
       // If customer provided email, send confirmation to them as well
       if (customerInfo.email) {
         return emailjs.send(
@@ -85,7 +84,8 @@ const Cart = () => {
           'mBo1DspnugkkMgb6x'
         );
       }
-      return Promise.resolve();
+      // Return the original response to keep the promise chain consistent
+      return response;
     })
     .then(() => {
       setProcessingPayment(false);
