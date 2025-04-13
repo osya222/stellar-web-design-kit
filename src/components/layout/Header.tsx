@@ -28,16 +28,6 @@ const Header = () => {
         <li><Link to="/#about" className="hover:text-blue-200 transition-colors">О нас</Link></li>
         <li><Link to="/#contacts" className="hover:text-blue-200 transition-colors">Контакты</Link></li>
         <li>
-          <Link to="/privacy-policy" className="hover:text-blue-200 transition-colors">
-            Политика конфиденциальности
-          </Link>
-        </li>
-        <li>
-          <Link to="/public-offer" className="hover:text-blue-200 transition-colors">
-            Публичная оферта
-          </Link>
-        </li>
-        <li>
           <Link to="/cart" className="flex items-center hover:text-blue-200 transition-colors">
             <ShoppingCart className="w-4 h-4 mr-2" />
             Корзина
@@ -81,12 +71,6 @@ const Header = () => {
             </Link>
             <Link to="/#contacts" className="text-lg font-medium hover:text-blue-200 transition-colors" onClick={() => setIsMenuOpen(false)}>
               Контакты
-            </Link>
-            <Link to="/privacy-policy" className="text-lg font-medium hover:text-blue-200 transition-colors" onClick={() => setIsMenuOpen(false)}>
-              Политика конфиденциальности
-            </Link>
-            <Link to="/public-offer" className="text-lg font-medium hover:text-blue-200 transition-colors" onClick={() => setIsMenuOpen(false)}>
-              Публичная оферта
             </Link>
             <Link to="/cart" className="flex items-center text-lg font-medium hover:text-blue-200 transition-colors" onClick={() => setIsMenuOpen(false)}>
               <ShoppingCart className="w-5 h-5 mr-2" />
