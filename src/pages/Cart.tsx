@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from "@/components/ui/button";
@@ -39,7 +38,6 @@ const Cart = () => {
   };
   
   const handleProcessPayment = () => {
-    // Валидация полей
     if (!customerInfo.name || !customerInfo.phone) {
       toast({
         title: "Ошибка",
@@ -51,18 +49,15 @@ const Cart = () => {
 
     setProcessingPayment(true);
     
-    // Имитация процесса оплаты
     setTimeout(() => {
       setProcessingPayment(false);
       setPaymentDialogOpen(false);
       
-      // Показываем уведомление об успешной оплате
       toast({
         title: "Заказ оформлен",
         description: "Ваш заказ успешно оформлен. Мы свяжемся с вами в ближайшее время.",
       });
       
-      // Очистка корзины после успешной оплаты
       clearCart();
     }, 2000);
   };
@@ -77,7 +72,6 @@ const Cart = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
       <header className="bg-blue-900 text-white">
         <div className="container mx-auto py-6 px-4">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
@@ -95,7 +89,6 @@ const Cart = () => {
         </div>
       </header>
 
-      {/* Cart content */}
       <div className="container mx-auto py-10 px-4">
         <div className="flex items-center gap-2 mb-6">
           <Link to="/" className="flex items-center text-blue-600 hover:text-blue-800">
@@ -243,21 +236,20 @@ const Cart = () => {
         </div>
       </div>
       
-      {/* Payment Dialog */}
       <Dialog open={paymentDialogOpen} onOpenChange={setPaymentDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
+        <DialogContent className="sm:max-w-md w-[95%] p-4">
+          <DialogHeader className="mb-2">
             <DialogTitle>Оформление заказа</DialogTitle>
             <DialogDescription>
               Общая сумма заказа: {formatPrice(getTotalPrice())}
             </DialogDescription>
           </DialogHeader>
           
-          <div className="grid gap-4 py-4">
-            <div className="space-y-2">
-              <h3 className="font-medium">Контактная информация</h3>
-              <div className="grid gap-3">
-                <div className="space-y-2">
+          <div className="grid gap-3 py-2">
+            <div className="space-y-1">
+              <h3 className="font-medium text-sm">Контактная информация</h3>
+              <div className="grid gap-2">
+                <div className="space-y-1">
                   <Label htmlFor="name">Имя*</Label>
                   <Input 
                     id="name" 
@@ -268,7 +260,7 @@ const Cart = () => {
                     required
                   />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <Label htmlFor="phone">Телефон*</Label>
                   <Input 
                     id="phone" 
@@ -279,7 +271,7 @@ const Cart = () => {
                     required
                   />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <Label htmlFor="email">Email</Label>
                   <Input 
                     id="email" 
@@ -290,7 +282,7 @@ const Cart = () => {
                     onChange={handleCustomerInfoChange}
                   />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <Label htmlFor="address">Адрес доставки</Label>
                   <Input 
                     id="address" 
@@ -300,7 +292,7 @@ const Cart = () => {
                     onChange={handleCustomerInfoChange}
                   />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-1">
                   <Label htmlFor="comment">Комментарий к заказу</Label>
                   <Textarea 
                     id="comment" 
@@ -313,26 +305,28 @@ const Cart = () => {
               </div>
             </div>
             
-            <div className="space-y-3">
-              <h3 className="font-medium">Способ оплаты</h3>
-              <div className="flex items-center p-3 border rounded-md bg-white">
+            <div className="space-y-2 pt-2">
+              <h3 className="font-medium text-sm">Способ оплаты</h3>
+              <div className="flex items-center p-2 border rounded-md bg-white">
                 <img 
                   src="/lovable-uploads/0fa26d3b-9843-48d7-afaf-e69bddbee7b5.png" 
                   alt="СБП через Альфа-Банк" 
-                  className="h-8 mr-3"
+                  className="h-6 mr-2"
                 />
                 <div>
-                  <div className="font-medium">Оплата СБП через Альфа-Банк</div>
-                  <div className="text-sm text-gray-500">Быстро и безопасно</div>
+                  <div className="font-medium text-sm">Оплата СБП через Альфа-Банк</div>
+                  <div className="text-xs text-gray-500">Быстро и безопасно</div>
                 </div>
               </div>
             </div>
           </div>
           
-          <DialogFooter className="sm:justify-between">
+          <DialogFooter className="sm:justify-between mt-2 gap-2">
             <Button 
               variant="outline" 
               onClick={() => setPaymentDialogOpen(false)}
+              size="sm"
+              className="text-sm h-8"
             >
               Отмена
             </Button>
@@ -340,13 +334,14 @@ const Cart = () => {
             <Button
               onClick={handleProcessPayment}
               disabled={processingPayment}
-              className="bg-green-600 hover:bg-green-700"
+              className="bg-green-600 hover:bg-green-700 text-sm h-8"
+              size="sm"
             >
               {processingPayment ? (
                 <>Обработка...</>
               ) : (
                 <>
-                  <CreditCard className="w-4 h-4 mr-2" />
+                  <CreditCard className="w-3 h-3 mr-1" />
                   Подтвердить заказ
                 </>
               )}
@@ -355,7 +350,6 @@ const Cart = () => {
         </DialogContent>
       </Dialog>
       
-      {/* Footer */}
       <footer className="bg-blue-900 text-white py-8 mt-auto">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
