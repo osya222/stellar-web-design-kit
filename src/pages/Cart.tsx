@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from "@/components/ui/button";
@@ -70,14 +71,17 @@ const Cart = () => {
       date: new Date().toLocaleString('ru-RU')
     };
 
+    // Initialize EmailJS with your public key
     emailjs.init("H6bEEmiaCDZAYmQVO");
 
+    // Use send method directly (no form needed)
     emailjs.send(
-      "service_3zmmybf",
-      "template_3lzcrli",
-      orderDetails
+      "service_3zmmybf",  // Service ID
+      "template_3lzcrli", // Template ID
+      orderDetails        // Template variables
     )
     .then(() => {
+      // Handle success
       setProcessingPayment(false);
       setPaymentDialogOpen(false);
       
@@ -90,8 +94,10 @@ const Cart = () => {
       console.log("Заказ оформлен:", orderDetails);
     })
     .catch((error) => {
+      // Handle error
       console.error("Ошибка отправки:", error);
       setProcessingPayment(false);
+      setErrorMessage("Произошла ошибка при отправке заказа. Пожалуйста, попробуйте еще раз или свяжитесь с нами по телефону.");
       
       toast({
         title: "Ошибка",
