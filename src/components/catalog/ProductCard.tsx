@@ -18,6 +18,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { toast } = useToast();
   const [imageError, setImageError] = useState(false);
   const [customImage, setCustomImage] = useState<string>(product.image || '');
+  const [showImageUploader, setShowImageUploader] = useState(false);
   
   const handleAddToCart = () => {
     const productToAdd = customImage 
@@ -35,6 +36,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const handleImageSelect = (imageUrl: string) => {
     setCustomImage(imageUrl);
     setImageError(false);
+    setShowImageUploader(false);
     
     // Show success toast
     toast({
@@ -63,17 +65,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
       <div className="h-48 bg-white flex items-center justify-center relative overflow-hidden">
-        {displayImage ? (
+        {showImageUploader || (!displayImage) ? (
+          <ImageUploader 
+            onImageSelect={handleImageSelect} 
+            className="w-full h-full"
+          />
+        ) : (
           <img 
             src={displayImage} 
             alt={product.name} 
             className="object-cover w-full h-full"
             onError={handleImageError}
-          />
-        ) : (
-          <ImageUploader 
-            onImageSelect={handleImageSelect} 
-            className="w-full h-full"
           />
         )}
       </div>
@@ -114,7 +116,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               <Button 
                 variant="outline" 
                 size="sm" 
-                onClick={() => setImageError(true)} 
+                onClick={() => setShowImageUploader(true)} 
                 className="text-blue-500"
               >
                 <ImageIcon className="w-4 h-4 mr-1" />
@@ -124,7 +126,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               <Button 
                 variant="outline" 
                 size="sm" 
-                onClick={() => setImageError(false)} 
+                onClick={() => setShowImageUploader(true)} 
                 className="text-blue-500"
               >
                 <ImageIcon className="w-4 h-4 mr-1" />
