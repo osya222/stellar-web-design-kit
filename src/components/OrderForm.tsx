@@ -18,7 +18,6 @@ interface OrderFormProps {
 }
 
 const OrderForm = ({ orderDetails, onSuccess, onError }: OrderFormProps) => {
-  // Initialize EmailJS with the correct public key
   useEffect(() => {
     emailjs.init("H6bEEmiaCDZAYmQVO");
   }, []);
@@ -33,7 +32,6 @@ const OrderForm = ({ orderDetails, onSuccess, onError }: OrderFormProps) => {
     const addressInput = form.elements.namedItem('address') as HTMLInputElement;
     const commentInput = form.elements.namedItem('comment') as HTMLTextAreaElement;
     
-    // Проверяем, что данные не пустые перед отправкой
     if (!nameInput.value || !phoneInput.value) {
       toast({
         title: "Ошибка",
@@ -42,23 +40,28 @@ const OrderForm = ({ orderDetails, onSuccess, onError }: OrderFormProps) => {
       });
       return;
     }
+
+    const currentTime = new Date().toLocaleString('ru-RU', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
     
-    // Создаем объект для отправки с корректными параметрами шаблона EmailJS
     const templateParams = {
-      from_name: nameInput.value,
-      to_name: "Администратор",
-      phone: phoneInput.value,
+      name: nameInput.value,
       email: emailInput.value || 'Не указан',
+      phone: phoneInput.value,
       address: addressInput.value || 'Не указан',
       message: commentInput.value || 'Нет комментариев',
-      order_details: `Товары (${orderDetails.totalItems}): ${orderDetails.items}`,
-      total: orderDetails.totalPrice,
+      title: `Товары (${orderDetails.totalItems}): ${orderDetails.items}`,
+      time: currentTime,
       reply_to: emailInput.value || 'no-reply@example.com'
     };
 
     console.log("Отправка письма с данными:", templateParams);
 
-    // Отправляем данные через EmailJS
     emailjs.send(
       'service_3zmmbyf',
       'template_3lzcrli',
