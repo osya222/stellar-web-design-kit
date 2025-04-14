@@ -70,7 +70,14 @@ const Cart = () => {
       date: new Date().toLocaleString('ru-RU')
     };
 
-    setTimeout(() => {
+    emailjs.init("H6bEEmiaCDZAYmQVO");
+
+    emailjs.send(
+      "service_3zmmybf",
+      "template_3lzcrli",
+      orderDetails
+    )
+    .then(() => {
       setProcessingPayment(false);
       setPaymentDialogOpen(false);
       
@@ -80,9 +87,18 @@ const Cart = () => {
       });
       
       clearCart();
-      
       console.log("Заказ оформлен:", orderDetails);
-    }, 1500);
+    })
+    .catch((error) => {
+      console.error("Ошибка отправки:", error);
+      setProcessingPayment(false);
+      
+      toast({
+        title: "Ошибка",
+        description: "Произошла ошибка при оформлении заказа. Пожалуйста, попробуйте еще раз.",
+        variant: "destructive"
+      });
+    });
   };
 
   const handleCustomerInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
