@@ -52,10 +52,13 @@ const OrderForm = ({ orderDetails, onSuccess, onError }: OrderFormProps) => {
     const templateParams = {
       name: nameInput.value,
       email: emailInput.value || 'Не указан',
-      title: `Товары (${orderDetails.totalItems}): ${orderDetails.items}\nОбщая сумма заказа: ${orderDetails.totalPrice}`,
-      message: `Телефон: ${phoneInput.value}
+      title: `Общая сумма заказа: ${orderDetails.totalPrice}`,
+      message: `
+Телефон: ${phoneInput.value}
 Адрес доставки: ${addressInput.value || 'Не указан'}
-Комментарий: ${commentInput.value || 'Нет комментариев'}`,
+Комментарий: ${commentInput.value || 'Нет комментариев'}
+Товары (${orderDetails.totalItems}): ${orderDetails.items}
+      `,
       time: currentTime,
       reply_to: emailInput.value || 'no-reply@example.com'
     };
