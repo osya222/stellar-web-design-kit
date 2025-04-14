@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -8,7 +8,6 @@ import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import OrderForm from '@/components/OrderForm';
-import emailjs from '@emailjs/browser';
 import { getProductImage } from '@/data/productImages';
 
 const Cart = () => {
@@ -25,17 +24,6 @@ const Cart = () => {
   const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
   const [processingPayment, setProcessingPayment] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [customerInfo, setCustomerInfo] = useState({
-    name: '',
-    phone: '',
-    email: '',
-    address: '',
-    comment: ''
-  });
-
-  useEffect(() => {
-    emailjs.init("iRolluD9pTF1xolQS5iWm");
-  }, []);
 
   const handleCheckout = () => {
     setErrorMessage(null);
@@ -45,14 +33,6 @@ const Cart = () => {
   const orderItemsString = items.map(item => 
     `${item.product.name} - ${item.quantity} шт. x ${formatPrice(item.product.price || 0)} = ${formatPrice((item.product.price || 0) * item.quantity)}`
   ).join('\n');
-
-  const handleCustomerInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setCustomerInfo(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">

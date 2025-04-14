@@ -1,11 +1,11 @@
-import React from 'react';
+
+import React, { useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import emailjs from '@emailjs/browser';
 import { toast } from '@/hooks/use-toast';
-import { formatPrice } from '@/lib/formatters';
 
 interface OrderFormProps {
   orderDetails: {
@@ -18,6 +18,11 @@ interface OrderFormProps {
 }
 
 const OrderForm = ({ orderDetails, onSuccess, onError }: OrderFormProps) => {
+  // Initialize EmailJS
+  useEffect(() => {
+    emailjs.init("iRolluD9pTF1xolQS5iWm");
+  }, []);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
@@ -40,11 +45,11 @@ const OrderForm = ({ orderDetails, onSuccess, onError }: OrderFormProps) => {
       date: new Date().toLocaleString('ru-RU')
     };
 
+    // Improved error handling for EmailJS
     emailjs.send(
       'service_3zmmbyf',
       'template_3lzcrli',
-      templateParams,
-      'iRolluD9pTF1xolQS5iWm'
+      templateParams
     )
     .then(() => {
       onSuccess();
@@ -55,7 +60,7 @@ const OrderForm = ({ orderDetails, onSuccess, onError }: OrderFormProps) => {
     })
     .catch((error) => {
       console.error("Ошибка отправки:", error);
-      onError("Произошла ошибка при отправке заказа. Пожалуйста, попробуйте еще раз или свяжитесь с нами по телефону.");
+      onError(`Произошла ошибка при отправке заказа: ${error.text || 'Неизвестная ошибка'}. Пожалуйста, попробуйте еще раз или свяжитесь с нами по телефону.`);
       toast({
         title: "Ошибка",
         description: "Произошла ошибка при оформлении заказа. Пожалуйста, попробуйте еще раз.",
