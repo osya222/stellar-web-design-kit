@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -8,6 +7,7 @@ import { ImageIcon, ShoppingCart } from "lucide-react";
 import { useCart } from '@/context/CartContext';
 import ImageUploader from '@/components/common/ImageUploader';
 import { useToast } from "@/components/ui/use-toast";
+import { getProductImage } from '@/data/productImages';
 
 interface ProductCardProps {
   product: Product;
@@ -17,7 +17,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
   const { toast } = useToast();
   const [imageError, setImageError] = useState(false);
-  const [customImage, setCustomImage] = useState<string>(product.image || '');
+  const [customImage, setCustomImage] = useState<string>(() => {
+    const storageKey = `product-image-${product.id}`;
+    return localStorage.getItem(storageKey) || product.image || getProductImage(product) || '';
+  });
   const [showImageUploader, setShowImageUploader] = useState(false);
   
   const handleAddToCart = () => {
@@ -29,7 +32,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   const handleImageError = () => {
-    console.log(`Image error loading: ${product.image}`);
+    console.log(`Image error loading: ${customImage}`);
     setImageError(true);
   };
 
@@ -38,29 +41,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     setImageError(false);
     setShowImageUploader(false);
     
-    // Show success toast
-    toast({
-      title: "Изображение обновлено",
-      description: "Изображение товара успешно изменено",
-    });
-
-    // Save the image URL to localStorage
     const storageKey = `product-image-${product.id}`;
     localStorage.setItem(storageKey, imageUrl);
+    
+    toast({
+      title: "Изображение обновлено",
+      description: "Изображение товара успешно сохранено",
+    });
   };
 
-  // Load saved image from localStorage on component mount
-  React.useEffect(() => {
-    const storageKey = `product-image-${product.id}`;
-    const savedImage = localStorage.getItem(storageKey);
-    if (savedImage) {
-      setCustomImage(savedImage);
-      setImageError(false);
-    }
-  }, [product.id]);
-
-  // Determine which image to display
-  const displayImage = customImage || (product.image && !imageError ? product.image : null);
+  const displayImage = customImage || (product.image && !imageError ? product.image : getProductImage(product));
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
@@ -68,6 +58,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         {showImageUploader || (!displayImage) ? (
           <ImageUploader 
             onImageSelect={handleImageSelect} 
+            currentImage={customImage}
             className="w-full h-full"
           />
         ) : (
