@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
-import { ImageIcon, ShoppingCart } from "lucide-react";
+import { ImageIcon, ShoppingCart, RefreshCw } from "lucide-react";
 import { useCart } from '@/context/CartContext';
 import ImageUploader from '@/components/common/ImageUploader';
 import { useToast } from "@/components/ui/use-toast";
@@ -17,11 +17,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
   const { toast } = useToast();
   const [imageError, setImageError] = useState(false);
-  const [customImage, setCustomImage] = useState<string>(() => {
-    const storageKey = `product-image-${product.id}`;
-    return localStorage.getItem(storageKey) || product.image || getProductImage(product) || '';
-  });
+  const [customImage, setCustomImage] = useState<string>('');
   const [showImageUploader, setShowImageUploader] = useState(false);
+  
+  useEffect(() => {
+    const storageKey = `product-image-${product.id}`;
+    const savedImage = localStorage.getItem(storageKey);
+    if (savedImage) {
+      setCustomImage(savedImage);
+      setImageError(false);
+    } else {
+      setCustomImage(product.image || getProductImage(product) || '');
+    }
+  }, [product.id, product.image]);
   
   const handleAddToCart = () => {
     const productToAdd = customImage 
@@ -49,6 +57,22 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       description: "Изображение товара успешно сохранено",
     });
   };
+  
+  const handleRefreshImage = () => {
+    const storageKey = `product-image-${product.id}`;
+    const savedImage = localStorage.getItem(storageKey);
+    if (savedImage) {
+      setCustomImage(`${savedImage}?t=${new Date().getTime()}`);
+    } else {
+      const defaultImage = product.image || getProductImage(product) || '';
+      setCustomImage(`${defaultImage}?t=${new Date().getTime()}`);
+    }
+    
+    toast({
+      title: "Изображение обновлено",
+      description: "Превью обновлено",
+    });
+  };
 
   const displayImage = customImage || (product.image && !imageError ? product.image : getProductImage(product));
 
@@ -62,12 +86,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             className="w-full h-full"
           />
         ) : (
-          <img 
-            src={displayImage} 
-            alt={product.name} 
-            className="object-cover w-full h-full"
-            onError={handleImageError}
-          />
+          <>
+            <img 
+              src={displayImage} 
+              alt={product.name} 
+              className="object-cover w-full h-full"
+              onError={handleImageError}
+            />
+            <button 
+              onClick={handleRefreshImage} 
+              className="absolute top-2 right-2 bg-white/80 p-1 rounded-full hover:bg-white"
+              title="Обновить превью"
+            >
+              <RefreshCw className="w-4 h-4 text-blue-500" />
+            </button>
+          </>
         )}
       </div>
       <CardContent className="p-4 flex flex-col flex-grow">
