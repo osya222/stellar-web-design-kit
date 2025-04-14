@@ -108,7 +108,6 @@ const Footer = () => {
         </div>
         <div className="pt-6 border-t border-blue-700 text-center md:text-left">
           <p className="mb-1">&copy; {new Date().getFullYear()} ООО "СИТЕКС". Все права защищены.</p>
-          <p className="text-sm text-blue-200">ИНН 7720939157 | Генеральный директор: Статий Владислав Николаевич</p>
           <div className="mt-2">
             <Link 
               to="/public-offer" 
