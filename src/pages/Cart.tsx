@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
@@ -33,10 +33,13 @@ const Cart = () => {
     comment: ''
   });
 
+  useEffect(() => {
+    emailjs.init("H6bEEmiaCDZAYmQVO");
+  }, []);
+
   const handleCheckout = () => {
     setErrorMessage(null);
     setPaymentDialogOpen(true);
-    emailjs.init("H6bEEmiaCDZAYmQVO");
   };
 
   const orderItemsString = items.map(item => 
@@ -273,23 +276,6 @@ const Cart = () => {
               className="text-sm h-8"
             >
               Отмена
-            </Button>
-            
-            <Button
-              type="submit"
-              form="order-form"
-              disabled={processingPayment}
-              className="bg-green-600 hover:bg-green-700 text-sm h-8"
-              size="sm"
-            >
-              {processingPayment ? (
-                <>Обработка...</>
-              ) : (
-                <>
-                  <CreditCard className="w-3 h-3 mr-1" />
-                  Подтвердить заказ
-                </>
-              )}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -42,8 +42,9 @@ const OrderForm = ({ orderDetails, onSuccess, onError }: OrderFormProps) => {
       date: new Date().toLocaleString('ru-RU')
     };
 
+    // Update EmailJS configuration with your correct service ID
     emailjs.send(
-      'service_3zmmybf',
+      'service_iuy5azn', // Replace with your actual EmailJS service ID
       'template_3lzcrli',
       templateParams,
       'H6bEEmiaCDZAYmQVO'
