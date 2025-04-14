@@ -1,4 +1,3 @@
-
 import { Phone, Mail, MapPin, Building } from "lucide-react";
 
 const Contacts = () => {
@@ -28,7 +27,7 @@ const Contacts = () => {
                 <MapPin className="w-5 h-5 text-blue-600 mr-3 mt-1" />
                 <div>
                   <p className="font-medium">Адрес:</p>
-                  <p className="text-lg">111123, г. Москва, Электродный проезд, д. 6 стр. 1, помещ. 3/1</p>
+                  <p className="text-lg">111123, г. Москва, Электродный проезд, д. 6</p>
                 </div>
               </div>
               <div className="flex items-start">
@@ -36,8 +35,6 @@ const Contacts = () => {
                 <div>
                   <p className="font-medium">Юридическая информация:</p>
                   <p className="text-lg">ООО "СИТЕКС"</p>
-                  <p className="text-sm text-gray-600">ИНН 7720939157</p>
-                  <p className="text-sm text-gray-600">Генеральный директор: Статий Владислав Николаевич</p>
                 </div>
               </div>
             </div>

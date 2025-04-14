@@ -1,4 +1,3 @@
-
 import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "@/components/layout/Logo";
 import { Phone, Mail, Building } from "lucide-react";
@@ -103,7 +102,7 @@ const Footer = () => {
             </p>
             <p className="flex items-center">
               <Building className="w-4 h-4 mr-2" />
-              111123, г. Москва, Электродный проезд, д. 6 стр. 1, помещ. 3/1
+              111123, г. Москва, Электродный проезд, д. 6
             </p>
           </div>
         </div>

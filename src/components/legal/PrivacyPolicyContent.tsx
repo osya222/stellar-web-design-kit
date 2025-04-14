@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Shield, Lock, User, Globe } from "lucide-react";
 
@@ -134,7 +133,7 @@ const PrivacyPolicyContent = () => {
         <ul className="mt-2 text-gray-700">
           <li>Телефон: +7 925 264-13-41</li>
           <li>Email: Statiy.info@bk.ru</li>
-          <li>Адрес: 111123, г. Москва, Электродный проезд, д. 6 стр. 1, помещ. 3/1</li>
+          <li>Адрес: 111123, г. Москва, Электродный проезд, д. 6</li>
         </ul>
       </div>
     </>
