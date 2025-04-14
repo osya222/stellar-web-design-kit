@@ -34,7 +34,7 @@ const Cart = () => {
   });
 
   useEffect(() => {
-    emailjs.init("H6bEEmiaCDZAYmQVO");
+    emailjs.init("iRolluD9pTF1xolQS5iWm");
   }, []);
 
   const handleCheckout = () => {

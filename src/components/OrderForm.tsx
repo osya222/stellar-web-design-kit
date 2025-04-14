@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,7 +22,6 @@ const OrderForm = ({ orderDetails, onSuccess, onError }: OrderFormProps) => {
     e.preventDefault();
     const form = e.currentTarget;
     
-    // Fix: Access form elements properly using HTMLFormElement
     const nameInput = form.elements.namedItem('name') as HTMLInputElement;
     const phoneInput = form.elements.namedItem('phone') as HTMLInputElement;
     const emailInput = form.elements.namedItem('email') as HTMLInputElement;
@@ -42,12 +40,11 @@ const OrderForm = ({ orderDetails, onSuccess, onError }: OrderFormProps) => {
       date: new Date().toLocaleString('ru-RU')
     };
 
-    // Update EmailJS configuration with your correct service ID
     emailjs.send(
-      'service_iuy5azn', // Replace with your actual EmailJS service ID
+      'service_3zmmbyf',
       'template_3lzcrli',
       templateParams,
-      'H6bEEmiaCDZAYmQVO'
+      'iRolluD9pTF1xolQS5iWm'
     )
     .then(() => {
       onSuccess();
