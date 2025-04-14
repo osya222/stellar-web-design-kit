@@ -57,8 +57,6 @@ const OrderForm = ({ orderDetails, onSuccess, onError }: OrderFormProps) => {
       message: commentInput.value || 'Нет комментариев',
       title: `Товары (${orderDetails.totalItems}): ${orderDetails.items}`,
       time: currentTime,
-      address: addressInput.value || 'Не указан', // Explicitly added to ensure address is included
-      phone: phoneInput.value, // Explicitly added to ensure phone is included
       reply_to: emailInput.value || 'no-reply@example.com'
     };
 
