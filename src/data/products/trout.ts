@@ -1,5 +1,5 @@
-
 import { Product } from '@/types/product';
+import { getProductImage } from '../productImages';
 
 // Форель (Турция) products
 export const troutProducts: Product[] = [
@@ -11,7 +11,7 @@ export const troutProducts: Product[] = [
     packaging: "25 кг", 
     catchDate: "Июнь",
     manufacturer: "Турция", 
-    image: "/lovable-uploads/7f979307-fd86-4fd7-a28a-428c30583726.png",
+    image: getProductImage({ category: "Форель (Турция)", name: "ФОРЕЛЬ б/г потр М" }),
     price: 1014.9
   },
   { 
@@ -22,7 +22,7 @@ export const troutProducts: Product[] = [
     packaging: "25 кг", 
     catchDate: "Июль",
     manufacturer: "Турция", 
-    image: "/lovable-uploads/7f979307-fd86-4fd7-a28a-428c30583726.png", 
+    image: getProductImage({ category: "Форель (Турция)", name: "ФОРЕЛЬ б/г потр М" }), 
     price: 1064.9
   },
   { 
@@ -33,7 +33,7 @@ export const troutProducts: Product[] = [
     packaging: "25 кг", 
     catchDate: "Июнь",
     manufacturer: "Турция", 
-    image: "/lovable-uploads/7f979307-fd86-4fd7-a28a-428c30583726.png",
+    image: getProductImage({ category: "Форель (Турция)", name: "ФОРЕЛЬ б/г потр М" }),
     price: 1166.9
   },
 ];

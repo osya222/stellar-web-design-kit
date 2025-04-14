@@ -1,5 +1,6 @@
 
 import { Product } from '@/types/product';
+import { getProductImage } from '../productImages';
 
 // Лосось (Чили) products
 export const salmonProducts: Product[] = [
@@ -11,7 +12,7 @@ export const salmonProducts: Product[] = [
     packaging: "27 кг", 
     catchDate: "Сентябрь",
     manufacturer: "Чили Premium", 
-    image: "/lovable-uploads/0d6e972e-0353-45aa-907b-5f193220c4bb.png",
+    image: getProductImage({ category: "Лосось (Чили)", name: "ЛОСОСЬ с/г потр. штучн" }),
     price: 1413.9
   },
   { 
@@ -22,7 +23,7 @@ export const salmonProducts: Product[] = [
     packaging: "27 кг", 
     catchDate: "Август",
     manufacturer: "Чили Premium", 
-    image: "/lovable-uploads/0d6e972e-0353-45aa-907b-5f193220c4bb.png",
+    image: getProductImage({ category: "Лосось (Чили)", name: "ЛОСОСЬ с/г потр." }),
     price: 1457.9
   },
 ];

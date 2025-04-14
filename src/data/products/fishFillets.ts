@@ -1,5 +1,6 @@
 
 import { Product } from '@/types/product';
+import { getProductImage } from '../productImages';
 
 // Филе рыбы products
 export const fishFilletProducts: Product[] = [
@@ -11,7 +12,7 @@ export const fishFilletProducts: Product[] = [
     packaging: "10", 
     catchDate: "Июнь/июль",
     manufacturer: "Вьетнам", 
-    image: "/images/pangasius-fillet.jpg",
+    image: getProductImage({ category: "Филе рыбы", name: "ФИЛЕ ПАНГАСИУСА" }),
     price: 252.9
   },
   { 
@@ -22,7 +23,7 @@ export const fishFilletProducts: Product[] = [
     packaging: "10", 
     catchDate: "Сентябрь",
     manufacturer: "Вьетнам", 
-    image: "/images/tilapia-fillet.jpg",
+    image: getProductImage({ category: "Филе рыбы", name: "ФИЛЕ ТИЛАПИИ" }),
     price: 609.9
   },
   { 
@@ -33,7 +34,7 @@ export const fishFilletProducts: Product[] = [
     packaging: "5*1 кг", 
     catchDate: "Декабрь",
     manufacturer: "Норд Вест/Мурманск", 
-    image: "/images/cod-fillet.jpg",
+    image: getProductImage({ category: "Филе рыбы", name: "ФИЛЕ ТРЕСКИ б/к фас." }),
     price: 722.9
   },
   { 
@@ -44,7 +45,7 @@ export const fishFilletProducts: Product[] = [
     packaging: "~ 12", 
     catchDate: "Август",
     manufacturer: "Аргентина", 
-    image: "/images/hake-fillet.jpg",
+    image: getProductImage({ category: "Филе рыбы", name: "ФИЛЕ ХЕКА в тубе" }),
     price: 497.9
   },
 ];
