@@ -1,29 +1,13 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ExternalLink } from "lucide-react";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious
-} from "@/components/ui/carousel";
-import { Card, CardContent } from "@/components/ui/card";
 import { products } from "@/data/products/index";
 import { formatPrice } from "@/lib/formatters";
 import { useIsMobile } from "@/hooks/use-mobile";
 import ImageUploader from "@/components/common/ImageUploader";
 
 const ProductShowcase: React.FC = () => {
-  // Define indices to use and verify they exist in the products array
-  const productIndices = [0, 3, 6, 32, 7, 9];
-  
-  // Get popular products - safely get products by indices, filtering out any undefined values
-  const popularProducts = productIndices
-    .map(index => products[index])
-    .filter(product => product !== undefined);
-  
-  const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
   const [categoryImageErrors, setCategoryImageErrors] = useState<Record<string, boolean>>({});
   const isMobile = useIsMobile();
 
@@ -93,13 +77,6 @@ const ProductShowcase: React.FC = () => {
     }, 100);
   };
 
-  const handleImageError = (index: number) => {
-    setImageErrors(prev => ({
-      ...prev,
-      [index]: true
-    }));
-  };
-
   const handleCategoryImageError = (categoryName: string) => {
     setCategoryImageErrors(prev => ({
       ...prev,
@@ -143,67 +120,6 @@ const ProductShowcase: React.FC = () => {
               </div>
             </div>
           ))}
-        </div>
-        
-        <div className="mt-12 md:mt-20">
-          <h3 className="text-xl md:text-2xl font-bold mb-2 text-center text-blue-800">Популярные товары</h3>
-          <p className="text-center text-gray-600 mb-6 md:mb-8 px-4">Наиболее востребованные позиции у наших клиентов</p>
-          <Carousel className="mx-auto max-w-6xl">
-            <CarouselContent>
-              {popularProducts.map((product, index) => (
-                <CarouselItem key={index} className="md:basis-1/2 lg:basis-1/3 p-2">
-                  <Card className="border-0 shadow-md rounded-xl overflow-hidden card-hover">
-                    <CardContent className="p-0">
-                      <div className="relative h-48 md:h-64 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
-                        {product.category === "Креветки и морепродукты" ? (
-                          <ImageUploader
-                            onImageSelect={(imageUrl) => {
-                              setImageErrors(prev => ({
-                                ...prev,
-                                [index]: false
-                              }));
-                              product.image = imageUrl;
-                            }}
-                            currentImage={product.image}
-                            className="w-full h-full"
-                          />
-                        ) : (
-                          product.image && !imageErrors[index] ? (
-                            <img 
-                              src={product.image} 
-                              alt={product.name} 
-                              className="object-cover w-full h-full"
-                              onError={() => handleImageError(index)}
-                            />
-                          ) : (
-                            <div className="flex items-center justify-center h-full w-full">
-                              {renderFishIcon()}
-                            </div>
-                          )
-                        )}
-                      </div>
-                      <div className="p-3 md:p-5">
-                        <p className="text-blue-600 text-xs md:text-sm font-medium mb-1">{product.category}</p>
-                        <h4 className="text-gray-800 font-semibold mb-2 line-clamp-2 text-sm md:text-base">{product.name}</h4>
-                        <div className="flex justify-between items-center">
-                          <p className="text-gray-600 text-xs md:text-sm">
-                            {product.manufacturer && `${product.manufacturer}`}
-                          </p>
-                          {product.price && (
-                            <p className="text-blue-800 font-semibold text-sm md:text-base">
-                              {formatPrice(product.price)} ₽
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-            <CarouselPrevious className="left-1 bg-white/80 hover:bg-white hidden sm:flex" />
-            <CarouselNext className="right-1 bg-white/80 hover:bg-white hidden sm:flex" />
-          </Carousel>
         </div>
         
         <div className="mt-10 md:mt-12 text-center">
