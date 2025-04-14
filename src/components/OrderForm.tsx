@@ -18,9 +18,9 @@ interface OrderFormProps {
 }
 
 const OrderForm = ({ orderDetails, onSuccess, onError }: OrderFormProps) => {
-  // Initialize EmailJS
+  // Initialize EmailJS with the correct public key
   useEffect(() => {
-    emailjs.init("iRolluD9pTF1xolQS5iWm");
+    emailjs.init("H6bEEmiaCDZAYmQVO");
   }, []);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
