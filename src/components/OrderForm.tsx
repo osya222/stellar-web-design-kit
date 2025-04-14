@@ -23,12 +23,19 @@ const OrderForm = ({ orderDetails, onSuccess, onError }: OrderFormProps) => {
     e.preventDefault();
     const form = e.currentTarget;
     
+    // Fix: Access form elements properly using HTMLFormElement
+    const nameInput = form.elements.namedItem('name') as HTMLInputElement;
+    const phoneInput = form.elements.namedItem('phone') as HTMLInputElement;
+    const emailInput = form.elements.namedItem('email') as HTMLInputElement;
+    const addressInput = form.elements.namedItem('address') as HTMLInputElement;
+    const commentInput = form.elements.namedItem('comment') as HTMLTextAreaElement;
+    
     const templateParams = {
-      customer_name: form.name.value,
-      customer_phone: form.phone.value,
-      customer_email: form.email.value || 'Не указан',
-      customer_address: form.address.value || 'Не указан',
-      customer_comment: form.comment.value || 'Нет комментариев',
+      customer_name: nameInput.value,
+      customer_phone: phoneInput.value,
+      customer_email: emailInput.value || 'Не указан',
+      customer_address: addressInput.value || 'Не указан',
+      customer_comment: commentInput.value || 'Нет комментариев',
       order_items: orderDetails.items,
       total_price: orderDetails.totalPrice,
       total_items: orderDetails.totalItems,
@@ -60,7 +67,7 @@ const OrderForm = ({ orderDetails, onSuccess, onError }: OrderFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4" id="order-form">
       <div className="space-y-2">
         <div className="space-y-1">
           <Label htmlFor="name">Имя*</Label>
@@ -106,6 +113,10 @@ const OrderForm = ({ orderDetails, onSuccess, onError }: OrderFormProps) => {
           />
         </div>
       </div>
+      
+      <Button type="submit" className="w-full bg-green-600 hover:bg-green-700">
+        Оформить заказ
+      </Button>
     </form>
   );
 };

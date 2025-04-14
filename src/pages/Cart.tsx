@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, Di
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import OrderForm from '@/components/OrderForm';
 import emailjs from '@emailjs/browser';
+import { getProductImage } from '@/data/productImages';
 
 const Cart = () => {
   const { 
