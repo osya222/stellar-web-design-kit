@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ExternalLink } from "lucide-react";
@@ -21,7 +22,7 @@ const ProductShowcase: React.FC = () => {
   const isMobile = useIsMobile();
 
   // Extract unique categories from products array to replace productCategories
-  // Filter out the unwanted categories
+  // Filter out unwanted categories
   const productCategories = Array.from(
     new Set(products.map(product => product.category))
   ).map(name => ({ 
@@ -33,7 +34,6 @@ const ProductShowcase: React.FC = () => {
     category.name !== "Икра" && 
     category.name !== "Деликатесы" &&
     category.name !== "Другие виды рыбы" &&
-    category.name !== "Филе рыбы" &&
     category.name !== "Мидии"
   ).slice(0, 6);
 
