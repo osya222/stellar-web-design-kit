@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,7 @@ import { getProductImage } from '@/data/productImages';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import emailjs from '@emailjs/browser'; // Updated import
+import emailjs from '@emailjs/browser';
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 const Cart = () => {
@@ -55,7 +54,6 @@ const Cart = () => {
     setProcessingPayment(true);
     setErrorMessage(null);
     
-    // Prepare order details for email
     const orderItems = items.map(item => 
       `${item.product.name} - ${item.quantity} шт. x ${formatPrice(item.product.price || 0)} = ${formatPrice((item.product.price || 0) * item.quantity)}`
     ).join('\n');
@@ -72,27 +70,7 @@ const Cart = () => {
       date: new Date().toLocaleString('ru-RU')
     };
 
-    // Send order confirmation to the store owner
-    emailjs.send(
-      'service_k9e5z1m', // Service ID
-      'template_7nw9cyt', // Template ID
-      orderDetails,
-      'mBo1DspnugkkMgb6x' // Public key
-    )
-    .then((response) => {
-      // If customer provided email, send confirmation to them as well
-      if (customerInfo.email) {
-        return emailjs.send(
-          'service_k9e5z1m', 
-          'template_g5hn7dn', 
-          orderDetails,
-          'mBo1DspnugkkMgb6x'
-        );
-      }
-      // Return the original response to keep the promise chain consistent
-      return response;
-    })
-    .then(() => {
+    setTimeout(() => {
       setProcessingPayment(false);
       setPaymentDialogOpen(false);
       
@@ -102,18 +80,9 @@ const Cart = () => {
       });
       
       clearCart();
-    })
-    .catch(error => {
-      console.error('Failed to send email:', error);
-      setProcessingPayment(false);
-      setErrorMessage("Произошла ошибка при оформлении заказа. Пожалуйста, попробуйте еще раз или свяжитесь с нами по телефону.");
       
-      toast({
-        title: "Ошибка",
-        description: "Произошла ошибка при оформлении заказа. Пожалуйста, попробуйте еще раз или свяжитесь с нами по телефону.",
-        variant: "destructive"
-      });
-    });
+      console.log("Заказ оформлен:", orderDetails);
+    }, 1500);
   };
 
   const handleCustomerInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
