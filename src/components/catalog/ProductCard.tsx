@@ -4,9 +4,10 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
-import { Fish, ShoppingCart, ShellIcon, Shell, ImageIcon } from "lucide-react";
+import { ImageIcon, ShoppingCart } from "lucide-react";
 import { useCart } from '@/context/CartContext';
 import ImageUploader from '@/components/common/ImageUploader';
+import { useToast } from "@/components/ui/use-toast";
 
 interface ProductCardProps {
   product: Product;
@@ -14,22 +15,11 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
+  const { toast } = useToast();
   const [imageError, setImageError] = useState(false);
-  const [customImage, setCustomImage] = useState<string>('');
+  const [customImage, setCustomImage] = useState<string>(product.image || '');
   
-  // Функция для выбора иконки в зависимости от категории товара
-  const renderProductIcon = () => {
-    return (
-      <img 
-        src="/lovable-uploads/02eda944-c8e4-4ddc-b061-5b197c2c118a.png" 
-        alt="Fish icon" 
-        className="w-16 h-16 opacity-70"
-      />
-    );
-  };
-
   const handleAddToCart = () => {
-    // If we have a custom image, add it to the product before adding to cart
     const productToAdd = customImage 
       ? { ...product, image: customImage }
       : product;
@@ -45,7 +35,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const handleImageSelect = (imageUrl: string) => {
     setCustomImage(imageUrl);
     setImageError(false);
+    
+    // Show success toast
+    toast({
+      title: "Изображение обновлено",
+      description: "Изображение товара успешно изменено",
+    });
+
+    // Save the image URL to localStorage
+    const storageKey = `product-image-${product.id}`;
+    localStorage.setItem(storageKey, imageUrl);
   };
+
+  // Load saved image from localStorage on component mount
+  React.useEffect(() => {
+    const storageKey = `product-image-${product.id}`;
+    const savedImage = localStorage.getItem(storageKey);
+    if (savedImage) {
+      setCustomImage(savedImage);
+      setImageError(false);
+    }
+  }, [product.id]);
 
   // Determine which image to display
   const displayImage = customImage || (product.image && !imageError ? product.image : null);
@@ -114,14 +124,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               <Button 
                 variant="outline" 
                 size="sm" 
-                onClick={() => setImageError(true)} 
+                onClick={() => setImageError(false)} 
                 className="text-blue-500"
               >
                 <ImageIcon className="w-4 h-4 mr-1" />
                 Добавить фото
               </Button>
             )}
-            <Button size="sm" onClick={handleAddToCart} className="ml-auto">
+            <Button size="sm" onClick={handleAddToCart}>
               <ShoppingCart className="w-4 h-4 mr-1" />
               В корзину
             </Button>
