@@ -100,7 +100,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div className="mt-auto">
           <ProductPrices price={product.price} />
           <div className="flex justify-between items-center mt-4">
-            {!displayImage && (
+            {displayImage ? (
+              <Button 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setImageError(true)} 
+                className="text-blue-500"
+              >
+                <ImageIcon className="w-4 h-4 mr-1" />
+                Изменить фото
+              </Button>
+            ) : (
               <Button 
                 variant="outline" 
                 size="sm" 

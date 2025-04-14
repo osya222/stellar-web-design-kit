@@ -14,6 +14,7 @@ export const productImages: Record<string, Record<string, string>> = {
     "default": "/lovable-uploads/9d283ac4-5a1a-45f8-b15b-f6e5d2812d1b.png",
     "КРЕВЕТКА ваннамей свежая в панцире б/г": "",
     "КРЕВЕТКА ваннамей свежая очищенная б/г": "",
+    "КРЕВЕТКА ваннамей вареная очищенная б/г": "",
     "ЛАНГУСТИНЫ с/м L 2": "",
     "ЛАНГУСТИНЫ с/м L 1": "",
     "ЛАНГУСТИНЫ с/м С 2": "",
@@ -25,11 +26,18 @@ export const productImages: Record<string, Record<string, string>> = {
     "ФИЛЕ ТИЛАПИИ": "",
     "ФИЛЕ ТРЕСКИ б/к фас.": "",
     "ФИЛЕ ХЕКА в тубе": ""
+  },
+  "Мидии": {
+    "default": "/lovable-uploads/0a745aa0-fdc0-4662-ad63-068c846bdb43.png",
+    "МИДИИ раковина в собственном соку": "",
+    "МИДИИ раковина сливки-чеснок/томат-чеснок/вино": "",
+    "МЯСО МИДИЙ в/м": ""
   }
 };
 
 // Функция для получения изображения продукта
 export function getProductImage(product: { category: string; name: string; size?: string }): string | undefined {
+  // Check if the category exists in our productImages map
   if (!productImages[product.category]) {
     return undefined;
   }
@@ -52,4 +60,3 @@ export async function isImageUrlValid(url: string): Promise<boolean> {
   // Для локальных путей всегда возвращаем true
   return true;
 }
-

@@ -1,5 +1,6 @@
 
 import { Product } from '@/types/product';
+import { getProductImage } from '../productImages';
 
 // Мидии products
 export const musselProducts: Product[] = [
@@ -11,7 +12,7 @@ export const musselProducts: Product[] = [
     packaging: "10*1", 
     catchDate: "Июнь-август",
     manufacturer: "Чили", 
-    image: "/images/mussels-shell-1.jpg",
+    image: getProductImage({ category: "Мидии", name: "МИДИИ раковина в собственном соку" }),
     price: 391.9
   },
   { 
@@ -22,7 +23,7 @@ export const musselProducts: Product[] = [
     packaging: "10*0,5", 
     catchDate: "Апрель/май/ноябрь",
     manufacturer: "Чили", 
-    image: "/images/mussels-shell-2.jpg",
+    image: getProductImage({ category: "Мидии", name: "МИДИИ раковина сливки-чеснок/томат-чеснок/вино" }),
     price: 483.9
   },
   { 
@@ -33,7 +34,7 @@ export const musselProducts: Product[] = [
     packaging: "9,2", 
     catchDate: "Май",
     manufacturer: "Чили", 
-    image: "/images/mussels-meat-1.jpg",
+    image: getProductImage({ category: "Мидии", name: "МЯСО МИДИЙ в/м" }),
     price: 520.9
   },
   { 
@@ -44,7 +45,7 @@ export const musselProducts: Product[] = [
     packaging: "9,2", 
     catchDate: "Май",
     manufacturer: "Чили", 
-    image: "/images/mussels-meat-2.jpg",
+    image: getProductImage({ category: "Мидии", name: "МЯСО МИДИЙ в/м" }),
     price: 509.9
   },
 ];
