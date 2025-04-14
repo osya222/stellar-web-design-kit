@@ -12,7 +12,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { products } from "@/data/products/index";
 import { formatPrice } from "@/lib/formatters";
 import { useIsMobile } from "@/hooks/use-mobile";
-import ImageUploader from "@/components/ui/image-uploader";
+import ImageUploader from "@/components/common/ImageUploader";
 
 const ProductShowcase: React.FC = () => {
   // Get popular products - modify the selection to include shrimp instead of duplicate salmon
@@ -113,7 +113,7 @@ const ProductShowcase: React.FC = () => {
     <section className="py-10 md:py-20 bg-white">
       <div className="container-custom">
         <h2 className="text-2xl md:text-3xl font-bold mb-2 text-center text-blue-800">Наша продукция</h2>
-        <p className="text-center text-gray-600 mb-8 md:mb-12 max-w-2xl mx-auto px-4">Широки�� выбор свежих морепродуктов от проверенных поставщиков для вашего бизнеса</p>
+        <p className="text-center text-gray-600 mb-8 md:mb-12 max-w-2xl mx-auto px-4">Широкий выбор свежих морепродуктов от проверенных поставщиков для вашего бизнеса</p>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
           {productCategories.map((category, index) => (
