@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from "@/components/ui/button";
@@ -7,13 +6,9 @@ import { ShoppingCart, Trash2, Plus, Minus, ArrowLeft, Fish, ShellIcon, Soup, Ga
 import { formatPrice } from '@/lib/formatters';
 import { Link } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
-import { toast } from '@/hooks/use-toast';
-import { getProductImage } from '@/data/productImages';
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import emailjs from '@emailjs/browser';
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import OrderForm from '@/components/OrderForm';
+import emailjs from '@emailjs/browser';
 
 const Cart = () => {
   const { 
@@ -40,72 +35,12 @@ const Cart = () => {
   const handleCheckout = () => {
     setErrorMessage(null);
     setPaymentDialogOpen(true);
-  };
-  
-  const handleProcessPayment = () => {
-    if (!customerInfo.name || !customerInfo.phone) {
-      toast({
-        title: "Ошибка",
-        description: "Пожалуйста, заполните обязательные поля (имя и телефон)",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setProcessingPayment(true);
-    setErrorMessage(null);
-    
-    const orderItems = items.map(item => 
-      `${item.product.name} - ${item.quantity} шт. x ${formatPrice(item.product.price || 0)} = ${formatPrice((item.product.price || 0) * item.quantity)}`
-    ).join('\n');
-    
-    const orderDetails = {
-      customer_name: customerInfo.name,
-      customer_phone: customerInfo.phone,
-      customer_email: customerInfo.email || 'Не указан',
-      customer_address: customerInfo.address || 'Не указан',
-      customer_comment: customerInfo.comment || 'Нет комментариев',
-      order_items: orderItems,
-      total_price: formatPrice(getTotalPrice()),
-      total_items: getTotalItems(),
-      date: new Date().toLocaleString('ru-RU')
-    };
-
-    // Initialize EmailJS with your public key
     emailjs.init("H6bEEmiaCDZAYmQVO");
-
-    // Use send method directly (no form needed)
-    emailjs.send(
-      "service_3zmmybf",  // Service ID
-      "template_3lzcrli", // Template ID
-      orderDetails        // Template variables
-    )
-    .then(() => {
-      // Handle success
-      setProcessingPayment(false);
-      setPaymentDialogOpen(false);
-      
-      toast({
-        title: "Заказ оформлен",
-        description: "Ваш заказ успешно оформлен. Мы свяжемся с вами в ближайшее время.",
-      });
-      
-      clearCart();
-      console.log("Заказ оформлен:", orderDetails);
-    })
-    .catch((error) => {
-      // Handle error
-      console.error("Ошибка отправки:", error);
-      setProcessingPayment(false);
-      setErrorMessage("Произошла ошибка при отправке заказа. Пожалуйста, попробуйте еще раз или свяжитесь с нами по телефону.");
-      
-      toast({
-        title: "Ошибка",
-        description: "Произошла ошибка при оформлении заказа. Пожалуйста, попробуйте еще раз.",
-        variant: "destructive"
-      });
-    });
   };
+
+  const orderItemsString = items.map(item => 
+    `${item.product.name} - ${item.quantity} шт. x ${formatPrice(item.product.price || 0)} = ${formatPrice((item.product.price || 0) * item.quantity)}`
+  ).join('\n');
 
   const handleCustomerInfoChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -296,83 +231,39 @@ const Cart = () => {
               <AlertDescription>{errorMessage}</AlertDescription>
             </Alert>
           )}
+
+          <OrderForm 
+            orderDetails={{
+              items: orderItemsString,
+              totalPrice: formatPrice(getTotalPrice()),
+              totalItems: getTotalItems()
+            }}
+            onSuccess={() => {
+              setProcessingPayment(false);
+              setPaymentDialogOpen(false);
+              clearCart();
+            }}
+            onError={(error) => {
+              setProcessingPayment(false);
+              setErrorMessage(error);
+            }}
+          />
           
-          <div className="grid gap-3 py-2">
-            <div className="space-y-1">
-              <h3 className="font-medium text-sm">Контактная информация</h3>
-              <div className="grid gap-2">
-                <div className="space-y-1">
-                  <Label htmlFor="name">Имя*</Label>
-                  <Input 
-                    id="name" 
-                    name="name" 
-                    placeholder="Иван Иванов" 
-                    value={customerInfo.name}
-                    onChange={handleCustomerInfoChange}
-                    required
-                  />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="phone">Телефон*</Label>
-                  <Input 
-                    id="phone" 
-                    name="phone" 
-                    placeholder="+7 (999) 999-99-99" 
-                    value={customerInfo.phone}
-                    onChange={handleCustomerInfoChange}
-                    required
-                  />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="email">Email</Label>
-                  <Input 
-                    id="email" 
-                    name="email" 
-                    type="email" 
-                    placeholder="example@mail.ru" 
-                    value={customerInfo.email}
-                    onChange={handleCustomerInfoChange}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="address">Адрес доставки</Label>
-                  <Input 
-                    id="address" 
-                    name="address" 
-                    placeholder="Москва, ул. Примерная, д. 1, кв. 1" 
-                    value={customerInfo.address}
-                    onChange={handleCustomerInfoChange}
-                  />
-                </div>
-                <div className="space-y-1">
-                  <Label htmlFor="comment">Комментарий к заказу</Label>
-                  <Textarea 
-                    id="comment" 
-                    name="comment" 
-                    placeholder="Дополнительная информация к заказу" 
-                    value={customerInfo.comment}
-                    onChange={handleCustomerInfoChange}
-                  />
-                </div>
-              </div>
-            </div>
-            
-            <div className="space-y-2 pt-2">
-              <h3 className="font-medium text-sm">Способ оплаты</h3>
-              <div className="flex items-center p-2 border rounded-md bg-white">
-                <img 
-                  src="/lovable-uploads/0fa26d3b-9843-48d7-afaf-e69bddbee7b5.png" 
-                  alt="СБП через Альфа-Банк" 
-                  className="h-6 mr-2"
-                />
-                <div>
-                  <div className="font-medium text-sm">Оплата СБП через Альфа-Банк</div>
-                  <div className="text-xs text-gray-500">Быстро и безопасно</div>
-                </div>
+          <div className="space-y-2 pt-2">
+            <h3 className="font-medium text-sm">Способ оплаты</h3>
+            <div className="flex items-center p-2 border rounded-md bg-white">
+              <img 
+                src="/lovable-uploads/0fa26d3b-9843-48d7-afaf-e69bddbee7b5.png" 
+                alt="СБП через Альфа-Банк" 
+                className="h-6 mr-2"
+              />
+              <div>
+                <div className="font-medium text-sm">Оплата СБП через Альфа-Банк</div>
+                <div className="text-xs text-gray-500">Быстро и безопасно</div>
               </div>
             </div>
           </div>
-          
+
           <DialogFooter className="sm:justify-between mt-2 gap-2">
             <Button 
               variant="outline" 
@@ -384,7 +275,8 @@ const Cart = () => {
             </Button>
             
             <Button
-              onClick={handleProcessPayment}
+              type="submit"
+              form="order-form"
               disabled={processingPayment}
               className="bg-green-600 hover:bg-green-700 text-sm h-8"
               size="sm"
