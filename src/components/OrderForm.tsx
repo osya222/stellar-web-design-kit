@@ -33,25 +33,39 @@ const OrderForm = ({ orderDetails, onSuccess, onError }: OrderFormProps) => {
     const addressInput = form.elements.namedItem('address') as HTMLInputElement;
     const commentInput = form.elements.namedItem('comment') as HTMLTextAreaElement;
     
+    // Проверяем, что данные не пустые перед отправкой
+    if (!nameInput.value || !phoneInput.value) {
+      toast({
+        title: "Ошибка",
+        description: "Пожалуйста, заполните обязательные поля",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    // Создаем объект для отправки с корректными параметрами шаблона EmailJS
     const templateParams = {
-      customer_name: nameInput.value,
-      customer_phone: phoneInput.value,
-      customer_email: emailInput.value || 'Не указан',
-      customer_address: addressInput.value || 'Не указан',
-      customer_comment: commentInput.value || 'Нет комментариев',
-      order_items: orderDetails.items,
-      total_price: orderDetails.totalPrice,
-      total_items: orderDetails.totalItems,
-      date: new Date().toLocaleString('ru-RU')
+      from_name: nameInput.value,
+      to_name: "Администратор",
+      phone: phoneInput.value,
+      email: emailInput.value || 'Не указан',
+      address: addressInput.value || 'Не указан',
+      message: commentInput.value || 'Нет комментариев',
+      order_details: `Товары (${orderDetails.totalItems}): ${orderDetails.items}`,
+      total: orderDetails.totalPrice,
+      reply_to: emailInput.value || 'no-reply@example.com'
     };
 
-    // Improved error handling for EmailJS
+    console.log("Отправка письма с данными:", templateParams);
+
+    // Отправляем данные через EmailJS
     emailjs.send(
       'service_3zmmbyf',
       'template_3lzcrli',
       templateParams
     )
-    .then(() => {
+    .then((response) => {
+      console.log("Письмо успешно отправлено:", response);
       onSuccess();
       toast({
         title: "Заказ оформлен",
