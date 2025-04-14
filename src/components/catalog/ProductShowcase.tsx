@@ -15,15 +15,13 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import ImageUploader from "@/components/common/ImageUploader";
 
 const ProductShowcase: React.FC = () => {
-  // Get popular products - modify the selection to include shrimp instead of duplicate salmon
-  const popularProducts = [
-    products[0], // First salmon product
-    products[3], // Trout product
-    products[6], // Shrimp product (креветка ваннамей)
-    products[32], // Fish fillet product (филе пангасиуса)
-    products[7], // Another shrimp product
-    products[9], // Langoustine product
-  ];
+  // Define indices to use and verify they exist in the products array
+  const productIndices = [0, 3, 6, 32, 7, 9];
+  
+  // Get popular products - safely get products by indices, filtering out any undefined values
+  const popularProducts = productIndices
+    .map(index => products[index])
+    .filter(product => product !== undefined);
   
   const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
   const [categoryImageErrors, setCategoryImageErrors] = useState<Record<string, boolean>>({});
