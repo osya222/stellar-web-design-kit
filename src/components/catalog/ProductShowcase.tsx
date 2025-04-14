@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { ArrowRight, ExternalLink } from "lucide-react";
@@ -13,10 +12,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import { products } from "@/data/products/index";
 import { formatPrice } from "@/lib/formatters";
 import { useIsMobile } from "@/hooks/use-mobile";
+import ImageUploader from "@/components/ui/image-uploader";
 
 const ProductShowcase: React.FC = () => {
-  // Get popular products from main categories
-  const popularProducts = products.slice(0, 6);
+  // Get popular products - modify the selection to include shrimp instead of duplicate salmon
+  const popularProducts = [
+    products[0], // First salmon product
+    products[3], // Trout product
+    products[6], // Shrimp product (креветка ваннамей)
+    products[32], // Fish fillet product (филе пангасиуса)
+    products[7], // Another shrimp product
+    products[9], // Langoustine product
+  ];
+  
   const [imageErrors, setImageErrors] = useState<Record<number, boolean>>({});
   const [categoryImageErrors, setCategoryImageErrors] = useState<Record<string, boolean>>({});
   const isMobile = useIsMobile();
@@ -105,7 +113,7 @@ const ProductShowcase: React.FC = () => {
     <section className="py-10 md:py-20 bg-white">
       <div className="container-custom">
         <h2 className="text-2xl md:text-3xl font-bold mb-2 text-center text-blue-800">Наша продукция</h2>
-        <p className="text-center text-gray-600 mb-8 md:mb-12 max-w-2xl mx-auto px-4">Широкий выбор свежих морепродуктов от проверенных поставщиков для вашего бизнеса</p>
+        <p className="text-center text-gray-600 mb-8 md:mb-12 max-w-2xl mx-auto px-4">Широки�� выбор свежих морепродуктов от проверенных поставщиков для вашего бизнеса</p>
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
           {productCategories.map((category, index) => (
@@ -149,17 +157,31 @@ const ProductShowcase: React.FC = () => {
                   <Card className="border-0 shadow-md rounded-xl overflow-hidden card-hover">
                     <CardContent className="p-0">
                       <div className="relative h-48 md:h-64 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
-                        {product.image && !imageErrors[index] ? (
-                          <img 
-                            src={product.image} 
-                            alt={product.name} 
-                            className="object-cover w-full h-full"
-                            onError={() => handleImageError(index)}
+                        {product.category === "Креветки и морепродукты" ? (
+                          <ImageUploader
+                            onImageSelect={(imageUrl) => {
+                              setImageErrors(prev => ({
+                                ...prev,
+                                [index]: false
+                              }));
+                              product.image = imageUrl;
+                            }}
+                            currentImage={product.image}
+                            className="w-full h-full"
                           />
                         ) : (
-                          <div className="flex items-center justify-center h-full w-full">
-                            {renderFishIcon()}
-                          </div>
+                          product.image && !imageErrors[index] ? (
+                            <img 
+                              src={product.image} 
+                              alt={product.name} 
+                              className="object-cover w-full h-full"
+                              onError={() => handleImageError(index)}
+                            />
+                          ) : (
+                            <div className="flex items-center justify-center h-full w-full">
+                              {renderFishIcon()}
+                            </div>
+                          )
                         )}
                       </div>
                       <div className="p-3 md:p-5">
