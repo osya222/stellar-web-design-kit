@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import emailjs from 'emailjs-com';
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 const Cart = () => {
   const { 
@@ -26,6 +28,7 @@ const Cart = () => {
   
   const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
   const [processingPayment, setProcessingPayment] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
     phone: '',
@@ -35,6 +38,7 @@ const Cart = () => {
   });
 
   const handleCheckout = () => {
+    setErrorMessage(null);
     setPaymentDialogOpen(true);
   };
   
@@ -49,6 +53,7 @@ const Cart = () => {
     }
 
     setProcessingPayment(true);
+    setErrorMessage(null);
     
     // Prepare order details for email
     const orderItems = items.map(item => 
@@ -101,6 +106,7 @@ const Cart = () => {
     .catch(error => {
       console.error('Failed to send email:', error);
       setProcessingPayment(false);
+      setErrorMessage("Произошла ошибка при оформлении заказа. Пожалуйста, попробуйте еще раз или свяжитесь с нами по телефону.");
       
       toast({
         title: "Ошибка",
@@ -292,6 +298,13 @@ const Cart = () => {
               Общая сумма заказа: {formatPrice(getTotalPrice())}
             </DialogDescription>
           </DialogHeader>
+          
+          {errorMessage && (
+            <Alert variant="destructive" className="mb-4">
+              <AlertTitle>Ошибка</AlertTitle>
+              <AlertDescription>{errorMessage}</AlertDescription>
+            </Alert>
+          )}
           
           <div className="grid gap-3 py-2">
             <div className="space-y-1">
