@@ -1,5 +1,5 @@
-
 import { Product } from '@/types/product';
+import { getProductImage } from '../productImages';
 
 // Креветки и морепродукты products
 export const shrimpProducts: Product[] = [
@@ -11,7 +11,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Апрель/май",
     manufacturer: "Индия", 
-    image: "/lovable-uploads/9d283ac4-5a1a-45f8-b15b-f6e5d2812d1b.png",
+    image: getProductImage({ category: "Креветки и морепродукты", name: "КРЕВЕТКА ваннамей свежая в панцире б/г" }),
     price: 1002.9
   },
   { 
@@ -22,7 +22,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Май",
     manufacturer: "Индия", 
-    image: "/lovable-uploads/9d283ac4-5a1a-45f8-b15b-f6e5d2812d1b.png",
+    image: getProductImage({ category: "Креветки и морепродукты", name: "КРЕВЕТКА ваннамей свежая очищенная б/г" }),
     price: 1004.9
   },
   { 
@@ -33,7 +33,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Июль",
     manufacturer: "Индия", 
-    image: "/lovable-uploads/9d283ac4-5a1a-45f8-b15b-f6e5d2812d1b.png",
+    image: getProductImage({ category: "Креветки и морепродукты", name: "КРЕВЕТКА ваннамей свежая очищенная б/г" }),
     price: 1071.9
   },
   { 
@@ -44,7 +44,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Апрель",
     manufacturer: "Индия", 
-    image: "/lovable-uploads/9d283ac4-5a1a-45f8-b15b-f6e5d2812d1b.png",
+    image: getProductImage({ category: "Креветки и морепродукты", name: "КРЕВЕТКА ваннамей вареная очищенная б/г" }),
     price: 1240.9
   },
   { 
@@ -55,7 +55,7 @@ export const shrimpProducts: Product[] = [
     packaging: "6*2 кг", 
     catchDate: "Июль",
     manufacturer: "Аргентина",
-    image: "/lovable-uploads/9d283ac4-5a1a-45f8-b15b-f6e5d2812d1b.png",
+    image: getProductImage({ category: "Креветки и морепродукты", name: "ЛАНГУСТИНЫ с/м L 2" }),
     price: 795.9
   },
   { 
@@ -66,7 +66,7 @@ export const shrimpProducts: Product[] = [
     packaging: "6*2 кг", 
     catchDate: "Январь/апрель",
     manufacturer: "Аргентина",
-    image: "/lovable-uploads/9d283ac4-5a1a-45f8-b15b-f6e5d2812d1b.png",
+    image: getProductImage({ category: "Креветки и морепродукты", name: "ЛАНГУСТИНЫ с/м L 1" }),
     price: 884.9
   },
   { 
@@ -77,7 +77,7 @@ export const shrimpProducts: Product[] = [
     packaging: "6*2 кг", 
     catchDate: "Январь",
     manufacturer: "Аргентина", 
-    image: "/lovable-uploads/9d283ac4-5a1a-45f8-b15b-f6e5d2812d1b.png",
+    image: getProductImage({ category: "Креветки и морепродукты", name: "ЛАНГУСТИНЫ с/м С 2" }),
     price: 1022.9
   },
   { 
@@ -89,7 +89,7 @@ export const shrimpProducts: Product[] = [
     weight: "9,6",
     catchDate: "Июль",
     manufacturer: "Китай", 
-    image: "/lovable-uploads/9d283ac4-5a1a-45f8-b15b-f6e5d2812d1b.png",
+    image: getProductImage({ category: "Креветки и морепродукты", name: "МЕДАЛЬОНЫ из креветки" }),
     price: 1192.9
   },
 ];
