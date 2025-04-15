@@ -60,7 +60,7 @@ const Logo: React.FC<LogoProps> = ({ size = 'md' }) => {
       <span className={`font-bold tracking-tight ${
         size === 'sm' ? 'text-xl' : size === 'md' ? 'text-2xl' : 'text-3xl'
       }`}>
-        МореПродукт
+        РыбАртель
       </span>
     </div>
   );

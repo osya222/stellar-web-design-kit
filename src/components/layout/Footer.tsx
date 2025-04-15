@@ -1,4 +1,3 @@
-
 import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "@/components/layout/Logo";
 import { Phone, Mail, Building } from "lucide-react";
@@ -116,7 +115,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="pt-6 border-t border-blue-700 text-center md:text-left">
-          <p className="mb-1 text-blue-200">&copy; {new Date().getFullYear()} ООО "СИТЕКС". Все права защищены.</p>
+          <p className="mb-1 text-blue-200">&copy; {new Date().getFullYear()} ООО "РыбАртель". Все права защищены.</p>
         </div>
       </div>
     </footer>
