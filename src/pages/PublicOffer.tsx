@@ -14,7 +14,6 @@ const PublicOffer = () => {
   const activeTab = isPrivacyPath ? "privacy" : "offer";
   
   useEffect(() => {
-    // Прокрутка страницы вверх при загрузке
     window.scrollTo(0, 0);
   }, [location.pathname]);
   
@@ -58,7 +57,7 @@ const PublicOffer = () => {
                 <PublicOfferContent />
               </TabsContent>
               
-              <TabsContent value="privacy" className="space-y-6">
+              <TabsContent value="privacy">
                 <PrivacyPolicyContent />
               </TabsContent>
             </Tabs>
@@ -72,3 +71,4 @@ const PublicOffer = () => {
 };
 
 export default PublicOffer;
+
