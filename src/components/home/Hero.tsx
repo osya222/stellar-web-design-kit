@@ -12,8 +12,29 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative py-20">        
-      <div className="container-custom text-center">
+    <section className="relative py-20 overflow-hidden">        
+      {/* Decorative waves */}
+      <div className="absolute inset-0 pointer-events-none">
+        <svg className="w-full h-full" viewBox="0 0 1200 400" preserveAspectRatio="none">
+          <path 
+            d="M0,100 C300,300 900,-100 1200,100 L1200,400 L0,400 Z" 
+            fill="#EBF7FC" 
+            className="opacity-60"
+          />
+          <path 
+            d="M0,200 C300,400 900,0 1200,200 L1200,400 L0,400 Z" 
+            fill="#E0F2F7" 
+            className="opacity-40"
+          />
+          <path 
+            d="M0,300 C300,500 900,100 1200,300 L1200,400 L0,400 Z" 
+            fill="#D3E7F0" 
+            className="opacity-20"
+          />
+        </svg>
+      </div>
+
+      <div className="container-custom text-center relative z-10">
         <div className="flex justify-center mb-12">
           <Logo size="lg" />
         </div>
