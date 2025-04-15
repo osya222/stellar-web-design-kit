@@ -21,7 +21,8 @@ const ProductShowcase: React.FC = () => {
     category.name !== "Икра" && 
     category.name !== "Деликатесы" &&
     category.name !== "Другие виды рыбы" &&
-    category.name !== "Мидии"
+    category.name !== "Мидии" &&
+    category.name !== "Филе рыбы"
   ).slice(0, 6);
 
   const handleCategoryClick = (categoryId: string, event: React.MouseEvent) => {
