@@ -18,14 +18,14 @@ const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({ category, produ
       <img 
         src="/lovable-uploads/f96b53d4-ab1d-4752-8c90-925f33c1173c.png" 
         alt="Category logo" 
-        className="w-10 h-10 mr-2 object-contain"
+        className="w-10 h-10 mr-2 object-contain opacity-80"
       />
     );
   };
   
   return (
     <div className="mb-10" id={`catalog-${categoryId}`}>
-      <h2 className="text-2xl font-bold mb-4 pb-2 border-b border-gray-200 flex items-center text-black">
+      <h2 className="text-2xl font-bold mb-4 pb-2 border-b border-gray-200 flex items-center text-gray-800">
         {renderCategoryLogo()}
         <span>{category}</span>
       </h2>

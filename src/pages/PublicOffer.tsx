@@ -11,13 +11,23 @@ const PublicOffer = () => {
     <div className="min-h-screen flex flex-col">
       <Header />
 
-      <main className="flex-grow bg-slate-50">
+      <main className="flex-grow bg-gradient-to-b from-slate-50 to-white">
         <div className="container-custom py-12">
-          <div className="bg-white rounded-lg shadow-md p-6 md:p-8 max-w-4xl mx-auto">
+          <div className="bg-white rounded-lg shadow-sm p-6 md:p-8 max-w-4xl mx-auto">
             <Tabs defaultValue="offer" className="w-full">
-              <TabsList className="w-full mb-6 bg-transparent">
-                <TabsTrigger value="offer" className="flex-1">Публичная оферта</TabsTrigger>
-                <TabsTrigger value="privacy" className="flex-1">Политика конфиденциальности</TabsTrigger>
+              <TabsList className="w-full mb-6 bg-gray-100/50 p-1 rounded-lg">
+                <TabsTrigger 
+                  value="offer" 
+                  className="flex-1 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md transition-all"
+                >
+                  Публичная оферта
+                </TabsTrigger>
+                <TabsTrigger 
+                  value="privacy" 
+                  className="flex-1 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md transition-all"
+                >
+                  Политика конфиденциальности
+                </TabsTrigger>
               </TabsList>
               
               <TabsContent value="offer">
