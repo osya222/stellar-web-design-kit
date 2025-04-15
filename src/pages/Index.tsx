@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import ProductCatalog from "@/components/ProductCatalog";
@@ -9,6 +8,7 @@ import Footer from "@/components/layout/Footer";
 import Hero from "@/components/home/Hero";
 import About from "@/components/home/About";
 import Contacts from "@/components/home/Contacts";
+import DeliveryInfo from "@/components/home/DeliveryInfo";
 
 const Index = () => {
   const location = useLocation();
@@ -63,6 +63,9 @@ const Index = () => {
           <ProductCatalog />
         </div>
       </section>
+
+      {/* Delivery Info Section */}
+      <DeliveryInfo />
 
       {/* About Us Section */}
       <About />

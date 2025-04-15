@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ShoppingCart, Menu, X } from "lucide-react";
@@ -74,6 +73,14 @@ const Header = () => {
         <li>
           <button 
             className="hover:text-blue-200 transition-colors bg-transparent border-0"
+            onClick={() => scrollToSection("delivery")}
+          >
+            Доставка
+          </button>
+        </li>
+        <li>
+          <button 
+            className="hover:text-blue-200 transition-colors bg-transparent border-0"
             onClick={() => scrollToSection("contacts")}
           >
             Контакты
@@ -128,6 +135,12 @@ const Header = () => {
               onClick={() => scrollToSection("about")}
             >
               О нас
+            </button>
+            <button 
+              className="text-lg font-medium hover:text-blue-200 transition-colors text-left bg-transparent border-0" 
+              onClick={() => scrollToSection("delivery")}
+            >
+              Доставка
             </button>
             <button 
               className="text-lg font-medium hover:text-blue-200 transition-colors text-left bg-transparent border-0" 
