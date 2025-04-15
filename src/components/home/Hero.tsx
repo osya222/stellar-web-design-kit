@@ -1,10 +1,15 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import Logo from "@/components/layout/Logo";
 import { Shell, ArrowDown } from "lucide-react";
-import { Link } from "react-router-dom";
+import HeroEdit from './HeroEdit';
 
 const Hero = () => {
+  const [content, setContent] = useState({
+    title: "Премиум морепродукты с доставкой",
+    description: "Широкий ассортимент качественной морской продукции с доставкой по Москве и МО. Работаем с ресторанами, магазинами и оптовыми покупателями."
+  });
+
   const scrollToCatalog = () => {
     const catalogSection = document.getElementById('catalog');
     if (catalogSection) {
@@ -19,12 +24,12 @@ const Hero = () => {
           <Logo size="lg" />
         </div>
         <h2 className="text-5xl font-bold mb-8 text-blue-800 flex items-center justify-center gap-4">
-          Премиум морепродукты с доставкой
+          {content.title}
           <Shell className="w-12 h-12 text-blue-600" />
         </h2>
         <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl shadow-lg max-w-3xl mx-auto mb-8">
           <p className="text-xl text-gray-800 leading-relaxed">
-            Широкий ассортимент качественной морской продукции с доставкой по Москве и МО. Работаем с ресторанами, магазинами и оптовыми покупателями.
+            {content.description}
           </p>
         </div>
         <button 
@@ -34,6 +39,7 @@ const Hero = () => {
           Перейти к каталогу
           <ArrowDown className="w-4 h-4" />
         </button>
+        <HeroEdit content={content} onUpdate={setContent} />
       </div>
     </section>
   );
