@@ -4,6 +4,7 @@ import { products } from "@/data/products/index";
 import { useIsMobile } from "@/hooks/use-mobile";
 import CategoryCard from './CategoryCard';
 import ViewAllButton from './ViewAllButton';
+import { getProductImage } from '@/data/productImages';
 
 const ProductShowcase: React.FC = () => {
   const isMobile = useIsMobile();
@@ -51,8 +52,7 @@ const ProductShowcase: React.FC = () => {
 
   // Get category image helper function
   const getCategoryImage = (categoryName: string) => {
-    const categoryProduct = products.find(p => p.category === categoryName && p.image);
-    return categoryProduct?.image;
+    return getProductImage({ category: categoryName, name: "default" });
   };
 
   return (

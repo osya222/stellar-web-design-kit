@@ -1,6 +1,6 @@
 
-import React, { useState } from 'react';
-import { ArrowRight } from "lucide-react";
+import React, { useState, useEffect } from 'react';
+import { ArrowRight, RefreshCcw } from "lucide-react";
 
 interface CategoryCardProps {
   category: {
@@ -14,6 +14,12 @@ interface CategoryCardProps {
 
 const CategoryCard: React.FC<CategoryCardProps> = ({ category, image, onCategoryClick }) => {
   const [imageError, setImageError] = useState(false);
+  const [currentImage, setCurrentImage] = useState(image);
+  
+  useEffect(() => {
+    setCurrentImage(image);
+    setImageError(false);
+  }, [image]);
   
   const renderFishIcon = () => {
     return (
@@ -28,9 +34,9 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, image, onCategory
   return (
     <div className="overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 bg-white card-hover">
       <div className="relative h-40 md:h-60 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
-        {image && !imageError ? (
+        {currentImage && !imageError ? (
           <img 
-            src={image} 
+            src={currentImage} 
             alt={category.name} 
             className="object-cover w-full h-full"
             onError={() => setImageError(true)}

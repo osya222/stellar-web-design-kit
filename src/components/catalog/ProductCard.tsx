@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
-import { ShoppingCart, ImageIcon, Edit } from "lucide-react";
+import { ShoppingCart, ImageIcon, Edit, RefreshCcw } from "lucide-react";
 import { useCart } from '@/context/CartContext';
 import { useToast } from "@/hooks/use-toast";
-import { getProductImage, updateProductImage } from '@/data/productImages';
+import { getProductImage, updateProductImage, resetImageCache } from '@/data/productImages';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 interface ProductCardProps {
@@ -19,8 +20,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [imageError, setImageError] = useState(false);
   const [isEditingImage, setIsEditingImage] = useState(false);
   const [newImageUrl, setNewImageUrl] = useState('');
-  const [imageUrl, setImageUrl] = useState(product.image || getProductImage(product));
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+  
+  // Используем useEffect для отслеживания изменений изображений
+  const [imageUrl, setImageUrl] = useState('');
+  
+  useEffect(() => {
+    const productImage = getProductImage(product) || '';
+    console.log(`Загрузка изображения для ${product.category}/${product.name}: ${productImage}`);
+    setImageUrl(productImage);
+    setNewImageUrl(productImage);
+  }, [product]);
 
   const handleAddToCart = () => {
     addToCart(product);
@@ -72,6 +82,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       description: "Новое изображение товара сохранено",
     });
   };
+  
+  const handleResetCache = () => {
+    resetImageCache();
+  };
 
   return (
     <>
@@ -80,6 +94,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           {!imageUrl || imageError ? (
             <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100">
               <ImageIcon className="w-12 h-12 text-gray-400" />
+              <p className="text-xs text-gray-500 mt-2">Нет изображения</p>
             </div>
           ) : (
             <img 
@@ -89,12 +104,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               onError={handleImageError}
             />
           )}
-          <button
-            onClick={handleOpenImageDialog}
-            className="absolute top-2 right-2 p-2 bg-white/80 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-          >
-            <Edit className="w-4 h-4" />
-          </button>
+          <div className="absolute top-2 right-2 flex gap-2">
+            <button
+              onClick={handleOpenImageDialog}
+              className="p-2 bg-white/80 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+            >
+              <Edit className="w-4 h-4" />
+            </button>
+          </div>
         </div>
         <CardContent className="p-4 flex flex-col flex-grow">
           <h3 className="font-bold text-base line-clamp-2 h-12 mb-2 text-black" title={product.name}>

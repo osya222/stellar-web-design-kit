@@ -1,3 +1,4 @@
+
 // Define product image paths by category and product name
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
@@ -7,7 +8,7 @@ export const productImages: Record<string, Record<string, string>> = {
   },
   "Форель (Турция)": {
     "default": "/lovable-uploads/7f979307-fd86-4fd7-a28a-428c30583726.png",
-    "ФОРЕЛЬ б/г потр М": ""
+    "ФОРЕЛЬ б/г потр М": "/lovable-uploads/7f979307-fd86-4fd7-a28a-428c30583726.png"
   },
   "Морепродукты": {
     "default": "/lovable-uploads/9d283ac4-5a1a-45f8-b15b-f6e5d2812d1b.png",
@@ -67,7 +68,21 @@ export function updateProductImage(category: string, productName: string, imageU
   // Save to localStorage
   try {
     localStorage.setItem('productImages', JSON.stringify(productImages));
+    console.log(`Сохранено изображение для ${category}/${productName}: ${imageUrl}`);
+    console.log('Текущие изображения:', JSON.stringify(productImages));
   } catch (error) {
     console.error('Error saving images:', error);
+  }
+}
+
+// Функция для сброса кеша изображений
+export function resetImageCache(): void {
+  try {
+    localStorage.removeItem('productImages');
+    console.log('Кеш изображений сброшен');
+    // Перезагрузить страницу для применения изменений
+    window.location.reload();
+  } catch (error) {
+    console.error('Ошибка при сбросе кеша изображений:', error);
   }
 }

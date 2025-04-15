@@ -1,3 +1,4 @@
+
 import { Product } from '@/types/product';
 import { getProductImage } from '../productImages';
 
@@ -11,7 +12,7 @@ export const troutProducts: Product[] = [
     packaging: "25 кг", 
     catchDate: "Июнь",
     manufacturer: "Турция", 
-    image: getProductImage({ category: "Форель (Турция)", name: "ФОРЕЛЬ б/г потр М" }),
+    image: "", // Используем getProductImage при рендеринге
     price: 1014.9
   },
   { 
@@ -22,7 +23,7 @@ export const troutProducts: Product[] = [
     packaging: "25 кг", 
     catchDate: "Июль",
     manufacturer: "Турция", 
-    image: getProductImage({ category: "Форель (Турция)", name: "ФОРЕЛЬ б/г потр М" }), 
+    image: "", // Используем getProductImage при рендеринге
     price: 1064.9
   },
   { 
@@ -33,7 +34,7 @@ export const troutProducts: Product[] = [
     packaging: "25 кг", 
     catchDate: "Июнь",
     manufacturer: "Турция", 
-    image: getProductImage({ category: "Форель (Турция)", name: "ФОРЕЛЬ б/г потр М" }),
+    image: "", // Используем getProductImage при рендеринге
     price: 1166.9
   },
 ];
