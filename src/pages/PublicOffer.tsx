@@ -13,6 +13,11 @@ const PublicOffer = () => {
   const isPrivacyPath = location.pathname === "/privacy-policy";
   const activeTab = isPrivacyPath ? "privacy" : "offer";
   
+  useEffect(() => {
+    // Прокрутка страницы вверх при загрузке
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+  
   const handleTabChange = (value: string) => {
     if (value === "privacy" && !isPrivacyPath) {
       navigate("/privacy-policy");

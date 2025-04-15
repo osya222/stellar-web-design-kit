@@ -42,7 +42,7 @@ const Footer = () => {
               <li>
                 <Button 
                   variant="ghost" 
-                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto"
+                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto w-full text-left justify-start"
                   onClick={handleHomeClick}
                 >
                   Главная
@@ -51,7 +51,7 @@ const Footer = () => {
               <li>
                 <Button 
                   variant="ghost" 
-                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto"
+                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto w-full text-left justify-start"
                   onClick={() => scrollToSection("catalog")}
                 >
                   Каталог
@@ -60,7 +60,7 @@ const Footer = () => {
               <li>
                 <Button 
                   variant="ghost" 
-                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto"
+                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto w-full text-left justify-start"
                   onClick={() => scrollToSection("about")}
                 >
                   О нас
@@ -69,7 +69,7 @@ const Footer = () => {
               <li>
                 <Button 
                   variant="ghost" 
-                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto"
+                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto w-full text-left justify-start"
                   onClick={() => scrollToSection("contacts")}
                 >
                   Контакты
@@ -78,7 +78,7 @@ const Footer = () => {
               <li>
                 <Button 
                   variant="ghost" 
-                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto"
+                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto w-full text-left justify-start"
                   asChild
                 >
                   <Link to="/public-offer">
@@ -89,7 +89,7 @@ const Footer = () => {
               <li>
                 <Button 
                   variant="ghost" 
-                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto"
+                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto w-full text-left justify-start"
                   asChild
                 >
                   <Link to="/privacy-policy">
