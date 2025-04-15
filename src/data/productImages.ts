@@ -13,7 +13,7 @@ export const productImages: Record<string, Record<string, string>> = {
   "Креветки и морепродукты": {
     "default": "/lovable-uploads/9d283ac4-5a1a-45f8-b15b-f6e5d2812d1b.png",
     "КРЕВЕТКА ваннамей свежая в панцире б/г": "",
-    "КРЕВЕТКА ваннамей свежая очищенная б/г": "",
+    "КРЕВЕТКА ваннамей свежая очищенная б/г": "https://avatars.mds.yandex.net/get-altay/5099256/2a00000180b2e824b521af2f5b74b39c789b/XXL_height",
     "КРЕВЕТКА ваннамей вареная очищенная б/г": "",
     "ЛАНГУСТИНЫ с/м L 2": "",
     "ЛАНГУСТИНЫ с/м L 1": "",
