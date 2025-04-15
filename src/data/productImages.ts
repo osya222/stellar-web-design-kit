@@ -1,4 +1,3 @@
-
 // Define product image paths by category and product name
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
@@ -19,8 +18,8 @@ export const productImages: Record<string, Record<string, string>> = {
     "ЛАНГУСТИНЫ с/м L 1": "https://sun9-10.userapi.com/impg/4QPMBOBpPElMd2CqP9iU40f1h8WHHPP5ig7VDQ/IDcWo8jC-30.jpg?size=1280x960&quality=95&sign=ab100a1bbf7e3b2c6182ef233c32740a&c_uniq_tag=hp0uNOKmELQMK5IzuE78VoiAT0kT5OMLgXuZFHnWaEg&type=album",
     "ЛАНГУСТИНЫ с/м С 2": "https://sun9-10.userapi.com/impg/4QPMBOBpPElMd2CqP9iU40f1h8WHHPP5ig7VDQ/IDcWo8jC-30.jpg?size=1280x960&quality=95&sign=ab100a1bbf7e3b2c6182ef233c32740a&c_uniq_tag=hp0uNOKmELQMK5IzuE78VoiAT0kT5OMLgXuZFHnWaEg&type=album",
     "МЕДАЛЬОНЫ из креветки": "",
-    "МИДИИ раковина в собственном соку": "",
-    "МИДИИ раковина сливки-чеснок/томат-чеснок/вино": "",
+    "МИДИИ раковина в собственном соку": "https://images.satu.kz/200677063_w700_h500_midii-v-golubyh.jpg",
+    "МИДИИ раковина сливки-чеснок/томат-чеснок/вино": "https://images.satu.kz/200677063_w700_h500_midii-v-golubyh.jpg",
     "МЯСО МИДИЙ в/м": ""
   },
   "Филе рыбы": {
