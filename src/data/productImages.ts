@@ -1,4 +1,3 @@
-
 // Define product image paths by category and product name
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
@@ -8,7 +7,10 @@ export const productImages: Record<string, Record<string, string>> = {
   },
   "Форель (Турция)": {
     "default": "/lovable-uploads/7f979307-fd86-4fd7-a28a-428c30583726.png",
-    "ФОРЕЛЬ б/г потр М": "/lovable-uploads/7f979307-fd86-4fd7-a28a-428c30583726.png"
+    "ФОРЕЛЬ б/г потр М": "/lovable-uploads/7f979307-fd86-4fd7-a28a-428c30583726.png",
+    "3_ФОРЕЛЬ б/г потр М": "/lovable-uploads/7f979307-fd86-4fd7-a28a-428c30583726.png",
+    "4_ФОРЕЛЬ б/г потр М": "/lovable-uploads/7f979307-fd86-4fd7-a28a-428c30583726.png",
+    "5_ФОРЕЛЬ б/г потр М": "/lovable-uploads/7f979307-fd86-4fd7-a28a-428c30583726.png"
   },
   "Морепродукты": {
     "default": "/lovable-uploads/9d283ac4-5a1a-45f8-b15b-f6e5d2812d1b.png",
