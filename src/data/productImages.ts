@@ -1,5 +1,5 @@
+import { productImages } from './productImages';
 
-// Product image paths by category and product name
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
     "default": "/lovable-uploads/0d6e972e-0353-45aa-907b-5f193220c4bb.png",
@@ -22,7 +22,7 @@ export const productImages: Record<string, Record<string, string>> = {
   },
   "Филе рыбы": {
     "default": "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png",
-    "ФИЛЕ ПАНГАСИУСА": "",
+    "ФИЛЕ ПАНГАСИУСА": "https://www.bernardaoemcasa.com.br/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/f/i/file-peixe.jpg",
     "ФИЛЕ ТИЛАПИИ": "",
     "ФИЛЕ ТРЕСКИ б/к фас.": "",
     "ФИЛЕ ХЕКА в тубе": ""
@@ -35,19 +35,15 @@ export const productImages: Record<string, Record<string, string>> = {
   }
 };
 
-// Функция для получения изображения продукта
 export function getProductImage(product: { category: string; name: string; size?: string }): string | undefined {
-  // Check if the category exists in our productImages map
   if (!productImages[product.category]) {
     return undefined;
   }
   
-  // Попытка получить изображение по названию продукта
   if (productImages[product.category][product.name] && productImages[product.category][product.name] !== "") {
     return productImages[product.category][product.name];
   }
   
-  // Если нет изображения для конкретного продукта, используем изображение категории по умолчанию
   if (productImages[product.category]["default"]) {
     return productImages[product.category]["default"];
   }
@@ -55,8 +51,6 @@ export function getProductImage(product: { category: string; name: string; size?
   return undefined;
 }
 
-// Вспомогательная функция для проверки валидности URL изображения
 export async function isImageUrlValid(url: string): Promise<boolean> {
-  // Для локальных путей всегда возвращаем true
   return true;
 }
