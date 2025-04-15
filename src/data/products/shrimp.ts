@@ -1,3 +1,4 @@
+
 import { Product } from '@/types/product';
 import { getProductImage } from '../productImages';
 
@@ -11,7 +12,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Апрель/май",
     manufacturer: "Индия", 
-    image: getProductImage({ category: "Морепродукты", name: "КРЕВЕТКА ваннамей свежая в панцире б/г" }),
+    image: getProductImage({ category: "Морепродукты", name: "КРЕВЕТКА ваннамей свежая в панцире б/г", id: 6 }),
     price: 1002.9
   },
   { 
@@ -22,7 +23,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Май",
     manufacturer: "Индия", 
-    image: getProductImage({ category: "Морепродукты", name: "КРЕВЕТКА ваннамей свежая очищенная б/г" }),
+    image: getProductImage({ category: "Морепродукты", name: "КРЕВЕТКА ваннамей свежая очищенная б/г", id: 7 }),
     price: 1004.9
   },
   { 
@@ -33,7 +34,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Июль",
     manufacturer: "Индия", 
-    image: getProductImage({ category: "Морепродукты", name: "КРЕВЕТКА ваннамей свежая очищенная б/г" }),
+    image: getProductImage({ category: "Морепродукты", name: "КРЕВЕТКА ваннамей свежая очищенная б/г", id: 8 }),
     price: 1071.9
   },
   { 
@@ -44,7 +45,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Апрель",
     manufacturer: "Индия", 
-    image: getProductImage({ category: "Морепродукты", name: "КРЕВЕТКА ваннамей вареная очищенная б/г" }),
+    image: getProductImage({ category: "Морепродукты", name: "КРЕВЕТКА ваннамей вареная очищенная б/г", id: 9 }),
     price: 1240.9
   },
   { 

@@ -26,8 +26,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [imageUrl, setImageUrl] = useState('');
   
   useEffect(() => {
-    const productImage = getProductImage(product) || '';
-    console.log(`Загрузка изображения для ${product.category}/${product.name}: ${productImage}`);
+    // Pass the product ID along with category and name
+    const productImage = getProductImage({ 
+      category: product.category, 
+      name: product.name, 
+      id: product.id 
+    }) || '';
+    console.log(`Загрузка изображения для ${product.category}/${product.name} (ID: ${product.id}): ${productImage}`);
     setImageUrl(productImage);
     setNewImageUrl(productImage);
   }, [product]);
@@ -75,7 +80,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     setIsEditingImage(false);
     
     // Save the image URL to the productImages data and persist it
-    updateProductImage(product.category, product.name, newImageUrl);
+    // Pass the product ID to create a unique key for products with duplicate names
+    updateProductImage(product.category, product.name, newImageUrl, product.id);
     
     toast({
       title: "Изображение обновлено",

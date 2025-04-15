@@ -13,7 +13,8 @@ export const productImages: Record<string, Record<string, string>> = {
   "Морепродукты": {
     "default": "/lovable-uploads/9d283ac4-5a1a-45f8-b15b-f6e5d2812d1b.png",
     "КРЕВЕТКА ваннамей свежая в панцире б/г": "/lovable-uploads/0fa26d3b-9843-48d7-afaf-e69bddbee7b5.png",
-    "КРЕВЕТКА ваннамей свежая очищенная б/г": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
+    "7_КРЕВЕТКА ваннамей свежая очищенная б/г": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
+    "8_КРЕВЕТКА ваннамей свежая очищенная б/г": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "КРЕВЕТКА ваннамей вареная очищенная б/г": "/lovable-uploads/35f921ad-7bc0-4f9b-91a7-c8b68ca8e7fa.png",
     "ЛАНГУСТИНЫ с/м L 2": "/lovable-uploads/5a441a58-1636-4325-82e2-cee49ad20585.png",
     "ЛАНГУСТИНЫ с/м L 1": "/lovable-uploads/5a441a58-1636-4325-82e2-cee49ad20585.png",
@@ -53,22 +54,33 @@ const loadSavedImages = () => {
 // Initialize by loading saved images
 loadSavedImages();
 
-export function getProductImage(product: { category: string; name: string }): string | undefined {
+export function getProductImage(product: { category: string; name: string; id?: number }): string | undefined {
+  if (product.id) {
+    // Try to get image with ID prefix first for items with duplicate names
+    const idKey = `${product.id}_${product.name}`;
+    const imageWithId = productImages[product.category]?.[idKey];
+    if (imageWithId) return imageWithId;
+  }
+  
+  // Fall back to name-only lookup
   return productImages[product.category]?.[product.name] || 
          productImages[product.category]?.["default"];
 }
 
-export function updateProductImage(category: string, productName: string, imageUrl: string): void {
+export function updateProductImage(category: string, productName: string, imageUrl: string, productId?: number): void {
   if (!productImages[category]) {
     productImages[category] = {};
   }
   
-  productImages[category][productName] = imageUrl;
+  // If product ID is provided, use it to create a unique key
+  const key = productId ? `${productId}_${productName}` : productName;
+  
+  productImages[category][key] = imageUrl;
   
   // Save to localStorage
   try {
     localStorage.setItem('productImages', JSON.stringify(productImages));
-    console.log(`Сохранено изображение для ${category}/${productName}: ${imageUrl}`);
+    console.log(`Сохранено изображение для ${category}/${key}: ${imageUrl}`);
     console.log('Текущие изображения:', JSON.stringify(productImages));
   } catch (error) {
     console.error('Error saving images:', error);
