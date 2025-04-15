@@ -3,8 +3,8 @@
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
     "default": "/lovable-uploads/0d6e972e-0353-45aa-907b-5f193220c4bb.png",
-    "ЛОСОСЬ с/г потр. штучн": "",
-    "ЛОСОСЬ с/г потр.": ""
+    "ЛОСОСЬ с/г потр. штучн": "/lovable-uploads/0d6e972e-0353-45aa-907b-5f193220c4bb.png",
+    "ЛОСОСЬ с/г потр.": "/lovable-uploads/0d6e972e-0353-45aa-907b-5f193220c4bb.png"
   },
   "Форель (Турция)": {
     "default": "/lovable-uploads/7f979307-fd86-4fd7-a28a-428c30583726.png",
@@ -16,6 +16,7 @@ export const productImages: Record<string, Record<string, string>> = {
   "Морепродукты": {
     "default": "/lovable-uploads/9d283ac4-5a1a-45f8-b15b-f6e5d2812d1b.png",
     "КРЕВЕТКА ваннамей свежая в панцире б/г": "/lovable-uploads/0fa26d3b-9843-48d7-afaf-e69bddbee7b5.png",
+    "КРЕВЕТКА ваннамей свежая очищенная б/г": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "7_КРЕВЕТКА ваннамей свежая очищенная б/г": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "8_КРЕВЕТКА ваннамей свежая очищенная б/г": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "КРЕВЕТКА ваннамей вареная очищенная б/г": "/lovable-uploads/35f921ad-7bc0-4f9b-91a7-c8b68ca8e7fa.png",
@@ -38,27 +39,7 @@ export const productImages: Record<string, Record<string, string>> = {
   }
 };
 
-// Load saved images from localStorage if available
-const loadSavedImages = () => {
-  const savedImages = localStorage.getItem('productImages');
-  if (savedImages) {
-    try {
-      const parsedImages = JSON.parse(savedImages);
-      Object.keys(parsedImages).forEach(category => {
-        if (!productImages[category]) {
-          productImages[category] = {};
-        }
-        Object.assign(productImages[category], parsedImages[category]);
-      });
-    } catch (error) {
-      console.error('Error loading saved images:', error);
-    }
-  }
-};
-
-// Initialize by loading saved images
-loadSavedImages();
-
+// Simple getter function for product images
 export function getProductImage(product: { category: string; name: string; id?: number }): string | undefined {
   if (product.id) {
     // Try to get image with ID prefix first for items with duplicate names
@@ -70,36 +51,4 @@ export function getProductImage(product: { category: string; name: string; id?: 
   // Fall back to name-only lookup
   return productImages[product.category]?.[product.name] || 
          productImages[product.category]?.["default"];
-}
-
-export function updateProductImage(category: string, productName: string, imageUrl: string, productId?: number): void {
-  if (!productImages[category]) {
-    productImages[category] = {};
-  }
-  
-  // If product ID is provided, use it to create a unique key
-  const key = productId ? `${productId}_${productName}` : productName;
-  
-  productImages[category][key] = imageUrl;
-  
-  // Save to localStorage
-  try {
-    localStorage.setItem('productImages', JSON.stringify(productImages));
-    console.log(`Сохранено изображение для ${category}/${key}: ${imageUrl}`);
-    console.log('Текущие изображения:', JSON.stringify(productImages));
-  } catch (error) {
-    console.error('Error saving images:', error);
-  }
-}
-
-// Функция для сброса кеша изображений
-export function resetImageCache(): void {
-  try {
-    localStorage.removeItem('productImages');
-    console.log('Кеш изображений сброшен');
-    // Перезагрузить страницу для применения изменений
-    window.location.reload();
-  } catch (error) {
-    console.error('Ошибка при сбросе кеша изображений:', error);
-  }
 }
