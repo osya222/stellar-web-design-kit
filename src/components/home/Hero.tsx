@@ -1,4 +1,5 @@
 
+import React from 'react';
 import Logo from "@/components/layout/Logo";
 import { Shell } from "lucide-react";
 
