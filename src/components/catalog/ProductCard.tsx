@@ -24,6 +24,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     setImageError(false);
     if (!product) return;
     
+    // Try to get image from localStorage first
+    const savedProductImage = localStorage.getItem(`productImage-${product.id}`);
+    if (savedProductImage) {
+      setImageUrl(savedProductImage);
+      return;
+    }
+    
+    // Fall back to default images
     const productImage = getProductImage({ 
       category: product.category, 
       name: product.name, 
@@ -55,17 +63,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       // Generate a unique filename
       const timestamp = Date.now();
       const filename = `product-${product.id}-${timestamp}-${file.name}`;
-      const savedImagePath = `/images/${filename}`;
-      
-      // Save the file to the project's public/images directory
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('path', savedImagePath);
       
       // Use URL.createObjectURL for immediate preview
       const previewUrl = URL.createObjectURL(file);
       setImageUrl(previewUrl);
       setImageError(false);
+      
+      // Save to localStorage for persistence
+      localStorage.setItem(`productImage-${product.id}`, previewUrl);
       
       toast({
         title: "Успешно",

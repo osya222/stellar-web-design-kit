@@ -27,14 +27,12 @@ const Hero = () => {
       const filename = `hero-${timestamp}-${file.name}`;
       const savedImagePath = `/images/${filename}`;
       
-      // Save the file to the project's public/images directory
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('path', savedImagePath);
-      
       // Use URL.createObjectURL for immediate preview
       const previewUrl = URL.createObjectURL(file);
       setBackgroundImage(previewUrl);
+      
+      // Save image to localStorage to persist between sessions
+      localStorage.setItem('heroBackgroundImage', previewUrl);
       
       toast({
         title: "Успешно",
@@ -51,6 +49,14 @@ const Hero = () => {
       setIsUploading(false);
     }
   };
+
+  // Load saved image from localStorage on component mount
+  React.useEffect(() => {
+    const savedImage = localStorage.getItem('heroBackgroundImage');
+    if (savedImage) {
+      setBackgroundImage(savedImage);
+    }
+  }, []);
 
   return (
     <section className="relative py-20 overflow-hidden">
