@@ -1,3 +1,4 @@
+
 // Define product image paths by category and product name
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
@@ -24,7 +25,9 @@ export const productImages: Record<string, Record<string, string>> = {
     "МЕДАЛЬОНЫ из креветки": "/lovable-uploads/923eda92-d974-48f3-813d-339626f70616.png",
     "МИДИИ раковина в собственном соку": "/lovable-uploads/9ae097fc-d5b2-4b02-a072-3d1aeb8c211f.png",
     "МИДИИ раковина сливки-чеснок/томат-чеснок/вино": "/lovable-uploads/9ae097fc-d5b2-4b02-a072-3d1aeb8c211f.png",
-    "МЯСО МИДИЙ в/м": "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png"
+    "МЯСО МИДИЙ в/м": "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png",
+    "16_МЯСО МИДИЙ в/м": "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png",
+    "17_МЯСО МИДИЙ в/м": "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png"
   },
   "Филе рыбы": {
     "default": "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png",

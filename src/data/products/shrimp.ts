@@ -123,7 +123,7 @@ export const shrimpProducts: Product[] = [
     packaging: "9,2", 
     catchDate: "Май",
     manufacturer: "Чили", 
-    image: getProductImage({ category: "Морепродукты", name: "МЯСО МИДИЙ в/м" }),
+    image: getProductImage({ category: "Морепродукты", name: "МЯСО МИДИЙ в/м", id: 16 }),
     price: 520.9
   },
   { 
@@ -134,7 +134,7 @@ export const shrimpProducts: Product[] = [
     packaging: "9,2", 
     catchDate: "Май",
     manufacturer: "Чили", 
-    image: getProductImage({ category: "Морепродукты", name: "МЯСО МИДИЙ в/м" }),
+    image: getProductImage({ category: "Морепродукты", name: "МЯСО МИДИЙ в/м", id: 17 }),
     price: 509.9
   }
 ];
