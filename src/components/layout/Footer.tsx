@@ -33,9 +33,6 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div className="flex items-center">
             <Logo size="md" />
-            <div className="ml-4">
-              <p className="text-blue-100">Качественные морепродукты оптом с доставкой по всей России</p>
-            </div>
           </div>
           <div>
             <h4 className="text-lg font-medium mb-4">Навигация</h4>
