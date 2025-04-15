@@ -1,7 +1,9 @@
+
 import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "@/components/layout/Logo";
 import { Phone, Mail, Building } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const Footer = () => {
   const location = useLocation();
@@ -38,52 +40,62 @@ const Footer = () => {
             <h4 className="text-lg font-medium mb-4 text-blue-100">Навигация</h4>
             <ul className="space-y-2">
               <li>
-                <button 
-                  className="text-blue-200 hover:text-white transition-colors bg-transparent border-0 p-0"
+                <Button 
+                  variant="ghost" 
+                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto"
                   onClick={handleHomeClick}
                 >
                   Главная
-                </button>
+                </Button>
               </li>
               <li>
-                <button 
-                  className="text-blue-200 hover:text-white transition-colors bg-transparent border-0 p-0"
+                <Button 
+                  variant="ghost" 
+                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto"
                   onClick={() => scrollToSection("catalog")}
                 >
                   Каталог
-                </button>
+                </Button>
               </li>
               <li>
-                <button 
-                  className="text-blue-200 hover:text-white transition-colors bg-transparent border-0 p-0"
+                <Button 
+                  variant="ghost" 
+                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto"
                   onClick={() => scrollToSection("about")}
                 >
                   О нас
-                </button>
+                </Button>
               </li>
               <li>
-                <button 
-                  className="text-blue-200 hover:text-white transition-colors bg-transparent border-0 p-0"
+                <Button 
+                  variant="ghost" 
+                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto"
                   onClick={() => scrollToSection("contacts")}
                 >
                   Контакты
-                </button>
+                </Button>
               </li>
               <li>
-                <Link 
-                  to="/public-offer" 
-                  className="text-blue-200 hover:text-white transition-colors"
+                <Button 
+                  variant="ghost" 
+                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto"
+                  asChild
                 >
-                  Публичная оферта
-                </Link>
+                  <Link to="/public-offer">
+                    Публичная оферта
+                  </Link>
+                </Button>
               </li>
               <li>
-                <Link 
-                  to="/privacy-policy" 
-                  className="text-blue-200 hover:text-white transition-colors"
+                <Button 
+                  variant="ghost" 
+                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto"
+                  asChild
                 >
-                  Политика конфиденциальности
-                </Link>
+                  <Link to="/privacy-policy">
+                    Политика конфиденциальности
+                  </Link>
+                </Button>
               </li>
             </ul>
           </div>
