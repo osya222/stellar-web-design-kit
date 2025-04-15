@@ -25,7 +25,7 @@ const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({ category, produ
   
   return (
     <div className="mb-10" id={`catalog-${categoryId}`}>
-      <h2 className="text-2xl font-bold mb-4 pb-2 border-b border-gray-200 flex items-center text-gray-800">
+      <h2 className="text-2xl font-bold mb-4 pb-2 border-b border-gray-100 flex items-center text-gray-800 bg-gradient-to-r from-slate-50 to-white p-4 rounded-lg shadow-sm">
         {renderCategoryLogo()}
         <span>{category}</span>
       </h2>

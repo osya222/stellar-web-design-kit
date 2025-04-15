@@ -28,7 +28,7 @@ const Footer = () => {
   };
   
   return (
-    <footer className="bg-gradient-to-r from-slate-100 to-slate-50 text-gray-800 py-12 mt-auto">
+    <footer className="bg-gradient-to-b from-slate-50 to-gray-100 text-gray-800 py-12 mt-auto">
       <div className="container-custom">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div className="flex items-center">
@@ -72,7 +72,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/public-offer" 
-                  className="text-blue-200 hover:text-white transition-colors"
+                  className="text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   Публичная оферта
                 </Link>
@@ -80,7 +80,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/privacy-policy" 
-                  className="text-blue-200 hover:text-white transition-colors"
+                  className="text-gray-600 hover:text-gray-900 transition-colors"
                 >
                   Политика конфиденциальности
                 </Link>

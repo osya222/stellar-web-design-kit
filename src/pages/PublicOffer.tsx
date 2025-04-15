@@ -15,16 +15,16 @@ const PublicOffer = () => {
         <div className="container-custom py-12">
           <div className="bg-white rounded-lg shadow-sm p-6 md:p-8 max-w-4xl mx-auto">
             <Tabs defaultValue="offer" className="w-full">
-              <TabsList className="w-full mb-6 bg-gray-100/50 p-1 rounded-lg">
+              <TabsList className="w-full mb-6 bg-gray-50 p-1 rounded-lg">
                 <TabsTrigger 
                   value="offer" 
-                  className="flex-1 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md transition-all"
+                  className="flex-1 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md transition-all text-gray-700"
                 >
                   Публичная оферта
                 </TabsTrigger>
                 <TabsTrigger 
                   value="privacy" 
-                  className="flex-1 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md transition-all"
+                  className="flex-1 data-[state=active]:bg-white data-[state=active]:shadow-sm rounded-md transition-all text-gray-700"
                 >
                   Политика конфиденциальности
                 </TabsTrigger>
