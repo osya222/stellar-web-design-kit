@@ -19,6 +19,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { toast } = useToast();
   const [imageError, setImageError] = useState(false);
   const [isEditingImage, setIsEditingImage] = useState(false);
+  const [newImageUrl, setNewImageUrl] = useState('');
   const [imageUrl, setImageUrl] = useState(product.image || getProductImage(product));
   
   const handleAddToCart = () => {
@@ -35,8 +36,22 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     setImageError(true);
   };
 
-  const handleImageUrlSubmit = (newUrl: string) => {
-    if (!newUrl.startsWith('/lovable-uploads/') && !newUrl.startsWith('http')) {
+  const handleOpenImageDialog = () => {
+    setNewImageUrl(imageUrl || '');
+    setIsEditingImage(true);
+  };
+
+  const handleImageUrlSubmit = () => {
+    if (!newImageUrl || newImageUrl === '') {
+      toast({
+        title: "Ошибка",
+        description: "URL изображения не может быть пустым",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!newImageUrl.startsWith('/lovable-uploads/') && !newImageUrl.startsWith('http')) {
       toast({
         title: "Ошибка",
         description: "URL изображения должен начинаться с /lovable-uploads/ или http",
@@ -45,12 +60,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       return;
     }
     
-    setImageUrl(newUrl);
+    // Update the local state
+    setImageUrl(newImageUrl);
     setImageError(false);
     setIsEditingImage(false);
     
-    // Save the image URL to the productImages data
-    updateProductImage(product.category, product.name, newUrl);
+    // Save the image URL to the productImages data and persist it
+    updateProductImage(product.category, product.name, newImageUrl);
     
     toast({
       title: "Изображение обновлено",
@@ -75,7 +91,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             />
           )}
           <button
-            onClick={() => setIsEditingImage(true)}
+            onClick={handleOpenImageDialog}
             className="absolute top-2 right-2 p-2 bg-white/80 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
           >
             <Edit className="w-4 h-4" />
@@ -136,14 +152,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               type="url"
               placeholder="https://example.com/image.jpg"
               className="w-full p-2 border rounded"
-              defaultValue={imageUrl}
-              onChange={(e) => handleImageUrlSubmit(e.target.value)}
+              value={newImageUrl}
+              onChange={(e) => setNewImageUrl(e.target.value)}
             />
             <div className="flex justify-end space-x-2">
               <Button variant="outline" onClick={() => setIsEditingImage(false)}>
                 Отмена
               </Button>
-              <Button onClick={() => handleImageUrlSubmit(imageUrl)}>
+              <Button onClick={handleImageUrlSubmit}>
                 Сохранить
               </Button>
             </div>
