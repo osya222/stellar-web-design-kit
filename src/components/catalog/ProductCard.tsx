@@ -54,6 +54,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     try {
       const formData = new FormData();
       formData.append('file', file);
+      // Используем абсолютный путь к API
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData
@@ -72,6 +73,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         description: "Изображение загружено",
       });
     } catch (error) {
+      console.error('Upload error:', error);
       toast({
         title: "Ошибка",
         description: "Не удалось загрузить изображение",

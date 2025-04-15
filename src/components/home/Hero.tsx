@@ -24,6 +24,7 @@ const Hero = () => {
     try {
       const formData = new FormData();
       formData.append('file', file);
+      // Используем абсолютный путь к API
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData
@@ -41,6 +42,7 @@ const Hero = () => {
         description: "Изображение загружено",
       });
     } catch (error) {
+      console.error('Upload error:', error);
       toast({
         title: "Ошибка",
         description: "Не удалось загрузить изображение",
