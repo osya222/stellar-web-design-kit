@@ -26,6 +26,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       id: product.id 
     }) || '';
     setImageUrl(productImage);
+    setImageError(false); // Reset error state when product changes
   }, [product]);
 
   const handleAddToCart = () => {
@@ -102,4 +103,3 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 };
 
 export default ProductCard;
-
