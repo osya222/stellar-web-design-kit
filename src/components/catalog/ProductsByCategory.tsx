@@ -13,13 +13,13 @@ const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({ category, produ
   
   const categoryId = category.toLowerCase().replace(/\s+/g, '-');
   
-  // Функция для отображения иконки рыбы
-  const renderFishIcon = () => {
+  // Функция для отображения логотипа
+  const renderCategoryLogo = () => {
     return (
       <img 
-        src="/lovable-uploads/02eda944-c8e4-4ddc-b061-5b197c2c118a.png" 
-        alt="Fish icon" 
-        className="w-6 h-6 mr-2 opacity-70"
+        src="/lovable-uploads/853b74f2-4e98-47dc-9c3f-cebe730d71d0.png" 
+        alt="Category logo" 
+        className="w-10 h-10 mr-2 opacity-90"
       />
     );
   };
@@ -27,7 +27,7 @@ const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({ category, produ
   return (
     <div className="mb-10" id={`catalog-${categoryId}`}>
       <h2 className="text-2xl font-bold mb-4 pb-2 border-b border-gray-200 flex items-center text-black">
-        {renderFishIcon()}
+        {renderCategoryLogo()}
         <span>{category}</span>
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
@@ -40,3 +40,4 @@ const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({ category, produ
 };
 
 export default ProductsByCategory;
+
