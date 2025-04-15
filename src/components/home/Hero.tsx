@@ -12,23 +12,23 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative py-20 bg-blue-800">        
+    <section className="relative py-20">        
       <div className="container-custom text-center">
         <div className="flex justify-center mb-12">
           <Logo size="lg" />
         </div>
-        <h2 className="text-5xl font-bold mb-8 text-white flex items-center justify-center gap-4">
+        <h2 className="text-5xl font-bold mb-8 text-gray-800 flex items-center justify-center gap-4">
           Премиум морепродукты с доставкой
-          <Shell className="w-12 h-12 text-blue-200" />
+          <Shell className="w-12 h-12 text-gray-600" />
         </h2>
-        <div className="bg-blue-700/30 backdrop-blur-sm p-6 rounded-xl shadow-lg max-w-3xl mx-auto mb-8">
-          <p className="text-xl text-white leading-relaxed">
+        <div className="bg-gray-100/70 backdrop-blur-sm p-6 rounded-xl shadow-lg max-w-3xl mx-auto mb-8">
+          <p className="text-xl text-gray-700 leading-relaxed">
             Широкий ассортимент качественной морской продукции с доставкой по Москве и МО. Работаем с ресторанами, магазинами и оптовыми покупателями.
           </p>
         </div>
         <button 
           onClick={scrollToCatalog}
-          className="flex items-center gap-2 mx-auto bg-white hover:bg-blue-50 text-blue-800 font-medium py-3 px-6 rounded-lg transition-colors"
+          className="flex items-center gap-2 mx-auto bg-white hover:bg-gray-50 text-gray-800 font-medium py-3 px-6 rounded-lg transition-colors border border-gray-200 shadow-sm"
         >
           Перейти к каталогу
           <ArrowDown className="w-4 h-4" />
