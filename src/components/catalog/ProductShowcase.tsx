@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { products } from "@/data/products/index";
 import { useIsMobile } from "@/hooks/use-mobile";
