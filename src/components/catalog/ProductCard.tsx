@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,7 @@ import { ImageIcon, ShoppingCart, RefreshCw } from "lucide-react";
 import { useCart } from '@/context/CartContext';
 import ImageUploader from '@/components/common/ImageUploader';
 import { useToast } from "@/components/ui/use-toast";
-import { getProductImage } from '@/data/productImages';
+import { getProductImage, isImageUrlValid } from '@/data/productImages';
 
 interface ProductCardProps {
   product: Product;
@@ -19,17 +20,38 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [imageError, setImageError] = useState(false);
   const [customImage, setCustomImage] = useState<string>('');
   const [showImageUploader, setShowImageUploader] = useState(false);
+  const [isLoadingImage, setIsLoadingImage] = useState(true);
   
+  // Generate a storage key for this product
+  const getStorageKey = () => `product-image-${product.id}-${product.category}`;
+  
+  // Load saved image on component mount
   useEffect(() => {
-    const storageKey = `product-image-${product.id}`;
-    const savedImage = localStorage.getItem(storageKey);
-    if (savedImage) {
-      setCustomImage(savedImage);
-      setImageError(false);
-    } else {
-      setCustomImage(product.image || getProductImage(product) || '');
-    }
-  }, [product.id, product.image]);
+    const loadSavedImage = async () => {
+      setIsLoadingImage(true);
+      const storageKey = getStorageKey();
+      const savedImage = localStorage.getItem(storageKey);
+      
+      if (savedImage) {
+        // Validate saved image from localStorage
+        const isValid = await isImageUrlValid(savedImage);
+        if (isValid) {
+          setCustomImage(savedImage);
+          setImageError(false);
+        } else {
+          // Remove invalid image from localStorage
+          localStorage.removeItem(storageKey);
+          setCustomImage(product.image || getProductImage(product) || '');
+        }
+      } else {
+        setCustomImage(product.image || getProductImage(product) || '');
+      }
+      
+      setIsLoadingImage(false);
+    };
+    
+    loadSavedImage();
+  }, [product.id, product.image, product.category]);
   
   const handleAddToCart = () => {
     const productToAdd = customImage 
@@ -37,19 +59,40 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       : product;
     
     addToCart(productToAdd);
+    
+    toast({
+      title: "Товар добавлен",
+      description: `${product.name} добавлен в корзину`,
+    });
   };
 
   const handleImageError = () => {
     console.log(`Image error loading: ${customImage}`);
     setImageError(true);
+    
+    // If the custom image failed to load, try to fall back to the product image
+    if (customImage !== product.image && product.image) {
+      setCustomImage(product.image);
+    } else {
+      // If we're already using the product image or it doesn't exist, try to use the category image
+      const categoryImage = getProductImage(product);
+      if (categoryImage) {
+        setCustomImage(categoryImage);
+      }
+    }
   };
 
   const handleImageSelect = (imageUrl: string) => {
+    if (!imageUrl) {
+      handleRemoveCustomImage();
+      return;
+    }
+    
     setCustomImage(imageUrl);
     setImageError(false);
     setShowImageUploader(false);
     
-    const storageKey = `product-image-${product.id}`;
+    const storageKey = getStorageKey();
     localStorage.setItem(storageKey, imageUrl);
     
     toast({
@@ -58,15 +101,30 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     });
   };
   
+  const handleRemoveCustomImage = () => {
+    const storageKey = getStorageKey();
+    localStorage.removeItem(storageKey);
+    
+    // Revert to the original product image or category image
+    setCustomImage(product.image || getProductImage(product) || '');
+    setImageError(false);
+    setShowImageUploader(false);
+    
+    toast({
+      title: "Изображение удалено",
+      description: "Изображение товара сброшено до исходного",
+    });
+  };
+  
   const handleRefreshImage = () => {
-    const storageKey = `product-image-${product.id}`;
-    const savedImage = localStorage.getItem(storageKey);
-    if (savedImage) {
-      setCustomImage(`${savedImage}?t=${new Date().getTime()}`);
-    } else {
-      const defaultImage = product.image || getProductImage(product) || '';
-      setCustomImage(`${defaultImage}?t=${new Date().getTime()}`);
-    }
+    setImageError(false);
+    
+    // Force re-render of the image by adding a timestamp
+    const timestamp = new Date().getTime();
+    setCustomImage(prevImage => {
+      const baseUrl = prevImage.split('?')[0]; // Remove any existing query params
+      return `${baseUrl}?t=${timestamp}`;
+    });
     
     toast({
       title: "Изображение обновлено",
@@ -74,24 +132,42 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     });
   };
 
+  // Determine which image to display
   const displayImage = customImage || (product.image && !imageError ? product.image : getProductImage(product));
 
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
       <div className="h-48 bg-white flex items-center justify-center relative overflow-hidden">
-        {showImageUploader || (!displayImage) ? (
+        {showImageUploader ? (
           <ImageUploader 
             onImageSelect={handleImageSelect} 
             currentImage={customImage}
             className="w-full h-full"
           />
+        ) : !displayImage || imageError ? (
+          <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100">
+            <ImageIcon className="w-12 h-12 text-gray-400 mb-2" />
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setShowImageUploader(true)}
+            >
+              Добавить фото
+            </Button>
+          </div>
         ) : (
-          <>
+          <div className="relative w-full h-full">
+            {isLoadingImage ? (
+              <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+              </div>
+            ) : null}
             <img 
               src={displayImage} 
               alt={product.name} 
               className="object-cover w-full h-full"
               onError={handleImageError}
+              onLoad={() => setIsLoadingImage(false)}
             />
             <button 
               onClick={handleRefreshImage} 
@@ -100,7 +176,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             >
               <RefreshCw className="w-4 h-4 text-blue-500" />
             </button>
-          </>
+          </div>
         )}
       </div>
       <CardContent className="p-4 flex flex-col flex-grow">
@@ -136,7 +212,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div className="mt-auto">
           <ProductPrices price={product.price} />
           <div className="flex justify-between items-center mt-4">
-            {displayImage ? (
+            {displayImage && !imageError ? (
               <Button 
                 variant="outline" 
                 size="sm" 

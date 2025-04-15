@@ -1,3 +1,4 @@
+
 // Define product image paths by category and product name
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
@@ -47,6 +48,26 @@ export function getProductImage(product: { category: string; name: string; size?
   return undefined;
 }
 
+// Improved image URL validation function
 export async function isImageUrlValid(url: string): Promise<boolean> {
-  return true;
+  if (!url) return false;
+  
+  // For data URLs or blob URLs, assume they're valid
+  if (url.startsWith('data:') || url.startsWith('blob:')) {
+    return true;
+  }
+  
+  // For local uploads (from our own server)
+  if (url.startsWith('/lovable-uploads/')) {
+    return true;
+  }
+  
+  try {
+    // For remote URLs, try to fetch the headers to check if the image exists
+    const response = await fetch(url, { method: 'HEAD' });
+    return response.ok;
+  } catch (error) {
+    console.error('Error validating image URL:', error);
+    return false;
+  }
 }
