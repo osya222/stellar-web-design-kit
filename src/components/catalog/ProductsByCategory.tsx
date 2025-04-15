@@ -13,13 +13,12 @@ const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({ category, produ
   
   const categoryId = category.toLowerCase().replace(/\s+/g, '-');
   
-  // Функция для отображения логотипа
   const renderCategoryLogo = () => {
     return (
       <img 
-        src="/lovable-uploads/01895ee1-a04a-4a5b-8df1-68c11d42986f.png" 
+        src="/lovable-uploads/f96b53d4-ab1d-4752-8c90-925f33c1173c.png" 
         alt="Category logo" 
-        className="w-10 h-10 mr-2 opacity-90"
+        className="w-10 h-10 mr-2 object-contain"
       />
     );
   };
