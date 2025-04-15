@@ -17,7 +17,7 @@ const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({ category, produ
   const renderCategoryLogo = () => {
     return (
       <img 
-        src="/lovable-uploads/853b74f2-4e98-47dc-9c3f-cebe730d71d0.png" 
+        src="/lovable-uploads/01895ee1-a04a-4a5b-8df1-68c11d42986f.png" 
         alt="Category logo" 
         className="w-10 h-10 mr-2 opacity-90"
       />
@@ -40,4 +40,3 @@ const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({ category, produ
 };
 
 export default ProductsByCategory;
-
