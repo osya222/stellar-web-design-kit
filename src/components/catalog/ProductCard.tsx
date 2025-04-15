@@ -85,10 +85,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col relative">
       <div className="h-48 bg-white flex items-center justify-center relative overflow-hidden">
-        {!imageUrl || imageError ? (
+        {(!imageUrl || imageError) ? (
           <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100">
             <ImageIcon className="w-12 h-12 text-gray-400" />
-            <label className="cursor-pointer mt-2">
+            <label className="cursor-pointer mt-2 flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 bg-white px-3 py-1.5 rounded-md shadow-sm">
               <input
                 type="file"
                 accept="image/*"
@@ -96,19 +96,29 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 onChange={handleImageUpload}
                 disabled={isUploading}
               />
-              <div className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700">
-                <Upload className="w-4 h-4" />
-                {isUploading ? 'Загрузка...' : 'Загрузить фото'}
-              </div>
+              <Upload className="w-4 h-4" />
+              {isUploading ? 'Загрузка...' : 'Загрузить фото'}
             </label>
           </div>
         ) : (
-          <img 
-            src={imageUrl} 
-            alt={product.name} 
-            className="object-cover w-full h-full"
-            onError={handleImageError}
-          />
+          <div className="relative w-full h-full">
+            <img 
+              src={imageUrl} 
+              alt={product.name} 
+              className="object-cover w-full h-full"
+              onError={handleImageError}
+            />
+            <label className="absolute bottom-2 right-2 cursor-pointer bg-white p-1.5 rounded-md shadow-sm opacity-80 hover:opacity-100 transition-opacity">
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageUpload}
+                disabled={isUploading}
+              />
+              <Upload className="w-4 h-4 text-blue-600" />
+            </label>
+          </div>
         )}
       </div>
       <CardContent className="p-4 flex flex-col flex-grow">
