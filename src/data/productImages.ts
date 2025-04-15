@@ -1,4 +1,3 @@
-
 // Define product image paths by category and product name
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
@@ -15,9 +14,9 @@ export const productImages: Record<string, Record<string, string>> = {
     "КРЕВЕТКА ваннамей свежая в панцире б/г": "https://avatars.mds.yandex.net/get-altay/5099256/2a00000180b2e824b521af2f5b74b39c789b/XXL_height",
     "КРЕВЕТКА ваннамей свежая очищенная б/г": "https://avatars.mds.yandex.net/get-altay/5099256/2a00000180b2e824b521af2f5b74b39c789b/XXL_height",
     "КРЕВЕТКА ваннамей вареная очищенная б/г": "",
-    "ЛАНГУСТИНЫ с/м L 2": "",
-    "ЛАНГУСТИНЫ с/м L 1": "",
-    "ЛАНГУСТИНЫ с/м С 2": "",
+    "ЛАНГУСТИНЫ с/м L 2": "https://sun9-10.userapi.com/impg/4QPMBOBpPElMd2CqP9iU40f1h8WHHPP5ig7VDQ/IDcWo8jC-30.jpg?size=1280x960&quality=95&sign=ab100a1bbf7e3b2c6182ef233c32740a&c_uniq_tag=hp0uNOKmELQMK5IzuE78VoiAT0kT5OMLgXuZFHnWaEg&type=album",
+    "ЛАНГУСТИНЫ с/м L 1": "https://sun9-10.userapi.com/impg/4QPMBOBpPElMd2CqP9iU40f1h8WHHPP5ig7VDQ/IDcWo8jC-30.jpg?size=1280x960&quality=95&sign=ab100a1bbf7e3b2c6182ef233c32740a&c_uniq_tag=hp0uNOKmELQMK5IzuE78VoiAT0kT5OMLgXuZFHnWaEg&type=album",
+    "ЛАНГУСТИНЫ с/м С 2": "https://sun9-10.userapi.com/impg/4QPMBOBpPElMd2CqP9iU40f1h8WHHPP5ig7VDQ/IDcWo8jC-30.jpg?size=1280x960&quality=95&sign=ab100a1bbf7e3b2c6182ef233c32740a&c_uniq_tag=hp0uNOKmELQMK5IzuE78VoiAT0kT5OMLgXuZFHnWaEg&type=album",
     "МЕДАЛЬОНЫ из креветки": ""
   },
   "Филе рыбы": {
