@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
-import { ShoppingCart, ImageIcon } from "lucide-react";
+import { ShoppingCart, ImageIcon, Upload } from "lucide-react";
 import { useCart } from '@/context/CartContext';
 import { useToast } from "@/hooks/use-toast";
 import { getProductImage } from '@/data/productImages';
@@ -18,11 +18,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { toast } = useToast();
   const [imageError, setImageError] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
   
   useEffect(() => {
-    // Reset state when product changes
     setImageError(false);
-    
     if (!product) return;
     
     const productImage = getProductImage({ 
@@ -31,7 +30,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       id: product.id 
     });
     
-    setImageUrl(productImage || '');
+    setImageUrl(product.image || productImage || '');
   }, [product]);
 
   const handleAddToCart = () => {
@@ -47,13 +46,61 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     setImageError(true);
   };
 
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (!response.ok) {
+        throw new Error('Upload failed');
+      }
+      
+      const data = await response.json();
+      setImageUrl(data.url);
+      setImageError(false);
+      
+      toast({
+        title: "Успешно",
+        description: "Изображение загружено",
+      });
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось загрузить изображение",
+        variant: "destructive"
+      });
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col relative">
       <div className="h-48 bg-white flex items-center justify-center relative overflow-hidden">
         {!imageUrl || imageError ? (
           <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100">
             <ImageIcon className="w-12 h-12 text-gray-400" />
-            <p className="text-xs text-gray-500 mt-2">Нет изображения</p>
+            <label className="cursor-pointer mt-2">
+              <input
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageUpload}
+                disabled={isUploading}
+              />
+              <div className="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700">
+                <Upload className="w-4 h-4" />
+                {isUploading ? 'Загрузка...' : 'Загрузить фото'}
+              </div>
+            </label>
           </div>
         ) : (
           <img 
