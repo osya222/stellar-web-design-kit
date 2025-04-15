@@ -52,9 +52,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
     setIsUploading(true);
     try {
-      // Создаем объект URL для отображения загруженного изображения
-      const imageUrl = URL.createObjectURL(file);
-      setImageUrl(imageUrl);
+      // Generate a unique filename
+      const timestamp = Date.now();
+      const filename = `product-${product.id}-${timestamp}-${file.name}`;
+      const savedImagePath = `/images/${filename}`;
+      
+      // Save the file to the project's public/images directory
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('path', savedImagePath);
+      
+      // Use URL.createObjectURL for immediate preview
+      const previewUrl = URL.createObjectURL(file);
+      setImageUrl(previewUrl);
       setImageError(false);
       
       toast({

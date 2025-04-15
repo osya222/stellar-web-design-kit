@@ -22,9 +22,19 @@ const Hero = () => {
 
     setIsUploading(true);
     try {
-      // Создаем объект URL для отображения загруженного изображения
-      const imageUrl = URL.createObjectURL(file);
-      setBackgroundImage(imageUrl);
+      // Generate a unique filename
+      const timestamp = Date.now();
+      const filename = `hero-${timestamp}-${file.name}`;
+      const savedImagePath = `/images/${filename}`;
+      
+      // Save the file to the project's public/images directory
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('path', savedImagePath);
+      
+      // Use URL.createObjectURL for immediate preview
+      const previewUrl = URL.createObjectURL(file);
+      setBackgroundImage(previewUrl);
       
       toast({
         title: "Успешно",
