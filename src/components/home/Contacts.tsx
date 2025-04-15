@@ -13,7 +13,7 @@ const Contacts = () => {
                 <Phone className="w-5 h-5 text-blue-600 mr-3 mt-1" />
                 <div>
                   <p className="font-medium">Телефон:</p>
-                  <p className="text-lg">+7 925 264-13-41</p>
+                  <p className="text-lg">+7 977 994 14 27</p>
                 </div>
               </div>
               <div className="flex items-start mb-4">

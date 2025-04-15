@@ -1,4 +1,3 @@
-
 import React from "react";
 import { FileText } from "lucide-react";
 
@@ -102,7 +101,7 @@ const PublicOfferContent = () => {
 
         <div className="mt-8 pt-4 border-t border-gray-200">
           <p className="font-medium">Юридический адрес Продавца: 111123, г. Москва, Электродный проезд, д. 6 стр. 1, помещ. 3/1</p>
-          <p className="font-medium mt-2">Телефон: +7 925 264-13-41</p>
+          <p className="font-medium mt-2">Телефон: +7 977 994 14 27</p>
         </div>
       </div>
     </>
