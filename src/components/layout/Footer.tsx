@@ -28,18 +28,18 @@ const Footer = () => {
   };
   
   return (
-    <footer className="bg-gradient-to-b from-slate-50 to-gray-100 text-gray-800 py-12 mt-auto">
+    <footer className="bg-blue-800 text-white py-12 mt-auto">
       <div className="container-custom">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div className="flex items-center">
             <Logo size="md" />
           </div>
           <div>
-            <h4 className="text-lg font-medium mb-4">Навигация</h4>
+            <h4 className="text-lg font-medium mb-4 text-blue-100">Навигация</h4>
             <ul className="space-y-2">
               <li>
                 <button 
-                  className="text-gray-600 hover:text-gray-900 transition-colors bg-transparent border-0 p-0"
+                  className="text-blue-200 hover:text-white transition-colors bg-transparent border-0 p-0"
                   onClick={handleHomeClick}
                 >
                   Главная
@@ -47,7 +47,7 @@ const Footer = () => {
               </li>
               <li>
                 <button 
-                  className="text-gray-600 hover:text-gray-900 transition-colors bg-transparent border-0 p-0"
+                  className="text-blue-200 hover:text-white transition-colors bg-transparent border-0 p-0"
                   onClick={() => scrollToSection("catalog")}
                 >
                   Каталог
@@ -55,7 +55,7 @@ const Footer = () => {
               </li>
               <li>
                 <button 
-                  className="text-gray-600 hover:text-gray-900 transition-colors bg-transparent border-0 p-0"
+                  className="text-blue-200 hover:text-white transition-colors bg-transparent border-0 p-0"
                   onClick={() => scrollToSection("about")}
                 >
                   О нас
@@ -63,7 +63,7 @@ const Footer = () => {
               </li>
               <li>
                 <button 
-                  className="text-gray-600 hover:text-gray-900 transition-colors bg-transparent border-0 p-0"
+                  className="text-blue-200 hover:text-white transition-colors bg-transparent border-0 p-0"
                   onClick={() => scrollToSection("contacts")}
                 >
                   Контакты
@@ -72,7 +72,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/public-offer" 
-                  className="text-gray-600 hover:text-gray-900 transition-colors"
+                  className="text-blue-200 hover:text-white transition-colors"
                 >
                   Публичная оферта
                 </Link>
@@ -80,7 +80,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/privacy-policy" 
-                  className="text-gray-600 hover:text-gray-900 transition-colors"
+                  className="text-blue-200 hover:text-white transition-colors"
                 >
                   Политика конфиденциальности
                 </Link>
@@ -88,23 +88,23 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h4 className="text-lg font-medium mb-4">Контакты</h4>
-            <p className="flex items-center mb-2 text-gray-600">
+            <h4 className="text-lg font-medium mb-4 text-blue-100">Контакты</h4>
+            <p className="flex items-center mb-2 text-blue-200">
               <Phone className="w-4 h-4 mr-2" />
               +7 (925) 264-13-41
             </p>
-            <p className="flex items-center mb-2 text-gray-600">
+            <p className="flex items-center mb-2 text-blue-200">
               <Mail className="w-4 h-4 mr-2" />
               Statiy.info@bk.ru
             </p>
-            <p className="flex items-center text-gray-600">
+            <p className="flex items-center text-blue-200">
               <Building className="w-4 h-4 mr-2" />
               Москва, Электродный проезд, д. 6
             </p>
           </div>
         </div>
-        <div className="pt-6 border-t border-gray-200 text-center md:text-left">
-          <p className="mb-1 text-gray-600">&copy; {new Date().getFullYear()} ООО "СИТЕКС". Все права защищены.</p>
+        <div className="pt-6 border-t border-blue-700 text-center md:text-left">
+          <p className="mb-1 text-blue-200">&copy; {new Date().getFullYear()} ООО "СИТЕКС". Все права защищены.</p>
         </div>
       </div>
     </footer>
