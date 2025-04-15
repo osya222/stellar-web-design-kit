@@ -1,3 +1,4 @@
+
 // Define product image paths by category and product name
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
@@ -45,4 +46,10 @@ export function getProductImage(product: { category: string; name: string; size?
   }
   
   return undefined;
+}
+
+export function updateProductImage(category: string, productName: string, newImageUrl: string): void {
+  if (productImages[category] && productName) {
+    productImages[category][productName] = newImageUrl;
+  }
 }

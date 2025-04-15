@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -5,8 +6,8 @@ import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
 import { ShoppingCart, ImageIcon, Edit } from "lucide-react";
 import { useCart } from '@/context/CartContext';
-import { useToast } from "@/components/ui/use-toast";
-import { getProductImage } from '@/data/productImages';
+import { useToast } from "@/hooks/use-toast";
+import { getProductImage, updateProductImage } from '@/data/productImages';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 interface ProductCardProps {
@@ -47,6 +48,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     setImageUrl(newUrl);
     setImageError(false);
     setIsEditingImage(false);
+    
+    // Save the image URL to the productImages data
+    updateProductImage(product.category, product.name, newUrl);
     
     toast({
       title: "Изображение обновлено",
