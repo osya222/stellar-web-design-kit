@@ -1,5 +1,5 @@
-import { productImages } from './productImages';
 
+// Define product image paths by category and product name
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
     "default": "/lovable-uploads/0d6e972e-0353-45aa-907b-5f193220c4bb.png",
