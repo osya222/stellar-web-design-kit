@@ -22,20 +22,9 @@ const Hero = () => {
 
     setIsUploading(true);
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      // Используем абсолютный путь к API
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData
-      });
-      
-      if (!response.ok) {
-        throw new Error('Upload failed');
-      }
-      
-      const data = await response.json();
-      setBackgroundImage(data.url);
+      // Создаем объект URL для отображения загруженного изображения
+      const imageUrl = URL.createObjectURL(file);
+      setBackgroundImage(imageUrl);
       
       toast({
         title: "Успешно",

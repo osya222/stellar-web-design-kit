@@ -52,20 +52,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
     setIsUploading(true);
     try {
-      const formData = new FormData();
-      formData.append('file', file);
-      // Используем абсолютный путь к API
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData
-      });
-      
-      if (!response.ok) {
-        throw new Error('Upload failed');
-      }
-      
-      const data = await response.json();
-      setImageUrl(data.url);
+      // Создаем объект URL для отображения загруженного изображения
+      const imageUrl = URL.createObjectURL(file);
+      setImageUrl(imageUrl);
       setImageError(false);
       
       toast({
