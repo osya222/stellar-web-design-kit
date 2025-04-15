@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -21,10 +20,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [isEditingImage, setIsEditingImage] = useState(false);
   const [newImageUrl, setNewImageUrl] = useState('');
   const [imageUrl, setImageUrl] = useState(product.image || getProductImage(product));
-  
+  const [uploadedFile, setUploadedFile] = useState<File | null>(null);
+
   const handleAddToCart = () => {
     addToCart(product);
-    
     toast({
       title: "Товар добавлен",
       description: `${product.name} добавлен в корзину`,

@@ -1,4 +1,3 @@
-
 // Define product image paths by category and product name
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
@@ -34,57 +33,41 @@ export const productImages: Record<string, Record<string, string>> = {
 
 // Load saved images from localStorage if available
 const loadSavedImages = () => {
-  try {
-    const savedImages = localStorage.getItem('productImages');
-    if (savedImages) {
+  const savedImages = localStorage.getItem('productImages');
+  if (savedImages) {
+    try {
       const parsedImages = JSON.parse(savedImages);
-      
-      // Merge the saved images with the default images
       Object.keys(parsedImages).forEach(category => {
-        if (productImages[category]) {
-          Object.keys(parsedImages[category]).forEach(product => {
-            productImages[category][product] = parsedImages[category][product];
-          });
-        } else {
-          productImages[category] = parsedImages[category];
+        if (!productImages[category]) {
+          productImages[category] = {};
         }
+        Object.assign(productImages[category], parsedImages[category]);
       });
+    } catch (error) {
+      console.error('Error loading saved images:', error);
     }
-  } catch (error) {
-    console.error('Error loading saved product images:', error);
   }
 };
 
 // Initialize by loading saved images
 loadSavedImages();
 
-export function getProductImage(product: { category: string; name: string; size?: string }): string | undefined {
-  if (!productImages[product.category]) {
-    return undefined;
-  }
-  
-  if (productImages[product.category][product.name] && productImages[product.category][product.name] !== "") {
-    return productImages[product.category][product.name];
-  }
-  
-  if (productImages[product.category]["default"]) {
-    return productImages[product.category]["default"];
-  }
-  
-  return undefined;
+export function getProductImage(product: { category: string; name: string }): string | undefined {
+  return productImages[product.category]?.[product.name] || 
+         productImages[product.category]?.["default"];
 }
 
-export function updateProductImage(category: string, productName: string, newImageUrl: string): void {
+export function updateProductImage(category: string, productName: string, imageUrl: string): void {
   if (!productImages[category]) {
-    productImages[category] = { "default": "" };
+    productImages[category] = {};
   }
   
-  productImages[category][productName] = newImageUrl;
+  productImages[category][productName] = imageUrl;
   
-  // Save to localStorage for persistence
+  // Save to localStorage
   try {
     localStorage.setItem('productImages', JSON.stringify(productImages));
   } catch (error) {
-    console.error('Error saving product images:', error);
+    console.error('Error saving images:', error);
   }
 }
