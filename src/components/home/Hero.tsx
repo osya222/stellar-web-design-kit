@@ -1,7 +1,7 @@
 
 import React from 'react';
 import Logo from "@/components/layout/Logo";
-import { Shell, ArrowDown } from "lucide-react";
+import { ArrowDown } from "lucide-react";
 
 const Hero = () => {
   const scrollToCatalog = () => {
@@ -17,9 +17,8 @@ const Hero = () => {
         <div className="flex justify-center mb-12">
           <Logo size="lg" />
         </div>
-        <h2 className="text-5xl font-bold mb-8 text-gray-800 flex items-center justify-center gap-4">
+        <h2 className="text-5xl font-bold mb-8 text-gray-800">
           Премиум морепродукты с доставкой
-          <Shell className="w-12 h-12 text-gray-600" />
         </h2>
         <div className="bg-gray-100/70 backdrop-blur-sm p-6 rounded-xl shadow-lg max-w-3xl mx-auto mb-8">
           <p className="text-xl text-gray-700 leading-relaxed">
