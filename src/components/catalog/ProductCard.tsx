@@ -35,6 +35,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   const handleImageUrlSubmit = (newUrl: string) => {
+    if (!newUrl.startsWith('/lovable-uploads/') && !newUrl.startsWith('http')) {
+      toast({
+        title: "Ошибка",
+        description: "URL изображения должен начинаться с /lovable-uploads/ или http",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     setImageUrl(newUrl);
     setImageError(false);
     setIsEditingImage(false);

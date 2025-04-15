@@ -11,23 +11,23 @@ export const productImages: Record<string, Record<string, string>> = {
   },
   "Морепродукты": {
     "default": "/lovable-uploads/9d283ac4-5a1a-45f8-b15b-f6e5d2812d1b.png",
-    "КРЕВЕТКА ваннамей свежая в панцире б/г": "https://avatars.mds.yandex.net/get-altay/5099256/2a00000180b2e824b521af2f5b74b39c789b/XXL_height",
-    "КРЕВЕТКА ваннамей свежая очищенная б/г": "https://avatars.mds.yandex.net/get-altay/5099256/2a00000180b2e824b521af2f5b74b39c789b/XXL_height",
-    "КРЕВЕТКА ваннамей вареная очищенная б/г": "",
-    "ЛАНГУСТИНЫ с/м L 2": "https://sun9-10.userapi.com/impg/4QPMBOBpPElMd2CqP9iU40f1h8WHHPP5ig7VDQ/IDcWo8jC-30.jpg?size=1280x960&quality=95&sign=ab100a1bbf7e3b2c6182ef233c32740a&c_uniq_tag=hp0uNOKmELQMK5IzuE78VoiAT0kT5OMLgXuZFHnWaEg&type=album",
-    "ЛАНГУСТИНЫ с/м L 1": "https://sun9-10.userapi.com/impg/4QPMBOBpPElMd2CqP9iU40f1h8WHHPP5ig7VDQ/IDcWo8jC-30.jpg?size=1280x960&quality=95&sign=ab100a1bbf7e3b2c6182ef233c32740a&c_uniq_tag=hp0uNOKmELQMK5IzuE78VoiAT0kT5OMLgXuZFHnWaEg&type=album",
-    "ЛАНГУСТИНЫ с/м С 2": "https://sun9-10.userapi.com/impg/4QPMBOBpPElMd2CqP9iU40f1h8WHHPP5ig7VDQ/IDcWo8jC-30.jpg?size=1280x960&quality=95&sign=ab100a1bbf7e3b2c6182ef233c32740a&c_uniq_tag=hp0uNOKmELQMK5IzuE78VoiAT0kT5OMLgXuZFHnWaEg&type=album",
-    "МЕДАЛЬОНЫ из креветки": "",
-    "МИДИИ раковина в собственном соку": "https://images.satu.kz/200677063_w700_h500_midii-v-golubyh.jpg",
-    "МИДИИ раковина сливки-чеснок/томат-чеснок/вино": "https://images.satu.kz/200677063_w700_h500_midii-v-golubyh.jpg",
-    "МЯСО МИДИЙ в/м": ""
+    "КРЕВЕТКА ваннамей свежая в панцире б/г": "/lovable-uploads/0fa26d3b-9843-48d7-afaf-e69bddbee7b5.png",
+    "КРЕВЕТКА ваннамей свежая очищенная б/г": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
+    "КРЕВЕТКА ваннамей вареная очищенная б/г": "/lovable-uploads/35f921ad-7bc0-4f9b-91a7-c8b68ca8e7fa.png",
+    "ЛАНГУСТИНЫ с/м L 2": "/lovable-uploads/5a441a58-1636-4325-82e2-cee49ad20585.png",
+    "ЛАНГУСТИНЫ с/м L 1": "/lovable-uploads/5a441a58-1636-4325-82e2-cee49ad20585.png",
+    "ЛАНГУСТИНЫ с/м С 2": "/lovable-uploads/5a441a58-1636-4325-82e2-cee49ad20585.png",
+    "МЕДАЛЬОНЫ из креветки": "/lovable-uploads/923eda92-d974-48f3-813d-339626f70616.png",
+    "МИДИИ раковина в собственном соку": "/lovable-uploads/9ae097fc-d5b2-4b02-a072-3d1aeb8c211f.png",
+    "МИДИИ раковина сливки-чеснок/томат-чеснок/вино": "/lovable-uploads/9ae097fc-d5b2-4b02-a072-3d1aeb8c211f.png",
+    "МЯСО МИДИЙ в/м": "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png"
   },
   "Филе рыбы": {
     "default": "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png",
-    "ФИЛЕ ПАНГАСИУСА": "https://www.bernardaoemcasa.com.br/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/f/i/file-peixe.jpg",
-    "ФИЛЕ ТИЛАПИИ": "",
-    "ФИЛЕ ТРЕСКИ б/к фас.": "",
-    "ФИЛЕ ХЕКА в тубе": ""
+    "ФИЛЕ ПАНГАСИУСА": "/lovable-uploads/d231c5c4-a1ac-424c-9e44-4c4f4ccae778.png",
+    "ФИЛЕ ТИЛАПИИ": "/lovable-uploads/de983f8f-acb9-417a-9ba8-54b8f3c696ad.png",
+    "ФИЛЕ ТРЕСКИ б/к фас.": "/lovable-uploads/0fd3ac43-ec30-425b-b149-fd187b22e947.png",
+    "ФИЛЕ ХЕКА в тубе": "/lovable-uploads/0fa26d3b-9843-48d7-afaf-e69bddbee7b5.png"
   }
 };
 
