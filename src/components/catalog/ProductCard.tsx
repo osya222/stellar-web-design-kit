@@ -20,13 +20,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [imageUrl, setImageUrl] = useState('');
   
   useEffect(() => {
+    // Reset state when product changes
+    setImageError(false);
+    
+    if (!product) return;
+    
     const productImage = getProductImage({ 
       category: product.category, 
       name: product.name, 
       id: product.id 
-    }) || '';
-    setImageUrl(productImage);
-    setImageError(false); // Reset error state when product changes
+    });
+    
+    setImageUrl(productImage || '');
   }, [product]);
 
   const handleAddToCart = () => {
@@ -38,6 +43,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   const handleImageError = () => {
+    console.log(`Image error for ${product.name}: ${imageUrl}`);
     setImageError(true);
   };
 

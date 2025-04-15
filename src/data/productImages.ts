@@ -41,14 +41,28 @@ export const productImages: Record<string, Record<string, string>> = {
 
 // Simple getter function for product images
 export function getProductImage(product: { category: string; name: string; id?: number }): string | undefined {
-  if (product.id) {
-    // Try to get image with ID prefix first for items with duplicate names
+  if (!product || !product.category) {
+    return undefined;
+  }
+
+  const categoryImages = productImages[product.category];
+  if (!categoryImages) {
+    return undefined;
+  }
+
+  // If we have an ID, try to get the image with ID prefix
+  if (product.id && product.name) {
     const idKey = `${product.id}_${product.name}`;
-    const imageWithId = productImages[product.category]?.[idKey];
-    if (imageWithId) return imageWithId;
+    if (categoryImages[idKey]) {
+      return categoryImages[idKey];
+    }
   }
   
-  // Fall back to name-only lookup
-  return productImages[product.category]?.[product.name] || 
-         productImages[product.category]?.["default"];
+  // Then try by product name
+  if (product.name && categoryImages[product.name]) {
+    return categoryImages[product.name];
+  }
+  
+  // Fall back to default category image
+  return categoryImages["default"];
 }
