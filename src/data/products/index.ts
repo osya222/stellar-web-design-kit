@@ -6,6 +6,7 @@ import { shrimpProducts } from './shrimp';
 import { fishFilletProducts } from './fishFillets';
 import { getCategoryByName } from './types';
 
+// This file combines all product data and exports it
 // Combine all products
 export const products: Product[] = [
   ...salmonProducts,
