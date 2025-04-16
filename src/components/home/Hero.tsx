@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Logo from "@/components/layout/Logo";
 import { ArrowDown, Upload, ImageIcon } from "lucide-react";
@@ -27,12 +26,19 @@ const Hero = () => {
       const filename = `hero-${timestamp}-${file.name}`;
       const savedImagePath = `/images/${filename}`;
       
-      // Use URL.createObjectURL for immediate preview
-      const previewUrl = URL.createObjectURL(file);
-      setBackgroundImage(previewUrl);
+      // Create a new FormData object
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('filename', filename);
+
+      // Save the image file
+      await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
       
-      // Save image to localStorage to persist between sessions
-      localStorage.setItem('heroBackgroundImage', previewUrl);
+      // Update the UI with the new image path
+      setBackgroundImage(savedImagePath);
       
       toast({
         title: "Успешно",
@@ -49,14 +55,6 @@ const Hero = () => {
       setIsUploading(false);
     }
   };
-
-  // Load saved image from localStorage on component mount
-  React.useEffect(() => {
-    const savedImage = localStorage.getItem('heroBackgroundImage');
-    if (savedImage) {
-      setBackgroundImage(savedImage);
-    }
-  }, []);
 
   return (
     <section className="relative py-20 overflow-hidden">

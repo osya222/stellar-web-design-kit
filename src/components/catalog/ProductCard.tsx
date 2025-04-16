@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -24,14 +23,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     setImageError(false);
     if (!product) return;
     
-    // Try to get image from localStorage first
-    const savedProductImage = localStorage.getItem(`productImage-${product.id}`);
-    if (savedProductImage) {
-      setImageUrl(savedProductImage);
-      return;
-    }
-    
-    // Fall back to default images
     const productImage = getProductImage({ 
       category: product.category, 
       name: product.name, 
@@ -64,13 +55,20 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       const timestamp = Date.now();
       const filename = `product-${product.id}-${timestamp}-${file.name}`;
       
-      // Use URL.createObjectURL for immediate preview
-      const previewUrl = URL.createObjectURL(file);
-      setImageUrl(previewUrl);
+      // Create a new FormData object
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('filename', filename);
+
+      // Save the image file
+      await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      const savedImagePath = `/images/${filename}`;
+      setImageUrl(savedImagePath);
       setImageError(false);
-      
-      // Save to localStorage for persistence
-      localStorage.setItem(`productImage-${product.id}`, previewUrl);
       
       toast({
         title: "Успешно",
