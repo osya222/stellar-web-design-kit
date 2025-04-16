@@ -24,14 +24,13 @@ export const handleUpload = async (req: Request) => {
     // Sanitize filename and create proper path
     const sanitizedFilename = filename.replace(/[^\w\s.-]/g, '').replace(/\s+/g, '-');
     
-    // Create path to the public directory
-    // In Vite, we need to make sure it reaches the proper directory
-    const publicDir = 'public';
+    // Create absolute paths to ensure files are written to the correct location
+    const publicDir = path.resolve('public');
     const imagesDir = path.join(publicDir, 'images');
     
     console.log("Upload API: Writing to path:", path.join(imagesDir, sanitizedFilename));
-    console.log("Public directory:", publicDir);
-    console.log("Images directory:", imagesDir);
+    console.log("Absolute public directory:", publicDir);
+    console.log("Absolute images directory:", imagesDir);
     
     // Ensure the images directory exists
     if (!fs.existsSync(imagesDir)) {

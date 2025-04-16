@@ -76,14 +76,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       formData.append('filename', filename);
 
       console.log("Sending upload request for product image");
-      // Save the image file - Make sure the API path is correct
+      
+      // Use the correct API endpoint with absolute path
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
         cache: 'no-store'
       });
 
-      // Check if response is OK before trying to parse JSON
+      // Handle error responses
       if (!response.ok) {
         const errorText = await response.text();
         console.error("Upload failed with status:", response.status, errorText);

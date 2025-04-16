@@ -48,14 +48,14 @@ const Hero = () => {
       formData.append('filename', filename);
 
       console.log("Sending upload request for hero image");
-      // Save the image file
+      // Send to the correct API endpoint
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
         cache: 'no-store'
       });
       
-      // Check if response is OK before trying to parse JSON
+      // Handle errors properly
       if (!response.ok) {
         const errorText = await response.text();
         console.error("Upload failed with status:", response.status, errorText);
