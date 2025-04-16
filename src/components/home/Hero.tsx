@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Logo from "@/components/layout/Logo";
 import { ArrowDown, Upload, ImageIcon } from "lucide-react";
@@ -50,15 +51,16 @@ const Hero = () => {
       // Save the image file
       const response = await fetch('/api/upload', {
         method: 'POST',
-        body: formData
+        body: formData,
+        cache: 'no-store'
       });
       
-      const result = await response.json();
-      
       if (!response.ok) {
-        throw new Error(`Failed to upload image: ${result.error || response.statusText}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(`Failed to upload image: ${errorData.error || response.statusText}`);
       }
       
+      const result = await response.json();
       console.log("Hero image upload response:", result);
       
       if (!result.path) {
@@ -99,7 +101,7 @@ const Hero = () => {
         {backgroundImage ? (
           <div className="w-full h-full relative">
             <img 
-              src={backgroundImage + `?t=${Date.now()}`} 
+              src={`${backgroundImage}?t=${Date.now()}`} 
               alt="Hero background" 
               className="w-full h-full object-cover"
               onError={(e) => {

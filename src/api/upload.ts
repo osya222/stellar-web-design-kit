@@ -25,11 +25,13 @@ export const handleUpload = async (req: Request) => {
     const sanitizedFilename = filename.replace(/[^\w\s.-]/g, '').replace(/\s+/g, '-');
     
     // Ensure we're using the absolute path to the public directory
-    const publicDir = path.join(process.cwd(), 'public');
-    const imagesDir = path.join(publicDir, 'images');
-    const filePath = path.join(imagesDir, sanitizedFilename);
+    const publicDir = path.resolve(process.cwd(), 'public');
+    const imagesDir = path.resolve(publicDir, 'images');
+    const filePath = path.resolve(imagesDir, sanitizedFilename);
     
     console.log("Upload API: Writing to path:", filePath);
+    console.log("Public directory:", publicDir);
+    console.log("Images directory:", imagesDir);
     
     // Ensure the images directory exists
     if (!fs.existsSync(imagesDir)) {

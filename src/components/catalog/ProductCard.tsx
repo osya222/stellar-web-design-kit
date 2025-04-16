@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -78,15 +79,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       // Save the image file
       const response = await fetch('/api/upload', {
         method: 'POST',
-        body: formData
+        body: formData,
+        cache: 'no-store'
       });
 
-      const result = await response.json();
-      
       if (!response.ok) {
-        throw new Error(`Failed to upload image: ${result.error || response.statusText}`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(`Failed to upload image: ${errorData.error || response.statusText}`);
       }
 
+      const result = await response.json();
       console.log(`Product ${product.id} image upload response:`, result);
       
       if (!result.path) {
