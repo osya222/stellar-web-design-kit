@@ -1,13 +1,13 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
-import { ShoppingCart, ImageIcon, Upload } from "lucide-react";
+import { ShoppingCart, ImageIcon, Upload, AlertCircle } from "lucide-react";
 import { useCart } from '@/context/CartContext';
 import { useToast } from "@/hooks/use-toast";
 import { getProductImage } from '@/data/productImages';
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface ProductCardProps {
   product: Product;
@@ -19,12 +19,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [imageError, setImageError] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
   
   useEffect(() => {
     setImageError(false);
     if (!product) return;
     
-    // Проверяем, есть ли сохраненное изображение в localStorage
+    // Check for saved image in localStorage
     const savedProductImage = localStorage.getItem(`productImage-${product.id}`);
     if (savedProductImage) {
       console.log(`Using saved image for product ${product.id}:`, savedProductImage);
@@ -60,10 +61,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
     console.log(`Uploading image for product ${product.id}:`, file.name);
     setIsUploading(true);
+    setUploadError('');
+    
     try {
-      // Generate a unique filename
+      // Generate a unique filename with proper sanitization
       const timestamp = Date.now();
-      const filename = `product-${product.id}-${timestamp}-${file.name.replace(/\s+/g, '-')}`;
+      const safeFilename = file.name.replace(/[^\w\s.-]/g, '').replace(/\s+/g, '-');
+      const filename = `product-${product.id}-${timestamp}-${safeFilename}`;
       
       // Create a new FormData object
       const formData = new FormData();
@@ -74,24 +78,28 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       // Save the image file
       const response = await fetch('/api/upload', {
         method: 'POST',
-        body: formData,
-        headers: {
-          // No Content-Type header as it's set automatically for FormData
-        }
+        body: formData
       });
 
+      const result = await response.json();
+      
       if (!response.ok) {
-        throw new Error(`Failed to upload image: ${response.status} ${response.statusText}`);
+        throw new Error(`Failed to upload image: ${result.error || response.statusText}`);
       }
 
-      const result = await response.json();
+      console.log(`Product ${product.id} image upload response:`, result);
+      
+      if (!result.path) {
+        throw new Error('No image path returned from server');
+      }
+      
       const savedImagePath = result.path;
       console.log(`Product ${product.id} image uploaded successfully:`, savedImagePath);
       
       setImageUrl(savedImagePath);
       setImageError(false);
       
-      // Сохраняем путь к изображению в localStorage
+      // Save image path to localStorage
       localStorage.setItem(`productImage-${product.id}`, savedImagePath);
       
       toast({
@@ -100,9 +108,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       });
     } catch (error) {
       console.error(`Upload error for product ${product.id}:`, error);
+      const errorMessage = error instanceof Error ? error.message : 'Неизвестная ошибка';
+      setUploadError(errorMessage);
       toast({
         title: "Ошибка",
-        description: "Не удалось загрузить изображение",
+        description: `Не удалось загрузить изображение: ${errorMessage}`,
         variant: "destructive"
       });
     } finally {
@@ -116,17 +126,24 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         {(!imageUrl || imageError) ? (
           <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100">
             <ImageIcon className="w-12 h-12 text-gray-400" />
-            <label className="cursor-pointer mt-2 flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 bg-white px-3 py-1.5 rounded-md shadow-sm">
-              <input
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleImageUpload}
-                disabled={isUploading}
-              />
-              <Upload className="w-4 h-4" />
-              {isUploading ? 'Загрузка...' : 'Загрузить фото'}
-            </label>
+            {uploadError ? (
+              <div className="mt-2 px-3 py-1 bg-red-50 text-red-600 text-xs rounded flex items-center">
+                <AlertCircle className="w-3 h-3 mr-1" />
+                {uploadError}
+              </div>
+            ) : (
+              <label className="cursor-pointer mt-2 flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 bg-white px-3 py-1.5 rounded-md shadow-sm">
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleImageUpload}
+                  disabled={isUploading}
+                />
+                <Upload className="w-4 h-4" />
+                {isUploading ? 'Загрузка...' : 'Загрузить фото'}
+              </label>
+            )}
           </div>
         ) : (
           <div className="relative w-full h-full">

@@ -4,28 +4,48 @@ import path from 'path';
 
 export const handleUpload = async (req: Request) => {
   try {
+    console.log("Upload API called");
     const formData = await req.formData();
     const file = formData.get('file') as File;
     const filename = formData.get('filename') as string;
 
     if (!file || !filename) {
-      return new Response('No file or filename provided', { status: 400 });
+      console.error("Upload API error: No file or filename provided");
+      return new Response(JSON.stringify({ error: 'No file or filename provided' }), { 
+        status: 400,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
     }
 
     const buffer = await file.arrayBuffer();
-    const filePath = path.join(process.cwd(), 'public', 'images', filename);
-
-    // Ensure the directory exists
-    const dir = path.dirname(filePath);
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir, { recursive: true });
+    
+    // Sanitize filename and create proper path
+    const sanitizedFilename = filename.replace(/[^\w\s.-]/g, '').replace(/\s+/g, '-');
+    
+    // Ensure we're using the absolute path to the public directory
+    const publicDir = path.join(process.cwd(), 'public');
+    const imagesDir = path.join(publicDir, 'images');
+    const filePath = path.join(imagesDir, sanitizedFilename);
+    
+    console.log("Upload API: Writing to path:", filePath);
+    
+    // Ensure the images directory exists
+    if (!fs.existsSync(imagesDir)) {
+      fs.mkdirSync(imagesDir, { recursive: true });
+      console.log("Upload API: Created images directory:", imagesDir);
     }
 
     // Write the file
     fs.writeFileSync(filePath, Buffer.from(buffer));
-
-    // Return success response with proper headers
-    return new Response(JSON.stringify({ path: `/images/${filename}` }), {
+    console.log("Upload API: File written successfully");
+    
+    // Return success response with proper headers and cache control
+    return new Response(JSON.stringify({ 
+      path: `/images/${sanitizedFilename}`,
+      success: true
+    }), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
@@ -35,7 +55,15 @@ export const handleUpload = async (req: Request) => {
       },
     });
   } catch (error) {
-    console.error('Upload error:', error);
-    return new Response('Error uploading file', { status: 500 });
+    console.error('Upload API error:', error);
+    return new Response(JSON.stringify({ 
+      error: 'Error uploading file', 
+      details: error instanceof Error ? error.message : String(error) 
+    }), { 
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
   }
 };

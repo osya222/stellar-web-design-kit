@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Logo from "@/components/layout/Logo";
 import { ArrowDown, Upload, ImageIcon } from "lucide-react";
@@ -7,12 +6,13 @@ import { useToast } from "@/hooks/use-toast";
 const Hero = () => {
   const [backgroundImage, setBackgroundImage] = useState('');
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
   const { toast } = useToast();
 
-  // Загружаем сохраненное изображение при монтировании компонента
+  // Load saved image when component mounts
   useEffect(() => {
     console.log("Hero component mounted, checking for saved image");
-    // Проверяем, есть ли сохраненное изображение в локальном хранилище
+    // Check for saved image in local storage
     const savedHeroImage = localStorage.getItem('heroBackgroundImage');
     if (savedHeroImage) {
       console.log("Found saved hero image:", savedHeroImage);
@@ -33,10 +33,13 @@ const Hero = () => {
 
     console.log("Uploading hero image:", file.name);
     setIsUploading(true);
+    setUploadError('');
+    
     try {
       // Generate a unique filename
       const timestamp = Date.now();
-      const filename = `hero-${timestamp}-${file.name.replace(/\s+/g, '-')}`;
+      const safeFilename = file.name.replace(/[^\w\s.-]/g, '').replace(/\s+/g, '-');
+      const filename = `hero-${timestamp}-${safeFilename}`;
       
       // Create a new FormData object
       const formData = new FormData();
@@ -47,24 +50,28 @@ const Hero = () => {
       // Save the image file
       const response = await fetch('/api/upload', {
         method: 'POST',
-        body: formData,
-        headers: {
-          // No Content-Type header as it's set automatically for FormData
-        }
+        body: formData
       });
       
+      const result = await response.json();
+      
       if (!response.ok) {
-        throw new Error(`Failed to upload image: ${response.status} ${response.statusText}`);
+        throw new Error(`Failed to upload image: ${result.error || response.statusText}`);
       }
       
-      const result = await response.json();
+      console.log("Hero image upload response:", result);
+      
+      if (!result.path) {
+        throw new Error('No image path returned from server');
+      }
+      
       const savedImagePath = result.path;
       console.log("Hero image uploaded successfully:", savedImagePath);
       
       // Update the UI with the new image path
       setBackgroundImage(savedImagePath);
       
-      // Сохраняем путь к изображению в localStorage
+      // Save image path to localStorage
       localStorage.setItem('heroBackgroundImage', savedImagePath);
       
       toast({
@@ -73,9 +80,11 @@ const Hero = () => {
       });
     } catch (error) {
       console.error('Upload error for hero image:', error);
+      const errorMessage = error instanceof Error ? error.message : 'Неизвестная ошибка';
+      setUploadError(errorMessage);
       toast({
         title: "Ошибка",
-        description: "Не удалось загрузить изображение",
+        description: `Не удалось загрузить изображение: ${errorMessage}`,
         variant: "destructive"
       });
     } finally {
@@ -96,8 +105,11 @@ const Hero = () => {
               onError={(e) => {
                 console.error("Failed to load hero image:", backgroundImage);
                 e.currentTarget.onerror = null; // Prevent infinite error loop
-                // Optional: Show fallback
-                // setBackgroundImage('');
+                toast({
+                  title: "Ошибка",
+                  description: "Не удалось загрузить фоновое изображение",
+                  variant: "destructive"
+                });
               }}
             />
             <div className="absolute inset-0 bg-black/20" /> {/* Overlay for better text readability */}
@@ -138,6 +150,11 @@ const Hero = () => {
             {isUploading ? 'Загрузка...' : 'Загрузить фон'}
           </span>
         </label>
+        {uploadError && (
+          <div className="mt-2 p-2 bg-red-50 text-red-600 text-xs rounded">
+            {uploadError}
+          </div>
+        )}
       </div>
 
       <div className="container-custom text-center relative z-10">
