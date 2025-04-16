@@ -61,7 +61,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     try {
       // Generate a unique filename
       const timestamp = Date.now();
-      const filename = `product-${product.id}-${timestamp}-${file.name}`;
+      const filename = `product-${product.id}-${timestamp}-${file.name.replace(/\s+/g, '-')}`;
       
       // Create a new FormData object
       const formData = new FormData();
@@ -69,10 +69,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       formData.append('filename', filename);
 
       // Save the image file
-      await fetch('/api/upload', {
+      const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData
       });
+
+      if (!response.ok) {
+        throw new Error('Failed to upload image');
+      }
 
       const savedImagePath = `/images/${filename}`;
       setImageUrl(savedImagePath);

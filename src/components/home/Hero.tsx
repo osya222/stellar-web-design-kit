@@ -33,7 +33,7 @@ const Hero = () => {
     try {
       // Generate a unique filename
       const timestamp = Date.now();
-      const filename = `hero-${timestamp}-${file.name}`;
+      const filename = `hero-${timestamp}-${file.name.replace(/\s+/g, '-')}`;
       const savedImagePath = `/images/${filename}`;
       
       // Create a new FormData object
@@ -42,10 +42,14 @@ const Hero = () => {
       formData.append('filename', filename);
 
       // Save the image file
-      await fetch('/api/upload', {
+      const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData
       });
+      
+      if (!response.ok) {
+        throw new Error('Failed to upload image');
+      }
       
       // Update the UI with the new image path
       setBackgroundImage(savedImagePath);

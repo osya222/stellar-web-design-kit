@@ -24,10 +24,14 @@ export const handleUpload = async (req: Request) => {
     // Write the file
     fs.writeFileSync(filePath, Buffer.from(buffer));
 
+    // Return success response with proper headers
     return new Response(JSON.stringify({ path: `/images/${filename}` }), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
       },
     });
   } catch (error) {
