@@ -58,55 +58,73 @@ export const handleUpload = async (req: Request) => {
       });
     }
     
-    // In browser environment, we can't write to the filesystem
-    // Instead, we'll create a blob URL and return it
-    // In a real environment, you would save the file to disk or cloud storage
-    
     // Sanitize filename
     const sanitizedFilename = String(filename).replace(/[^\w\s.-]/g, '').replace(/\s+/g, '-');
     
-    // Since we're in the browser, we'll simulate successful file upload
-    // and return a path that will work in the browser
+    // Create a blob URL for immediate use
     const fileUrl = URL.createObjectURL(file);
+    console.log("Created blob URL:", fileUrl);
     
-    // Store the file in localStorage as base64 for persistence
-    try {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
+    // Store the file as base64 in localStorage for persistence
+    const reader = new FileReader();
+    
+    return new Promise<Response>((resolve) => {
       reader.onloadend = () => {
         const base64data = reader.result;
         if (typeof base64data === 'string') {
           // Using a prefix to identify our uploaded images
           localStorage.setItem(`uploaded_image_${sanitizedFilename}`, base64data);
-          console.log("File saved to localStorage");
+          console.log("File saved to localStorage as base64");
+          
+          // Generate a unique image path that will be recognized by our app
+          const imagePath = `/images/${sanitizedFilename}`;
+          
+          // Store the mapping between path and blob URL
+          localStorage.setItem(`image_url_${imagePath}`, fileUrl);
+          
+          console.log("Success, returning path:", imagePath);
+          
+          resolve(new Response(JSON.stringify({ 
+            path: imagePath,
+            success: true,
+            base64: base64data, // Include the base64 data for immediate use
+            blobUrl: fileUrl
+          }), {
+            status: 200,
+            headers: {
+              'Content-Type': 'application/json',
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache',
+              'Expires': '0'
+            },
+          }));
+        } else {
+          console.error("Failed to convert file to base64");
+          resolve(new Response(JSON.stringify({ 
+            error: 'Failed to process image' 
+          }), { 
+            status: 500,
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }));
         }
       };
-    } catch (err) {
-      console.error("Error saving to localStorage:", err);
-      // Continue anyway, as we still have the blob URL
-    }
-    
-    // Generate a unique image path that will be recognized by our app
-    const imagePath = `/images/${sanitizedFilename}`;
-    
-    // Store the mapping between path and blob URL
-    localStorage.setItem(`image_url_${imagePath}`, fileUrl);
-    
-    console.log("Success, returning path:", imagePath);
-    
-    return new Response(JSON.stringify({ 
-      path: imagePath,
-      success: true,
-      // Include the blob URL for immediate use
-      blobUrl: fileUrl
-    }), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
-      },
+      
+      reader.onerror = () => {
+        console.error("FileReader error:", reader.error);
+        resolve(new Response(JSON.stringify({ 
+          error: 'Error reading file', 
+          details: reader.error?.message || 'Unknown error'
+        }), { 
+          status: 500,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        }));
+      };
+      
+      reader.readAsDataURL(file);
     });
   } catch (error) {
     console.error('Upload API critical error:', error);

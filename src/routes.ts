@@ -34,9 +34,12 @@ export const apiRoutes = {
 
 // Add a utility function to get uploaded images
 export const getUploadedImageUrl = (path: string): string | null => {
+  console.log("Getting uploaded image for path:", path);
+  
   // First try to get the blob URL from localStorage
   const blobUrl = localStorage.getItem(`image_url_${path}`);
   if (blobUrl) {
+    console.log("Found blob URL in localStorage:", blobUrl);
     return blobUrl;
   }
   
@@ -45,9 +48,18 @@ export const getUploadedImageUrl = (path: string): string | null => {
   if (filename) {
     const base64data = localStorage.getItem(`uploaded_image_${filename}`);
     if (base64data) {
+      console.log("Found base64 data in localStorage for:", filename);
       return base64data;
     }
   }
   
+  // If we still don't have an image, look in localStorage directly with the path as key
+  const directBase64 = localStorage.getItem(path);
+  if (directBase64) {
+    console.log("Found direct base64 data in localStorage for path:", path);
+    return directBase64;
+  }
+  
+  console.log("No image found for path:", path);
   return null;
 };

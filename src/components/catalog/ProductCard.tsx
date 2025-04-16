@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -38,6 +37,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         console.log(`Found uploaded image URL for product ${product.id}:`, actualImageUrl);
         setImageUrl(actualImageUrl);
       } else {
+        console.log(`No uploaded image URL found, using saved path directly for product ${product.id}:`, savedProductImagePath);
         setImageUrl(savedProductImagePath);
       }
       return;
@@ -107,18 +107,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         throw new Error('No image path returned from server');
       }
       
-      // Save both the path and the blob URL
+      // Save the path for persistence
       const savedImagePath = result.path;
-      console.log(`Product ${product.id} image uploaded successfully:`, savedImagePath);
+      localStorage.setItem(`productImage-${product.id}`, savedImagePath);
       
-      // Use the blob URL directly if available
-      const imageToDisplay = result.blobUrl || savedImagePath;
+      // Use the base64 data or blob URL directly if available
+      const imageToDisplay = result.base64 || result.blobUrl || savedImagePath;
+      console.log(`Setting image for product ${product.id} to:`, typeof imageToDisplay === 'string' ? imageToDisplay.substring(0, 50) + '...' : imageToDisplay);
       
       setImageUrl(imageToDisplay);
       setImageError(false);
-      
-      // Save image path to localStorage for persistence
-      localStorage.setItem(`productImage-${product.id}`, savedImagePath);
       
       toast({
         title: "Успешно",
@@ -166,7 +164,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         ) : (
           <div className="relative w-full h-full">
             <img 
-              src={`${imageUrl}?t=${Date.now()}`} 
+              src={imageUrl} 
               alt={product.name} 
               className="object-cover w-full h-full"
               onError={handleImageError}

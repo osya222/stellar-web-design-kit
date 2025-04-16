@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Logo from "@/components/layout/Logo";
 import { ArrowDown, Upload, ImageIcon } from "lucide-react";
@@ -25,6 +24,7 @@ const Hero = () => {
         console.log("Found uploaded image URL:", imageUrl);
         setBackgroundImage(imageUrl);
       } else {
+        console.log("No uploaded image URL found, using saved path directly:", savedHeroImage);
         setBackgroundImage(savedHeroImage);
       }
     }
@@ -78,18 +78,16 @@ const Hero = () => {
         throw new Error('No image path returned from server');
       }
       
-      // Save both the path and the blob URL
+      // Save the path for persistence
       const savedImagePath = result.path;
-      console.log("Hero image uploaded successfully:", savedImagePath);
+      localStorage.setItem('heroBackgroundImage', savedImagePath);
       
-      // Use the blob URL directly if available
-      const imageToDisplay = result.blobUrl || savedImagePath;
+      // Use the base64 data or blob URL directly if available
+      const imageToDisplay = result.base64 || result.blobUrl || savedImagePath;
+      console.log("Setting background image to:", typeof imageToDisplay === 'string' ? imageToDisplay.substring(0, 50) + '...' : imageToDisplay);
       
       // Update the UI with the new image
       setBackgroundImage(imageToDisplay);
-      
-      // Save image path to localStorage for persistence
-      localStorage.setItem('heroBackgroundImage', savedImagePath);
       
       toast({
         title: "Успешно",
@@ -116,7 +114,7 @@ const Hero = () => {
         {backgroundImage ? (
           <div className="w-full h-full relative">
             <img 
-              src={`${backgroundImage}?t=${Date.now()}`} 
+              src={backgroundImage} 
               alt="Hero background" 
               className="w-full h-full object-cover"
               onError={(e) => {
