@@ -1,36 +1,32 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Index from "./pages/Index";
-import NotFound from "./pages/NotFound";
-import Cart from "./pages/Cart";
-import PublicOffer from "./pages/PublicOffer";
-import { CartProvider } from "./context/CartContext";
+import { useEffect } from 'react'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Index from './pages/Index'
+import NotFound from './pages/NotFound'
+import PublicOffer from './pages/PublicOffer'
+import Cart from './pages/Cart'
+import Admin from './pages/Admin' // Import the new Admin page
+import { CartProvider } from './context/CartContext'
+import { Toaster } from './components/ui/toaster'
+import './App.css'
 
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <CartProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
+function App() {
+  return (
+    <div className='app'>
+      <BrowserRouter>
+        <CartProvider>
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/cart" element={<Cart />} />
-            <Route path="/privacy-policy" element={<PublicOffer />} />
             <Route path="/public-offer" element={<PublicOffer />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="/admin" element={<Admin />} /> {/* Add the Admin route */}
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </BrowserRouter>
-      </CartProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+          <Toaster />
+        </CartProvider>
+      </BrowserRouter>
+    </div>
+  )
+}
 
-export default App;
+export default App
