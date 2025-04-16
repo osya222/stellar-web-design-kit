@@ -9,6 +9,7 @@ import { useCart } from '@/context/CartContext';
 import { useToast } from "@/hooks/use-toast";
 import { getProductImage } from '@/data/productImages';
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { getUploadedImageUrl } from '@/routes';
 
 interface ProductCardProps {
   product: Product;
@@ -27,10 +28,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     if (!product) return;
     
     // Check for saved image in localStorage
-    const savedProductImage = localStorage.getItem(`productImage-${product.id}`);
-    if (savedProductImage) {
-      console.log(`Using saved image for product ${product.id}:`, savedProductImage);
-      setImageUrl(savedProductImage);
+    const savedProductImagePath = localStorage.getItem(`productImage-${product.id}`);
+    if (savedProductImagePath) {
+      console.log(`Using saved image path for product ${product.id}:`, savedProductImagePath);
+      
+      // Try to get the actual image URL
+      const actualImageUrl = getUploadedImageUrl(savedProductImagePath);
+      if (actualImageUrl) {
+        console.log(`Found uploaded image URL for product ${product.id}:`, actualImageUrl);
+        setImageUrl(actualImageUrl);
+      } else {
+        setImageUrl(savedProductImagePath);
+      }
       return;
     }
     
@@ -98,13 +107,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         throw new Error('No image path returned from server');
       }
       
+      // Save both the path and the blob URL
       const savedImagePath = result.path;
       console.log(`Product ${product.id} image uploaded successfully:`, savedImagePath);
       
-      setImageUrl(savedImagePath);
+      // Use the blob URL directly if available
+      const imageToDisplay = result.blobUrl || savedImagePath;
+      
+      setImageUrl(imageToDisplay);
       setImageError(false);
       
-      // Save image path to localStorage
+      // Save image path to localStorage for persistence
       localStorage.setItem(`productImage-${product.id}`, savedImagePath);
       
       toast({

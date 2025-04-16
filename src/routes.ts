@@ -31,3 +31,23 @@ export const apiRoutes = {
     }
   }
 };
+
+// Add a utility function to get uploaded images
+export const getUploadedImageUrl = (path: string): string | null => {
+  // First try to get the blob URL from localStorage
+  const blobUrl = localStorage.getItem(`image_url_${path}`);
+  if (blobUrl) {
+    return blobUrl;
+  }
+  
+  // If no blob URL, try to get the base64 data
+  const filename = path.split('/').pop();
+  if (filename) {
+    const base64data = localStorage.getItem(`uploaded_image_${filename}`);
+    if (base64data) {
+      return base64data;
+    }
+  }
+  
+  return null;
+};

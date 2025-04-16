@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Logo from "@/components/layout/Logo";
 import { ArrowDown, Upload, ImageIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { getUploadedImageUrl } from '@/routes';
 
 const Hero = () => {
   const [backgroundImage, setBackgroundImage] = useState('');
@@ -16,8 +17,16 @@ const Hero = () => {
     // Check for saved image in local storage
     const savedHeroImage = localStorage.getItem('heroBackgroundImage');
     if (savedHeroImage) {
-      console.log("Found saved hero image:", savedHeroImage);
-      setBackgroundImage(savedHeroImage);
+      console.log("Found saved hero image path:", savedHeroImage);
+      
+      // Try to get the actual image URL
+      const imageUrl = getUploadedImageUrl(savedHeroImage);
+      if (imageUrl) {
+        console.log("Found uploaded image URL:", imageUrl);
+        setBackgroundImage(imageUrl);
+      } else {
+        setBackgroundImage(savedHeroImage);
+      }
     }
   }, []);
 
@@ -69,13 +78,17 @@ const Hero = () => {
         throw new Error('No image path returned from server');
       }
       
+      // Save both the path and the blob URL
       const savedImagePath = result.path;
       console.log("Hero image uploaded successfully:", savedImagePath);
       
-      // Update the UI with the new image path
-      setBackgroundImage(savedImagePath);
+      // Use the blob URL directly if available
+      const imageToDisplay = result.blobUrl || savedImagePath;
       
-      // Save image path to localStorage
+      // Update the UI with the new image
+      setBackgroundImage(imageToDisplay);
+      
+      // Save image path to localStorage for persistence
       localStorage.setItem('heroBackgroundImage', savedImagePath);
       
       toast({

@@ -1,12 +1,12 @@
 
-import fs from 'fs';
-import path from 'path';
+// No need for actual fs and path in browser environment
+// We'll simulate file storage for client-side development
 
 export const handleUpload = async (req: Request) => {
   try {
     console.log("Upload handler called");
     
-    // Проверяем метод запроса
+    // Check request method
     if (req.method !== 'POST') {
       console.log("Method not allowed:", req.method);
       return new Response(JSON.stringify({ error: 'Method not allowed' }), { 
@@ -17,7 +17,7 @@ export const handleUpload = async (req: Request) => {
       });
     }
     
-    // Получаем данные формы
+    // Get form data
     let formData;
     try {
       formData = await req.formData();
@@ -58,63 +58,47 @@ export const handleUpload = async (req: Request) => {
       });
     }
     
-    // Получаем данные файла
-    let buffer;
-    try {
-      buffer = await file.arrayBuffer();
-      console.log("File buffer received, size:", buffer.byteLength);
-    } catch (error) {
-      console.error("Error reading file buffer:", error);
-      return new Response(JSON.stringify({ error: 'Failed to read file data' }), { 
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-    }
+    // In browser environment, we can't write to the filesystem
+    // Instead, we'll create a blob URL and return it
+    // In a real environment, you would save the file to disk or cloud storage
     
-    // Получаем правильное имя файла
+    // Sanitize filename
     const sanitizedFilename = String(filename).replace(/[^\w\s.-]/g, '').replace(/\s+/g, '-');
     
-    // Создаем пути к директориям
-    const publicDir = path.resolve('public');
-    const imagesDir = path.join(publicDir, 'images');
-    const filePath = path.join(imagesDir, sanitizedFilename);
+    // Since we're in the browser, we'll simulate successful file upload
+    // and return a path that will work in the browser
+    const fileUrl = URL.createObjectURL(file);
     
-    console.log("Writing file to:", filePath);
-    console.log("Public dir:", publicDir);
-    console.log("Images dir:", imagesDir);
-    
-    // Создаем директорию, если она не существует
-    if (!fs.existsSync(imagesDir)) {
-      console.log("Creating images directory");
-      fs.mkdirSync(imagesDir, { recursive: true });
-    }
-
-    // Записываем файл
+    // Store the file in localStorage as base64 for persistence
     try {
-      fs.writeFileSync(filePath, Buffer.from(buffer));
-      console.log("File written successfully");
-    } catch (error) {
-      console.error("Error writing file:", error);
-      return new Response(JSON.stringify({ 
-        error: 'Failed to save file', 
-        details: error instanceof Error ? error.message : String(error) 
-      }), { 
-        status: 500,
-        headers: {
-          'Content-Type': 'application/json'
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onloadend = () => {
+        const base64data = reader.result;
+        if (typeof base64data === 'string') {
+          // Using a prefix to identify our uploaded images
+          localStorage.setItem(`uploaded_image_${sanitizedFilename}`, base64data);
+          console.log("File saved to localStorage");
         }
-      });
+      };
+    } catch (err) {
+      console.error("Error saving to localStorage:", err);
+      // Continue anyway, as we still have the blob URL
     }
     
-    // Возвращаем успешный ответ
+    // Generate a unique image path that will be recognized by our app
     const imagePath = `/images/${sanitizedFilename}`;
+    
+    // Store the mapping between path and blob URL
+    localStorage.setItem(`image_url_${imagePath}`, fileUrl);
+    
     console.log("Success, returning path:", imagePath);
     
     return new Response(JSON.stringify({ 
       path: imagePath,
-      success: true
+      success: true,
+      // Include the blob URL for immediate use
+      blobUrl: fileUrl
     }), {
       status: 200,
       headers: {
