@@ -1,3 +1,4 @@
+
 import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "@/components/layout/Logo";
 import { Phone, Mail, Building } from "lucide-react";
@@ -106,7 +107,7 @@ const Footer = () => {
             </p>
             <p className="flex items-center mb-2 text-blue-200">
               <Mail className="w-4 h-4 mr-2" />
-              Statiy.info@bk.ru
+              riba@рыба.shop
             </p>
             <p className="flex items-center text-blue-200">
               <Building className="w-4 h-4 mr-2" />
