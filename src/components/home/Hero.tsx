@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import Logo from "@/components/layout/Logo";
 import { ArrowDown, Upload, ImageIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -7,6 +8,15 @@ const Hero = () => {
   const [backgroundImage, setBackgroundImage] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
+
+  // Загружаем сохраненное изображение при монтировании компонента
+  useEffect(() => {
+    // Проверяем, есть ли сохраненное изображение в локальном хранилище
+    const savedHeroImage = localStorage.getItem('heroBackgroundImage');
+    if (savedHeroImage) {
+      setBackgroundImage(savedHeroImage);
+    }
+  }, []);
 
   const scrollToCatalog = () => {
     const catalogSection = document.getElementById('catalog');
@@ -39,6 +49,9 @@ const Hero = () => {
       
       // Update the UI with the new image path
       setBackgroundImage(savedImagePath);
+      
+      // Сохраняем путь к изображению в localStorage
+      localStorage.setItem('heroBackgroundImage', savedImagePath);
       
       toast({
         title: "Успешно",

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,6 +23,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   useEffect(() => {
     setImageError(false);
     if (!product) return;
+    
+    // Проверяем, есть ли сохраненное изображение в localStorage
+    const savedProductImage = localStorage.getItem(`productImage-${product.id}`);
+    if (savedProductImage) {
+      setImageUrl(savedProductImage);
+      return;
+    }
     
     const productImage = getProductImage({ 
       category: product.category, 
@@ -69,6 +77,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       const savedImagePath = `/images/${filename}`;
       setImageUrl(savedImagePath);
       setImageError(false);
+      
+      // Сохраняем путь к изображению в localStorage
+      localStorage.setItem(`productImage-${product.id}`, savedImagePath);
       
       toast({
         title: "Успешно",
