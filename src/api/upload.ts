@@ -24,12 +24,12 @@ export const handleUpload = async (req: Request) => {
     // Sanitize filename and create proper path
     const sanitizedFilename = filename.replace(/[^\w\s.-]/g, '').replace(/\s+/g, '-');
     
-    // Ensure we're using the absolute path to the public directory
-    const publicDir = path.resolve(process.cwd(), 'public');
-    const imagesDir = path.resolve(publicDir, 'images');
-    const filePath = path.resolve(imagesDir, sanitizedFilename);
+    // Create path to the public directory
+    // In Vite, we need to make sure it reaches the proper directory
+    const publicDir = 'public';
+    const imagesDir = path.join(publicDir, 'images');
     
-    console.log("Upload API: Writing to path:", filePath);
+    console.log("Upload API: Writing to path:", path.join(imagesDir, sanitizedFilename));
     console.log("Public directory:", publicDir);
     console.log("Images directory:", imagesDir);
     
@@ -40,7 +40,7 @@ export const handleUpload = async (req: Request) => {
     }
 
     // Write the file
-    fs.writeFileSync(filePath, Buffer.from(buffer));
+    fs.writeFileSync(path.join(imagesDir, sanitizedFilename), Buffer.from(buffer));
     console.log("Upload API: File written successfully");
     
     // Return success response with proper headers and cache control

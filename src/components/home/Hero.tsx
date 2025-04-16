@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Logo from "@/components/layout/Logo";
 import { ArrowDown, Upload, ImageIcon } from "lucide-react";
@@ -54,9 +55,11 @@ const Hero = () => {
         cache: 'no-store'
       });
       
+      // Check if response is OK before trying to parse JSON
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(`Failed to upload image: ${errorData.error || response.statusText}`);
+        const errorText = await response.text();
+        console.error("Upload failed with status:", response.status, errorText);
+        throw new Error(`Failed to upload image: ${response.statusText || 'Server error'}`);
       }
       
       const result = await response.json();
