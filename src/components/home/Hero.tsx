@@ -11,9 +11,11 @@ const Hero = () => {
 
   // Загружаем сохраненное изображение при монтировании компонента
   useEffect(() => {
+    console.log("Hero component mounted, checking for saved image");
     // Проверяем, есть ли сохраненное изображение в локальном хранилище
     const savedHeroImage = localStorage.getItem('heroBackgroundImage');
     if (savedHeroImage) {
+      console.log("Found saved hero image:", savedHeroImage);
       setBackgroundImage(savedHeroImage);
     }
   }, []);
@@ -29,27 +31,35 @@ const Hero = () => {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    console.log("Uploading hero image:", file.name);
     setIsUploading(true);
     try {
       // Generate a unique filename
       const timestamp = Date.now();
       const filename = `hero-${timestamp}-${file.name.replace(/\s+/g, '-')}`;
-      const savedImagePath = `/images/${filename}`;
       
       // Create a new FormData object
       const formData = new FormData();
       formData.append('file', file);
       formData.append('filename', filename);
 
+      console.log("Sending upload request for hero image");
       // Save the image file
       const response = await fetch('/api/upload', {
         method: 'POST',
-        body: formData
+        body: formData,
+        headers: {
+          // No Content-Type header as it's set automatically for FormData
+        }
       });
       
       if (!response.ok) {
-        throw new Error('Failed to upload image');
+        throw new Error(`Failed to upload image: ${response.status} ${response.statusText}`);
       }
+      
+      const result = await response.json();
+      const savedImagePath = result.path;
+      console.log("Hero image uploaded successfully:", savedImagePath);
       
       // Update the UI with the new image path
       setBackgroundImage(savedImagePath);
@@ -62,7 +72,7 @@ const Hero = () => {
         description: "Изображение загружено",
       });
     } catch (error) {
-      console.error('Upload error:', error);
+      console.error('Upload error for hero image:', error);
       toast({
         title: "Ошибка",
         description: "Не удалось загрузить изображение",
@@ -80,9 +90,15 @@ const Hero = () => {
         {backgroundImage ? (
           <div className="w-full h-full relative">
             <img 
-              src={backgroundImage} 
+              src={backgroundImage + `?t=${Date.now()}`} 
               alt="Hero background" 
               className="w-full h-full object-cover"
+              onError={(e) => {
+                console.error("Failed to load hero image:", backgroundImage);
+                e.currentTarget.onerror = null; // Prevent infinite error loop
+                // Optional: Show fallback
+                // setBackgroundImage('');
+              }}
             />
             <div className="absolute inset-0 bg-black/20" /> {/* Overlay for better text readability */}
           </div>

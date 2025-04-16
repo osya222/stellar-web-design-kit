@@ -27,6 +27,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     // Проверяем, есть ли сохраненное изображение в localStorage
     const savedProductImage = localStorage.getItem(`productImage-${product.id}`);
     if (savedProductImage) {
+      console.log(`Using saved image for product ${product.id}:`, savedProductImage);
       setImageUrl(savedProductImage);
       return;
     }
@@ -57,6 +58,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    console.log(`Uploading image for product ${product.id}:`, file.name);
     setIsUploading(true);
     try {
       // Generate a unique filename
@@ -68,17 +70,24 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       formData.append('file', file);
       formData.append('filename', filename);
 
+      console.log("Sending upload request for product image");
       // Save the image file
       const response = await fetch('/api/upload', {
         method: 'POST',
-        body: formData
+        body: formData,
+        headers: {
+          // No Content-Type header as it's set automatically for FormData
+        }
       });
 
       if (!response.ok) {
-        throw new Error('Failed to upload image');
+        throw new Error(`Failed to upload image: ${response.status} ${response.statusText}`);
       }
 
-      const savedImagePath = `/images/${filename}`;
+      const result = await response.json();
+      const savedImagePath = result.path;
+      console.log(`Product ${product.id} image uploaded successfully:`, savedImagePath);
+      
       setImageUrl(savedImagePath);
       setImageError(false);
       
@@ -90,7 +99,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         description: "Изображение загружено",
       });
     } catch (error) {
-      console.error('Upload error:', error);
+      console.error(`Upload error for product ${product.id}:`, error);
       toast({
         title: "Ошибка",
         description: "Не удалось загрузить изображение",
@@ -122,7 +131,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         ) : (
           <div className="relative w-full h-full">
             <img 
-              src={imageUrl} 
+              src={`${imageUrl}?t=${Date.now()}`} 
               alt={product.name} 
               className="object-cover w-full h-full"
               onError={handleImageError}
