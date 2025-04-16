@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import Logo from "@/components/layout/Logo";
 import { ArrowDown, Upload, ImageIcon } from "lucide-react";
@@ -24,6 +25,7 @@ const Hero = () => {
         console.log("Found uploaded image URL:", imageUrl);
         setBackgroundImage(imageUrl);
       } else {
+        // If the direct URL approach fails, try to use the saved path directly
         console.log("No uploaded image URL found, using saved path directly:", savedHeroImage);
         setBackgroundImage(savedHeroImage);
       }
@@ -82,8 +84,30 @@ const Hero = () => {
       const savedImagePath = result.path;
       localStorage.setItem('heroBackgroundImage', savedImagePath);
       
-      // Use the base64 data or blob URL directly if available
-      const imageToDisplay = result.base64 || result.blobUrl || savedImagePath;
+      // Display the image - try multiple sources
+      let imageToDisplay = null;
+      
+      // First try direct image URL if available
+      if (result.directImageUrl) {
+        console.log("Using direct image URL:", result.directImageUrl);
+        imageToDisplay = result.directImageUrl;
+      } 
+      // Then try blob URL
+      else if (result.blobUrl) {
+        console.log("Using blob URL");
+        imageToDisplay = result.blobUrl;
+      }
+      // Then try base64 data
+      else if (result.base64) {
+        console.log("Using base64 data");
+        imageToDisplay = result.base64;
+      }
+      // Fall back to saved path
+      else {
+        console.log("Using saved image path");
+        imageToDisplay = savedImagePath;
+      }
+      
       console.log("Setting background image to:", typeof imageToDisplay === 'string' ? imageToDisplay.substring(0, 50) + '...' : imageToDisplay);
       
       // Update the UI with the new image
@@ -120,6 +144,8 @@ const Hero = () => {
               onError={(e) => {
                 console.error("Failed to load hero image:", backgroundImage);
                 e.currentTarget.onerror = null; // Prevent infinite error loop
+                // Fall back to the dynamic waves if image fails to load
+                setBackgroundImage('');
                 toast({
                   title: "Ошибка",
                   description: "Не удалось загрузить фоновое изображение",

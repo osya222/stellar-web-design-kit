@@ -36,7 +36,13 @@ export const apiRoutes = {
 export const getUploadedImageUrl = (path: string): string | null => {
   console.log("Getting uploaded image for path:", path);
   
-  // First try to get the blob URL from localStorage
+  // First check if the path is already a direct URL to the image
+  if (path.startsWith('data:') || path.startsWith('blob:')) {
+    console.log("Path is already a direct URL:", path.substring(0, 50) + '...');
+    return path;
+  }
+  
+  // Try to get the blob URL from localStorage
   const blobUrl = localStorage.getItem(`image_url_${path}`);
   if (blobUrl) {
     console.log("Found blob URL in localStorage:", blobUrl);
@@ -58,6 +64,13 @@ export const getUploadedImageUrl = (path: string): string | null => {
   if (directBase64) {
     console.log("Found direct base64 data in localStorage for path:", path);
     return directBase64;
+  }
+  
+  // Final attempt: check if the path is a valid image URL relative to the project
+  // This helps when images are saved directly to the project's public directory
+  if (path.startsWith('/images/')) {
+    console.log("Using direct project image path:", path);
+    return path; // Return the path as is, assuming it's valid within the project
   }
   
   console.log("No image found for path:", path);

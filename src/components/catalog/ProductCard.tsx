@@ -111,10 +111,34 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       const savedImagePath = result.path;
       localStorage.setItem(`productImage-${product.id}`, savedImagePath);
       
-      // Use the base64 data or blob URL directly if available
-      const imageToDisplay = result.base64 || result.blobUrl || savedImagePath;
-      console.log(`Setting image for product ${product.id} to:`, typeof imageToDisplay === 'string' ? imageToDisplay.substring(0, 50) + '...' : imageToDisplay);
+      // Display the image - try multiple sources
+      let imageToDisplay = null;
       
+      // First try direct image URL if available
+      if (result.directImageUrl) {
+        console.log(`Using direct image URL for product ${product.id}:`, result.directImageUrl);
+        imageToDisplay = result.directImageUrl;
+      } 
+      // Then try blob URL
+      else if (result.blobUrl) {
+        console.log(`Using blob URL for product ${product.id}`);
+        imageToDisplay = result.blobUrl;
+      }
+      // Then try base64 data
+      else if (result.base64) {
+        console.log(`Using base64 data for product ${product.id}`);
+        imageToDisplay = result.base64;
+      }
+      // Fall back to saved path
+      else {
+        console.log(`Using saved image path for product ${product.id}`);
+        imageToDisplay = savedImagePath;
+      }
+      
+      console.log(`Setting image for product ${product.id} to:`, 
+        typeof imageToDisplay === 'string' ? imageToDisplay.substring(0, 50) + '...' : imageToDisplay);
+      
+      // Update the UI with the new image
       setImageUrl(imageToDisplay);
       setImageError(false);
       
