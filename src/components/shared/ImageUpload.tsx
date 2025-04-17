@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Upload, Loader2, X, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -78,6 +79,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       
       const savedImagePath = result.path;
       
+      // Create a blob URL for preview
       const imageUrl = file ? URL.createObjectURL(file) : null;
       setImage(imageUrl);
       
@@ -131,53 +133,61 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         </div>
       ) : (
         <div className="border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center h-48 relative">
-          <label className="w-full h-full flex flex-col items-center justify-center cursor-pointer">
-            <input 
-              type="file" 
-              className="hidden" 
-              accept="image/*" 
-              onChange={handleImageUpload}
-              disabled={isUploading}
-            />
-            <ImageIcon className="h-10 w-10 text-gray-400 mb-2" />
-            
-            {uploadError ? (
-              <div className="text-center">
-                <p className="text-red-500 text-sm mb-2">{uploadError}</p>
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => setUploadError('')}
-                >
-                  Попробовать снова
-                </Button>
+          <input 
+            type="file" 
+            id="image-upload"
+            className="hidden" 
+            accept="image/*" 
+            onChange={handleImageUpload}
+            disabled={isUploading}
+          />
+          
+          {uploadError ? (
+            <div className="text-center">
+              <p className="text-red-500 text-sm mb-2">{uploadError}</p>
+              <Button 
+                type="button" 
+                variant="outline" 
+                size="sm" 
+                onClick={() => setUploadError('')}
+              >
+                Попробовать снова
+              </Button>
+            </div>
+          ) : (
+            <div className="text-center">
+              <div className="mb-3">
+                <ImageIcon className="h-12 w-12 text-gray-400 mb-2 mx-auto" />
+                <p className="text-gray-500 mb-4">Выберите изображение</p>
               </div>
-            ) : (
-              <div className="text-center">
+              
+              <label htmlFor="image-upload">
                 <Button 
                   type="button" 
-                  variant="outline" 
-                  size="lg" 
-                  className="mb-2"
+                  variant="default" 
+                  size="default" 
+                  className="cursor-pointer"
                   disabled={isUploading}
+                  asChild
                 >
-                  {isUploading ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Загрузка...
-                    </>
-                  ) : (
-                    <>
-                      <Upload className="h-4 w-4 mr-2" />
-                      Выбрать фото
-                    </>
-                  )}
+                  <span>
+                    {isUploading ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Загрузка...
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="h-4 w-4 mr-2" />
+                        Загрузить фото
+                      </>
+                    )}
+                  </span>
                 </Button>
-                <p className="text-gray-400 text-xs">Макс. размер: 2MB</p>
-              </div>
-            )}
-          </label>
+              </label>
+              <p className="text-gray-400 text-xs mt-2">Макс. размер: 2MB</p>
+            </div>
+          )}
         </div>
       )}
     </div>
