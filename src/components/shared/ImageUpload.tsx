@@ -23,7 +23,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
   useEffect(() => {
     if (initialImage) {
-      // Try to get the actual image URL from localStorage or other sources
+      // Try to get the actual image URL
       const resolvedUrl = getUploadedImageUrl(initialImage) || initialImage;
       setImage(resolvedUrl);
     }
@@ -35,31 +35,19 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
     console.log(`Uploading image:`, file.name, `Size: ${(file.size / 1024).toFixed(2)} KB`);
     
-    // Check file size before uploading (max 2MB for localStorage)
-    if (file.size > 2 * 1024 * 1024) {
-      toast({
-        variant: "destructive",
-        title: "Изображение слишком большое",
-        description: "Максимальный размер файла: 2МБ. Пожалуйста, уменьшите размер изображения."
-      });
-      return;
-    }
-    
     setIsUploading(true);
     setUploadError('');
     
     try {
-      // Generate a unique filename with proper sanitization
-      const timestamp = Date.now();
-      const safeFilename = file.name.replace(/[^\w\s.-]/g, '').replace(/\s+/g, '-');
-      const filename = productId 
-        ? `product-${productId}-${timestamp}-${safeFilename}`
-        : `product-new-${timestamp}-${safeFilename}`;
+      // Generate a prefix for the filename
+      const prefix = productId 
+        ? `product-${productId}`
+        : `product-new`;
       
       // Create a new FormData object
       const formData = new FormData();
       formData.append('file', file);
-      formData.append('filename', filename);
+      formData.append('filename', `${prefix}-${file.name}`);
 
       console.log("Sending upload request for image");
       
@@ -84,32 +72,20 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         throw new Error('No image path returned from server');
       }
       
-      // Save the path for persistence
+      // Get the saved image path
       const savedImagePath = result.path;
       
-      // Display the image - try multiple sources
-      let imageToDisplay = null;
+      // Get the image URL for display
+      const imageUrl = getUploadedImageUrl(savedImagePath);
       
-      // First try direct blob URL if available (most reliable)
-      if (result.blobUrl) {
-        console.log(`Using blob URL`);
-        imageToDisplay = result.blobUrl;
-      } 
-      // Then try direct image URL
-      else if (result.directImageUrl) {
-        console.log(`Using direct image URL:`, result.directImageUrl);
-        imageToDisplay = result.directImageUrl;
-      }
-      // Fall back to saved path
-      else {
-        console.log(`Using saved image path`);
-        imageToDisplay = savedImagePath;
+      if (!imageUrl) {
+        throw new Error('Failed to get image URL after upload');
       }
       
       // Update the UI with the new image
-      setImage(imageToDisplay);
+      setImage(imageUrl);
       
-      // Call the callback with the saved image path (this is what will be stored in the product)
+      // Call the callback with the saved image path
       onImageUploaded(savedImagePath);
       
       toast({
@@ -176,7 +152,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             </div>
           ) : (
             <div className="text-center">
-              <p className="text-gray-500 text-sm mb-2">Загрузите изображение товара (макс. 2МБ)</p>
+              <p className="text-gray-500 text-sm mb-2">Загрузите изображение товара</p>
               <label>
                 <Button 
                   type="button" 

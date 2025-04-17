@@ -34,48 +34,24 @@ export const apiRoutes = {
 
 // Add a utility function to get uploaded images
 export const getUploadedImageUrl = (path: string): string | null => {
+  if (!path) return null;
+  
   console.log("Getting uploaded image for path:", path);
   
-  // First check if the path is already a direct URL to the image
-  if (path.startsWith('data:') || path.startsWith('blob:')) {
-    console.log("Path is already a direct URL");
+  // If it's a data URL, return it directly
+  if (path.startsWith('data:')) {
     return path;
   }
   
-  // Check if we have a flag that this is blob-only
-  const isBlobOnly = localStorage.getItem(`image_blob_only_${path}`);
-  
-  // Try to get the blob URL from localStorage
-  const blobUrl = localStorage.getItem(`image_url_${path}`);
-  if (blobUrl) {
-    console.log("Found blob URL in localStorage");
-    return blobUrl;
+  // If the path is in our permanent storage, return the data URL
+  if (window.permanentImageStorage && window.permanentImageStorage[path]) {
+    console.log("Found image in permanent storage");
+    return window.permanentImageStorage[path].base64;
   }
   
-  // If no blob URL and not blob-only, try to get the base64 data
-  if (!isBlobOnly) {
-    const filename = path.split('/').pop();
-    if (filename) {
-      const base64data = localStorage.getItem(`uploaded_image_${filename}`);
-      if (base64data) {
-        console.log("Found base64 data in localStorage for:", filename);
-        return base64data;
-      }
-    }
-    
-    // If we still don't have an image, look in localStorage directly with the path as key
-    const directBase64 = localStorage.getItem(path);
-    if (directBase64) {
-      console.log("Found direct base64 data in localStorage for path:", path);
-      return directBase64;
-    }
-  }
-  
-  // Final attempt: check if the path is a valid image URL relative to the project
-  // This helps when images are saved directly to the project's public directory
-  if (path.startsWith('/images/')) {
-    console.log("Using direct project image path:", path);
-    return path; // Return the path as is, assuming it's valid within the project
+  // If it's a relative path to a static resource, return it directly
+  if (path.startsWith('/')) {
+    return path;
   }
   
   console.log("No image found for path:", path);

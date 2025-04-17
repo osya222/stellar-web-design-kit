@@ -5,7 +5,7 @@ import ProductForm from './ProductForm';
 import ProductList from './ProductList';
 import { Product } from '@/types/product';
 import { useToast } from "@/hooks/use-toast";
-import { saveProductToProject, getProductsFromStorage } from '@/utils/productStorage';
+import { saveProductToProject, deleteProductFromStorage, getProductsFromStorage } from '@/utils/productStorage';
 
 const ProductManagement: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -13,32 +13,23 @@ const ProductManagement: React.FC = () => {
   const { toast } = useToast();
   
   useEffect(() => {
-    const storedProducts = getProductsFromStorage();
-    if (storedProducts.length > 0) {
-      setProducts(storedProducts);
-    }
+    loadProducts();
   }, []);
+
+  const loadProducts = () => {
+    const storedProducts = getProductsFromStorage();
+    setProducts(storedProducts);
+  };
 
   const handleSaveProduct = async (product: Product) => {
     try {
-      // Generate a new id if this is a new product
-      if (!product.id) {
-        product.id = Math.max(0, ...products.map(p => p.id)) + 1;
-      }
-      
-      // If we're editing, remove the old version
-      const updatedProducts = editingProduct 
-        ? products.filter(p => p.id !== editingProduct.id)
-        : [...products];
-      
-      // Add the new/updated product
-      updatedProducts.push(product);
-      
       // Save the product to the project
-      await saveProductToProject(product, updatedProducts);
+      await saveProductToProject(product);
       
-      // Update state
-      setProducts(updatedProducts);
+      // Reload all products to ensure we have the latest data
+      loadProducts();
+      
+      // Clear editing state
       setEditingProduct(null);
       
       toast({
@@ -61,14 +52,11 @@ const ProductManagement: React.FC = () => {
 
   const handleDeleteProduct = async (productId: number) => {
     try {
-      const updatedProducts = products.filter(p => p.id !== productId);
+      // Delete the product from storage
+      await deleteProductFromStorage(productId);
       
-      // Update the storage
-      for (const product of updatedProducts) {
-        await saveProductToProject(product, updatedProducts);
-      }
-      
-      setProducts(updatedProducts);
+      // Reload products to get the updated list
+      loadProducts();
       
       toast({
         title: "Товар удален",

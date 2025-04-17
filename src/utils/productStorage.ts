@@ -1,34 +1,15 @@
+
 import { Product } from '@/types/product';
 import { products as defaultProducts } from '@/data/products';
-
-// Constants
-const CUSTOM_PRODUCTS_KEY = 'custom_products';
-const CUSTOM_PRODUCTS_PREFIX = 'custom_product_';
+import { getCustomProducts, saveCustomProduct, deleteCustomProduct } from '@/data/products/custom';
 
 /**
  * Get all products from storage (both default and custom)
  */
 export const getProductsFromStorage = (): Product[] => {
   try {
-    // Get custom products from storage
-    const customProductsString = localStorage.getItem(CUSTOM_PRODUCTS_KEY);
-    const customProductIds = customProductsString 
-      ? JSON.parse(customProductsString) as number[] 
-      : [];
-    
-    // Load all custom products
-    const customProducts: Product[] = [];
-    for (const id of customProductIds) {
-      const productString = localStorage.getItem(`${CUSTOM_PRODUCTS_PREFIX}${id}`);
-      if (productString) {
-        try {
-          const product = JSON.parse(productString) as Product;
-          customProducts.push(product);
-        } catch (error) {
-          console.error(`Error parsing custom product ${id}:`, error);
-        }
-      }
-    }
+    // Get custom products
+    const customProducts = getCustomProducts();
     
     // Combine default and custom products
     return [...defaultProducts, ...customProducts];
@@ -46,34 +27,8 @@ export const saveProductToProject = async (
   allProducts?: Product[]
 ): Promise<void> => {
   try {
-    // Get existing custom product IDs
-    const customProductsString = localStorage.getItem(CUSTOM_PRODUCTS_KEY);
-    const customProductIds = customProductsString 
-      ? JSON.parse(customProductsString) as number[] 
-      : [];
-    
-    // If this is a new product, generate a unique ID
-    if (!product.id || product.id === 0) {
-      // Get highest ID from all products
-      const existingProducts = allProducts || getProductsFromStorage();
-      const maxId = Math.max(0, ...existingProducts.map(p => p.id));
-      product.id = maxId + 1;
-    }
-    
-    // Add this product ID if it's not already in the list
-    if (!customProductIds.includes(product.id)) {
-      customProductIds.push(product.id);
-      // Save updated list of custom product IDs
-      localStorage.setItem(CUSTOM_PRODUCTS_KEY, JSON.stringify(customProductIds));
-    }
-    
-    // Save the product data - ensure we're not storing image data inline
-    // Just keep the image path reference
-    localStorage.setItem(
-      `${CUSTOM_PRODUCTS_PREFIX}${product.id}`, 
-      JSON.stringify(product)
-    );
-    
+    // Save the product using the custom products module
+    saveCustomProduct(product);
     console.log(`Product ${product.id} saved successfully`);
   } catch (error) {
     console.error("Error saving product:", error);
@@ -86,21 +41,8 @@ export const saveProductToProject = async (
  */
 export const deleteProductFromStorage = async (productId: number): Promise<void> => {
   try {
-    // Get existing custom product IDs
-    const customProductsString = localStorage.getItem(CUSTOM_PRODUCTS_KEY);
-    const customProductIds = customProductsString 
-      ? JSON.parse(customProductsString) as number[] 
-      : [];
-    
-    // Remove this product ID from the list
-    const updatedIds = customProductIds.filter(id => id !== productId);
-    
-    // Save updated list of custom product IDs
-    localStorage.setItem(CUSTOM_PRODUCTS_KEY, JSON.stringify(updatedIds));
-    
-    // Remove the product data
-    localStorage.removeItem(`${CUSTOM_PRODUCTS_PREFIX}${productId}`);
-    
+    // Delete the product using the custom products module
+    deleteCustomProduct(productId);
     console.log(`Product ${productId} deleted successfully`);
   } catch (error) {
     console.error("Error deleting product:", error);

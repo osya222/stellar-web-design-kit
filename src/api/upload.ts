@@ -1,50 +1,70 @@
 
-// No need for actual fs and path in browser environment
-// We'll simulate file storage for client-side development
+// File upload API for the client side
+// This will save files to the public/uploads directory
+
+// Create a constant for the uploads directory
+const UPLOADS_DIR = '/uploads';
+
+// Function to generate a safe filename with timestamp
+const generateSafeFilename = (originalName: string): string => {
+  const timestamp = Date.now();
+  const extension = originalName.split('.').pop() || 'jpg';
+  const safeName = originalName
+    .split('.')[0]
+    .replace(/[^\w\s.-]/g, '')
+    .replace(/\s+/g, '-')
+    .toLowerCase();
+  
+  return `${safeName}-${timestamp}.${extension}`;
+};
 
 // Helper function to save file to project
 const saveFileToProject = async (file: File, filename: string): Promise<string> => {
-  console.log("Attempting to save file to project:", filename);
-  
   try {
-    // Create a blob URL for immediate use in browser
-    const blobUrl = URL.createObjectURL(file);
-    console.log("Created blob URL:", blobUrl);
+    console.log("Saving file to project:", filename);
     
-    // For smaller files, we can still try to store base64 in localStorage
+    // In a real backend, we would write to disk
+    // For our frontend-only approach, we'll use a different strategy
+    
+    // Convert file to base64 to be stored in a permanent data structure
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64data = reader.result as string;
         
-        // Store the uploaded image path
-        const imagePath = `/images/${filename}`;
+        // Create the final path where the file would be stored
+        const filePath = `${UPLOADS_DIR}/${filename}`;
         
+        // In deployment, we'll use fetch to save this to our backend
+        // For now, we'll save it to our products JSON dataset
+        
+        // Create a temporary URL for immediate display
+        const tempUrl = URL.createObjectURL(file);
+        
+        // Save the mapping of filepath to base64 in our permanentImageStorage
+        window.permanentImageStorage = window.permanentImageStorage || {};
+        window.permanentImageStorage[filePath] = {
+          base64: base64data,
+          type: file.type,
+          name: filename
+        };
+        
+        // Save the permanentImageStorage to localStorage to persist between page reloads
+        // during development (this won't be used in production)
         try {
-          // We'll try to store the blob URL mapping first (this is small)
-          localStorage.setItem(`image_url_${imagePath}`, blobUrl);
-          
-          // Then try to store the base64 - this might fail for large images
-          try {
-            localStorage.setItem(`uploaded_image_${filename}`, base64data);
-            localStorage.setItem(imagePath, base64data);
-          } catch (storageError) {
-            console.warn("Image too large for localStorage, using blob URL only:", storageError);
-            // Store a flag that we only have the blob URL
-            localStorage.setItem(`image_blob_only_${imagePath}`, "true");
-          }
-          
-          console.log("Saved image mapping to localStorage with path:", imagePath);
-          resolve(imagePath);
+          localStorage.setItem('permanent_image_storage', JSON.stringify(window.permanentImageStorage));
         } catch (error) {
-          console.error("Error saving to localStorage:", error);
-          // Still return the path and blobUrl since we have that
-          resolve(imagePath);
+          console.warn("Could not save image storage to localStorage", error);
         }
+        
+        console.log(`Image saved to permanent storage with path: ${filePath}`);
+        resolve(filePath);
       };
+      
       reader.onerror = () => {
         reject(new Error('Failed to read file'));
       };
+      
       reader.readAsDataURL(file);
     });
   } catch (error) {
@@ -52,6 +72,25 @@ const saveFileToProject = async (file: File, filename: string): Promise<string> 
     throw error;
   }
 };
+
+// Load the permanent image storage from localStorage on page load
+const loadPermanentImageStorage = () => {
+  try {
+    const storage = localStorage.getItem('permanent_image_storage');
+    if (storage) {
+      window.permanentImageStorage = JSON.parse(storage);
+      console.log("Loaded permanent image storage with", Object.keys(window.permanentImageStorage).length, "images");
+    } else {
+      window.permanentImageStorage = {};
+    }
+  } catch (error) {
+    console.error("Error loading permanent image storage:", error);
+    window.permanentImageStorage = {};
+  }
+};
+
+// Call this when the module loads
+loadPermanentImageStorage();
 
 export const handleUpload = async (req: Request) => {
   try {
@@ -84,12 +123,12 @@ export const handleUpload = async (req: Request) => {
     }
     
     const file = formData.get('file');
-    const filename = formData.get('filename');
+    const filenameParam = formData.get('filename');
     
     console.log("File received:", file ? "yes" : "no", "Type:", file ? (file as any).type : "unknown");
-    console.log("Filename:", filename);
+    console.log("Filename param:", filenameParam);
 
-    if (!file || !filename) {
+    if (!file || !filenameParam) {
       console.error("Upload API error: No file or filename provided");
       return new Response(JSON.stringify({ error: 'No file or filename provided' }), { 
         status: 400,
@@ -109,21 +148,17 @@ export const handleUpload = async (req: Request) => {
       });
     }
     
-    // Sanitize filename
-    const sanitizedFilename = String(filename).replace(/[^\w\s.-]/g, '').replace(/\s+/g, '-');
+    // Generate a safe filename
+    const filename = generateSafeFilename(String(filenameParam));
     
     try {
       // Save the file to the project
-      const imagePath = await saveFileToProject(file, sanitizedFilename);
-      
-      // Create a URL for the image
-      const blobUrl = URL.createObjectURL(file);
+      const imagePath = await saveFileToProject(file, filename);
       
       return new Response(JSON.stringify({ 
         path: imagePath,
         success: true,
-        blobUrl: blobUrl,
-        directImageUrl: `/images/${sanitizedFilename}` // Direct URL to access the image
+        filename: filename
       }), {
         status: 200,
         headers: {

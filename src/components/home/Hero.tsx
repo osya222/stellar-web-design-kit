@@ -12,28 +12,7 @@ const Hero = () => {
   };
 
   return (
-    <section className="relative py-20 overflow-hidden">
-      {/* Background waves */}
-      <div className="absolute inset-0 pointer-events-none">
-        <svg className="w-full h-full" viewBox="0 0 1200 400" preserveAspectRatio="none">
-          <path 
-            d="M0,100 C300,300 900,-100 1200,100 L1200,400 L0,400 Z" 
-            fill="#EBF7FC" 
-            className="opacity-60"
-          />
-          <path 
-            d="M0,200 C300,400 900,0 1200,200 L1200,400 L0,400 Z" 
-            fill="#E0F2F7" 
-            className="opacity-40"
-          />
-          <path 
-            d="M0,300 C300,500 900,100 1200,300 L1200,400 L0,400 Z" 
-            fill="#D3E7F0" 
-            className="opacity-20"
-          />
-        </svg>
-      </div>
-
+    <section className="relative py-20 bg-gradient-to-b from-blue-50 to-white">
       <div className="container-custom text-center relative z-10">
         <div className="flex justify-center mb-12">
           <Logo size="lg" />
@@ -41,9 +20,10 @@ const Hero = () => {
         <h2 className="text-5xl font-bold mb-8 text-gray-800">
           Премиум морепродукты с доставкой
         </h2>
-        <div className="bg-gray-100/70 backdrop-blur-sm p-6 rounded-xl shadow-lg max-w-3xl mx-auto mb-8">
+        <div className="bg-white/80 backdrop-blur-sm p-6 rounded-xl shadow-lg max-w-3xl mx-auto mb-8">
           <p className="text-xl leading-relaxed text-gray-700">
-            Широкий ассортимент качественной морской продукции с доставкой по Москве и МО. Работаем с ресторанами, магазинами и оптовыми покупателями.
+            Широкий ассортимент качественной морской продукции с доставкой по Москве и МО. 
+            Работаем с ресторанами, магазинами и оптовыми покупателями. Для связи: riba@рыба.shop
           </p>
         </div>
         <button 
