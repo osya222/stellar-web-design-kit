@@ -1,4 +1,3 @@
-
 // File upload API for the client side
 // This saves files in the public/lovable-uploads directory
 
@@ -23,13 +22,13 @@ const saveFileToProject = async (file: File, filename: string): Promise<string> 
   try {
     console.log("Saving file to project:", filename);
     
-    // For development/preview, use blob URL which will be shown in the preview
+    // For development/preview, use blob URL
     const blob = new Blob([await file.arrayBuffer()], { type: file.type });
     const blobUrl = URL.createObjectURL(blob);
     console.log("Created blob URL:", blobUrl);
     
     // Create the final path where the file would be stored
-    const filePath = `${UPLOADS_DIR}/${filename}`;
+    const filePath = `lovable-uploads/${filename}`;
     console.log(`Image saved with path: ${filePath}`);
     
     return filePath;

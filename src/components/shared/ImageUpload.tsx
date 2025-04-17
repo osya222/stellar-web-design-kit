@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Upload, Loader2, X, Image as ImageIcon } from 'lucide-react';
+import { Upload, Loader2, X, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getUploadedImageUrl } from '@/routes';
 import { useToast } from '@/hooks/use-toast';
@@ -80,7 +80,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       const savedImagePath = result.path;
       
       // Create a blob URL for preview
-      const imageUrl = file ? URL.createObjectURL(file) : null;
+      const imageUrl = URL.createObjectURL(file);
       setImage(imageUrl);
       
       onImageUploaded(savedImagePath);
@@ -132,7 +132,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           </Button>
         </div>
       ) : (
-        <div className="border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center h-48 relative">
+        <div className="border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center h-48 relative bg-gray-50 hover:bg-gray-100 transition-colors">
           <input 
             type="file" 
             id="image-upload"
@@ -142,52 +142,52 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             disabled={isUploading}
           />
           
-          {uploadError ? (
-            <div className="text-center">
-              <p className="text-red-500 text-sm mb-2">{uploadError}</p>
-              <Button 
-                type="button" 
-                variant="outline" 
-                size="sm" 
-                onClick={() => setUploadError('')}
-              >
-                Попробовать снова
-              </Button>
-            </div>
-          ) : (
-            <div className="text-center">
-              <div className="mb-3">
-                <ImageIcon className="h-12 w-12 text-gray-400 mb-2 mx-auto" />
-                <p className="text-gray-500 mb-4">Выберите изображение</p>
+          <label 
+            htmlFor="image-upload" 
+            className="w-full h-full flex flex-col items-center justify-center cursor-pointer"
+          >
+            {uploadError ? (
+              <div className="text-center">
+                <p className="text-red-500 text-sm mb-2">{uploadError}</p>
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => setUploadError('')}
+                >
+                  Попробовать снова
+                </Button>
               </div>
-              
-              <label htmlFor="image-upload">
+            ) : (
+              <div className="text-center">
+                <div className="mb-3">
+                  <ImageIcon className="h-12 w-12 text-gray-400 mb-2 mx-auto" />
+                  <p className="text-gray-500 mb-4">Нажмите для загрузки изображения</p>
+                </div>
+                
                 <Button 
                   type="button" 
                   variant="default" 
                   size="default" 
                   className="cursor-pointer"
                   disabled={isUploading}
-                  asChild
                 >
-                  <span>
-                    {isUploading ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Загрузка...
-                      </>
-                    ) : (
-                      <>
-                        <Upload className="h-4 w-4 mr-2" />
-                        Загрузить фото
-                      </>
-                    )}
-                  </span>
+                  {isUploading ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Загрузка...
+                    </>
+                  ) : (
+                    <>
+                      <Upload className="h-4 w-4 mr-2" />
+                      Загрузить фото
+                    </>
+                  )}
                 </Button>
-              </label>
-              <p className="text-gray-400 text-xs mt-2">Макс. размер: 2MB</p>
-            </div>
-          )}
+                <p className="text-gray-400 text-xs mt-2">Макс. размер: 2MB</p>
+              </div>
+            )}
+          </label>
         </div>
       )}
     </div>

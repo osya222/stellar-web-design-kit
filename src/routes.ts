@@ -38,14 +38,19 @@ export const getUploadedImageUrl = (path: string): string | null => {
   
   console.log("Getting uploaded image for path:", path);
   
-  // If it's a data URL, return it directly
-  if (path.startsWith('data:')) {
+  // If it's a data URL or blob URL, return it directly
+  if (path.startsWith('data:') || path.startsWith('blob:')) {
     return path;
   }
   
   // If it's a relative path to a static resource, return it directly
   if (path.startsWith('/')) {
     return path;
+  }
+  
+  // If it's a lovable-uploads path, ensure it starts with a slash
+  if (path.includes('lovable-uploads') && !path.startsWith('/')) {
+    return `/${path}`;
   }
   
   console.log("No image found for path:", path);
