@@ -24,14 +24,6 @@ export const getProductsFromStorage = (): Product[] => {
       if (productString) {
         try {
           const product = JSON.parse(productString) as Product;
-          
-          // Check for a saved image for this product
-          const savedImagePath = localStorage.getItem(`productImage-${id}`);
-          if (savedImagePath && (!product.image || product.image !== savedImagePath)) {
-            console.log(`Found saved image for product ${id}, updating image path:`, savedImagePath);
-            product.image = savedImagePath;
-          }
-          
           customProducts.push(product);
         } catch (error) {
           console.error(`Error parsing custom product ${id}:`, error);
@@ -40,25 +32,7 @@ export const getProductsFromStorage = (): Product[] => {
     }
     
     // Combine default and custom products
-    const allProducts = [...defaultProducts, ...customProducts];
-    
-    // Make sure there are no duplicate IDs
-    const uniqueProducts = allProducts.reduce((acc, product) => {
-      // If a product with this ID already exists in the accumulator,
-      // prefer the custom product over the default one
-      const existingProductIndex = acc.findIndex(p => p.id === product.id);
-      if (existingProductIndex !== -1) {
-        // Check if this is a custom product (should replace default)
-        if (customProductIds.includes(product.id)) {
-          acc[existingProductIndex] = product;
-        }
-      } else {
-        acc.push(product);
-      }
-      return acc;
-    }, [] as Product[]);
-    
-    return uniqueProducts;
+    return [...defaultProducts, ...customProducts];
   } catch (error) {
     console.error("Error loading products from storage:", error);
     return [...defaultProducts];
@@ -86,25 +60,11 @@ export const saveProductToProject = async (
       localStorage.setItem(CUSTOM_PRODUCTS_KEY, JSON.stringify(customProductIds));
     }
     
-    // Check if there's a saved image for this product that's not yet included in the product data
-    const savedImagePath = localStorage.getItem(`productImage-${product.id}`);
-    if (savedImagePath && (!product.image || product.image !== savedImagePath)) {
-      console.log(`Found saved image for product ${product.id}, updating image path:`, savedImagePath);
-      product.image = savedImagePath;
-    }
-    
     // Save the product data
     localStorage.setItem(
       `${CUSTOM_PRODUCTS_PREFIX}${product.id}`, 
       JSON.stringify(product)
     );
-    
-    // If we have all products, update the data structure with the latest products
-    if (allProducts) {
-      // Here, we would typically update the products.ts file or a JSON file
-      // In this example, we're saving to localStorage as a fallback
-      localStorage.setItem('all_products', JSON.stringify(allProducts));
-    }
     
     console.log(`Product ${product.id} saved successfully`);
   } catch (error) {
@@ -132,9 +92,6 @@ export const deleteProductFromStorage = async (productId: number): Promise<void>
     
     // Remove the product data
     localStorage.removeItem(`${CUSTOM_PRODUCTS_PREFIX}${productId}`);
-    
-    // Also remove any saved image path for this product
-    localStorage.removeItem(`productImage-${productId}`);
     
     console.log(`Product ${productId} deleted successfully`);
   } catch (error) {
