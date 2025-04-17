@@ -43,12 +43,6 @@ export const getUploadedImageUrl = (path: string): string | null => {
     return path;
   }
   
-  // If the path is in our permanent storage, return the data URL
-  if (window.permanentImageStorage && window.permanentImageStorage[path]) {
-    console.log("Found image in permanent storage");
-    return window.permanentImageStorage[path].base64;
-  }
-  
   // If it's a relative path to a static resource, return it directly
   if (path.startsWith('/')) {
     return path;

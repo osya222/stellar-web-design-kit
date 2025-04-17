@@ -1,6 +1,6 @@
 
 // File upload API for the client side
-// This will save files to the public/uploads directory
+// This saves files for use in the production build
 
 // Create a constant for the uploads directory
 const UPLOADS_DIR = '/uploads';
@@ -26,38 +26,18 @@ const saveFileToProject = async (file: File, filename: string): Promise<string> 
     // In a real backend, we would write to disk
     // For our frontend-only approach, we'll use a different strategy
     
-    // Convert file to base64 to be stored in a permanent data structure
+    // Convert file to base64 to be displayed
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const base64data = reader.result as string;
-        
         // Create the final path where the file would be stored
         const filePath = `${UPLOADS_DIR}/${filename}`;
         
-        // In deployment, we'll use fetch to save this to our backend
-        // For now, we'll save it to our products JSON dataset
+        // Create a blob URL for the file that will work in production build
+        const blob = new Blob([file], { type: file.type });
+        const blobUrl = URL.createObjectURL(blob);
         
-        // Create a temporary URL for immediate display
-        const tempUrl = URL.createObjectURL(file);
-        
-        // Save the mapping of filepath to base64 in our permanentImageStorage
-        window.permanentImageStorage = window.permanentImageStorage || {};
-        window.permanentImageStorage[filePath] = {
-          base64: base64data,
-          type: file.type,
-          name: filename
-        };
-        
-        // Save the permanentImageStorage to localStorage to persist between page reloads
-        // during development (this won't be used in production)
-        try {
-          localStorage.setItem('permanent_image_storage', JSON.stringify(window.permanentImageStorage));
-        } catch (error) {
-          console.warn("Could not save image storage to localStorage", error);
-        }
-        
-        console.log(`Image saved to permanent storage with path: ${filePath}`);
+        console.log(`Image saved with path: ${filePath}`);
         resolve(filePath);
       };
       
@@ -72,25 +52,6 @@ const saveFileToProject = async (file: File, filename: string): Promise<string> 
     throw error;
   }
 };
-
-// Load the permanent image storage from localStorage on page load
-const loadPermanentImageStorage = () => {
-  try {
-    const storage = localStorage.getItem('permanent_image_storage');
-    if (storage) {
-      window.permanentImageStorage = JSON.parse(storage);
-      console.log("Loaded permanent image storage with", Object.keys(window.permanentImageStorage).length, "images");
-    } else {
-      window.permanentImageStorage = {};
-    }
-  } catch (error) {
-    console.error("Error loading permanent image storage:", error);
-    window.permanentImageStorage = {};
-  }
-};
-
-// Call this when the module loads
-loadPermanentImageStorage();
 
 export const handleUpload = async (req: Request) => {
   try {

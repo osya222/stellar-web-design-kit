@@ -10,11 +10,6 @@ import { Product } from '@/types/product';
 declare global {
   interface Window {
     customProducts: Product[];
-    permanentImageStorage: Record<string, {
-      base64: string;
-      type: string;
-      name: string;
-    }>;
   }
 }
 

@@ -33,6 +33,17 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     const file = event.target.files?.[0];
     if (!file) return;
 
+    // Check file size (limit to 2MB)
+    const maxSizeInBytes = 2 * 1024 * 1024; // 2MB
+    if (file.size > maxSizeInBytes) {
+      toast({
+        variant: "destructive",
+        title: "Ошибка",
+        description: `Файл слишком большой. Максимальный размер: 2MB`,
+      });
+      return;
+    }
+
     console.log(`Uploading image:`, file.name, `Size: ${(file.size / 1024).toFixed(2)} KB`);
     
     setIsUploading(true);
@@ -75,14 +86,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       // Get the saved image path
       const savedImagePath = result.path;
       
-      // Get the image URL for display
-      const imageUrl = getUploadedImageUrl(savedImagePath);
-      
-      if (!imageUrl) {
-        throw new Error('Failed to get image URL after upload');
-      }
-      
-      // Update the UI with the new image
+      // Update the UI with the new image path
+      const imageUrl = file ? URL.createObjectURL(file) : null;
       setImage(imageUrl);
       
       // Call the callback with the saved image path
@@ -153,6 +158,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           ) : (
             <div className="text-center">
               <p className="text-gray-500 text-sm mb-2">Загрузите изображение товара</p>
+              <p className="text-gray-400 text-xs mb-2">Макс. размер: 2MB</p>
               <label>
                 <Button 
                   type="button" 
