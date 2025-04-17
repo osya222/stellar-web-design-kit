@@ -104,46 +104,6 @@ export const handleUpload = async (req: Request) => {
       // Save the file to the project
       const imagePath = await saveFileToProject(file, sanitizedFilename);
       
-      // Attempt to use fetchAPI to save to the server if available
-      // This is a fallback for production environments
-      if (typeof window !== 'undefined') {
-        try {
-          // Create a copy of the form data
-          const formDataCopy = new FormData();
-          formDataCopy.append('file', file);
-          formDataCopy.append('filename', sanitizedFilename);
-
-          // Try to send the file to the server via a service worker or other mechanism
-          // This is optional and depends on the project setup
-          const saveToServerWorker = new Worker(
-            URL.createObjectURL(
-              new Blob([
-                `self.onmessage = function(e) {
-                  console.log("Worker received file to save:", e.data.filename);
-                  self.postMessage({ success: true, path: "/images/" + e.data.filename });
-                };`
-              ], { type: 'application/javascript' })
-            )
-          );
-          
-          saveToServerWorker.postMessage({ 
-            file, 
-            filename: sanitizedFilename 
-          });
-          
-          saveToServerWorker.onmessage = (e) => {
-            console.log("Worker response:", e.data);
-            saveToServerWorker.terminate();
-          };
-        } catch (workerError) {
-          console.log("Worker approach not available, using localStorage only:", workerError);
-        }
-      }
-      
-      // Create a downloadable link for the file
-      const fileReader = new FileReader();
-      fileReader.readAsDataURL(file);
-      
       return new Response(JSON.stringify({ 
         path: imagePath,
         success: true,
