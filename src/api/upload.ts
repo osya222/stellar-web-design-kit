@@ -11,24 +11,36 @@ const saveFileToProject = async (file: File, filename: string): Promise<string> 
     const blobUrl = URL.createObjectURL(file);
     console.log("Created blob URL:", blobUrl);
     
-    // Convert to base64 as a fallback
+    // For smaller files, we can still try to store base64 in localStorage
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64data = reader.result as string;
-        // In a real environment, we would save to file system
-        // For our demo, we'll save to localStorage as fallback
-        localStorage.setItem(`uploaded_image_${filename}`, base64data);
         
         // Store the uploaded image path
         const imagePath = `/images/${filename}`;
-        // Store mapping between path and URL
-        localStorage.setItem(`image_url_${imagePath}`, blobUrl);
-        // Direct storage with path as key
-        localStorage.setItem(imagePath, base64data);
         
-        console.log("Saved image to localStorage with path:", imagePath);
-        resolve(imagePath);
+        try {
+          // We'll try to store the blob URL mapping first (this is small)
+          localStorage.setItem(`image_url_${imagePath}`, blobUrl);
+          
+          // Then try to store the base64 - this might fail for large images
+          try {
+            localStorage.setItem(`uploaded_image_${filename}`, base64data);
+            localStorage.setItem(imagePath, base64data);
+          } catch (storageError) {
+            console.warn("Image too large for localStorage, using blob URL only:", storageError);
+            // Store a flag that we only have the blob URL
+            localStorage.setItem(`image_blob_only_${imagePath}`, "true");
+          }
+          
+          console.log("Saved image mapping to localStorage with path:", imagePath);
+          resolve(imagePath);
+        } catch (error) {
+          console.error("Error saving to localStorage:", error);
+          // Still return the path and blobUrl since we have that
+          resolve(imagePath);
+        }
       };
       reader.onerror = () => {
         reject(new Error('Failed to read file'));
@@ -104,11 +116,13 @@ export const handleUpload = async (req: Request) => {
       // Save the file to the project
       const imagePath = await saveFileToProject(file, sanitizedFilename);
       
+      // Create a URL for the image
+      const blobUrl = URL.createObjectURL(file);
+      
       return new Response(JSON.stringify({ 
         path: imagePath,
         success: true,
-        base64: localStorage.getItem(`uploaded_image_${sanitizedFilename}`),
-        blobUrl: localStorage.getItem(`image_url_${imagePath}`),
+        blobUrl: blobUrl,
         directImageUrl: `/images/${sanitizedFilename}` // Direct URL to access the image
       }), {
         status: 200,

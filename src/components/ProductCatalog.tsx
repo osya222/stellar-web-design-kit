@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Card,
   CardContent,
@@ -8,7 +8,8 @@ import {
 } from "@/components/ui/card";
 import ProductFilters from './catalog/ProductFilters';
 import ProductListing from './catalog/ProductListing';
-import { products } from '@/data/products/index';
+import { products as defaultProducts } from '@/data/products/index';
+import { customProducts } from '@/data/products/custom';
 import { Product } from '@/types/product';
 
 const ProductCatalog: React.FC = () => {
@@ -16,12 +17,20 @@ const ProductCatalog: React.FC = () => {
   const [selectedManufacturer, setSelectedManufacturer] = useState('all');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
+  const [products, setProducts] = useState<Product[]>([]);
   
-  // Получаем уникальные категории и производителей для фильтрации
+  // Load products including custom ones
+  useEffect(() => {
+    // Combine default and custom products
+    const allProducts = [...defaultProducts, ...customProducts];
+    setProducts(allProducts);
+  }, []);
+  
+  // Get unique categories and manufacturers for filtering
   const categories = Array.from(new Set(products.map(product => product.category)));
   const manufacturers = Array.from(new Set(products.map(product => product.manufacturer).filter(Boolean)));
   
-  // Фильтруем продукты на основе поисковой строки и выбранных фильтров
+  // Filter products based on search term and selected filters
   const filteredProducts = products.filter(product => {
     return (
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
@@ -30,7 +39,7 @@ const ProductCatalog: React.FC = () => {
     );
   });
   
-  // Сбросить фильтры
+  // Reset filters
   const handleResetFilters = () => {
     setSearchTerm('');
     setSelectedManufacturer('all');

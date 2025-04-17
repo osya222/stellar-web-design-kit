@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -22,11 +21,9 @@ import { useToast } from '@/hooks/use-toast';
 import { getUploadedImageUrl } from '@/routes';
 import { products } from '@/data/products';
 
-// Define available categories based on existing products
 const existingCategories = Array.from(new Set(products.map(product => product.category)))
   .filter(Boolean) as string[];
 
-// Form schema for validation
 const productSchema = z.object({
   name: z.string().min(3, { message: "Название должно содержать не менее 3 символов" }),
   category: z.string().min(1, { message: "Выберите категорию" }),
@@ -51,7 +48,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialProduct, onSave, onCan
   const [isUsingCustomCategory, setIsUsingCustomCategory] = useState(false);
   const { toast } = useToast();
 
-  // Initialize the form with default values or initial product
   const form = useForm<z.infer<typeof productSchema>>({
     resolver: zodResolver(productSchema),
     defaultValues: initialProduct ? {
@@ -77,16 +73,12 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialProduct, onSave, onCan
     },
   });
 
-  // Load image URL from initial product if available
   useEffect(() => {
     if (initialProduct?.image) {
-      const savedImageUrl = initialProduct.image;
-      const resolvedUrl = getUploadedImageUrl(savedImageUrl) || savedImageUrl;
-      setImageUrl(resolvedUrl);
+      setImageUrl(initialProduct.image);
     }
   }, [initialProduct]);
 
-  // Handle category selection or custom category input
   const handleCategoryChange = (value: string) => {
     if (value === 'custom') {
       setIsUsingCustomCategory(true);
@@ -97,7 +89,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialProduct, onSave, onCan
     }
   };
 
-  // Handle custom category input changes
   const handleCustomCategoryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setCustomCategory(value);
@@ -106,12 +97,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialProduct, onSave, onCan
     }
   };
 
-  // Handle image upload completion
   const handleImageUploaded = (uploadedUrl: string) => {
+    console.log("Image uploaded, setting URL:", uploadedUrl);
     setImageUrl(uploadedUrl);
   };
 
-  // Handle form submission
   const onSubmit = (data: z.infer<typeof productSchema>) => {
     if (!imageUrl) {
       toast({
@@ -122,9 +112,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialProduct, onSave, onCan
       return;
     }
 
-    // Create product object
     const product: Product = {
-      id: initialProduct?.id || 0,  // This will be updated when saved
+      id: initialProduct?.id || 0,
       name: data.name,
       category: data.category,
       size: data.size || undefined,
@@ -139,7 +128,6 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialProduct, onSave, onCan
 
     onSave(product);
     
-    // Reset form if it's not an edit operation
     if (!initialProduct) {
       form.reset();
       setImageUrl('');

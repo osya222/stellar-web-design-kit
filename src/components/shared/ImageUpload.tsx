@@ -33,7 +33,18 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     const file = event.target.files?.[0];
     if (!file) return;
 
-    console.log(`Uploading image:`, file.name);
+    console.log(`Uploading image:`, file.name, `Size: ${(file.size / 1024).toFixed(2)} KB`);
+    
+    // Check file size before uploading (max 2MB for localStorage)
+    if (file.size > 2 * 1024 * 1024) {
+      toast({
+        variant: "destructive",
+        title: "Изображение слишком большое",
+        description: "Максимальный размер файла: 2МБ. Пожалуйста, уменьшите размер изображения."
+      });
+      return;
+    }
+    
     setIsUploading(true);
     setUploadError('');
     
@@ -79,29 +90,21 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       // Display the image - try multiple sources
       let imageToDisplay = null;
       
-      // First try direct image URL if available
-      if (result.directImageUrl) {
-        console.log(`Using direct image URL:`, result.directImageUrl);
-        imageToDisplay = result.directImageUrl;
-      } 
-      // Then try blob URL
-      else if (result.blobUrl) {
+      // First try direct blob URL if available (most reliable)
+      if (result.blobUrl) {
         console.log(`Using blob URL`);
         imageToDisplay = result.blobUrl;
-      }
-      // Then try base64 data
-      else if (result.base64) {
-        console.log(`Using base64 data`);
-        imageToDisplay = result.base64;
+      } 
+      // Then try direct image URL
+      else if (result.directImageUrl) {
+        console.log(`Using direct image URL:`, result.directImageUrl);
+        imageToDisplay = result.directImageUrl;
       }
       // Fall back to saved path
       else {
         console.log(`Using saved image path`);
         imageToDisplay = savedImagePath;
       }
-      
-      console.log(`Setting image to:`, 
-        typeof imageToDisplay === 'string' ? imageToDisplay.substring(0, 50) + '...' : imageToDisplay);
       
       // Update the UI with the new image
       setImage(imageToDisplay);
@@ -118,9 +121,9 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       const errorMessage = error instanceof Error ? error.message : 'Неизвестная ошибка';
       setUploadError(errorMessage);
       toast({
+        variant: "destructive",
         title: "Ошибка",
         description: `Не удалось загрузить изображение: ${errorMessage}`,
-        variant: "destructive"
       });
     } finally {
       setIsUploading(false);
@@ -173,7 +176,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             </div>
           ) : (
             <div className="text-center">
-              <p className="text-gray-500 text-sm mb-2">Загрузите изображение товара</p>
+              <p className="text-gray-500 text-sm mb-2">Загрузите изображение товара (макс. 2МБ)</p>
               <label>
                 <Button 
                   type="button" 

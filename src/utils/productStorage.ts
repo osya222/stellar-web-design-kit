@@ -1,4 +1,3 @@
-
 import { Product } from '@/types/product';
 import { products as defaultProducts } from '@/data/products';
 
@@ -53,6 +52,14 @@ export const saveProductToProject = async (
       ? JSON.parse(customProductsString) as number[] 
       : [];
     
+    // If this is a new product, generate a unique ID
+    if (!product.id || product.id === 0) {
+      // Get highest ID from all products
+      const existingProducts = allProducts || getProductsFromStorage();
+      const maxId = Math.max(0, ...existingProducts.map(p => p.id));
+      product.id = maxId + 1;
+    }
+    
     // Add this product ID if it's not already in the list
     if (!customProductIds.includes(product.id)) {
       customProductIds.push(product.id);
@@ -60,7 +67,8 @@ export const saveProductToProject = async (
       localStorage.setItem(CUSTOM_PRODUCTS_KEY, JSON.stringify(customProductIds));
     }
     
-    // Save the product data
+    // Save the product data - ensure we're not storing image data inline
+    // Just keep the image path reference
     localStorage.setItem(
       `${CUSTOM_PRODUCTS_PREFIX}${product.id}`, 
       JSON.stringify(product)

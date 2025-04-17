@@ -28,6 +28,13 @@ export const getCustomProducts = (): Product[] => {
       if (productData) {
         try {
           const product = JSON.parse(productData) as Product;
+          
+          // Ensure product has all required fields
+          if (!product.name || !product.category || !product.manufacturer) {
+            console.warn(`Custom product ${id} is missing required fields:`, product);
+            continue;
+          }
+          
           customProducts.push(product);
         } catch (error) {
           console.error(`Error parsing custom product ${id}:`, error);
@@ -35,6 +42,7 @@ export const getCustomProducts = (): Product[] => {
       }
     }
     
+    console.log(`Loaded ${customProducts.length} custom products`);
     return customProducts;
   } catch (error) {
     console.error("Error loading custom products:", error);

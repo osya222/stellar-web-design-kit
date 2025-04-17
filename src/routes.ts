@@ -38,32 +38,37 @@ export const getUploadedImageUrl = (path: string): string | null => {
   
   // First check if the path is already a direct URL to the image
   if (path.startsWith('data:') || path.startsWith('blob:')) {
-    console.log("Path is already a direct URL:", path.substring(0, 50) + '...');
+    console.log("Path is already a direct URL");
     return path;
   }
+  
+  // Check if we have a flag that this is blob-only
+  const isBlobOnly = localStorage.getItem(`image_blob_only_${path}`);
   
   // Try to get the blob URL from localStorage
   const blobUrl = localStorage.getItem(`image_url_${path}`);
   if (blobUrl) {
-    console.log("Found blob URL in localStorage:", blobUrl);
+    console.log("Found blob URL in localStorage");
     return blobUrl;
   }
   
-  // If no blob URL, try to get the base64 data
-  const filename = path.split('/').pop();
-  if (filename) {
-    const base64data = localStorage.getItem(`uploaded_image_${filename}`);
-    if (base64data) {
-      console.log("Found base64 data in localStorage for:", filename);
-      return base64data;
+  // If no blob URL and not blob-only, try to get the base64 data
+  if (!isBlobOnly) {
+    const filename = path.split('/').pop();
+    if (filename) {
+      const base64data = localStorage.getItem(`uploaded_image_${filename}`);
+      if (base64data) {
+        console.log("Found base64 data in localStorage for:", filename);
+        return base64data;
+      }
     }
-  }
-  
-  // If we still don't have an image, look in localStorage directly with the path as key
-  const directBase64 = localStorage.getItem(path);
-  if (directBase64) {
-    console.log("Found direct base64 data in localStorage for path:", path);
-    return directBase64;
+    
+    // If we still don't have an image, look in localStorage directly with the path as key
+    const directBase64 = localStorage.getItem(path);
+    if (directBase64) {
+      console.log("Found direct base64 data in localStorage for path:", path);
+      return directBase64;
+    }
   }
   
   // Final attempt: check if the path is a valid image URL relative to the project
