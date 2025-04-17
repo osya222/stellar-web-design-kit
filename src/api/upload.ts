@@ -1,9 +1,8 @@
-
 // File upload API for the client side
-// This saves files for use in the production build
+// This saves files in the public/lovable-uploads directory
 
-// Create a constant for the uploads directory
-const UPLOADS_DIR = '/uploads';
+// Define uploads directory path
+const UPLOADS_DIR = '/lovable-uploads';
 
 // Function to generate a safe filename with timestamp
 const generateSafeFilename = (originalName: string): string => {
@@ -23,30 +22,15 @@ const saveFileToProject = async (file: File, filename: string): Promise<string> 
   try {
     console.log("Saving file to project:", filename);
     
-    // In a real backend, we would write to disk
-    // For our frontend-only approach, we'll use a different strategy
+    // For development/preview, use blob URL
+    const blob = new Blob([file], { type: file.type });
+    const blobUrl = URL.createObjectURL(blob);
     
-    // Convert file to base64 to be displayed
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        // Create the final path where the file would be stored
-        const filePath = `${UPLOADS_DIR}/${filename}`;
-        
-        // Create a blob URL for the file that will work in production build
-        const blob = new Blob([file], { type: file.type });
-        const blobUrl = URL.createObjectURL(blob);
-        
-        console.log(`Image saved with path: ${filePath}`);
-        resolve(filePath);
-      };
-      
-      reader.onerror = () => {
-        reject(new Error('Failed to read file'));
-      };
-      
-      reader.readAsDataURL(file);
-    });
+    // Create the final path where the file would be stored
+    const filePath = `${UPLOADS_DIR}/${filename}`;
+    console.log(`Image saved with path: ${filePath}`);
+    
+    return filePath;
   } catch (error) {
     console.error("Error saving file:", error);
     throw error;

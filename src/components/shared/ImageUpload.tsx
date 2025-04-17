@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Upload, Loader2, X, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -23,7 +22,6 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
   useEffect(() => {
     if (initialImage) {
-      // Try to get the actual image URL
       const resolvedUrl = getUploadedImageUrl(initialImage) || initialImage;
       setImage(resolvedUrl);
     }
@@ -33,7 +31,6 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Check file size (limit to 2MB)
     const maxSizeInBytes = 2 * 1024 * 1024; // 2MB
     if (file.size > maxSizeInBytes) {
       toast({
@@ -50,26 +47,22 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     setUploadError('');
     
     try {
-      // Generate a prefix for the filename
       const prefix = productId 
         ? `product-${productId}`
         : `product-new`;
       
-      // Create a new FormData object
       const formData = new FormData();
       formData.append('file', file);
       formData.append('filename', `${prefix}-${file.name}`);
 
       console.log("Sending upload request for image");
       
-      // Use the correct API endpoint with absolute path
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
         cache: 'no-store'
       });
 
-      // Handle error responses
       if (!response.ok) {
         const errorText = await response.text();
         console.error("Upload failed with status:", response.status, errorText);
@@ -83,14 +76,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         throw new Error('No image path returned from server');
       }
       
-      // Get the saved image path
       const savedImagePath = result.path;
       
-      // Update the UI with the new image path
       const imageUrl = file ? URL.createObjectURL(file) : null;
       setImage(imageUrl);
       
-      // Call the callback with the saved image path
       onImageUploaded(savedImagePath);
       
       toast({
@@ -140,31 +130,36 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           </Button>
         </div>
       ) : (
-        <div className="border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center h-48">
-          <ImageIcon className="h-10 w-10 text-gray-400 mb-2" />
-          
-          {uploadError ? (
-            <div className="text-center">
-              <p className="text-red-500 text-sm mb-2">{uploadError}</p>
-              <Button 
-                type="button" 
-                variant="outline" 
-                size="sm" 
-                onClick={() => setUploadError('')}
-              >
-                Попробовать снова
-              </Button>
-            </div>
-          ) : (
-            <div className="text-center">
-              <p className="text-gray-500 text-sm mb-2">Загрузите изображение товара</p>
-              <p className="text-gray-400 text-xs mb-2">Макс. размер: 2MB</p>
-              <label>
+        <div className="border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center h-48 relative">
+          <label className="w-full h-full flex flex-col items-center justify-center cursor-pointer">
+            <input 
+              type="file" 
+              className="hidden" 
+              accept="image/*" 
+              onChange={handleImageUpload}
+              disabled={isUploading}
+            />
+            <ImageIcon className="h-10 w-10 text-gray-400 mb-2" />
+            
+            {uploadError ? (
+              <div className="text-center">
+                <p className="text-red-500 text-sm mb-2">{uploadError}</p>
                 <Button 
                   type="button" 
                   variant="outline" 
                   size="sm" 
-                  className="cursor-pointer"
+                  onClick={() => setUploadError('')}
+                >
+                  Попробовать снова
+                </Button>
+              </div>
+            ) : (
+              <div className="text-center">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  size="lg" 
+                  className="mb-2"
                   disabled={isUploading}
                 >
                   {isUploading ? (
@@ -175,20 +170,14 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                   ) : (
                     <>
                       <Upload className="h-4 w-4 mr-2" />
-                      Выбрать файл
+                      Выбрать фото
                     </>
                   )}
                 </Button>
-                <input 
-                  type="file" 
-                  className="hidden" 
-                  accept="image/*" 
-                  onChange={handleImageUpload}
-                  disabled={isUploading}
-                />
-              </label>
-            </div>
-          )}
+                <p className="text-gray-400 text-xs">Макс. размер: 2MB</p>
+              </div>
+            )}
+          </label>
         </div>
       )}
     </div>
