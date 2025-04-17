@@ -7,8 +7,6 @@ import { ShoppingCart, ImageIcon, Upload, AlertCircle } from "lucide-react";
 import { useCart } from '@/context/CartContext';
 import { useToast } from "@/hooks/use-toast";
 import { getProductImage } from '@/data/productImages';
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { getUploadedImageUrl } from '@/routes';
 
 interface ProductCardProps {
   product: Product;
@@ -30,19 +28,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     const savedProductImagePath = localStorage.getItem(`productImage-${product.id}`);
     if (savedProductImagePath) {
       console.log(`Using saved image path for product ${product.id}:`, savedProductImagePath);
-      
-      // Try to get the actual image URL
-      const actualImageUrl = getUploadedImageUrl(savedProductImagePath);
-      if (actualImageUrl) {
-        console.log(`Found uploaded image URL for product ${product.id}:`, actualImageUrl);
-        setImageUrl(actualImageUrl);
-      } else {
-        console.log(`No uploaded image URL found, using saved path directly for product ${product.id}:`, savedProductImagePath);
-        setImageUrl(savedProductImagePath);
-      }
+      setImageUrl(savedProductImagePath);
       return;
     }
     
+    // Otherwise use the image from the product or fallback to the category image
     const productImage = getProductImage({ 
       category: product.category, 
       name: product.name, 
@@ -86,7 +76,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
       console.log("Sending upload request for product image");
       
-      // Use the correct API endpoint with absolute path
+      // Use the correct API endpoint
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
@@ -108,38 +98,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       }
       
       // Save the path for persistence
-      const savedImagePath = result.path;
-      localStorage.setItem(`productImage-${product.id}`, savedImagePath);
-      
-      // Display the image - try multiple sources
-      let imageToDisplay = null;
-      
-      // First try direct image URL if available
-      if (result.directImageUrl) {
-        console.log(`Using direct image URL for product ${product.id}:`, result.directImageUrl);
-        imageToDisplay = result.directImageUrl;
-      } 
-      // Then try blob URL
-      else if (result.blobUrl) {
-        console.log(`Using blob URL for product ${product.id}`);
-        imageToDisplay = result.blobUrl;
-      }
-      // Then try base64 data
-      else if (result.base64) {
-        console.log(`Using base64 data for product ${product.id}`);
-        imageToDisplay = result.base64;
-      }
-      // Fall back to saved path
-      else {
-        console.log(`Using saved image path for product ${product.id}`);
-        imageToDisplay = savedImagePath;
-      }
-      
-      console.log(`Setting image for product ${product.id} to:`, 
-        typeof imageToDisplay === 'string' ? imageToDisplay.substring(0, 50) + '...' : imageToDisplay);
+      const imagePath = result.path;
+      localStorage.setItem(`productImage-${product.id}`, imagePath);
       
       // Update the UI with the new image
-      setImageUrl(imageToDisplay);
+      setImageUrl(imagePath);
       setImageError(false);
       
       toast({
@@ -206,6 +169,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           </div>
         )}
       </div>
+      
       <CardContent className="p-4 flex flex-col flex-grow">
         <h3 className="font-bold text-base line-clamp-2 h-12 mb-2 text-black" title={product.name}>
           {product.name}

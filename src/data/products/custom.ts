@@ -28,6 +28,14 @@ export const getCustomProducts = (): Product[] => {
       if (productData) {
         try {
           const product = JSON.parse(productData) as Product;
+          
+          // Check for a saved image for this product
+          const savedImagePath = localStorage.getItem(`productImage-${id}`);
+          if (savedImagePath && (!product.image || product.image !== savedImagePath)) {
+            console.log(`Found saved image for product ${id}, updating image path:`, savedImagePath);
+            product.image = savedImagePath;
+          }
+          
           customProducts.push(product);
         } catch (error) {
           console.error(`Error parsing custom product ${id}:`, error);

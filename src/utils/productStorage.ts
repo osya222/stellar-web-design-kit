@@ -6,9 +6,6 @@ import { products as defaultProducts } from '@/data/products';
 const CUSTOM_PRODUCTS_KEY = 'custom_products';
 const CUSTOM_PRODUCTS_PREFIX = 'custom_product_';
 
-// Storage types
-type StorageType = 'localStorage' | 'projectStorage';
-
 /**
  * Get all products from storage (both default and custom)
  */
@@ -27,9 +24,17 @@ export const getProductsFromStorage = (): Product[] => {
       if (productString) {
         try {
           const product = JSON.parse(productString) as Product;
+          
+          // Check for a saved image for this product
+          const savedImagePath = localStorage.getItem(`productImage-${id}`);
+          if (savedImagePath && (!product.image || product.image !== savedImagePath)) {
+            console.log(`Found saved image for product ${id}, updating image path:`, savedImagePath);
+            product.image = savedImagePath;
+          }
+          
           customProducts.push(product);
         } catch (error) {
-          console.error(`Error parsing product ${id}:`, error);
+          console.error(`Error parsing custom product ${id}:`, error);
         }
       }
     }
@@ -81,6 +86,13 @@ export const saveProductToProject = async (
       localStorage.setItem(CUSTOM_PRODUCTS_KEY, JSON.stringify(customProductIds));
     }
     
+    // Check if there's a saved image for this product that's not yet included in the product data
+    const savedImagePath = localStorage.getItem(`productImage-${product.id}`);
+    if (savedImagePath && (!product.image || product.image !== savedImagePath)) {
+      console.log(`Found saved image for product ${product.id}, updating image path:`, savedImagePath);
+      product.image = savedImagePath;
+    }
+    
     // Save the product data
     localStorage.setItem(
       `${CUSTOM_PRODUCTS_PREFIX}${product.id}`, 
@@ -120,6 +132,9 @@ export const deleteProductFromStorage = async (productId: number): Promise<void>
     
     // Remove the product data
     localStorage.removeItem(`${CUSTOM_PRODUCTS_PREFIX}${productId}`);
+    
+    // Also remove any saved image path for this product
+    localStorage.removeItem(`productImage-${productId}`);
     
     console.log(`Product ${productId} deleted successfully`);
   } catch (error) {
