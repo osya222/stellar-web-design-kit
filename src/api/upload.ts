@@ -16,7 +16,7 @@ const generateUniqueFilename = (originalName: string): string => {
   return `${safeName}-${timestamp}-${randomId}.${extension}`;
 };
 
-// Function to save image data to localStorage
+// Function to compress and save image data to localStorage
 const saveImageToLocalStorage = (file: File, filename: string): Promise<void> => {
   return new Promise((resolve, reject) => {
     if (typeof window === 'undefined') {
@@ -29,10 +29,29 @@ const saveImageToLocalStorage = (file: File, filename: string): Promise<void> =>
       const reader = new FileReader();
       
       reader.onload = () => {
-        const dataUrl = reader.result as string;
-        localStorage.setItem(`image_data_${filename}`, dataUrl);
-        console.log(`Successfully saved image data to localStorage for ${filename}`);
-        resolve();
+        try {
+          const dataUrl = reader.result as string;
+          
+          // Check if the image is too large for localStorage
+          if (dataUrl.length > 2 * 1024 * 1024) { // If larger than ~2MB
+            console.warn(`Image ${filename} is too large for localStorage (${Math.round(dataUrl.length/1024/1024)}MB), storing reference only`);
+            
+            // Store only a reference instead of the full data
+            localStorage.setItem(`image_ref_${filename}`, filename);
+            resolve();
+            return;
+          }
+          
+          // Store the full image data for smaller images
+          localStorage.setItem(`image_data_${filename}`, dataUrl);
+          console.log(`Successfully saved image data to localStorage for ${filename}`);
+          resolve();
+        } catch (storageError) {
+          console.error("LocalStorage error:", storageError);
+          // If quota exceeded, just store the reference
+          localStorage.setItem(`image_ref_${filename}`, filename);
+          resolve();
+        }
       };
       
       reader.onerror = (error) => {
