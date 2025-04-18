@@ -1,3 +1,4 @@
+
 // Define uploads directory path
 // We'll use a string constant instead of path.join which is Node.js only
 const UPLOADS_DIR = "/images/products";
@@ -67,6 +68,7 @@ const saveImageToLocalStorage = (file: File, filename: string): Promise<void> =>
   });
 };
 
+// Handle upload function
 export const handleUpload = async (req: Request) => {
   try {
     console.log("Upload handler called with method:", req.method);
