@@ -18,13 +18,30 @@ const ProductCatalog: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   
-  // Load products including custom ones
+  // Force refresh when component mounts or when navigation occurs
+  useEffect(() => {
+    // Use a timestamp to force refresh
+    setRefreshTrigger(Date.now());
+  }, []);
+  
+  // Load products including custom ones with refresh trigger
   useEffect(() => {
     // Combine default and custom products
     const allProducts = [...defaultProducts, ...customProducts];
+    console.log("ProductCatalog: Refreshing products list with", allProducts.length, "items");
+    
+    // Clear localStorage cache for image URLs that might be stale
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith('image_url_cache_')) {
+        localStorage.removeItem(key);
+      }
+    }
+    
     setProducts(allProducts);
-  }, []);
+  }, [refreshTrigger]);
   
   // Get unique categories and manufacturers for filtering
   const categories = Array.from(new Set(products.map(product => product.category)));

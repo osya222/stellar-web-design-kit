@@ -33,15 +33,37 @@ export const apiRoutes = {
   }
 };
 
+// Add a cache layer for image URLs
+const imageUrlCache: Record<string, { url: string, timestamp: number }> = {};
+
 // Improved utility function to get uploaded images
 export const getUploadedImageUrl = (path: string): string | null => {
   if (!path) return null;
   
   try {
+    // Generate a cache key from the path
+    const cacheKey = `image_path_${path}`;
+    
+    // Check if we have a recent cached version (less than 5 seconds old)
+    const cachedItem = localStorage.getItem(`image_url_cache_${cacheKey}`);
+    if (cachedItem) {
+      try {
+        const cached = JSON.parse(cachedItem);
+        if (cached && cached.timestamp && Date.now() - cached.timestamp < 5000) {
+          console.log(`Using cached image URL for ${path}:`, cached.url);
+          return cached.url;
+        }
+      } catch (e) {
+        console.warn("Error parsing cache:", e);
+      }
+    }
+    
     console.log("Getting image URL for path:", path);
     
     // If it's a data URL or blob URL, return it directly
     if (path.startsWith('data:') || path.startsWith('blob:')) {
+      // Cache and return
+      cacheImageUrl(cacheKey, path);
       return path;
     }
     
@@ -54,6 +76,7 @@ export const getUploadedImageUrl = (path: string): string | null => {
         const blobUrl = localStorage.getItem(`blob_url_${filename}`);
         if (blobUrl && blobUrl.startsWith('blob:')) {
           console.log("Found blob URL for:", filename);
+          cacheImageUrl(cacheKey, blobUrl);
           return blobUrl;
         }
         
@@ -61,6 +84,7 @@ export const getUploadedImageUrl = (path: string): string | null => {
         const storedPath = localStorage.getItem(`uploaded_image_${filename}`);
         if (storedPath) {
           console.log("Found stored path for:", filename);
+          cacheImageUrl(cacheKey, storedPath);
           return storedPath;
         }
         
@@ -68,6 +92,7 @@ export const getUploadedImageUrl = (path: string): string | null => {
         const imageData = localStorage.getItem(`image_data_${filename}`);
         if (imageData && imageData.startsWith('data:')) {
           console.log("Found image data for:", filename);
+          cacheImageUrl(cacheKey, imageData);
           return imageData;
         }
       }
@@ -75,12 +100,15 @@ export const getUploadedImageUrl = (path: string): string | null => {
     
     // If it's a relative path to a static resource, return it directly
     if (path.startsWith('/') && !path.includes('lovable-uploads')) {
+      cacheImageUrl(cacheKey, path);
       return path;
     }
     
     // If it's a lovable-uploads path but missing the leading slash, add it
     if (path.includes('lovable-uploads') && !path.startsWith('/')) {
-      return `/${path}`;
+      const fixedPath = `/${path}`;
+      cacheImageUrl(cacheKey, fixedPath);
+      return fixedPath;
     }
     
     // Try looking for any filename match in localStorage as last resort
@@ -92,6 +120,7 @@ export const getUploadedImageUrl = (path: string): string | null => {
           const value = localStorage.getItem(key);
           if (value && (value.startsWith('blob:') || value.startsWith('data:') || value.includes('lovable-uploads'))) {
             console.log("Found matching storage item for:", filename);
+            cacheImageUrl(cacheKey, value);
             return value;
           }
         }
@@ -102,8 +131,11 @@ export const getUploadedImageUrl = (path: string): string | null => {
     if (path.includes('lovable-uploads')) {
       // For relative paths, try to get the base URL
       if (!path.startsWith('http') && !path.startsWith('/')) {
-        return `/${path}`;
+        const fixedPath = `/${path}`;
+        cacheImageUrl(cacheKey, fixedPath);
+        return fixedPath;
       }
+      cacheImageUrl(cacheKey, path);
       return path;
     }
     
@@ -114,3 +146,15 @@ export const getUploadedImageUrl = (path: string): string | null => {
     return path; // Return original path if there was an error
   }
 };
+
+// Helper function to cache image URLs
+function cacheImageUrl(key: string, url: string): void {
+  try {
+    localStorage.setItem(`image_url_cache_${key}`, JSON.stringify({
+      url,
+      timestamp: Date.now()
+    }));
+  } catch (e) {
+    console.warn("Error caching image URL:", e);
+  }
+}

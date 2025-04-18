@@ -11,6 +11,19 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 const Admin: React.FC = () => {
   const navigate = useNavigate();
   
+  const handleReturnToHome = () => {
+    // Clear any image URL caches before returning to home
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.startsWith('image_url_cache_')) {
+        localStorage.removeItem(key);
+      }
+    }
+    
+    // Navigate back to home
+    navigate('/');
+  };
+  
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -21,7 +34,7 @@ const Admin: React.FC = () => {
             variant="ghost" 
             size="sm" 
             className="mr-2"
-            onClick={() => navigate('/')}
+            onClick={handleReturnToHome}
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Вернуться на главную
