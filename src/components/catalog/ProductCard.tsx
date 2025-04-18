@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useRef } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProductPrices from './ProductPrices';
@@ -16,6 +17,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
   const { toast } = useToast();
   const [imageError, setImageError] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   const imageSrc = imageError || !product.image 
     ? '/placeholder.svg' 
@@ -36,22 +39,91 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     setImageError(true);
   };
 
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSizeInBytes) {
+      toast({
+        variant: "destructive",
+        title: "Ошибка",
+        description: "Файл слишком большой. Максимальный размер: 5MB",
+      });
+      return;
+    }
+
+    setIsUploading(true);
+
+    try {
+      const timestamp = Date.now();
+      const safeFileName = file.name.replace(/[^\w\s.-]/g, '').toLowerCase();
+      const path = `products/${product.id}-${timestamp}-${safeFileName}`;
+      
+      await storage.upload(file, path);
+      const publicUrl = storage.getPublicUrl(path);
+      
+      setImageError(false);
+      product.image = publicUrl;
+
+      toast({
+        title: "Успешно",
+        description: "Изображение загружено",
+      });
+    } catch (error) {
+      console.error('Upload error:', error);
+      toast({
+        variant: "destructive",
+        title: "Ошибка",
+        description: `Не удалось загрузить изображение: ${error instanceof Error ? error.message : String(error)}`,
+      });
+      setImageError(true);
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
       <div className="h-48 bg-white flex items-center justify-center relative overflow-hidden">
+        <input 
+          type="file" 
+          className="hidden" 
+          accept="image/*" 
+          onChange={handleImageUpload}
+          disabled={isUploading}
+          ref={fileInputRef}
+        />
+        
         {!imageSrc || imageError ? (
-          <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100">
-            <Upload className="w-12 h-12 text-gray-400 mb-2" />
-            <span className="text-sm text-gray-500">Загрузить изображение</span>
+          <div 
+            className="w-full h-full flex flex-col items-center justify-center bg-gray-100 cursor-pointer hover:bg-gray-200 transition-colors"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <Upload className={`w-12 h-12 ${isUploading ? 'animate-bounce text-gray-600' : 'text-gray-400'} mb-2`} />
+            <span className="text-sm text-gray-500">
+              {isUploading ? 'Загрузка...' : 'Загрузить изображение'}
+            </span>
           </div>
         ) : (
-          <img 
-            src={imageSrc} 
-            alt={product.name} 
-            className="object-contain w-full h-full p-2"
-            onError={handleImageError}
-            onLoad={() => console.log(`Image loaded successfully for ${product.name}`)}
-          />
+          <div className="relative w-full h-full group">
+            <img 
+              src={imageSrc} 
+              alt={product.name} 
+              className="object-contain w-full h-full p-2"
+              onError={handleImageError}
+              onLoad={() => console.log(`Image loaded successfully for ${product.name}`)}
+            />
+            <div 
+              className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <Upload className="w-8 h-8 text-white" />
+            </div>
+          </div>
         )}
       </div>
       
