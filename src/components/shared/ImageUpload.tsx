@@ -40,7 +40,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   }, [initialImage]);
 
   const triggerFileInput = () => {
-    // Directly trigger the hidden file input click event
+    // Напрямую вызываем клик по скрытому input элементу
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
@@ -169,7 +169,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         <div className="relative border rounded-md overflow-hidden">
           <img 
             src={image} 
-            alt="Uploaded" 
+            alt="Загруженное фото" 
             className="w-full h-48 object-contain bg-gray-100"
             onError={() => {
               setUploadError('Не удалось загрузить изображение');
@@ -190,7 +190,10 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
           </Button>
         </div>
       ) : (
-        <div className="border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center h-48 relative bg-gray-50 hover:bg-gray-100 transition-colors">
+        <div 
+          className="border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center h-48 relative bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer"
+          onClick={triggerFileInput}
+        >
           <input 
             type="file" 
             id="image-upload"
@@ -217,7 +220,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
               </Button>
             </div>
           ) : (
-            <div className="text-center">
+            <div className="text-center w-full">
               <div className="mb-3">
                 <ImageIcon className="h-12 w-12 text-gray-400 mb-2 mx-auto" />
                 <p className="text-gray-500 mb-4">Нажмите для загрузки изображения</p>
@@ -227,9 +230,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                 type="button" 
                 variant="default" 
                 size="default" 
-                className="cursor-pointer"
+                className="w-full cursor-pointer"
                 disabled={isUploading}
-                onClick={triggerFileInput}
               >
                 {isUploading ? (
                   <>
