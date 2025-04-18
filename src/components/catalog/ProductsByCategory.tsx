@@ -9,7 +9,24 @@ interface ProductsByCategoryProps {
 }
 
 const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({ category, products }) => {
-  if (products.length === 0) return null;
+  // Filter out duplicate products by checking for products with the same price and name
+  const uniqueProducts = products.reduce((acc: Product[], current) => {
+    const isDuplicate = acc.some(item => 
+      item.name === current.name && 
+      item.price === current.price &&
+      item.manufacturer === current.manufacturer
+    );
+    
+    if (!isDuplicate) {
+      acc.push(current);
+    } else {
+      console.log(`Filtered out duplicate product: ${current.name}`);
+    }
+    
+    return acc;
+  }, []);
+  
+  if (uniqueProducts.length === 0) return null;
   
   const categoryId = category.toLowerCase().replace(/\s+/g, '-');
   
@@ -31,8 +48,8 @@ const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({ category, produ
         <span>{category}</span>
       </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
+        {uniqueProducts.map((product) => (
+          <ProductCard key={`${product.id}-${Date.now()}`} product={product} />
         ))}
       </div>
     </div>

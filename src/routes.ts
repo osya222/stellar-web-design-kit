@@ -57,7 +57,7 @@ export const getUploadedImageUrl = (path: string): string | null => {
       }
     }
     
-    // Add timestamp to force browser to reload image and not use cache
+    // Always add timestamp to force browser to reload image and not use cache
     const timestamp = Date.now();
     
     // For production or if no blob URL found, use the static path
@@ -67,7 +67,7 @@ export const getUploadedImageUrl = (path: string): string | null => {
       resolvedPath = `/${path}`;
     }
     
-    // Add cache buster to prevent cached images
+    // Always use cache buster to prevent cached images
     return `${resolvedPath}?t=${timestamp}`;
   } catch (error) {
     console.error("Error in getUploadedImageUrl:", error);
