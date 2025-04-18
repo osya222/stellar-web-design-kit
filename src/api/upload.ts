@@ -1,8 +1,6 @@
 // Define uploads directory path
-import path from 'path';
-
-// Define uploads directory path
-const UPLOADS_DIR = path.join(process.cwd(), "public", "images", "products");
+// We'll use a string constant instead of path.join which is Node.js only
+const UPLOADS_DIR = "/images/products";
 
 // Function to generate a unique filename with timestamp and random ID
 const generateUniqueFilename = (originalName: string): string => {
