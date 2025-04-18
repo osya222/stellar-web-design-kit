@@ -34,8 +34,14 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
   useEffect(() => {
     if (initialImage) {
-      const resolvedUrl = getUploadedImageUrl(initialImage) || initialImage;
-      setImage(resolvedUrl);
+      try {
+        const resolvedUrl = getUploadedImageUrl(initialImage) || initialImage;
+        console.log(`ImageUpload: Got initial image: ${initialImage}, resolved to: ${resolvedUrl}`);
+        setImage(resolvedUrl);
+      } catch (error) {
+        console.error("Error resolving initial image:", error);
+        setImage(null);
+      }
     }
   }, [initialImage]);
 
@@ -172,6 +178,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             alt="Загруженное фото" 
             className="w-full h-48 object-contain bg-gray-100"
             onError={() => {
+              console.error("Failed to load image:", image);
               setUploadError('Не удалось загрузить изображение');
               setImage(null);
             }}

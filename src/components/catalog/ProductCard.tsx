@@ -26,10 +26,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     if (!product) return;
     
     if (product.image) {
-      const uploadedImageUrl = getUploadedImageUrl(product.image);
-      if (uploadedImageUrl) {
-        setImageUrl(uploadedImageUrl);
-        return;
+      try {
+        const uploadedImageUrl = getUploadedImageUrl(product.image);
+        console.log(`ProductCard: Processing image for ${product.name}:`, product.image, "->", uploadedImageUrl);
+        if (uploadedImageUrl) {
+          setImageUrl(uploadedImageUrl);
+          return;
+        }
+      } catch (error) {
+        console.error("Error resolving product image:", error);
+        setImageError(true);
       }
     }
   }, [product]);
@@ -70,7 +76,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   const handleImageError = () => {
-    console.log(`Image error for ${product.name}: ${imageUrl}`);
+    console.error(`Image error for ${product.name}: ${imageUrl}`);
     setImageError(true);
   };
 
@@ -106,14 +112,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               <img 
                 src={imageUrl} 
                 alt={product.name} 
-                className="object-cover w-full h-full"
+                className="object-contain w-full h-full p-2"
                 onError={handleImageError}
               />
             )}
             <Button
               variant="ghost"
               size="icon"
-              className="absolute top-2 right-2 bg-white/80 hover:bg-white"
+              className="absolute top-2 right-2 bg-white/80 hover:bg-white shadow-sm"
               onClick={() => setIsEditing(true)}
             >
               <Edit2 className="h-4 w-4" />

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ImageIcon } from "lucide-react";
 import { getUploadedImageUrl } from '@/routes';
 
 interface CategoryCardProps {
