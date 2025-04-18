@@ -30,19 +30,22 @@ const Footer = () => {
   };
   
   return (
-    <footer className="bg-blue-800 text-white py-12 mt-auto">
+    <footer className="bg-gradient-to-b from-blue-900 to-blue-950 text-white py-12 mt-auto">
       <div className="container-custom">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-          <div className="flex items-center">
+          <div className="flex flex-col items-start space-y-4">
             <Logo size="md" />
+            <p className="text-blue-200 text-sm max-w-xs">
+              Качественные морепродукты для вашего стола. Свежесть и качество - наш главный приоритет.
+            </p>
           </div>
           <div>
-            <h4 className="text-lg font-medium mb-4 text-blue-100">Навигация</h4>
+            <h4 className="text-lg font-medium mb-4 text-white">Навигация</h4>
             <ul className="space-y-2">
               <li>
                 <Button 
                   variant="ghost" 
-                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto w-full text-left justify-start"
+                  className="text-blue-200 hover:text-white hover:bg-white/10 transition-colors p-2 h-auto w-full text-left justify-start"
                   onClick={handleHomeClick}
                 >
                   Главная
@@ -51,7 +54,7 @@ const Footer = () => {
               <li>
                 <Button 
                   variant="ghost" 
-                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto w-full text-left justify-start"
+                  className="text-blue-200 hover:text-white hover:bg-white/10 transition-colors p-2 h-auto w-full text-left justify-start"
                   onClick={() => scrollToSection("catalog")}
                 >
                   Каталог
@@ -60,7 +63,7 @@ const Footer = () => {
               <li>
                 <Button 
                   variant="ghost" 
-                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto w-full text-left justify-start"
+                  className="text-blue-200 hover:text-white hover:bg-white/10 transition-colors p-2 h-auto w-full text-left justify-start"
                   onClick={() => scrollToSection("about")}
                 >
                   О нас
@@ -69,7 +72,7 @@ const Footer = () => {
               <li>
                 <Button 
                   variant="ghost" 
-                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto w-full text-left justify-start"
+                  className="text-blue-200 hover:text-white hover:bg-white/10 transition-colors p-2 h-auto w-full text-left justify-start"
                   onClick={() => scrollToSection("contacts")}
                 >
                   Контакты
@@ -78,7 +81,7 @@ const Footer = () => {
               <li>
                 <Button 
                   variant="ghost" 
-                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto w-full text-left justify-start"
+                  className="text-blue-200 hover:text-white hover:bg-white/10 transition-colors p-2 h-auto w-full text-left justify-start"
                   asChild
                 >
                   <Link to="/public-offer">
@@ -89,7 +92,7 @@ const Footer = () => {
               <li>
                 <Button 
                   variant="ghost" 
-                  className="text-blue-200 hover:text-white hover:bg-blue-700/50 transition-colors p-2 h-auto w-full text-left justify-start"
+                  className="text-blue-200 hover:text-white hover:bg-white/10 transition-colors p-2 h-auto w-full text-left justify-start"
                   asChild
                 >
                   <Link to="/privacy-policy">
@@ -100,23 +103,25 @@ const Footer = () => {
             </ul>
           </div>
           <div>
-            <h4 className="text-lg font-medium mb-4 text-blue-100">Контакты</h4>
-            <p className="flex items-center mb-2 text-blue-200">
-              <Phone className="w-4 h-4 mr-2" />
-              +7 977 994 14 27
-            </p>
-            <p className="flex items-center mb-2 text-blue-200">
-              <Mail className="w-4 h-4 mr-2" />
-              riba@рыба.shop
-            </p>
-            <p className="flex items-center text-blue-200">
-              <Building className="w-4 h-4 mr-2" />
-              Москва, Электродный проезд, д. 6
-            </p>
+            <h4 className="text-lg font-medium mb-4 text-white">Контакты</h4>
+            <div className="space-y-4">
+              <a href="tel:+79779941427" className="flex items-center group">
+                <Phone className="w-4 h-4 mr-2 text-blue-300 group-hover:text-white transition-colors" />
+                <span className="text-blue-200 group-hover:text-white transition-colors">+7 977 994 14 27</span>
+              </a>
+              <a href="mailto:riba@рыба.shop" className="flex items-center group">
+                <Mail className="w-4 h-4 mr-2 text-blue-300 group-hover:text-white transition-colors" />
+                <span className="text-blue-200 group-hover:text-white transition-colors">riba@рыба.shop</span>
+              </a>
+              <div className="flex items-center">
+                <Building className="w-4 h-4 mr-2 text-blue-300" />
+                <span className="text-blue-200">Москва, Электродный проезд, д. 6</span>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="pt-6 border-t border-blue-700 text-center md:text-left">
-          <p className="mb-1 text-blue-200">&copy; {new Date().getFullYear()} ООО «Ситекс». Все права защищены.</p>
+        <div className="pt-6 border-t border-blue-800/50 text-center md:text-left">
+          <p className="text-blue-200 text-sm">&copy; {new Date().getFullYear()} ООО «Ситекс». Все права защищены.</p>
         </div>
       </div>
     </footer>
