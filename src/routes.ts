@@ -61,7 +61,7 @@ export const getUploadedImageUrl = (path: string): string | null => {
         const storedPath = localStorage.getItem(`uploaded_image_${filename}`);
         if (storedPath) {
           console.log("Found stored path for:", filename);
-          return path;
+          return storedPath;
         }
         
         // Check for image data
@@ -96,6 +96,15 @@ export const getUploadedImageUrl = (path: string): string | null => {
           }
         }
       }
+    }
+    
+    // If we have a direct lovable-uploads path, make sure to add the full URL
+    if (path.includes('lovable-uploads')) {
+      // For relative paths, try to get the base URL
+      if (!path.startsWith('http') && !path.startsWith('/')) {
+        return `/${path}`;
+      }
+      return path;
     }
     
     console.log("No valid image found for path:", path);

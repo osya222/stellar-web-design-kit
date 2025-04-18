@@ -25,8 +25,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     
     if (product.image) {
       try {
+        // Get the resolved image URL
         const uploadedImageUrl = getUploadedImageUrl(product.image);
         console.log(`ProductCard: Processing image for ${product.name}:`, product.image, "->", uploadedImageUrl);
+        
+        // Set the image URL if we have one
         if (uploadedImageUrl) {
           setImageUrl(uploadedImageUrl);
           return;

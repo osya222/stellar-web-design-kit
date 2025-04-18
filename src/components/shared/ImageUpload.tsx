@@ -114,6 +114,15 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         throw new Error('No image path returned from server');
       }
       
+      // Save image reference to localStorage
+      try {
+        localStorage.setItem(`uploaded_image_${result.filename}`, result.path);
+        localStorage.setItem(`blob_url_${result.filename}`, previewUrl);
+        console.log(`Saved image references to localStorage: ${result.filename}`);
+      } catch (storageError) {
+        console.warn("Failed to save to localStorage:", storageError);
+      }
+      
       // Notify parent component with the successfully uploaded image path
       onImageUploaded(result.path);
       
