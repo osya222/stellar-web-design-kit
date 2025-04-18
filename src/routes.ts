@@ -14,7 +14,8 @@ export const apiRoutes = {
       
       return new Response(JSON.stringify({ message: 'Upload API is working' }), {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache, no-store, must-revalidate'
         }
       });
     } catch (error) {

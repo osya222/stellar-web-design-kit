@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import { Upload, Loader2, X, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -80,10 +81,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       setLocalBlob(previewUrl);
       setImage(previewUrl);
       
+      // Generate a unique ID for the product if not exists
+      const uniqueId = productId || Date.now();
+      
       // Determine file prefix based on usage
-      const prefix = productId 
-        ? `product-${productId}`
-        : `product-${Date.now()}`;
+      const prefix = `product-${uniqueId}`;
       
       const formData = new FormData();
       formData.append('file', file);
@@ -106,13 +108,13 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       }
 
       const result = await response.json();
-      console.log(`Image upload response:`, result);
+      console.log(`Image upload success:`, result);
       
       if (!result.path) {
         throw new Error('No image path returned from server');
       }
       
-      // Save the path for later use
+      // Notify parent component with the successfully uploaded image path
       onImageUploaded(result.path);
       
       toast({

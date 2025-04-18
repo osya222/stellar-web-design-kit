@@ -10,6 +10,7 @@ import { saveProductToProject, deleteProductFromStorage, getProductsFromStorage 
 const ProductManagement: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [activeTab, setActiveTab] = useState<string>("list");
   const { toast } = useToast();
   
   useEffect(() => {
@@ -28,6 +29,8 @@ const ProductManagement: React.FC = () => {
         product.id = Date.now();
       }
       
+      console.log(`Saving product: ${product.name} with image: ${product.image}`);
+      
       // Save the product to the project
       await saveProductToProject(product);
       
@@ -36,6 +39,9 @@ const ProductManagement: React.FC = () => {
       
       // Clear editing state
       setEditingProduct(null);
+      
+      // Switch back to list tab after saving
+      setActiveTab("list");
       
       toast({
         title: editingProduct ? "Товар обновлен" : "Товар добавлен",
@@ -53,6 +59,7 @@ const ProductManagement: React.FC = () => {
 
   const handleEditProduct = (product: Product) => {
     setEditingProduct(product);
+    setActiveTab("add");
   };
 
   const handleDeleteProduct = async (productId: number) => {
@@ -79,11 +86,12 @@ const ProductManagement: React.FC = () => {
 
   const handleCancelEdit = () => {
     setEditingProduct(null);
+    setActiveTab("list");
   };
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      <Tabs defaultValue={editingProduct ? "add" : "list"}>
+      <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="mb-6">
           <TabsTrigger value="add">{editingProduct ? 'Редактирование товара' : 'Добавить товар'}</TabsTrigger>
           <TabsTrigger value="list">Список товаров ({products.length})</TabsTrigger>

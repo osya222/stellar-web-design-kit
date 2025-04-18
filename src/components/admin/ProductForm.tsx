@@ -114,8 +114,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialProduct, onSave, onCan
       return;
     }
 
+    const productId = initialProduct?.id || Date.now();
+    
     const product: Product = {
-      id: initialProduct?.id || Date.now(), // Ensure we always have a unique ID
+      id: productId,
       name: data.name,
       category: data.category,
       size: data.size || undefined,
@@ -128,6 +130,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialProduct, onSave, onCan
       price: data.price
     };
 
+    console.log("Saving product with image:", product.image);
     onSave(product);
     
     if (!initialProduct) {
