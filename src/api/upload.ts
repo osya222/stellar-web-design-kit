@@ -1,6 +1,8 @@
+// Define uploads directory path
+import path from 'path';
 
 // Define uploads directory path
-const UPLOADS_DIR = '/lovable-uploads';
+const UPLOADS_DIR = path.join(process.cwd(), "public", "images", "products");
 
 // Function to generate a unique filename with timestamp and random ID
 const generateUniqueFilename = (originalName: string): string => {
@@ -108,7 +110,7 @@ export const handleUpload = async (req: Request) => {
       }
       
       // Create a path that works for both upload directories
-      const filePath = `${UPLOADS_DIR}/${filename}`;
+      const filePath = `/images/products/${filename}`;
       console.log(`Image will be stored at: ${filePath}`);
       
       // Return the path to the file

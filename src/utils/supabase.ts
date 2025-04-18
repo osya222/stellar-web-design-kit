@@ -1,4 +1,3 @@
-
 import { createClient } from '@supabase/supabase-js';
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
@@ -36,7 +35,6 @@ const createMockStorage = () => {
     },
 
     getPublicUrl: (path: string) => {
-      // Return the direct path to the image in the public directory
       return `/images/products/${path.split('/').pop()}`;
     },
 
