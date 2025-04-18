@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Product } from '@/types/product';
 import { Edit, Trash2, Search, Eye } from 'lucide-react';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { getUploadedImageUrl } from '@/routes';
+import { getImageUrl, getUploadedImageUrl } from '@/routes';
 import { Card, CardContent } from '@/components/ui/card';
 
 interface ProductListProps {

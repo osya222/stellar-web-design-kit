@@ -52,3 +52,23 @@ export const getImageUrl = (path: string | undefined): string => {
   const timestamp = Date.now();
   return `${resolvedPath}?t=${timestamp}`;
 };
+
+// Function to get uploaded image URL with cache busting
+export const getUploadedImageUrl = (path: string | undefined): string => {
+  if (!path) return '';
+  
+  // If it's already a full URL, return it as is
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    return path;
+  }
+  
+  // Make sure path starts with a forward slash for proper URL resolution
+  let resolvedPath = path;
+  if (!path.startsWith('/')) {
+    resolvedPath = `/${path}`;
+  }
+  
+  // Add cache buster to prevent browsers from using cached images
+  const timestamp = Date.now();
+  return `${resolvedPath}?t=${timestamp}`;
+};

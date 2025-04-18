@@ -19,7 +19,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Product } from '@/types/product';
 import { ImageUpload } from '../shared/ImageUpload';
 import { useToast } from '@/hooks/use-toast';
-import { getUploadedImageUrl } from '@/routes';
+import { getImageUrl, getUploadedImageUrl } from '@/routes';
 import { products } from '@/data/products';
 
 const existingCategories = Array.from(new Set(products.map(product => product.category)))

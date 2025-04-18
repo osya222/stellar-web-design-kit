@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { products } from "@/data/products/index";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -9,7 +8,7 @@ import { ImageUpload } from '../shared/ImageUpload';
 import { Button } from "../ui/button";
 import { Edit2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { getUploadedImageUrl } from '@/routes';
+import { getImageUrl, getUploadedImageUrl } from '@/routes';
 
 const ProductShowcase: React.FC = () => {
   const isMobile = useIsMobile();
