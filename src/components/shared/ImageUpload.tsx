@@ -2,8 +2,8 @@
 import React, { useState, useRef } from 'react';
 import { Upload, Loader2, X, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { getImageUrl } from '@/routes';
 import { useToast } from '@/hooks/use-toast';
+import { storage } from '@/utils/supabase';
 
 interface ImageUploadProps {
   initialImage?: string;
@@ -16,7 +16,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   onImageUploaded,
   productId 
 }) => {
-  const [previewUrl, setPreviewUrl] = useState<string | null>(initialImage ? getImageUrl(initialImage) : null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(initialImage || null);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
@@ -40,34 +40,21 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     try {
       // Generate a unique filename with product ID if available
       const uniqueId = productId || Date.now();
-      const prefix = `product-${uniqueId}`;
+      const timestamp = Date.now();
+      const safeFileName = file.name.replace(/[^\w\s.-]/g, '').toLowerCase();
+      const path = `products/${uniqueId}-${timestamp}-${safeFileName}`;
       
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('filename', `${prefix}-${file.name}`);
-
-      console.log(`Uploading image with filename: ${prefix}-${file.name}`);
+      // Upload to Supabase Storage
+      await storage.upload(file, path);
       
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData
-      });
-
-      if (!response.ok) {
-        throw new Error(`Upload failed: ${response.statusText}`);
-      }
-
-      const result = await response.json();
+      // Get the public URL
+      const publicUrl = storage.getPublicUrl(path);
       
-      if (!result.path) {
-        throw new Error('No image path returned from server');
-      }
-      
-      // Update preview with the new image URL
-      setPreviewUrl(getImageUrl(result.path));
+      // Update preview
+      setPreviewUrl(publicUrl);
       
       // Notify parent component
-      onImageUploaded(result.path);
+      onImageUploaded(publicUrl);
       
       toast({
         title: "Успешно",
@@ -164,3 +151,4 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     </div>
   );
 };
+
