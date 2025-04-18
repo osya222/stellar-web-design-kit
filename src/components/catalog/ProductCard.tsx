@@ -1,13 +1,14 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
-import { ShoppingCart, ImageIcon } from "lucide-react";
+import { ShoppingCart, ImageIcon, Edit2, X } from "lucide-react";
 import { useCart } from '@/context/CartContext';
 import { useToast } from "@/hooks/use-toast";
-import { getProductImage } from '@/data/productImages';
 import { getUploadedImageUrl } from '@/routes';
+import { ImageUpload } from '../shared/ImageUpload';
 
 interface ProductCardProps {
   product: Product;
@@ -18,28 +19,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { toast } = useToast();
   const [imageError, setImageError] = useState(false);
   const [imageUrl, setImageUrl] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
   
   useEffect(() => {
     setImageError(false);
     if (!product) return;
     
     if (product.image) {
-      // Try to get the uploaded image
       const uploadedImageUrl = getUploadedImageUrl(product.image);
       if (uploadedImageUrl) {
         setImageUrl(uploadedImageUrl);
         return;
       }
     }
-    
-    // Fall back to the default category image
-    const productImage = getProductImage({ 
-      category: product.category, 
-      name: product.name, 
-      id: product.id 
-    });
-    
-    setImageUrl(productImage || '');
   }, [product]);
 
   const handleAddToCart = () => {
@@ -47,6 +39,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     toast({
       title: "Товар добавлен",
       description: `${product.name} добавлен в корзину`,
+    });
+  };
+
+  const handleImageUploaded = (uploadedUrl: string) => {
+    console.log(`Image uploaded for product ${product.name}:`, uploadedUrl);
+    setImageUrl(uploadedUrl);
+    setIsEditing(false);
+    toast({
+      title: "Изображение загружено",
+      description: `Изображение для товара "${product.name}" успешно обновлено`,
     });
   };
 
@@ -58,18 +60,48 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col relative">
       <div className="h-48 bg-white flex items-center justify-center relative overflow-hidden">
-        {(!imageUrl || imageError) ? (
-          <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100">
-            <ImageIcon className="w-12 h-12 text-gray-400" />
-            <span className="text-sm text-gray-500 mt-2">Нет изображения</span>
+        {isEditing ? (
+          <div className="absolute inset-0 bg-white p-4">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="font-semibold">Загрузка изображения</h3>
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={() => setIsEditing(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <ImageUpload 
+              initialImage={imageUrl}
+              onImageUploaded={handleImageUploaded}
+              productId={product.id}
+            />
           </div>
         ) : (
-          <img 
-            src={imageUrl} 
-            alt={product.name} 
-            className="object-cover w-full h-full"
-            onError={handleImageError}
-          />
+          <>
+            {(!imageUrl || imageError) ? (
+              <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100">
+                <ImageIcon className="w-12 h-12 text-gray-400" />
+                <span className="text-sm text-gray-500 mt-2">Нет изображения</span>
+              </div>
+            ) : (
+              <img 
+                src={imageUrl} 
+                alt={product.name} 
+                className="object-cover w-full h-full"
+                onError={handleImageError}
+              />
+            )}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute top-2 right-2 bg-white/80 hover:bg-white"
+              onClick={() => setIsEditing(true)}
+            >
+              <Edit2 className="h-4 w-4" />
+            </Button>
+          </>
         )}
       </div>
       
