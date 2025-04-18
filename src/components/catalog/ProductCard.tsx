@@ -7,7 +7,7 @@ import { Product } from '@/types/product';
 import { ShoppingCart, ImageIcon } from "lucide-react";
 import { useCart } from '@/context/CartContext';
 import { useToast } from "@/hooks/use-toast";
-import { getImageUrl } from '@/routes';
+import { storage } from '@/utils/supabase';
 
 interface ProductCardProps {
   product: Product;
@@ -18,9 +18,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { toast } = useToast();
   const [imageError, setImageError] = useState(false);
   
+  // For Supabase URLs, use them directly. For paths, try to get from storage
   const imageSrc = imageError || !product.image 
     ? '/placeholder.svg' 
-    : getImageUrl(product.image);
+    : product.image.startsWith('http') 
+      ? product.image 
+      : storage.getPublicUrl(product.image);
 
   const handleAddToCart = () => {
     addToCart(product);

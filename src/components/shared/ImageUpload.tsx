@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Upload, Loader2, X, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -44,8 +43,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       const safeFileName = file.name.replace(/[^\w\s.-]/g, '').toLowerCase();
       const path = `products/${uniqueId}-${timestamp}-${safeFileName}`;
       
-      // Upload to Supabase Storage
-      await storage.upload(file, path);
+      // Upload using the storage service (either Supabase or localStorage fallback)
+      const result = await storage.upload(file, path);
       
       // Get the public URL
       const publicUrl = storage.getPublicUrl(path);
@@ -151,4 +150,3 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     </div>
   );
 };
-

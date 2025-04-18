@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { ArrowRight } from "lucide-react";
-import { getImageUrl, getUploadedImageUrl } from '@/routes';
+import { storage } from '@/utils/supabase';
 
 interface CategoryCardProps {
   category: {
@@ -22,7 +23,11 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, image, onCategory
       setImageError(false);
       
       try {
-        const resolvedUrl = getUploadedImageUrl(image) || image;
+        // Use the image directly if it's a URL, otherwise try to get from storage
+        const resolvedUrl = image.startsWith('http') 
+          ? image 
+          : storage.getPublicUrl(image);
+        
         console.log(`CategoryCard: Resolved image URL for ${category.name}:`, resolvedUrl);
         
         if (resolvedUrl) {
