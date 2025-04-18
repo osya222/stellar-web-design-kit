@@ -1,7 +1,8 @@
 
-import { handleUpload } from './api/upload';
-
 // Define route handlers for API endpoints
+const API_BASE = '/api';
+const UPLOADS_DIR = '/images/products';
+
 export const apiRoutes = {
   '/api/upload': async (req: Request) => {
     try {
@@ -43,32 +44,10 @@ export const getImageUrl = (path: string | undefined): string => {
   }
   
   // Make sure path starts with a forward slash
-  let resolvedPath = path;
-  if (!path.startsWith('/')) {
-    resolvedPath = `/${path}`;
-  }
+  const resolvedPath = path.startsWith('/') ? path : `/${path}`;
   
   // Add cache buster to prevent browsers from using cached images
   const timestamp = Date.now();
   return `${resolvedPath}?t=${timestamp}`;
 };
 
-// Function to get uploaded image URL with cache busting
-export const getUploadedImageUrl = (path: string | undefined): string => {
-  if (!path) return '';
-  
-  // If it's already a full URL, return it as is
-  if (path.startsWith('http://') || path.startsWith('https://')) {
-    return path;
-  }
-  
-  // Make sure path starts with a forward slash for proper URL resolution
-  let resolvedPath = path;
-  if (!path.startsWith('/')) {
-    resolvedPath = `/${path}`;
-  }
-  
-  // Add cache buster to prevent browsers from using cached images
-  const timestamp = Date.now();
-  return `${resolvedPath}?t=${timestamp}`;
-};

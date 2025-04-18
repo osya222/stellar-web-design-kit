@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { Upload, Loader2, X, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -15,18 +16,10 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   onImageUploaded,
   productId 
 }) => {
-  const [imagePath, setImagePath] = useState<string | null>(initialImage || null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(initialImage ? getImageUrl(initialImage) : null);
   const [isUploading, setIsUploading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
-
-  const triggerFileInput = () => {
-    if (fileInputRef.current) {
-      fileInputRef.current.click();
-    }
-  };
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -43,10 +36,9 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     }
 
     setIsUploading(true);
-    setError(null);
-    
+
     try {
-      // Generate a unique ID for the product if not exists
+      // Generate a unique filename with product ID if available
       const uniqueId = productId || Date.now();
       const prefix = `product-${uniqueId}`;
       
@@ -55,19 +47,14 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       formData.append('filename', `${prefix}-${file.name}`);
 
       console.log(`Uploading image with filename: ${prefix}-${file.name}`);
-
-      // Create a temporary preview for immediate feedback
-      const tempPreviewUrl = URL.createObjectURL(file);
-      setPreviewUrl(tempPreviewUrl);
-
+      
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(`Failed to upload image: ${response.statusText || 'Server error'} ${errorData.details || ''}`);
+        throw new Error(`Upload failed: ${response.statusText}`);
       }
 
       const result = await response.json();
@@ -76,12 +63,10 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         throw new Error('No image path returned from server');
       }
       
-      console.log("Upload successful, received path:", result.path);
+      // Update preview with the new image URL
+      setPreviewUrl(getImageUrl(result.path));
       
-      // Store the server path
-      setImagePath(result.path);
-      
-      // Notify parent component with the successfully uploaded image path
+      // Notify parent component
       onImageUploaded(result.path);
       
       toast({
@@ -90,16 +75,10 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       });
     } catch (error) {
       console.error(`Upload error:`, error);
-      const errorMessage = error instanceof Error ? error.message : 'Неизвестная ошибка';
-      setError(errorMessage);
-      
-      // Keep the preview URL even if the server upload failed
-      // This allows the user to see what they uploaded
-      
       toast({
         variant: "destructive",
         title: "Ошибка",
-        description: `Не удалось загрузить изображение: ${errorMessage}`,
+        description: `Не удалось загрузить изображение: ${error instanceof Error ? error.message : String(error)}`,
       });
     } finally {
       setIsUploading(false);
@@ -110,14 +89,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   };
 
   const handleRemoveImage = () => {
-    // Revoke any object URL to prevent memory leaks
-    if (previewUrl && previewUrl.startsWith('blob:')) {
-      URL.revokeObjectURL(previewUrl);
-    }
-    
     setPreviewUrl(null);
-    setImagePath(null);
-    setError(null);
     onImageUploaded('');
   };
 
@@ -127,14 +99,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         <div className="relative border rounded-md overflow-hidden">
           <img 
             src={previewUrl} 
-            alt="Загруженное фото" 
+            alt="Preview" 
             className="w-full h-48 object-contain bg-gray-100"
-            onError={() => {
-              console.error("Image failed to load:", previewUrl);
-              // If the preview fails to load, try using the original path
-              if (imagePath) {
-                setPreviewUrl(getImageUrl(imagePath));
-              }
+            onError={(e) => {
+              console.error("Preview image failed to load:", previewUrl);
+              e.currentTarget.src = '/placeholder.svg';
             }}
           />
           <div className="absolute top-2 right-2">
@@ -152,11 +121,10 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       ) : (
         <div 
           className="border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center h-48 relative bg-gray-50 hover:bg-gray-100 transition-colors cursor-pointer"
-          onClick={triggerFileInput}
+          onClick={() => fileInputRef.current?.click()}
         >
           <input 
             type="file" 
-            id="image-upload"
             className="hidden" 
             accept="image/*" 
             onChange={handleImageUpload}
@@ -164,50 +132,33 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             ref={fileInputRef}
           />
           
-          {error ? (
-            <div className="text-center">
-              <p className="text-red-500 text-sm mb-2">{error}</p>
-              <Button 
-                type="button" 
-                variant="outline" 
-                size="sm" 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setError(null);
-                }}
-              >
-                Попробовать снова
-              </Button>
+          <div className="text-center w-full">
+            <div className="mb-3">
+              <ImageIcon className="h-12 w-12 text-gray-400 mb-2 mx-auto" />
+              <p className="text-gray-500 mb-4">Нажмите для загрузки изображения</p>
             </div>
-          ) : (
-            <div className="text-center w-full">
-              <div className="mb-3">
-                <ImageIcon className="h-12 w-12 text-gray-400 mb-2 mx-auto" />
-                <p className="text-gray-500 mb-4">Нажмите для загрузки изображения</p>
-              </div>
-              
-              <Button 
-                type="button" 
-                variant="default" 
-                size="default" 
-                className="w-full cursor-pointer"
-                disabled={isUploading}
-              >
-                {isUploading ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Загрузка...
-                  </>
-                ) : (
-                  <>
-                    <Upload className="h-4 w-4 mr-2" />
-                    Загрузить фото
-                  </>
-                )}
-              </Button>
-              <p className="text-gray-400 text-xs mt-2">Макс. размер: 5MB</p>
-            </div>
-          )}
+            
+            <Button 
+              type="button" 
+              variant="default" 
+              size="default" 
+              className="w-full cursor-pointer"
+              disabled={isUploading}
+            >
+              {isUploading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Загрузка...
+                </>
+              ) : (
+                <>
+                  <Upload className="h-4 w-4 mr-2" />
+                  Загрузить фото
+                </>
+              )}
+            </Button>
+            <p className="text-gray-400 text-xs mt-2">Макс. размер: 5MB</p>
+          </div>
         </div>
       )}
     </div>

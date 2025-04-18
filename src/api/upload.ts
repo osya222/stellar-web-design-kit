@@ -1,7 +1,4 @@
 
-// File upload API for the project
-// This saves files in the public/images/products directory
-
 // Define uploads directory path
 const UPLOADS_DIR = '/images/products';
 
@@ -23,7 +20,6 @@ export const handleUpload = async (req: Request) => {
   try {
     console.log("Upload handler called");
     
-    // Check request method
     if (req.method !== 'POST') {
       return new Response(JSON.stringify({ error: 'Method not allowed' }), { 
         status: 405,
@@ -31,7 +27,6 @@ export const handleUpload = async (req: Request) => {
       });
     }
     
-    // Get form data
     const formData = await req.formData();
     const file = formData.get('file');
     const filenameParam = formData.get('filename');
@@ -47,10 +42,6 @@ export const handleUpload = async (req: Request) => {
     const filename = generateUniqueFilename(String(filenameParam || file.name));
     
     try {
-      // In a real server, we would save the file to disk here
-      // For our vite-based development environment, the files will be
-      // stored by the framework when deployed
-      
       // Create the final path where the file will be stored
       const filePath = `${UPLOADS_DIR}/${filename}`;
       console.log(`Image will be stored at: ${filePath}`);
