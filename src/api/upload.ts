@@ -44,6 +44,17 @@ export const handleUpload = async (req: Request) => {
     const filename = generateUniqueFilename(String(filenameParam || file.name));
     
     try {
+      // Store file content in localStorage
+      if (typeof window !== 'undefined' && file instanceof File) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const dataUrl = reader.result as string;
+          localStorage.setItem(`image_data_${filename}`, dataUrl);
+          console.log(`Saved image data to localStorage for ${filename}`);
+        };
+        reader.readAsDataURL(file);
+      }
+      
       // Create the final path where the file will be stored
       const filePath = `${UPLOADS_DIR}/${filename}`;
       console.log(`Image will be stored at: ${filePath}`);

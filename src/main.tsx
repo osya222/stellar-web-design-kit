@@ -1,3 +1,4 @@
+
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
@@ -28,6 +29,17 @@ window.fetch = async (input, init) => {
             const clonedFormData = new FormData();
             for (const [key, value] of init.body.entries()) {
               clonedFormData.append(key, value);
+              
+              // If this is a file, store its data URL in localStorage
+              if (value instanceof File) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                  const filename = clonedFormData.get('filename') as string || value.name;
+                  localStorage.setItem(`image_data_${filename}`, reader.result as string);
+                  console.log(`Saved image data for ${filename} to localStorage`);
+                };
+                reader.readAsDataURL(value);
+              }
             }
             
             // Create a new request with the cloned FormData
@@ -56,7 +68,7 @@ window.fetch = async (input, init) => {
       console.log("Intercepting lovable-uploads image request:", url);
       
       // Extract the filename
-      const filename = url.split('/').pop();
+      const filename = url.split('/').pop()?.split('?')[0];
       
       if (filename) {
         // Try to get the image data from localStorage
