@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Upload, Loader2, X, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -19,18 +18,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   const [image, setImage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
-  const [localBlob, setLocalBlob] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
-
-  useEffect(() => {
-    // Clean up any created blob URLs when component unmounts
-    return () => {
-      if (localBlob) {
-        URL.revokeObjectURL(localBlob);
-      }
-    };
-  }, [localBlob]);
 
   useEffect(() => {
     if (initialImage) {
@@ -67,69 +56,37 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       return;
     }
 
-    console.log(`Uploading image:`, file.name, `Size: ${(file.size / 1024).toFixed(2)} KB`, `Type: ${file.type}`);
-    
     setIsUploading(true);
     setUploadError('');
     
     try {
-      // Create a preview immediately
-      if (localBlob) {
-        URL.revokeObjectURL(localBlob);
-      }
-      const previewUrl = URL.createObjectURL(file);
-      setLocalBlob(previewUrl);
-      setImage(previewUrl);
-      
       // Generate a unique ID for the product if not exists
       const uniqueId = productId || Date.now();
-      
-      // Determine file prefix based on usage
       const prefix = `product-${uniqueId}`;
       
       const formData = new FormData();
       formData.append('file', file);
       formData.append('filename', `${prefix}-${file.name}`);
 
-      console.log("Sending upload request with FormData:", [...formData.entries()].map(e => e[0]));
-      
       const response = await fetch('/api/upload', {
         method: 'POST',
-        body: formData,
-        cache: 'no-store'
+        body: formData
       });
 
-      console.log("Upload response status:", response.status);
-      
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Upload failed with status:", response.status, errorText);
         throw new Error(`Failed to upload image: ${response.statusText || 'Server error'}`);
       }
 
       const result = await response.json();
-      console.log(`Image upload success:`, result);
       
       if (!result.path) {
         throw new Error('No image path returned from server');
       }
       
-      // Save image reference to localStorage for persistence
-      try {
-        localStorage.setItem(`uploaded_image_${result.filename}`, result.path);
-        localStorage.setItem(`blob_url_${result.filename}`, previewUrl);
-        console.log(`Saved image references to localStorage: ${result.filename}`);
-        
-        // Also save to the persistent uploaded files list
-        const uploadedFiles = JSON.parse(localStorage.getItem('lovable_uploaded_files') || '[]');
-        uploadedFiles.push({
-          filename: result.filename,
-          path: result.path,
-          uploadDate: new Date().toISOString()
-        });
-        localStorage.setItem('lovable_uploaded_files', JSON.stringify(uploadedFiles));
-      } catch (storageError) {
-        console.warn("Failed to save to localStorage:", storageError);
+      // Set the preview image
+      const previewUrl = getUploadedImageUrl(result.path);
+      if (previewUrl) {
+        setImage(previewUrl);
       }
       
       // Notify parent component with the successfully uploaded image path
@@ -150,7 +107,6 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       });
     } finally {
       setIsUploading(false);
-      // Reset the file input so the same file can be selected again if needed
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -158,30 +114,9 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   };
 
   const handleRemoveImage = () => {
-    try {
-      if (localBlob) {
-        URL.revokeObjectURL(localBlob);
-        setLocalBlob(null);
-      }
-      
-      // Clear the image state
-      setImage(null);
-      
-      // Notify parent component
-      onImageUploaded('');
-      
-      // Reset any error state
-      setUploadError('');
-      
-      console.log("Image successfully removed");
-    } catch (error) {
-      console.error("Error removing image:", error);
-      toast({
-        variant: "destructive",
-        title: "Ошибка",
-        description: "Не удалось удалить изображение"
-      });
-    }
+    setImage(null);
+    onImageUploaded('');
+    setUploadError('');
   };
 
   return (
@@ -203,10 +138,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             variant="destructive" 
             size="icon" 
             className="absolute top-2 right-2 rounded-full"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleRemoveImage();
-            }}
+            onClick={handleRemoveImage}
           >
             <X className="h-4 w-4" />
           </Button>
@@ -233,10 +165,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                 type="button" 
                 variant="outline" 
                 size="sm" 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setUploadError('');
-                }}
+                onClick={() => setUploadError('')}
               >
                 Попробовать снова
               </Button>
