@@ -4,6 +4,7 @@ export interface Product {
   id: number;
   name: string;
   category: string;
+  description?: string; // Added description field
   size?: string;
   packaging?: string;
   catchDate?: string;

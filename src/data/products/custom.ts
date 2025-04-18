@@ -1,6 +1,7 @@
 
 import { Product } from '@/types/product';
 
+// Define the array of custom products
 export const customProducts: Product[] = [
   {
     id: 1001, // Using a unique numeric ID as per existing type
@@ -36,3 +37,36 @@ export const customProducts: Product[] = [
     size: "400г"
   }
 ];
+
+// In-memory storage for custom products
+let inMemoryCustomProducts = [...customProducts];
+
+// Helper function to get custom products
+export const getCustomProducts = (): Product[] => {
+  return inMemoryCustomProducts;
+};
+
+// Helper function to add or update a custom product
+export const saveCustomProduct = (product: Product): void => {
+  // If it's a new product, assign an ID
+  if (!product.id) {
+    const maxId = Math.max(0, ...inMemoryCustomProducts.map(p => p.id));
+    product.id = maxId + 1;
+  }
+  
+  // Find and replace existing product or add new one
+  const index = inMemoryCustomProducts.findIndex(p => p.id === product.id);
+  if (index >= 0) {
+    inMemoryCustomProducts[index] = product;
+  } else {
+    inMemoryCustomProducts.push(product);
+  }
+  
+  console.log(`Product saved: ${product.name} (ID: ${product.id})`);
+};
+
+// Helper function to delete a custom product
+export const deleteCustomProduct = (productId: number): void => {
+  inMemoryCustomProducts = inMemoryCustomProducts.filter(p => p.id !== productId);
+  console.log(`Product deleted: ID ${productId}`);
+};
