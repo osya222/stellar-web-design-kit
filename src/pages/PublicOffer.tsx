@@ -71,4 +71,3 @@ const PublicOffer = () => {
 };
 
 export default PublicOffer;
-
