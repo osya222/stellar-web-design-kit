@@ -14,12 +14,13 @@ const ProductsByCategory: React.FC<ProductsByCategoryProps> = ({ category, produ
   const categoryId = category.toLowerCase().replace(/\s+/g, '-');
   
   const renderCategoryLogo = () => {
+    // Use a standard category icon to prevent loading issues
     return (
-      <img 
-        src="/lovable-uploads/f96b53d4-ab1d-4752-8c90-925f33c1173c.png" 
-        alt="Category logo" 
-        className="w-10 h-10 mr-2 object-contain opacity-80"
-      />
+      <div className="w-10 h-10 mr-2 flex items-center justify-center bg-blue-100 rounded-full">
+        <span className="text-blue-700 font-bold text-xl">
+          {category.charAt(0).toUpperCase()}
+        </span>
+      </div>
     );
   };
   

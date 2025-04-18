@@ -163,6 +163,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
               alt="Загруженное фото" 
               className="w-full h-48 object-contain bg-gray-100"
               onError={handleImageError}
+              onLoad={() => console.log("Image loaded successfully")}
             />
           )}
           <div className="absolute top-2 right-2 flex gap-2">
@@ -209,7 +210,10 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                 type="button" 
                 variant="outline" 
                 size="sm" 
-                onClick={() => setUploadError('')}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setUploadError('');
+                }}
               >
                 Попробовать снова
               </Button>

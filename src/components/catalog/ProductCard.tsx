@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
-import { ShoppingCart, ImageIcon } from "lucide-react";
+import { ShoppingCart, ImageIcon, RefreshCw } from "lucide-react";
 import { useCart } from '@/context/CartContext';
 import { useToast } from "@/hooks/use-toast";
 import { getUploadedImageUrl } from '@/routes';
@@ -97,7 +97,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 className="mt-2 text-xs text-blue-500"
                 onClick={retryLoadingImage}
               >
-                Повторить загрузку
+                <RefreshCw className="w-3 h-3 mr-1" />
+                Обновить
               </Button>
             )}
           </div>
@@ -107,6 +108,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             alt={product.name} 
             className="object-contain w-full h-full p-2"
             onError={handleImageError}
+            onLoad={() => console.log(`Image loaded successfully for ${product.name}`)}
           />
         )}
       </div>

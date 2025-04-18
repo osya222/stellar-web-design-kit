@@ -3,7 +3,7 @@
 // This saves files in the public/images directory
 
 // Define uploads directory path
-const UPLOADS_DIR = '/images';
+const UPLOADS_DIR = '/images/products';
 
 // Function to generate a unique filename with UUID-like ID
 const generateUniqueFilename = (originalName: string): string => {
@@ -29,7 +29,7 @@ const saveFileToProject = async (file: File, filename: string): Promise<string> 
     console.log(`Image path set to: ${filePath}`);
     
     // For development we'll create a blob URL for preview
-    if (process.env.NODE_ENV === 'development') {
+    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
       const blob = new Blob([await file.arrayBuffer()], { type: file.type });
       const blobUrl = URL.createObjectURL(blob);
       

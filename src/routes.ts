@@ -46,7 +46,7 @@ export const getUploadedImageUrl = (path: string): string | null => {
     }
     
     // For development, check if we have a blob URL in sessionStorage
-    if (process.env.NODE_ENV === 'development') {
+    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
       const filename = path.split('/').pop();
       if (filename) {
         const blobUrl = sessionStorage.getItem(`dev_image_${filename}`);
