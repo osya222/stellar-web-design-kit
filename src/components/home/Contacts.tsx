@@ -8,7 +8,7 @@ const Contacts = () => {
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-12">Контакты</h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="max-w-2xl mx-auto">
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h3 className="text-xl font-bold mb-4">Наши контакты</h3>
             
@@ -48,58 +48,6 @@ const Contacts = () => {
               </div>
             </div>
           </div>
-          
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <h3 className="text-xl font-bold mb-4">Напишите нам</h3>
-            <p className="mb-6 text-gray-600">
-              Остались вопросы? Отправьте нам сообщение, и мы ответим вам в ближайшее время.
-            </p>
-            
-            <form className="space-y-4">
-              <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                  Ваше имя
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Иван Иванов"
-                />
-              </div>
-              
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="ivan@example.com"
-                />
-              </div>
-              
-              <div>
-                <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1">
-                  Сообщение
-                </label>
-                <textarea
-                  id="message"
-                  rows={4}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Ваше сообщение..."
-                />
-              </div>
-              
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              >
-                Отправить
-              </button>
-            </form>
-          </div>
         </div>
       </div>
     </section>
@@ -107,3 +55,4 @@ const Contacts = () => {
 };
 
 export default Contacts;
+
