@@ -16,6 +16,38 @@ const generateUniqueFilename = (originalName: string): string => {
   return `${safeName}-${timestamp}-${randomId}.${extension}`;
 };
 
+// Function to save image data to localStorage
+const saveImageToLocalStorage = (file: File, filename: string): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    if (typeof window === 'undefined') {
+      console.warn("Cannot save to localStorage in server context");
+      resolve();
+      return;
+    }
+
+    try {
+      const reader = new FileReader();
+      
+      reader.onload = () => {
+        const dataUrl = reader.result as string;
+        localStorage.setItem(`image_data_${filename}`, dataUrl);
+        console.log(`Successfully saved image data to localStorage for ${filename}`);
+        resolve();
+      };
+      
+      reader.onerror = (error) => {
+        console.error("Error reading file:", error);
+        reject(error);
+      };
+      
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error("Error in saveImageToLocalStorage:", error);
+      reject(error);
+    }
+  });
+};
+
 export const handleUpload = async (req: Request) => {
   try {
     console.log("Upload handler called with method:", req.method);
@@ -45,14 +77,15 @@ export const handleUpload = async (req: Request) => {
     
     try {
       // Store file content in localStorage
-      if (typeof window !== 'undefined' && file instanceof File) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const dataUrl = reader.result as string;
-          localStorage.setItem(`image_data_${filename}`, dataUrl);
-          console.log(`Saved image data to localStorage for ${filename}`);
-        };
-        reader.readAsDataURL(file);
+      if (file instanceof File) {
+        console.log("Saving file to localStorage:", filename);
+        try {
+          await saveImageToLocalStorage(file, filename);
+          console.log("Successfully saved to localStorage");
+        } catch (storageError) {
+          console.error("Failed to save to localStorage:", storageError);
+          // Continue anyway, as we'll still return the file path
+        }
       }
       
       // Create the final path where the file will be stored

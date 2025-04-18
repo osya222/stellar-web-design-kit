@@ -57,6 +57,7 @@ export const getImageUrl = (path: string | undefined): string => {
 // Function to get the URL for uploaded images
 export const getUploadedImageUrl = (path: string | undefined): string => {
   if (!path) return '/placeholder.svg';
+  console.log("Getting uploaded image URL for path:", path);
   
   // If it's already a full URL, return it as is
   if (path.startsWith('http://') || path.startsWith('https://')) {
@@ -65,11 +66,13 @@ export const getUploadedImageUrl = (path: string | undefined): string => {
   
   // Check if the path already contains lovable-uploads, which is where files are actually stored
   if (path.includes(LOVABLE_UPLOADS_DIR)) {
+    console.log(`Path contains ${LOVABLE_UPLOADS_DIR}, using as is:`, path);
     return getImageUrl(path);
   }
   
   // Check if the path already includes the expected uploads directory
   if (path.includes(UPLOADS_DIR)) {
+    console.log(`Path contains ${UPLOADS_DIR}, using as is:`, path);
     // Try to load from the expected directory first
     return getImageUrl(path);
   }
