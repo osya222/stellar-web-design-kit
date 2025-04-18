@@ -18,7 +18,7 @@ const generateUniqueFilename = (originalName: string): string => {
 
 export const handleUpload = async (req: Request) => {
   try {
-    console.log("Upload handler called");
+    console.log("Upload handler called with method:", req.method);
     
     if (req.method !== 'POST') {
       return new Response(JSON.stringify({ error: 'Method not allowed' }), { 
@@ -30,6 +30,8 @@ export const handleUpload = async (req: Request) => {
     const formData = await req.formData();
     const file = formData.get('file');
     const filenameParam = formData.get('filename');
+    
+    console.log("Received file upload request:", filenameParam || (file instanceof File ? file.name : "unknown file"));
     
     if (!file || !(file instanceof File)) {
       return new Response(JSON.stringify({ error: 'No valid file provided' }), { 
@@ -50,7 +52,8 @@ export const handleUpload = async (req: Request) => {
       return new Response(JSON.stringify({ 
         path: filePath,
         success: true,
-        filename: filename
+        filename: filename,
+        storageDirectory: UPLOADS_DIR
       }), {
         status: 200,
         headers: {
