@@ -82,6 +82,23 @@ const ProductShowcase: React.FC = () => {
 
   const handleImageUploaded = (uploadedUrl: string, categoryName: string) => {
     try {
+      // Handle image removal
+      if (!uploadedUrl) {
+        const updatedImages = { ...categoryImages };
+        delete updatedImages[categoryName];
+        setCategoryImages(updatedImages);
+        
+        // Remove from localStorage
+        localStorage.removeItem(`category-image-${categoryName}`);
+        
+        toast({
+          title: "Изображение удалено",
+          description: `Изображение для категории "${categoryName}" удалено`,
+        });
+        setEditingCategory(null);
+        return;
+      }
+      
       // Save to state and localStorage
       setCategoryImages(prev => ({
         ...prev,

@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, RefreshCcw } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { getUploadedImageUrl } from '@/routes';
 
 interface CategoryCardProps {
@@ -19,11 +19,20 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, image, onCategory
   
   useEffect(() => {
     if (image) {
-      const resolvedUrl = getUploadedImageUrl(image) || image;
-      setCurrentImage(resolvedUrl);
+      // Reset error state when image prop changes
       setImageError(false);
+      
+      try {
+        const resolvedUrl = getUploadedImageUrl(image) || image;
+        setCurrentImage(resolvedUrl);
+      } catch (error) {
+        console.error("Error resolving image URL:", error);
+        setImageError(true);
+        setCurrentImage(null);
+      }
     } else {
       setCurrentImage(null);
+      setImageError(false);
     }
   }, [image]);
   
@@ -33,8 +42,17 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, image, onCategory
         src="/lovable-uploads/02eda944-c8e4-4ddc-b061-5b197c2c118a.png" 
         alt="Fish icon" 
         className="w-16 h-16 opacity-70"
+        onError={(e) => {
+          console.error("Error loading fish icon");
+          e.currentTarget.style.display = 'none';
+        }}
       />
     );
+  };
+
+  const handleImageError = () => {
+    console.error("Image failed to load:", image);
+    setImageError(true);
   };
 
   return (
@@ -45,7 +63,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, image, onCategory
             src={currentImage} 
             alt={category.name} 
             className="object-cover w-full h-full"
-            onError={() => setImageError(true)}
+            onError={handleImageError}
           />
         ) : (
           <div className="flex items-center justify-center h-full w-full bg-gradient-to-br from-blue-50 to-blue-100">

@@ -44,8 +44,25 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
   const handleImageUploaded = (uploadedUrl: string) => {
     console.log(`Image uploaded for product ${product.name}:`, uploadedUrl);
+    
+    // If empty URL is provided, it means the image was removed
+    if (!uploadedUrl) {
+      setImageUrl('');
+      setImageError(false);
+      setIsEditing(false);
+      
+      toast({
+        title: "Изображение удалено",
+        description: `Изображение для товара "${product.name}" удалено`,
+      });
+      return;
+    }
+    
+    // Update with the new URL
     setImageUrl(uploadedUrl);
+    setImageError(false);
     setIsEditing(false);
+    
     toast({
       title: "Изображение загружено",
       description: `Изображение для товара "${product.name}" успешно обновлено`,
@@ -61,7 +78,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col relative">
       <div className="h-48 bg-white flex items-center justify-center relative overflow-hidden">
         {isEditing ? (
-          <div className="absolute inset-0 bg-white p-4">
+          <div className="absolute inset-0 bg-white p-4 z-10">
             <div className="flex justify-between items-center mb-4">
               <h3 className="font-semibold">Загрузка изображения</h3>
               <Button 

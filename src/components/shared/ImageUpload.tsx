@@ -127,12 +127,33 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   };
 
   const handleRemoveImage = () => {
-    if (localBlob) {
-      URL.revokeObjectURL(localBlob);
-      setLocalBlob(null);
+    // Stop any event propagation
+    try {
+      if (localBlob) {
+        URL.revokeObjectURL(localBlob);
+        setLocalBlob(null);
+      }
+      
+      // Clear the image state
+      setImage(null);
+      
+      // Notify parent component
+      if (typeof onImageUploaded === 'function') {
+        onImageUploaded('');
+      }
+      
+      // Reset any error state
+      setUploadError('');
+      
+      console.log("Image successfully removed");
+    } catch (error) {
+      console.error("Error removing image:", error);
+      toast({
+        variant: "destructive",
+        title: "Ошибка",
+        description: "Не удалось удалить изображение"
+      });
     }
-    setImage(null);
-    onImageUploaded('');
   };
 
   return (
@@ -153,7 +174,10 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             variant="destructive" 
             size="icon" 
             className="absolute top-2 right-2 rounded-full"
-            onClick={handleRemoveImage}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRemoveImage();
+            }}
           >
             <X className="h-4 w-4" />
           </Button>
@@ -181,7 +205,10 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                   type="button" 
                   variant="outline" 
                   size="sm" 
-                  onClick={() => setUploadError('')}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setUploadError('');
+                  }}
                 >
                   Попробовать снова
                 </Button>
