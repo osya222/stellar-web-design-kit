@@ -24,6 +24,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, image, onCategory
       
       try {
         const resolvedUrl = getUploadedImageUrl(image) || image;
+        console.log(`CategoryCard: Resolved image URL for ${category.name}:`, resolvedUrl);
         setCurrentImage(resolvedUrl);
       } catch (error) {
         console.error("Error resolving image URL:", error);
@@ -34,7 +35,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, image, onCategory
       setCurrentImage(null);
       setImageError(false);
     }
-  }, [image]);
+  }, [image, category.name]);
   
   const renderFishIcon = () => {
     return (

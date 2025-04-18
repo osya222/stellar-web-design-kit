@@ -39,6 +39,13 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     }
   }, [initialImage]);
 
+  const triggerFileInput = () => {
+    // Directly trigger the hidden file input click event
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -194,55 +201,51 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             ref={fileInputRef}
           />
           
-          <label 
-            htmlFor="image-upload" 
-            className="w-full h-full flex flex-col items-center justify-center cursor-pointer"
-          >
-            {uploadError ? (
-              <div className="text-center">
-                <p className="text-red-500 text-sm mb-2">{uploadError}</p>
-                <Button 
-                  type="button" 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setUploadError('');
-                  }}
-                >
-                  Попробовать снова
-                </Button>
+          {uploadError ? (
+            <div className="text-center">
+              <p className="text-red-500 text-sm mb-2">{uploadError}</p>
+              <Button 
+                type="button" 
+                variant="outline" 
+                size="sm" 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setUploadError('');
+                }}
+              >
+                Попробовать снова
+              </Button>
+            </div>
+          ) : (
+            <div className="text-center">
+              <div className="mb-3">
+                <ImageIcon className="h-12 w-12 text-gray-400 mb-2 mx-auto" />
+                <p className="text-gray-500 mb-4">Нажмите для загрузки изображения</p>
               </div>
-            ) : (
-              <div className="text-center">
-                <div className="mb-3">
-                  <ImageIcon className="h-12 w-12 text-gray-400 mb-2 mx-auto" />
-                  <p className="text-gray-500 mb-4">Нажмите для загрузки изображения</p>
-                </div>
-                
-                <Button 
-                  type="button" 
-                  variant="default" 
-                  size="default" 
-                  className="cursor-pointer"
-                  disabled={isUploading}
-                >
-                  {isUploading ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Загрузка...
-                    </>
-                  ) : (
-                    <>
-                      <Upload className="h-4 w-4 mr-2" />
-                      Загрузить фото
-                    </>
-                  )}
-                </Button>
-                <p className="text-gray-400 text-xs mt-2">Макс. размер: 5MB</p>
-              </div>
-            )}
-          </label>
+              
+              <Button 
+                type="button" 
+                variant="default" 
+                size="default" 
+                className="cursor-pointer"
+                disabled={isUploading}
+                onClick={triggerFileInput}
+              >
+                {isUploading ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Загрузка...
+                  </>
+                ) : (
+                  <>
+                    <Upload className="h-4 w-4 mr-2" />
+                    Загрузить фото
+                  </>
+                )}
+              </Button>
+              <p className="text-gray-400 text-xs mt-2">Макс. размер: 5MB</p>
+            </div>
+          )}
         </div>
       )}
     </div>
