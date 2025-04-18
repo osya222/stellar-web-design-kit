@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -31,12 +32,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       } catch (error) {
         console.error("Error resolving product image:", error);
         setImageError(true);
+      } finally {
+        setIsLoadingImage(false);
       }
     } else {
       setImageUrl('');
+      setIsLoadingImage(false);
     }
-    
-    setIsLoadingImage(false);
   }, [product]);
 
   const handleAddToCart = () => {
@@ -52,6 +54,30 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     setImageError(true);
   };
 
+  // Retry loading the image if it failed to load
+  const retryLoadingImage = () => {
+    if (product?.image) {
+      setImageError(false);
+      setIsLoadingImage(true);
+      try {
+        // Force a new timestamp in URL to bypass cache
+        const timestamp = Date.now();
+        let url = product.image;
+        if (!url.startsWith('/')) url = `/${url}`;
+        
+        // Add timestamp to bypass cache
+        const newUrl = `${url}?t=${timestamp}`;
+        console.log(`Retrying image load for ${product.name} with URL:`, newUrl);
+        setImageUrl(newUrl);
+      } catch (error) {
+        console.error("Error retrying image load:", error);
+        setImageError(true);
+      } finally {
+        setIsLoadingImage(false);
+      }
+    }
+  };
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
       <div className="h-48 bg-white flex items-center justify-center relative overflow-hidden">
@@ -64,6 +90,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100">
             <ImageIcon className="w-12 h-12 text-gray-400" />
             <span className="text-sm text-gray-500 mt-2">Нет изображения</span>
+            {imageError && (
+              <Button 
+                variant="link" 
+                size="sm" 
+                className="mt-2 text-xs text-blue-500"
+                onClick={retryLoadingImage}
+              >
+                Повторить загрузку
+              </Button>
+            )}
           </div>
         ) : (
           <img 

@@ -51,18 +51,24 @@ export const getUploadedImageUrl = (path: string): string | null => {
       if (filename) {
         const blobUrl = sessionStorage.getItem(`dev_image_${filename}`);
         if (blobUrl && blobUrl.startsWith('blob:')) {
+          console.log(`Found blob URL for ${filename}:`, blobUrl);
           return blobUrl;
         }
       }
     }
     
+    // Add timestamp to force browser to reload image and not use cache
+    const timestamp = Date.now();
+    
     // For production or if no blob URL found, use the static path
     // Make sure path starts with a forward slash
+    let resolvedPath = path;
     if (!path.startsWith('/')) {
-      return `/${path}`;
+      resolvedPath = `/${path}`;
     }
     
-    return path;
+    // Add cache buster to prevent cached images
+    return `${resolvedPath}?t=${timestamp}`;
   } catch (error) {
     console.error("Error in getUploadedImageUrl:", error);
     return path;

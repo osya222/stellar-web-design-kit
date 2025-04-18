@@ -28,18 +28,21 @@ const saveFileToProject = async (file: File, filename: string): Promise<string> 
     const filePath = `${UPLOADS_DIR}/${filename}`;
     console.log(`Image path set to: ${filePath}`);
     
-    // For real environment, file will be saved to /public/images/
-    // For development we'll still create a blob URL for preview
-    const blob = new Blob([await file.arrayBuffer()], { type: file.type });
-    const blobUrl = URL.createObjectURL(blob);
-    
-    // Store the mapping between file path and blob URL for development
-    try {
-      sessionStorage.setItem(`dev_image_${filename}`, blobUrl);
-    } catch (storageError) {
-      console.warn("Failed to save blob URL to sessionStorage:", storageError);
+    // For development we'll create a blob URL for preview
+    if (process.env.NODE_ENV === 'development') {
+      const blob = new Blob([await file.arrayBuffer()], { type: file.type });
+      const blobUrl = URL.createObjectURL(blob);
+      
+      // Store the mapping between file path and blob URL for development
+      try {
+        console.log(`Storing blob URL for ${filename}:`, blobUrl);
+        sessionStorage.setItem(`dev_image_${filename}`, blobUrl);
+      } catch (storageError) {
+        console.warn("Failed to save blob URL to sessionStorage:", storageError);
+      }
     }
     
+    // In all environments, return the static file path
     return filePath;
   } catch (error) {
     console.error("Error saving file:", error);
@@ -77,6 +80,9 @@ export const handleUpload = async (req: Request) => {
     try {
       // Save the file to the project
       const imagePath = await saveFileToProject(file, filename);
+      
+      // Log the result for debugging
+      console.log(`File successfully processed, returning path: ${imagePath}`);
       
       return new Response(JSON.stringify({ 
         path: imagePath,
