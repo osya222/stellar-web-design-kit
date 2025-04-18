@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Upload, Loader2, X, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getUploadedImageUrl } from '@/routes';
@@ -19,7 +19,18 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   const [image, setImage] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
+  const [localBlob, setLocalBlob] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
+  useEffect(() => {
+    // Clean up any created blob URLs when component unmounts
+    return () => {
+      if (localBlob) {
+        URL.revokeObjectURL(localBlob);
+      }
+    };
+  }, [localBlob]);
 
   useEffect(() => {
     if (initialImage) {
@@ -48,6 +59,14 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     setUploadError('');
     
     try {
+      // Create a preview immediately
+      if (localBlob) {
+        URL.revokeObjectURL(localBlob);
+      }
+      const previewUrl = URL.createObjectURL(file);
+      setLocalBlob(previewUrl);
+      setImage(previewUrl);
+      
       const prefix = productId 
         ? `product-${productId}`
         : `product-new`;
@@ -81,11 +100,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       
       const savedImagePath = result.path;
       
-      // Create a blob URL for preview
-      URL.revokeObjectURL(image || '');
-      const imageUrl = URL.createObjectURL(file);
-      setImage(imageUrl);
-      
+      // If we're on localhost/development, we'll use the blob URL for preview
+      // but save the path for later use
       onImageUploaded(savedImagePath);
       
       toast({
@@ -103,12 +119,17 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       });
     } finally {
       setIsUploading(false);
+      // Reset the file input so the same file can be selected again if needed
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
   const handleRemoveImage = () => {
-    if (image && image.startsWith('blob:')) {
-      URL.revokeObjectURL(image);
+    if (localBlob) {
+      URL.revokeObjectURL(localBlob);
+      setLocalBlob(null);
     }
     setImage(null);
     onImageUploaded('');
@@ -146,6 +167,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             accept="image/*" 
             onChange={handleImageUpload}
             disabled={isUploading}
+            ref={fileInputRef}
           />
           
           <label 

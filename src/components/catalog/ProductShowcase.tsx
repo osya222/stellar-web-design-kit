@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { products } from "@/data/products/index";
 import { useIsMobile } from "@/hooks/use-mobile";
 import CategoryCard from './CategoryCard';
@@ -9,10 +9,12 @@ import { ImageUpload } from '../shared/ImageUpload';
 import { Button } from "../ui/button";
 import { Edit2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { getUploadedImageUrl } from '@/routes';
 
 const ProductShowcase: React.FC = () => {
   const isMobile = useIsMobile();
   const [editingCategory, setEditingCategory] = useState<string | null>(null);
+  const [categoryImages, setCategoryImages] = useState<Record<string, string>>({});
   const { toast } = useToast();
 
   // Extract unique categories from products array
@@ -30,6 +32,27 @@ const ProductShowcase: React.FC = () => {
     category.name !== "Мидии" &&
     category.name !== "Филе рыбы"
   ).slice(0, 6);
+
+  // Initialize category images from localStorage or defaults
+  useEffect(() => {
+    const savedImages: Record<string, string> = {};
+    try {
+      productCategories.forEach(category => {
+        const savedImage = localStorage.getItem(`category-image-${category.name}`);
+        if (savedImage) {
+          savedImages[category.name] = savedImage;
+        } else {
+          const defaultImage = getProductImage({ category: category.name, name: "default" });
+          if (defaultImage) {
+            savedImages[category.name] = defaultImage;
+          }
+        }
+      });
+      setCategoryImages(savedImages);
+    } catch (e) {
+      console.error("Error loading saved category images:", e);
+    }
+  }, []);
 
   const handleCategoryClick = (categoryId: string, event: React.MouseEvent) => {
     event.preventDefault();
@@ -58,11 +81,28 @@ const ProductShowcase: React.FC = () => {
   };
 
   const handleImageUploaded = (uploadedUrl: string, categoryName: string) => {
-    toast({
-      title: "Изображение загружено",
-      description: `Изображение для категории "${categoryName}" успешно обновлено`,
-    });
-    setEditingCategory(null);
+    try {
+      // Save to state and localStorage
+      setCategoryImages(prev => ({
+        ...prev,
+        [categoryName]: uploadedUrl
+      }));
+      
+      localStorage.setItem(`category-image-${categoryName}`, uploadedUrl);
+      
+      toast({
+        title: "Изображение загружено",
+        description: `Изображение для категории "${categoryName}" успешно обновлено`,
+      });
+      setEditingCategory(null);
+    } catch (error) {
+      console.error("Error saving category image:", error);
+      toast({
+        variant: "destructive",
+        title: "Ошибка",
+        description: "Не удалось сохранить изображение категории",
+      });
+    }
   };
 
   return (
@@ -78,11 +118,11 @@ const ProductShowcase: React.FC = () => {
             <div key={category.id} className="relative">
               <CategoryCard
                 category={category}
-                image={editingCategory === category.name ? undefined : getProductImage({ category: category.name, name: "default" })}
+                image={editingCategory === category.name ? undefined : categoryImages[category.name]}
                 onCategoryClick={handleCategoryClick}
               />
               {editingCategory === category.name ? (
-                <div className="absolute inset-0 bg-white p-4 rounded-xl shadow-md">
+                <div className="absolute inset-0 bg-white p-4 rounded-xl shadow-md z-10">
                   <div className="flex justify-between items-center mb-4">
                     <h3 className="font-semibold">Загрузка изображения</h3>
                     <Button 
@@ -94,7 +134,7 @@ const ProductShowcase: React.FC = () => {
                     </Button>
                   </div>
                   <ImageUpload
-                    initialImage={getProductImage({ category: category.name, name: "default" })}
+                    initialImage={categoryImages[category.name]}
                     onImageUploaded={(url) => handleImageUploaded(url, category.name)}
                     productId={undefined}
                   />
@@ -103,7 +143,7 @@ const ProductShowcase: React.FC = () => {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="absolute top-2 right-2 bg-white/80 hover:bg-white"
+                  className="absolute top-2 right-2 bg-white/80 hover:bg-white z-10"
                   onClick={() => setEditingCategory(category.name)}
                 >
                   <Edit2 className="h-4 w-4" />

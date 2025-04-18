@@ -29,8 +29,18 @@ const saveFileToProject = async (file: File, filename: string): Promise<string> 
     console.log("Created blob URL:", blobUrl);
     
     // Create the final path where the file would be stored
-    const filePath = `lovable-uploads/${filename}`;
+    const filePath = `${UPLOADS_DIR}/${filename}`;
     console.log(`Image path set to: ${filePath}`);
+    
+    // In a real environment, we would save the file to the filesystem
+    // For the preview environment, we'll store it in localStorage to persist between page reloads
+    try {
+      // Store just the path in localStorage, not the actual blob data
+      localStorage.setItem(`uploaded_image_${filename}`, filePath);
+      console.log(`Saved image reference to localStorage: ${filename}`);
+    } catch (storageError) {
+      console.error("Failed to save to localStorage:", storageError);
+    }
     
     return filePath;
   } catch (error) {

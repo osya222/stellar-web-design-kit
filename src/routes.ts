@@ -43,6 +43,17 @@ export const getUploadedImageUrl = (path: string): string | null => {
   
   // If it's a relative path to a static resource, return it directly
   if (path.startsWith('/')) {
+    // Check if this is a lovable-uploads path that we've stored in localStorage
+    if (path.includes('/lovable-uploads/')) {
+      // For preview/development, check if we have the image in localStorage
+      const filename = path.split('/').pop();
+      if (filename) {
+        const storedPath = localStorage.getItem(`uploaded_image_${filename}`);
+        if (storedPath) {
+          return path; // Use the original path as the reference
+        }
+      }
+    }
     return path;
   }
   

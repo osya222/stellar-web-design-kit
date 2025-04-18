@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, RefreshCcw } from "lucide-react";
+import { getUploadedImageUrl } from '@/routes';
 
 interface CategoryCardProps {
   category: {
@@ -14,11 +15,16 @@ interface CategoryCardProps {
 
 const CategoryCard: React.FC<CategoryCardProps> = ({ category, image, onCategoryClick }) => {
   const [imageError, setImageError] = useState(false);
-  const [currentImage, setCurrentImage] = useState(image);
+  const [currentImage, setCurrentImage] = useState<string | null>(null);
   
   useEffect(() => {
-    setCurrentImage(image);
-    setImageError(false);
+    if (image) {
+      const resolvedUrl = getUploadedImageUrl(image) || image;
+      setCurrentImage(resolvedUrl);
+      setImageError(false);
+    } else {
+      setCurrentImage(null);
+    }
   }, [image]);
   
   const renderFishIcon = () => {
