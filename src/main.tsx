@@ -51,44 +51,50 @@ window.fetch = async (input, init) => {
       }
     }
     
-    // Check if this is a request for an uploaded image
-    if (url.includes('/images/')) {
-      console.log("Intercepting image request:", url);
+    // Handle requests for lovable-uploads images
+    if (url.includes('/lovable-uploads/')) {
+      console.log("Intercepting lovable-uploads image request:", url);
       
-      // Try to get the image from localStorage
-      const imagePath = url;
-      const base64Data = localStorage.getItem(imagePath) || 
-                         localStorage.getItem(`uploaded_image_${url.split('/').pop()}`);
+      // Extract the filename
+      const filename = url.split('/').pop();
       
-      if (base64Data) {
-        console.log("Found image data for:", url);
+      if (filename) {
+        // Try to get the image data from localStorage
+        const imageData = localStorage.getItem(`image_data_${filename}`);
         
-        // Create a response with the image data
-        const response = new Response(base64Data);
-        // Clone the response and add the content type header
-        const clonedResponse = new Response(response.body, {
-          status: 200,
-          headers: {
-            'Content-Type': base64Data.startsWith('data:image/') 
-              ? base64Data.split(';')[0].replace('data:', '')
-              : 'image/jpeg'
+        if (imageData && imageData.startsWith('data:')) {
+          console.log("Found image data for:", filename);
+          
+          // Create a response with the image data
+          return new Response(imageData, {
+            status: 200,
+            headers: {
+              'Content-Type': imageData.split(';')[0].replace('data:', '')
+            }
+          });
+        }
+        
+        // Try to get the blob URL
+        const blobUrl = localStorage.getItem(`blob_url_${filename}`);
+        if (blobUrl && blobUrl.startsWith('blob:')) {
+          console.log("Found blob URL for:", filename);
+          
+          try {
+            // Fetch the blob and return it
+            const blobResponse = await originalFetch(blobUrl);
+            return blobResponse;
+          } catch (blobError) {
+            console.error("Error fetching blob:", blobError);
           }
-        });
-        
-        return clonedResponse;
+        }
       }
+      
+      // If we couldn't find the image, return a placeholder
+      console.log("Image not found in localStorage, returning placeholder");
+      return originalFetch('/placeholder.svg');
     }
   } catch (error) {
-    console.error("Error intercepting API request:", error);
-    return new Response(JSON.stringify({ 
-      error: 'Error processing request', 
-      details: error instanceof Error ? error.message : String(error) 
-    }), { 
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    });
+    console.error("Error intercepting request:", error);
   }
   
   // Otherwise, pass the request to the original fetch

@@ -35,9 +35,28 @@ const saveFileToProject = async (file: File, filename: string): Promise<string> 
     // In a real environment, we would save the file to the filesystem
     // For the preview environment, we'll store it in localStorage to persist between page reloads
     try {
-      // Store just the path in localStorage, not the actual blob data
+      // Store the path in localStorage
       localStorage.setItem(`uploaded_image_${filename}`, filePath);
       console.log(`Saved image reference to localStorage: ${filename}`);
+      
+      // Also store the blob URL for direct access
+      localStorage.setItem(`blob_url_${filename}`, blobUrl);
+      console.log(`Saved blob URL to localStorage: ${filename}`);
+      
+      // For development, add the image data (base64) to localStorage
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64 = reader.result;
+        if (typeof base64 === 'string') {
+          try {
+            localStorage.setItem(`image_data_${filename}`, base64);
+            console.log(`Saved image data to localStorage: ${filename}`);
+          } catch (err) {
+            console.warn("Failed to save image data (likely too large):", err);
+          }
+        }
+      };
+      reader.readAsDataURL(file);
     } catch (storageError) {
       console.error("Failed to save to localStorage:", storageError);
     }

@@ -25,7 +25,23 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, image, onCategory
       try {
         const resolvedUrl = getUploadedImageUrl(image) || image;
         console.log(`CategoryCard: Resolved image URL for ${category.name}:`, resolvedUrl);
-        setCurrentImage(resolvedUrl);
+        
+        // Check if the image is from a lovable-uploads path and make sure it's properly formatted
+        if (resolvedUrl && resolvedUrl.includes('lovable-uploads')) {
+          // Create an image element to pre-load and verify the image works
+          const img = new Image();
+          img.onload = () => {
+            setCurrentImage(resolvedUrl);
+          };
+          img.onerror = () => {
+            console.error("Image failed to preload:", resolvedUrl);
+            setImageError(true);
+            setCurrentImage(null);
+          };
+          img.src = resolvedUrl;
+        } else {
+          setCurrentImage(resolvedUrl);
+        }
       } catch (error) {
         console.error("Error resolving image URL:", error);
         setImageError(true);

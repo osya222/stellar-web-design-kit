@@ -43,25 +43,45 @@ export const getUploadedImageUrl = (path: string): string | null => {
   
   // If it's a relative path to a static resource, return it directly
   if (path.startsWith('/')) {
-    // Check if this is a lovable-uploads path that we've stored in localStorage
+    // For paths like /lovable-uploads/... check if they exist in localStorage
     if (path.includes('/lovable-uploads/')) {
-      // For preview/development, check if we have the image in localStorage
       const filename = path.split('/').pop();
+      
+      // First try with the exact key
       if (filename) {
+        // Look for the image in localStorage by its full path or by key
         const storedPath = localStorage.getItem(`uploaded_image_${filename}`);
         if (storedPath) {
-          return path; // Use the original path as the reference
+          console.log("Found path in localStorage for:", filename);
+          
+          // If we're in development, we can use the blob URL if available
+          const blobUrl = localStorage.getItem(`blob_url_${filename}`);
+          if (blobUrl && blobUrl.startsWith('blob:')) {
+            console.log("Using blob URL for:", filename);
+            return blobUrl;
+          }
+          
+          return path;
         }
       }
     }
-    return path;
+    
+    // If we didn't find it in localStorage but it's a valid path, return it
+    if (path.startsWith('/') && path.includes('.')) {
+      return path;
+    }
+    
+    // If all else fails, check if there's a placeholder image
+    if (path.includes('/placeholder')) {
+      return '/placeholder.svg';
+    }
   }
   
-  // If it's a lovable-uploads path, ensure it starts with a slash
+  // If it's a lovable-uploads path but missing the leading slash, add it
   if (path.includes('lovable-uploads') && !path.startsWith('/')) {
     return `/${path}`;
   }
   
-  console.log("No image found for path:", path);
+  console.log("No valid image found for path:", path);
   return null;
 };
