@@ -32,50 +32,49 @@ export const apiRoutes = {
   }
 };
 
-// Add a utility function to get uploaded images
+// Improved utility function to get uploaded images
 export const getUploadedImageUrl = (path: string): string | null => {
   if (!path) return null;
   
   try {
+    console.log("Getting image URL for path:", path);
+    
     // If it's a data URL or blob URL, return it directly
     if (path.startsWith('data:') || path.startsWith('blob:')) {
       return path;
     }
     
-    // If it's a relative path to a static resource, return it directly
-    if (path.startsWith('/')) {
-      // For paths like /lovable-uploads/... check if they exist in localStorage
-      if (path.includes('/lovable-uploads/')) {
-        const filename = path.split('/').pop();
+    // For paths like /lovable-uploads/... look in localStorage
+    if (path.includes('lovable-uploads')) {
+      const filename = path.split('/').pop();
+      
+      if (filename) {
+        // Check for blob URL first (most direct access)
+        const blobUrl = localStorage.getItem(`blob_url_${filename}`);
+        if (blobUrl && blobUrl.startsWith('blob:')) {
+          console.log("Found blob URL for:", filename);
+          return blobUrl;
+        }
         
-        // First try with the exact key
-        if (filename) {
-          // Look for the image in localStorage by its full path or by key
-          const storedPath = localStorage.getItem(`uploaded_image_${filename}`);
-          if (storedPath) {
-            console.log("Found path in localStorage for:", filename);
-            
-            // If we're in development, we can use the blob URL if available
-            const blobUrl = localStorage.getItem(`blob_url_${filename}`);
-            if (blobUrl && blobUrl.startsWith('blob:')) {
-              console.log("Using blob URL for:", filename);
-              return blobUrl;
-            }
-            
-            return path;
-          }
+        // Check for the stored path
+        const storedPath = localStorage.getItem(`uploaded_image_${filename}`);
+        if (storedPath) {
+          console.log("Found stored path for:", filename);
+          return path;
+        }
+        
+        // Check for image data
+        const imageData = localStorage.getItem(`image_data_${filename}`);
+        if (imageData && imageData.startsWith('data:')) {
+          console.log("Found image data for:", filename);
+          return imageData;
         }
       }
-      
-      // If we didn't find it in localStorage but it's a valid path, return it
-      if (path.startsWith('/') && path.includes('.')) {
-        return path;
-      }
-      
-      // If all else fails, check if there's a placeholder image
-      if (path.includes('/placeholder')) {
-        return '/placeholder.svg';
-      }
+    }
+    
+    // If it's a relative path to a static resource, return it directly
+    if (path.startsWith('/') && !path.includes('lovable-uploads')) {
+      return path;
     }
     
     // If it's a lovable-uploads path but missing the leading slash, add it
@@ -83,17 +82,16 @@ export const getUploadedImageUrl = (path: string): string | null => {
       return `/${path}`;
     }
     
-    // Try looking for any filename match in localStorage
+    // Try looking for any filename match in localStorage as last resort
     const filename = path.includes('/') ? path.split('/').pop() : path;
     if (filename) {
-      // Try to find any blob URL with a partial match
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        if (key && key.startsWith('blob_url_') && key.includes(filename)) {
-          const blobUrl = localStorage.getItem(key);
-          if (blobUrl && blobUrl.startsWith('blob:')) {
-            console.log("Found matching blob URL for:", filename);
-            return blobUrl;
+        if (key && key.includes(filename)) {
+          const value = localStorage.getItem(key);
+          if (value && (value.startsWith('blob:') || value.startsWith('data:') || value.includes('lovable-uploads'))) {
+            console.log("Found matching storage item for:", filename);
+            return value;
           }
         }
       }

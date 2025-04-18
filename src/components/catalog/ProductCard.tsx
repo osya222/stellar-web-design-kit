@@ -38,6 +38,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         setImageError(true);
       }
     }
+    
+    setImageUrl('');
   }, [product]);
 
   const handleAddToCart = () => {

@@ -5,9 +5,10 @@
 // Define uploads directory path
 const UPLOADS_DIR = '/lovable-uploads';
 
-// Function to generate a safe filename with timestamp
-const generateSafeFilename = (originalName: string): string => {
+// Function to generate a unique filename with UUID-like ID
+const generateUniqueFilename = (originalName: string): string => {
   const timestamp = Date.now();
+  const randomId = Math.random().toString(36).substring(2, 15);
   const extension = originalName.split('.').pop() || 'jpg';
   const safeName = originalName
     .split('.')[0]
@@ -15,7 +16,7 @@ const generateSafeFilename = (originalName: string): string => {
     .replace(/\s+/g, '-')
     .toLowerCase();
   
-  return `${safeName}-${timestamp}.${extension}`;
+  return `${safeName}-${timestamp}-${randomId}.${extension}`;
 };
 
 // Helper function to save file to project
@@ -123,8 +124,8 @@ export const handleUpload = async (req: Request) => {
     
     console.log("File received:", file.name, "Size:", file.size, "Type:", file.type);
     
-    // Generate a safe filename
-    const filename = generateSafeFilename(String(filenameParam));
+    // Generate a unique filename to prevent collisions
+    const filename = generateUniqueFilename(String(filenameParam));
     
     try {
       // Save the file to the project

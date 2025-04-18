@@ -42,11 +42,12 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         console.error("Error resolving initial image:", error);
         setImage(null);
       }
+    } else {
+      setImage(null);
     }
   }, [initialImage]);
 
   const triggerFileInput = () => {
-    // Напрямую вызываем клик по скрытому input элементу
     if (fileInputRef.current) {
       fileInputRef.current.click();
     }
@@ -80,9 +81,10 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       setLocalBlob(previewUrl);
       setImage(previewUrl);
       
+      // Determine file prefix based on usage
       const prefix = productId 
         ? `product-${productId}`
-        : `product-new`;
+        : `category-${Date.now()}`;
       
       const formData = new FormData();
       formData.append('file', file);
@@ -111,11 +113,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         throw new Error('No image path returned from server');
       }
       
-      const savedImagePath = result.path;
-      
-      // If we're on localhost/development, we'll use the blob URL for preview
-      // but save the path for later use
-      onImageUploaded(savedImagePath);
+      // Save the path for later use
+      onImageUploaded(result.path);
       
       toast({
         title: "Успешно",
@@ -140,7 +139,6 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   };
 
   const handleRemoveImage = () => {
-    // Stop any event propagation
     try {
       if (localBlob) {
         URL.revokeObjectURL(localBlob);
@@ -151,9 +149,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       setImage(null);
       
       // Notify parent component
-      if (typeof onImageUploaded === 'function') {
-        onImageUploaded('');
-      }
+      onImageUploaded('');
       
       // Reset any error state
       setUploadError('');

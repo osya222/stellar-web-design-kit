@@ -40,6 +40,7 @@ const ProductShowcase: React.FC = () => {
       productCategories.forEach(category => {
         const savedImage = localStorage.getItem(`category-image-${category.name}`);
         if (savedImage) {
+          console.log(`Loaded saved image for category ${category.name}:`, savedImage);
           savedImages[category.name] = savedImage;
         } else {
           const defaultImage = getProductImage({ category: category.name, name: "default" });
@@ -98,6 +99,8 @@ const ProductShowcase: React.FC = () => {
         setEditingCategory(null);
         return;
       }
+      
+      console.log(`Saving category image for ${categoryName}:`, uploadedUrl);
       
       // Save to state and localStorage
       setCategoryImages(prev => ({
