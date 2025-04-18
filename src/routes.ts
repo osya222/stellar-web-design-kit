@@ -1,5 +1,7 @@
 
 // Define route handlers for API endpoints
+import { handleUpload } from './api/upload';
+
 const API_BASE = '/api';
 const UPLOADS_DIR = '/images/products';
 
@@ -51,3 +53,22 @@ export const getImageUrl = (path: string | undefined): string => {
   return `${resolvedPath}?t=${timestamp}`;
 };
 
+// Function to get the URL for uploaded images
+export const getUploadedImageUrl = (path: string | undefined): string => {
+  if (!path) return '/placeholder.svg';
+  
+  // If it's already a full URL, return it as is
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    return path;
+  }
+  
+  // Make sure the path starts with the uploads directory
+  if (!path.includes(UPLOADS_DIR) && !path.startsWith('/lovable-uploads/')) {
+    // If the path doesn't include the uploads directory, assume it's in the uploads directory
+    const normalizedPath = path.startsWith('/') ? path.substring(1) : path;
+    path = `${UPLOADS_DIR}/${normalizedPath}`;
+  }
+  
+  // Return the path with cache busting
+  return getImageUrl(path);
+};
