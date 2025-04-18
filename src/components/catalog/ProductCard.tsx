@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
-import { ShoppingCart, ImageIcon } from "lucide-react";
+import { ShoppingCart, Upload, ImageIcon } from "lucide-react";
 import { useCart } from '@/context/CartContext';
 import { useToast } from "@/hooks/use-toast";
 import { storage } from '@/utils/supabase';
@@ -18,7 +17,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { toast } = useToast();
   const [imageError, setImageError] = useState(false);
   
-  // For Supabase URLs, use them directly. For paths, try to get from storage
   const imageSrc = imageError || !product.image 
     ? '/placeholder.svg' 
     : product.image.startsWith('http') 
@@ -43,8 +41,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       <div className="h-48 bg-white flex items-center justify-center relative overflow-hidden">
         {!imageSrc || imageError ? (
           <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100">
-            <ImageIcon className="w-12 h-12 text-gray-400" />
-            <span className="text-sm text-gray-500 mt-2">Нет изображения</span>
+            <Upload className="w-12 h-12 text-gray-400 mb-2" />
+            <span className="text-sm text-gray-500">Загрузить изображение</span>
           </div>
         ) : (
           <img 
