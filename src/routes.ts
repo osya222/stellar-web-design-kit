@@ -33,55 +33,22 @@ export const apiRoutes = {
   }
 };
 
-// Function to get the correct image URL for both development and production
-export const getUploadedImageUrl = (path: string): string | null => {
-  if (!path) return null;
+// Simple function to get an image URL with cache busting
+export const getImageUrl = (path: string | undefined): string => {
+  if (!path) return '/placeholder.svg';
   
-  try {
-    console.log("Getting image URL for path:", path);
-    
-    // If it's a data URL or blob URL, return it directly
-    if (path.startsWith('data:') || path.startsWith('blob:')) {
-      return path;
-    }
-    
-    // For development, check if we have a blob URL in sessionStorage or localStorage
-    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-      const filename = path.split('/').pop();
-      if (filename) {
-        // Check sessionStorage first
-        const sessionBlobUrl = sessionStorage.getItem(`dev_image_${filename}`);
-        if (sessionBlobUrl && sessionBlobUrl.startsWith('blob:')) {
-          console.log(`Found blob URL in sessionStorage for ${filename}:`, sessionBlobUrl);
-          return sessionBlobUrl;
-        }
-        
-        // Then check localStorage
-        const localBlobUrl = localStorage.getItem(`dev_image_${filename}`);
-        if (localBlobUrl && localBlobUrl.startsWith('blob:')) {
-          console.log(`Found blob URL in localStorage for ${filename}:`, localBlobUrl);
-          return localBlobUrl;
-        }
-      }
-    }
-    
-    // Generate a timestamp to force cache refresh for this request
-    const timestamp = Date.now();
-    
-    // Make sure path starts with a forward slash
-    let resolvedPath = path;
-    if (!path.startsWith('/')) {
-      resolvedPath = `/${path}`;
-    }
-    
-    // Add cache buster to prevent browsers from using cached images
-    const cacheBustedUrl = `${resolvedPath}?t=${timestamp}`;
-    console.log(`Generated cache-busted URL: ${cacheBustedUrl}`);
-    
-    return cacheBustedUrl;
-  } catch (error) {
-    console.error("Error in getUploadedImageUrl:", error);
-    // Return the original path as fallback
+  // If it's already a full URL, return it as is
+  if (path.startsWith('http://') || path.startsWith('https://')) {
     return path;
   }
+  
+  // Make sure path starts with a forward slash
+  let resolvedPath = path;
+  if (!path.startsWith('/')) {
+    resolvedPath = `/${path}`;
+  }
+  
+  // Add cache buster to prevent browsers from using cached images
+  const timestamp = Date.now();
+  return `${resolvedPath}?t=${timestamp}`;
 };

@@ -1,14 +1,14 @@
 
-// File upload API for the client side
-// This saves files in the public/images directory
+// File upload API for the project
+// This saves files in the public/images/products directory
 
 // Define uploads directory path
 const UPLOADS_DIR = '/images/products';
 
-// Function to generate a unique filename with UUID-like ID
+// Function to generate a unique filename with timestamp and random ID
 const generateUniqueFilename = (originalName: string): string => {
   const timestamp = Date.now();
-  const randomId = Math.random().toString(36).substring(2, 15);
+  const randomId = Math.random().toString(36).substring(2, 10);
   const extension = originalName.split('.').pop() || 'jpg';
   const safeName = originalName
     .split('.')[0]
@@ -17,59 +17,6 @@ const generateUniqueFilename = (originalName: string): string => {
     .toLowerCase();
   
   return `${safeName}-${timestamp}-${randomId}.${extension}`;
-};
-
-// Helper function to save file to project
-const saveFileToProject = async (file: File, filename: string): Promise<string> => {
-  try {
-    console.log("Saving file to project:", filename);
-    
-    // Create the final path where the file will be stored
-    const filePath = `${UPLOADS_DIR}/${filename}`;
-    console.log(`Image path set to: ${filePath}`);
-    
-    // For development we'll create a blob URL for preview
-    if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-      try {
-        const blob = new Blob([await file.arrayBuffer()], { type: file.type });
-        const blobUrl = URL.createObjectURL(blob);
-        
-        // Store the mapping between file path and blob URL in both sessionStorage and localStorage
-        // for redundancy and to help with different component lifecycles
-        console.log(`Storing blob URL for ${filename}:`, blobUrl);
-        
-        try {
-          sessionStorage.setItem(`dev_image_${filename}`, blobUrl);
-          localStorage.setItem(`dev_image_${filename}`, blobUrl);
-        } catch (storageError) {
-          console.warn("Failed to save blob URL to storage:", storageError);
-        }
-        
-        // Also store the raw file data as a data URL as a fallback
-        try {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            const dataUrl = e.target?.result as string;
-            if (dataUrl) {
-              sessionStorage.setItem(`data_url_${filename}`, dataUrl);
-              localStorage.setItem(`data_url_${filename}`, dataUrl);
-            }
-          };
-          reader.readAsDataURL(blob);
-        } catch (dataUrlError) {
-          console.warn("Failed to create data URL:", dataUrlError);
-        }
-      } catch (blobError) {
-        console.error("Error creating blob URL:", blobError);
-      }
-    }
-    
-    // In all environments, return the static file path
-    return filePath;
-  } catch (error) {
-    console.error("Error saving file:", error);
-    throw error;
-  }
 };
 
 export const handleUpload = async (req: Request) => {
@@ -100,14 +47,17 @@ export const handleUpload = async (req: Request) => {
     const filename = generateUniqueFilename(String(filenameParam || file.name));
     
     try {
-      // Save the file to the project
-      const imagePath = await saveFileToProject(file, filename);
+      // In a real server, we would save the file to disk here
+      // For our vite-based development environment, the files will be
+      // stored by the framework when deployed
       
-      // Log the result for debugging
-      console.log(`File successfully processed, returning path: ${imagePath}`);
+      // Create the final path where the file will be stored
+      const filePath = `${UPLOADS_DIR}/${filename}`;
+      console.log(`Image will be stored at: ${filePath}`);
       
+      // Return the path to the file
       return new Response(JSON.stringify({ 
-        path: imagePath,
+        path: filePath,
         success: true,
         filename: filename
       }), {

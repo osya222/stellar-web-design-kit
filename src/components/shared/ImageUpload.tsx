@@ -1,8 +1,7 @@
-
-import React, { useState, useEffect, useRef } from 'react';
-import { Upload, Loader2, X, ImageIcon, RefreshCw } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Upload, Loader2, X, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { getUploadedImageUrl } from '@/routes';
+import { getImageUrl } from '@/routes';
 import { useToast } from '@/hooks/use-toast';
 
 interface ImageUploadProps {
@@ -16,34 +15,12 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   onImageUploaded,
   productId 
 }) => {
-  const [image, setImage] = useState<string | null>(null);
+  const [imagePath, setImagePath] = useState<string | null>(initialImage || null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(initialImage ? getImageUrl(initialImage) : null);
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadError, setUploadError] = useState('');
-  const [isImageLoading, setIsImageLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
-  const [rawImagePath, setRawImagePath] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (initialImage) {
-      try {
-        setIsImageLoading(true);
-        setRawImagePath(initialImage);
-        console.log(`ImageUpload: Loading initial image path: ${initialImage}`);
-        const resolvedUrl = getUploadedImageUrl(initialImage) || initialImage;
-        console.log(`ImageUpload: Resolved URL: ${resolvedUrl}`);
-        setImage(resolvedUrl);
-      } catch (error) {
-        console.error("Error resolving initial image:", error);
-        setImage(null);
-      } finally {
-        setIsImageLoading(false);
-      }
-    } else {
-      setRawImagePath(null);
-      setImage(null);
-    }
-  }, [initialImage]);
 
   const triggerFileInput = () => {
     if (fileInputRef.current) {
@@ -66,7 +43,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     }
 
     setIsUploading(true);
-    setUploadError('');
+    setError(null);
     
     try {
       // Generate a unique ID for the product if not exists
@@ -78,6 +55,10 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       formData.append('filename', `${prefix}-${file.name}`);
 
       console.log(`Uploading image with filename: ${prefix}-${file.name}`);
+
+      // Create a temporary preview for immediate feedback
+      const tempPreviewUrl = URL.createObjectURL(file);
+      setPreviewUrl(tempPreviewUrl);
 
       const response = await fetch('/api/upload', {
         method: 'POST',
@@ -97,20 +78,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       
       console.log("Upload successful, received path:", result.path);
       
-      // Store the raw path for future reference
-      setRawImagePath(result.path);
-      
-      // Create a temporary object URL for immediate preview
-      if (file) {
-        const tempUrl = URL.createObjectURL(file);
-        setImage(tempUrl);
-        console.log("Created temporary preview URL:", tempUrl);
-        
-        // Clean up the temporary URL when component unmounts
-        setTimeout(() => {
-          URL.revokeObjectURL(tempUrl);
-        }, 60000); // Revoke after 1 minute
-      }
+      // Store the server path
+      setImagePath(result.path);
       
       // Notify parent component with the successfully uploaded image path
       onImageUploaded(result.path);
@@ -122,7 +91,11 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     } catch (error) {
       console.error(`Upload error:`, error);
       const errorMessage = error instanceof Error ? error.message : 'Неизвестная ошибка';
-      setUploadError(errorMessage);
+      setError(errorMessage);
+      
+      // Keep the preview URL even if the server upload failed
+      // This allows the user to see what they uploaded
+      
       toast({
         variant: "destructive",
         title: "Ошибка",
@@ -137,61 +110,34 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   };
 
   const handleRemoveImage = () => {
-    setImage(null);
-    setRawImagePath(null);
-    onImageUploaded('');
-    setUploadError('');
-  };
-
-  const handleRetryLoadImage = () => {
-    if (rawImagePath) {
-      setIsImageLoading(true);
-      // Force a timestamp to bust cache
-      const timestamp = Date.now();
-      let url = rawImagePath;
-      if (!url.startsWith('/')) url = `/${url}`;
-      const cacheBustUrl = `${url}?t=${timestamp}`;
-      
-      console.log(`Retrying image load with cache-busting URL: ${cacheBustUrl}`);
-      setImage(cacheBustUrl);
-      setTimeout(() => setIsImageLoading(false), 500);
+    // Revoke any object URL to prevent memory leaks
+    if (previewUrl && previewUrl.startsWith('blob:')) {
+      URL.revokeObjectURL(previewUrl);
     }
-  };
-
-  const handleImageError = () => {
-    console.error("Failed to load image:", image);
-    setUploadError('Не удалось загрузить изображение');
+    
+    setPreviewUrl(null);
+    setImagePath(null);
+    setError(null);
+    onImageUploaded('');
   };
 
   return (
     <div className="w-full">
-      {image ? (
+      {previewUrl ? (
         <div className="relative border rounded-md overflow-hidden">
-          {isImageLoading ? (
-            <div className="w-full h-48 flex flex-col items-center justify-center bg-gray-100">
-              <div className="animate-spin h-8 w-8 border-4 border-blue-500 rounded-full border-t-transparent"></div>
-              <span className="text-sm text-gray-500 mt-2">Загрузка изображения...</span>
-            </div>
-          ) : (
-            <img 
-              src={image} 
-              alt="Загруженное фото" 
-              className="w-full h-48 object-contain bg-gray-100"
-              onError={handleImageError}
-              onLoad={() => console.log("Image loaded successfully")}
-            />
-          )}
-          <div className="absolute top-2 right-2 flex gap-2">
-            <Button 
-              type="button" 
-              variant="outline" 
-              size="icon" 
-              className="rounded-full bg-white"
-              onClick={handleRetryLoadImage}
-              title="Обновить изображение"
-            >
-              <RefreshCw className="h-4 w-4" />
-            </Button>
+          <img 
+            src={previewUrl} 
+            alt="Загруженное фото" 
+            className="w-full h-48 object-contain bg-gray-100"
+            onError={() => {
+              console.error("Image failed to load:", previewUrl);
+              // If the preview fails to load, try using the original path
+              if (imagePath) {
+                setPreviewUrl(getImageUrl(imagePath));
+              }
+            }}
+          />
+          <div className="absolute top-2 right-2">
             <Button 
               type="button" 
               variant="destructive" 
@@ -218,16 +164,16 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
             ref={fileInputRef}
           />
           
-          {uploadError ? (
+          {error ? (
             <div className="text-center">
-              <p className="text-red-500 text-sm mb-2">{uploadError}</p>
+              <p className="text-red-500 text-sm mb-2">{error}</p>
               <Button 
                 type="button" 
                 variant="outline" 
                 size="sm" 
                 onClick={(e) => {
                   e.stopPropagation();
-                  setUploadError('');
+                  setError(null);
                 }}
               >
                 Попробовать снова
