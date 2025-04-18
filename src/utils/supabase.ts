@@ -7,64 +7,51 @@ const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 // Create a mock storage service if Supabase is not configured
 const createMockStorage = () => {
   console.warn(
-    'Supabase environment variables are missing. Using localStorage fallback for image storage. ' +
-    'For production, please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY in your environment.'
+    'Using local file storage for images. ' +
+    'Images will be stored in public/images/products directory.'
   );
-
-  // Local storage key for images
-  const STORAGE_KEY = 'product_images';
-
-  // Get stored images from localStorage
-  const getStoredImages = (): Record<string, string> => {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      return stored ? JSON.parse(stored) : {};
-    } catch (error) {
-      console.error('Error reading from localStorage:', error);
-      return {};
-    }
-  };
-
-  // Save images to localStorage
-  const saveStoredImages = (images: Record<string, string>) => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(images));
-    } catch (error) {
-      console.error('Error saving to localStorage:', error);
-    }
-  };
 
   return {
     upload: async (file: File, path: string) => {
-      return new Promise<{ path: string }>((resolve, reject) => {
-        const reader = new FileReader();
-
-        reader.onload = (event) => {
-          try {
-            const base64Data = event.target?.result as string;
-            const images = getStoredImages();
-            images[path] = base64Data;
-            saveStoredImages(images);
-            resolve({ path });
-          } catch (error) {
-            reject(error);
-          }
-        };
-
-        reader.onerror = (error) => reject(error);
-        reader.readAsDataURL(file);
-      });
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('filename', path);
+        
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+        
+        if (!response.ok) {
+          throw new Error('Upload failed');
+        }
+        
+        const data = await response.json();
+        return { path: data.path };
+      } catch (error) {
+        console.error('Upload error:', error);
+        throw error;
+      }
     },
 
     getPublicUrl: (path: string) => {
-      const images = getStoredImages();
-      return images[path] || '';
+      // Return the direct path to the image in the public directory
+      return `/images/products/${path.split('/').pop()}`;
     },
 
     delete: async (path: string) => {
-      const images = getStoredImages();
-      delete images[path];
-      saveStoredImages(images);
+      try {
+        const response = await fetch(`/api/upload?path=${encodeURIComponent(path)}`, {
+          method: 'DELETE',
+        });
+        if (!response.ok) {
+          throw new Error('Delete failed');
+        }
+      } catch (error) {
+        console.error('Delete error:', error);
+        throw error;
+      }
     }
   };
 };

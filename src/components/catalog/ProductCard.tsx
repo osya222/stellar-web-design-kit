@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -58,7 +57,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     try {
       const timestamp = Date.now();
       const safeFileName = file.name.replace(/[^\w\s.-]/g, '').toLowerCase();
-      const path = `products/${product.id}-${timestamp}-${safeFileName}`;
+      const path = `${product.id}-${timestamp}-${safeFileName}`;
       
       await storage.upload(file, path);
       const publicUrl = storage.getPublicUrl(path);

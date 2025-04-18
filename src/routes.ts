@@ -1,4 +1,3 @@
-
 // Define route handlers for API endpoints
 import { handleUpload } from './api/upload';
 
