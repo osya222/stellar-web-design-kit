@@ -63,6 +63,12 @@ const ProductCatalog: React.FC = () => {
     setSelectedCategory('all');
   };
   
+  // Function to manually trigger a refresh
+  const handleRefresh = () => {
+    console.log("Manually refreshing catalog...");
+    setRefreshTrigger(Date.now());
+  };
+  
   return (
     <Card className="border-0 shadow-lg rounded-xl overflow-hidden">
       <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 py-8">

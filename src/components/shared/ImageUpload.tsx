@@ -114,11 +114,20 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         throw new Error('No image path returned from server');
       }
       
-      // Save image reference to localStorage
+      // Save image reference to localStorage for persistence
       try {
         localStorage.setItem(`uploaded_image_${result.filename}`, result.path);
         localStorage.setItem(`blob_url_${result.filename}`, previewUrl);
         console.log(`Saved image references to localStorage: ${result.filename}`);
+        
+        // Also save to the persistent uploaded files list
+        const uploadedFiles = JSON.parse(localStorage.getItem('lovable_uploaded_files') || '[]');
+        uploadedFiles.push({
+          filename: result.filename,
+          path: result.path,
+          uploadDate: new Date().toISOString()
+        });
+        localStorage.setItem('lovable_uploaded_files', JSON.stringify(uploadedFiles));
       } catch (storageError) {
         console.warn("Failed to save to localStorage:", storageError);
       }

@@ -58,6 +58,17 @@ const saveFileToProject = async (file: File, filename: string): Promise<string> 
         }
       };
       reader.readAsDataURL(file);
+      
+      // Create a permanent record that links the filename to the upload date
+      // This will help with persistence
+      const uploadedFiles = JSON.parse(localStorage.getItem('lovable_uploaded_files') || '[]');
+      uploadedFiles.push({
+        filename,
+        path: filePath,
+        uploadDate: new Date().toISOString()
+      });
+      localStorage.setItem('lovable_uploaded_files', JSON.stringify(uploadedFiles));
+      
     } catch (storageError) {
       console.error("Failed to save to localStorage:", storageError);
     }

@@ -20,8 +20,8 @@ const Admin: React.FC = () => {
       }
     }
     
-    // Navigate back to home
-    navigate('/');
+    // Force reload if returning to home to ensure all product changes are visible
+    window.location.href = '/';
   };
   
   return (
@@ -48,7 +48,7 @@ const Admin: React.FC = () => {
           <AlertTitle className="text-blue-800">Управление товарами</AlertTitle>
           <AlertDescription className="text-blue-700">
             Добавляйте новые товары и редактируйте существующие. Изображения будут сохранены в проекте 
-            и доступны после публикации. Ограничение размера изображений: 2MB. 
+            и доступны после публикации. Ограничение размера изображений: 5MB. 
             Для связи используйте email: riba@рыба.shop
           </AlertDescription>
         </Alert>

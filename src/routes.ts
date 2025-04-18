@@ -44,12 +44,12 @@ export const getUploadedImageUrl = (path: string): string | null => {
     // Generate a cache key from the path
     const cacheKey = `image_path_${path}`;
     
-    // Check if we have a recent cached version (less than 5 seconds old)
+    // Check if we have a recent cached version (less than 3 seconds old)
     const cachedItem = localStorage.getItem(`image_url_cache_${cacheKey}`);
     if (cachedItem) {
       try {
         const cached = JSON.parse(cachedItem);
-        if (cached && cached.timestamp && Date.now() - cached.timestamp < 5000) {
+        if (cached && cached.timestamp && Date.now() - cached.timestamp < 3000) {
           console.log(`Using cached image URL for ${path}:`, cached.url);
           return cached.url;
         }
@@ -94,6 +94,19 @@ export const getUploadedImageUrl = (path: string): string | null => {
           console.log("Found image data for:", filename);
           cacheImageUrl(cacheKey, imageData);
           return imageData;
+        }
+        
+        // Check in the uploaded files list (for persistence)
+        try {
+          const uploadedFiles = JSON.parse(localStorage.getItem('lovable_uploaded_files') || '[]');
+          const fileRecord = uploadedFiles.find((f: any) => f.filename === filename || f.path === path);
+          if (fileRecord) {
+            console.log("Found file record in uploaded files list:", fileRecord);
+            cacheImageUrl(cacheKey, fileRecord.path);
+            return fileRecord.path;
+          }
+        } catch (e) {
+          console.warn("Error parsing uploaded files list:", e);
         }
       }
     }
