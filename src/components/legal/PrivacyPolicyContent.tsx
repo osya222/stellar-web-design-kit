@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Shield, Lock, User, Globe } from "lucide-react";
 
@@ -121,7 +122,7 @@ const PrivacyPolicyContent = () => {
 
       <div className="mt-10 pt-6 border-t border-gray-200">
         <p className="text-gray-700 italic">
-          Спасибо, что выбрали Рыба Shop (https://рыба.shop/)!<br />
+          Спасибо, что выбрали ООО «Ситекс» (https://рыба.shop/)!<br />
           Мы ценим ваше доверие и делаем всё возможное, чтобы ваш опыт покупок был безопасным и приятным.
         </p>
         
