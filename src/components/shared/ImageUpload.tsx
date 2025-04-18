@@ -22,13 +22,16 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   const [isImageLoading, setIsImageLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+  const [rawImagePath, setRawImagePath] = useState<string | null>(null);
 
   useEffect(() => {
     if (initialImage) {
       try {
         setIsImageLoading(true);
+        setRawImagePath(initialImage);
+        console.log(`ImageUpload: Loading initial image path: ${initialImage}`);
         const resolvedUrl = getUploadedImageUrl(initialImage) || initialImage;
-        console.log(`ImageUpload: Got initial image: ${initialImage}, resolved to: ${resolvedUrl}`);
+        console.log(`ImageUpload: Resolved URL: ${resolvedUrl}`);
         setImage(resolvedUrl);
       } catch (error) {
         console.error("Error resolving initial image:", error);
@@ -37,6 +40,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         setIsImageLoading(false);
       }
     } else {
+      setRawImagePath(null);
       setImage(null);
     }
   }, [initialImage]);
@@ -93,10 +97,19 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       
       console.log("Upload successful, received path:", result.path);
       
-      // Set the preview image with cache busting
-      const previewUrl = getUploadedImageUrl(result.path);
-      if (previewUrl) {
-        setImage(previewUrl);
+      // Store the raw path for future reference
+      setRawImagePath(result.path);
+      
+      // Create a temporary object URL for immediate preview
+      if (file) {
+        const tempUrl = URL.createObjectURL(file);
+        setImage(tempUrl);
+        console.log("Created temporary preview URL:", tempUrl);
+        
+        // Clean up the temporary URL when component unmounts
+        setTimeout(() => {
+          URL.revokeObjectURL(tempUrl);
+        }, 60000); // Revoke after 1 minute
       }
       
       // Notify parent component with the successfully uploaded image path
@@ -125,19 +138,21 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
 
   const handleRemoveImage = () => {
     setImage(null);
+    setRawImagePath(null);
     onImageUploaded('');
     setUploadError('');
   };
 
   const handleRetryLoadImage = () => {
-    if (initialImage) {
+    if (rawImagePath) {
       setIsImageLoading(true);
       // Force a timestamp to bust cache
       const timestamp = Date.now();
-      let url = initialImage;
+      let url = rawImagePath;
       if (!url.startsWith('/')) url = `/${url}`;
       const cacheBustUrl = `${url}?t=${timestamp}`;
       
+      console.log(`Retrying image load with cache-busting URL: ${cacheBustUrl}`);
       setImage(cacheBustUrl);
       setTimeout(() => setIsImageLoading(false), 500);
     }

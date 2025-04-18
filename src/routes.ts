@@ -45,32 +45,43 @@ export const getUploadedImageUrl = (path: string): string | null => {
       return path;
     }
     
-    // For development, check if we have a blob URL in sessionStorage
+    // For development, check if we have a blob URL in sessionStorage or localStorage
     if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
       const filename = path.split('/').pop();
       if (filename) {
-        const blobUrl = sessionStorage.getItem(`dev_image_${filename}`);
-        if (blobUrl && blobUrl.startsWith('blob:')) {
-          console.log(`Found blob URL for ${filename}:`, blobUrl);
-          return blobUrl;
+        // Check sessionStorage first
+        const sessionBlobUrl = sessionStorage.getItem(`dev_image_${filename}`);
+        if (sessionBlobUrl && sessionBlobUrl.startsWith('blob:')) {
+          console.log(`Found blob URL in sessionStorage for ${filename}:`, sessionBlobUrl);
+          return sessionBlobUrl;
+        }
+        
+        // Then check localStorage
+        const localBlobUrl = localStorage.getItem(`dev_image_${filename}`);
+        if (localBlobUrl && localBlobUrl.startsWith('blob:')) {
+          console.log(`Found blob URL in localStorage for ${filename}:`, localBlobUrl);
+          return localBlobUrl;
         }
       }
     }
     
-    // Always add timestamp to force browser to reload image and not use cache
+    // Generate a timestamp to force cache refresh for this request
     const timestamp = Date.now();
     
-    // For production or if no blob URL found, use the static path
     // Make sure path starts with a forward slash
     let resolvedPath = path;
     if (!path.startsWith('/')) {
       resolvedPath = `/${path}`;
     }
     
-    // Always use cache buster to prevent cached images
-    return `${resolvedPath}?t=${timestamp}`;
+    // Add cache buster to prevent browsers from using cached images
+    const cacheBustedUrl = `${resolvedPath}?t=${timestamp}`;
+    console.log(`Generated cache-busted URL: ${cacheBustedUrl}`);
+    
+    return cacheBustedUrl;
   } catch (error) {
     console.error("Error in getUploadedImageUrl:", error);
+    // Return the original path as fallback
     return path;
   }
 };

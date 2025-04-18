@@ -30,15 +30,37 @@ const saveFileToProject = async (file: File, filename: string): Promise<string> 
     
     // For development we'll create a blob URL for preview
     if (typeof window !== 'undefined' && process.env.NODE_ENV === 'development') {
-      const blob = new Blob([await file.arrayBuffer()], { type: file.type });
-      const blobUrl = URL.createObjectURL(blob);
-      
-      // Store the mapping between file path and blob URL for development
       try {
+        const blob = new Blob([await file.arrayBuffer()], { type: file.type });
+        const blobUrl = URL.createObjectURL(blob);
+        
+        // Store the mapping between file path and blob URL in both sessionStorage and localStorage
+        // for redundancy and to help with different component lifecycles
         console.log(`Storing blob URL for ${filename}:`, blobUrl);
-        sessionStorage.setItem(`dev_image_${filename}`, blobUrl);
-      } catch (storageError) {
-        console.warn("Failed to save blob URL to sessionStorage:", storageError);
+        
+        try {
+          sessionStorage.setItem(`dev_image_${filename}`, blobUrl);
+          localStorage.setItem(`dev_image_${filename}`, blobUrl);
+        } catch (storageError) {
+          console.warn("Failed to save blob URL to storage:", storageError);
+        }
+        
+        // Also store the raw file data as a data URL as a fallback
+        try {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const dataUrl = e.target?.result as string;
+            if (dataUrl) {
+              sessionStorage.setItem(`data_url_${filename}`, dataUrl);
+              localStorage.setItem(`data_url_${filename}`, dataUrl);
+            }
+          };
+          reader.readAsDataURL(blob);
+        } catch (dataUrlError) {
+          console.warn("Failed to create data URL:", dataUrlError);
+        }
+      } catch (blobError) {
+        console.error("Error creating blob URL:", blobError);
       }
     }
     
