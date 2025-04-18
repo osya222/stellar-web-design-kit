@@ -1,6 +1,6 @@
 
 // Define uploads directory path
-const UPLOADS_DIR = '/images/products';
+const UPLOADS_DIR = '/lovable-uploads';
 
 // Function to generate a unique filename with timestamp and random ID
 const generateUniqueFilename = (originalName: string): string => {

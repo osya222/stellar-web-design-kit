@@ -4,9 +4,10 @@ import { handleUpload } from './api/upload';
 
 const API_BASE = '/api';
 const UPLOADS_DIR = '/images/products';
+const LOVABLE_UPLOADS_DIR = '/lovable-uploads';
 
 export const apiRoutes = {
-  '/api/upload': async (req: Request) => {
+  [`${API_BASE}/upload`]: async (req: Request) => {
     try {
       console.log("API route called:", req.method, req.url);
       
@@ -62,13 +63,24 @@ export const getUploadedImageUrl = (path: string | undefined): string => {
     return path;
   }
   
-  // Make sure the path starts with the uploads directory
-  if (!path.includes(UPLOADS_DIR) && !path.startsWith('/lovable-uploads/')) {
-    // If the path doesn't include the uploads directory, assume it's in the uploads directory
-    const normalizedPath = path.startsWith('/') ? path.substring(1) : path;
-    path = `${UPLOADS_DIR}/${normalizedPath}`;
+  // Check if the path already contains lovable-uploads, which is where files are actually stored
+  if (path.includes(LOVABLE_UPLOADS_DIR)) {
+    return getImageUrl(path);
   }
   
-  // Return the path with cache busting
-  return getImageUrl(path);
+  // Check if the path already includes the expected uploads directory
+  if (path.includes(UPLOADS_DIR)) {
+    // Try to load from the expected directory first
+    return getImageUrl(path);
+  }
+  
+  // If neither, normalize the path and try both locations
+  const normalizedPath = path.startsWith('/') ? path.substring(1) : path;
+  
+  // First try the lovable-uploads directory
+  const lovablePath = `${LOVABLE_UPLOADS_DIR}/${normalizedPath}`;
+  console.log(`Trying lovable uploads path: ${lovablePath}`);
+  
+  // Return the lovable-uploads path with cache busting
+  return getImageUrl(lovablePath);
 };
