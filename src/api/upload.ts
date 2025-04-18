@@ -107,7 +107,7 @@ export const handleUpload = async (req: Request) => {
         }
       }
       
-      // Create the final path where the file will be stored
+      // Create a path that works for both upload directories
       const filePath = `${UPLOADS_DIR}/${filename}`;
       console.log(`Image will be stored at: ${filePath}`);
       

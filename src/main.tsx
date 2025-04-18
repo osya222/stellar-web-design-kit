@@ -1,3 +1,4 @@
+
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.tsx'
@@ -31,13 +32,31 @@ window.fetch = async (input, init) => {
               
               // If this is a file, store its data URL in localStorage
               if (value instanceof File) {
-                const reader = new FileReader();
-                reader.onload = () => {
-                  const filename = clonedFormData.get('filename') as string || value.name;
-                  localStorage.setItem(`image_data_${filename}`, reader.result as string);
-                  console.log(`Saved image data for ${filename} to localStorage`);
-                };
-                reader.readAsDataURL(value);
+                try {
+                  const reader = new FileReader();
+                  reader.onload = () => {
+                    try {
+                      const filename = clonedFormData.get('filename') as string || value.name;
+                      const dataUrl = reader.result as string;
+                      
+                      // Check if image is too large for localStorage
+                      if (dataUrl.length > 5 * 1024 * 1024) {
+                        console.warn(`Image ${filename} is too large for localStorage (${Math.round(dataUrl.length/1024/1024)}MB), storing reference only`);
+                        localStorage.setItem(`image_ref_${filename}`, filename);
+                      } else {
+                        localStorage.setItem(`image_data_${filename}`, dataUrl);
+                        console.log(`Saved image data for ${filename} to localStorage`);
+                      }
+                    } catch (storageError) {
+                      console.error("LocalStorage error:", storageError);
+                      const filename = clonedFormData.get('filename') as string || value.name;
+                      localStorage.setItem(`image_ref_${filename}`, filename);
+                    }
+                  };
+                  reader.readAsDataURL(value);
+                } catch (fileError) {
+                  console.error("Error processing file:", fileError);
+                }
               }
             }
             
@@ -123,13 +142,35 @@ window.fetch = async (input, init) => {
         console.log("No local storage data found for:", filename);
       }
       
-      // If we couldn't find the image in localStorage, try the original fetch
+      // Try both image paths if the original fetch fails
       try {
         console.log("Attempting original fetch for:", url);
         return await originalFetch(input, init);
       } catch (fetchError) {
         console.error("Original fetch failed:", fetchError);
-        // If original fetch fails, return a placeholder
+        
+        // If URL was from lovable-uploads, try images/products instead
+        if (url.includes('/lovable-uploads/')) {
+          const productsUrl = url.replace('/lovable-uploads/', '/images/products/');
+          console.log("Trying alternate path:", productsUrl);
+          try {
+            return await originalFetch(productsUrl, init);
+          } catch (altError) {
+            console.error("Alternate fetch failed:", altError);
+          }
+        }
+        // If URL was from images/products, try lovable-uploads instead
+        else if (url.includes('/images/products/')) {
+          const lovableUrl = url.replace('/images/products/', '/lovable-uploads/');
+          console.log("Trying alternate path:", lovableUrl);
+          try {
+            return await originalFetch(lovableUrl, init);
+          } catch (altError) {
+            console.error("Alternate fetch failed:", altError);
+          }
+        }
+        
+        // If all attempts fail, return a placeholder
         console.log("Returning placeholder image");
         return originalFetch('/placeholder.svg');
       }
