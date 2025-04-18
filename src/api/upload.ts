@@ -1,3 +1,4 @@
+
 // File upload API for the client side
 // This saves files in the public/lovable-uploads directory
 
@@ -22,14 +23,14 @@ const saveFileToProject = async (file: File, filename: string): Promise<string> 
   try {
     console.log("Saving file to project:", filename);
     
-    // For development/preview, use blob URL
+    // For development/preview, create a blob URL
     const blob = new Blob([await file.arrayBuffer()], { type: file.type });
     const blobUrl = URL.createObjectURL(blob);
     console.log("Created blob URL:", blobUrl);
     
     // Create the final path where the file would be stored
     const filePath = `lovable-uploads/${filename}`;
-    console.log(`Image saved with path: ${filePath}`);
+    console.log(`Image path set to: ${filePath}`);
     
     return filePath;
   } catch (error) {
@@ -57,7 +58,7 @@ export const handleUpload = async (req: Request) => {
     let formData;
     try {
       formData = await req.formData();
-      console.log("Form data received, entries:", [...formData.entries()].map(e => e[0]));
+      console.log("Form data received, entries:", [...formData.entries()].map(entry => `${entry[0]}: ${typeof entry[1]}`));
     } catch (error) {
       console.error("Error parsing form data:", error);
       return new Response(JSON.stringify({ error: 'Failed to parse form data' }), { 
@@ -69,14 +70,11 @@ export const handleUpload = async (req: Request) => {
     }
     
     const file = formData.get('file');
-    const filenameParam = formData.get('filename');
+    const filenameParam = formData.get('filename') || 'upload.jpg';
     
-    console.log("File received:", file ? "yes" : "no", "Type:", file ? (file as any).type : "unknown");
-    console.log("Filename param:", filenameParam);
-
-    if (!file || !filenameParam) {
-      console.error("Upload API error: No file or filename provided");
-      return new Response(JSON.stringify({ error: 'No file or filename provided' }), { 
+    if (!file) {
+      console.error("Upload API error: No file provided");
+      return new Response(JSON.stringify({ error: 'No file provided' }), { 
         status: 400,
         headers: {
           'Content-Type': 'application/json'
@@ -85,7 +83,7 @@ export const handleUpload = async (req: Request) => {
     }
 
     if (!(file instanceof File)) {
-      console.error("Upload API error: Invalid file object");
+      console.error("Upload API error: Invalid file object, type:", typeof file);
       return new Response(JSON.stringify({ error: 'Invalid file object' }), { 
         status: 400,
         headers: {
@@ -94,12 +92,16 @@ export const handleUpload = async (req: Request) => {
       });
     }
     
+    console.log("File received:", file.name, "Size:", file.size, "Type:", file.type);
+    
     // Generate a safe filename
     const filename = generateSafeFilename(String(filenameParam));
     
     try {
       // Save the file to the project
       const imagePath = await saveFileToProject(file, filename);
+      
+      console.log("Upload successful, returning path:", imagePath);
       
       return new Response(JSON.stringify({ 
         path: imagePath,

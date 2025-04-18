@@ -32,17 +32,17 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
     const file = event.target.files?.[0];
     if (!file) return;
 
-    const maxSizeInBytes = 2 * 1024 * 1024; // 2MB
+    const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
     if (file.size > maxSizeInBytes) {
       toast({
         variant: "destructive",
         title: "Ошибка",
-        description: `Файл слишком большой. Максимальный размер: 2MB`,
+        description: `Файл слишком большой. Максимальный размер: 5MB`,
       });
       return;
     }
 
-    console.log(`Uploading image:`, file.name, `Size: ${(file.size / 1024).toFixed(2)} KB`);
+    console.log(`Uploading image:`, file.name, `Size: ${(file.size / 1024).toFixed(2)} KB`, `Type: ${file.type}`);
     
     setIsUploading(true);
     setUploadError('');
@@ -56,7 +56,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       formData.append('file', file);
       formData.append('filename', `${prefix}-${file.name}`);
 
-      console.log("Sending upload request for image");
+      console.log("Sending upload request with FormData:", [...formData.entries()].map(e => e[0]));
       
       const response = await fetch('/api/upload', {
         method: 'POST',
@@ -64,6 +64,8 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         cache: 'no-store'
       });
 
+      console.log("Upload response status:", response.status);
+      
       if (!response.ok) {
         const errorText = await response.text();
         console.error("Upload failed with status:", response.status, errorText);
@@ -80,6 +82,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       const savedImagePath = result.path;
       
       // Create a blob URL for preview
+      URL.revokeObjectURL(image || '');
       const imageUrl = URL.createObjectURL(file);
       setImage(imageUrl);
       
@@ -104,6 +107,9 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   };
 
   const handleRemoveImage = () => {
+    if (image && image.startsWith('blob:')) {
+      URL.revokeObjectURL(image);
+    }
     setImage(null);
     onImageUploaded('');
   };
@@ -184,7 +190,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
                     </>
                   )}
                 </Button>
-                <p className="text-gray-400 text-xs mt-2">Макс. размер: 2MB</p>
+                <p className="text-gray-400 text-xs mt-2">Макс. размер: 5MB</p>
               </div>
             )}
           </label>
