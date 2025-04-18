@@ -70,23 +70,6 @@ const Contacts = () => {
             </CardContent>
           </Card>
         </div>
-
-        <div className="mt-12 max-w-4xl mx-auto">
-          <Card className="border-blue-100">
-            <CardContent className="p-0">
-              <iframe 
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2242.4338680976766!2d37.72724511610031!3d55.79340049562131!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x46b5350f8674c1d1%3A0x5e853981368b02!2z0K3Qu9C10LrRgtGA0L7QtNC90YvQuSDQv9GA0L7QtdC30LQsIDYsINCc0L7RgdC60LLQsCwg0KDQvtGB0YHQuNGPLCAxMDUwOTQ!5e0!3m2!1sru!2s!4v1650284589519!5m2!1sru!2s"
-                width="100%"
-                height="400"
-                style={{ border: 0 }}
-                allowFullScreen
-                loading="lazy"
-                referrerPolicy="no-referrer-when-downgrade"
-                className="rounded-lg"
-              />
-            </CardContent>
-          </Card>
-        </div>
       </div>
     </section>
   );

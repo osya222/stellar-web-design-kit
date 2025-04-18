@@ -23,6 +23,11 @@ const ProductManagement: React.FC = () => {
 
   const handleSaveProduct = async (product: Product) => {
     try {
+      // Ensure product has a unique ID if it's new
+      if (!product.id) {
+        product.id = Date.now();
+      }
+      
       // Save the product to the project
       await saveProductToProject(product);
       
@@ -78,7 +83,7 @@ const ProductManagement: React.FC = () => {
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6">
-      <Tabs defaultValue="add">
+      <Tabs defaultValue={editingProduct ? "add" : "list"}>
         <TabsList className="mb-6">
           <TabsTrigger value="add">{editingProduct ? 'Редактирование товара' : 'Добавить товар'}</TabsTrigger>
           <TabsTrigger value="list">Список товаров ({products.length})</TabsTrigger>

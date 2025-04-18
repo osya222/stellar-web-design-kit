@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Upload, Loader2, X, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -84,7 +83,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       // Determine file prefix based on usage
       const prefix = productId 
         ? `product-${productId}`
-        : `category-${Date.now()}`;
+        : `product-${Date.now()}`;
       
       const formData = new FormData();
       formData.append('file', file);

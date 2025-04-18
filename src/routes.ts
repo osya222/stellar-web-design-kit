@@ -98,9 +98,9 @@ export const getUploadedImageUrl = (path: string): string | null => {
     }
     
     console.log("No valid image found for path:", path);
-    return null;
+    return path; // Return original path as fallback
   } catch (error) {
     console.error("Error in getUploadedImageUrl:", error);
-    return null;
+    return path; // Return original path if there was an error
   }
 };

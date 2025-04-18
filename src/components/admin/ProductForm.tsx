@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -75,6 +76,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialProduct, onSave, onCan
 
   useEffect(() => {
     if (initialProduct?.image) {
+      console.log("Loading initial product image:", initialProduct.image);
       setImageUrl(initialProduct.image);
     }
   }, [initialProduct]);
@@ -113,7 +115,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ initialProduct, onSave, onCan
     }
 
     const product: Product = {
-      id: initialProduct?.id || 0,
+      id: initialProduct?.id || Date.now(), // Ensure we always have a unique ID
       name: data.name,
       category: data.category,
       size: data.size || undefined,
