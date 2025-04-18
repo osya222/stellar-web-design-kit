@@ -1,4 +1,3 @@
-
 import { handleUpload } from './api/upload';
 
 // Define route handlers for API endpoints
@@ -35,8 +34,6 @@ export const apiRoutes = {
 // Add a utility function to get uploaded images
 export const getUploadedImageUrl = (path: string): string | null => {
   if (!path) return null;
-  
-  console.log("Getting uploaded image for path:", path);
   
   // If it's a data URL or blob URL, return it directly
   if (path.startsWith('data:') || path.startsWith('blob:')) {

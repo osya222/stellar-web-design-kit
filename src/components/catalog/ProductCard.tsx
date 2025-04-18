@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -29,7 +28,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       const uploadedImageUrl = getUploadedImageUrl(product.image);
       if (uploadedImageUrl) {
         setImageUrl(uploadedImageUrl);
-        console.log(`Set image for ${product.name}:`, uploadedImageUrl);
         return;
       }
     }
@@ -42,7 +40,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     });
     
     setImageUrl(productImage || '');
-    console.log(`Using fallback image for ${product.name}:`, productImage);
   }, [product]);
 
   const handleAddToCart = () => {
