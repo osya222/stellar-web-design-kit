@@ -84,11 +84,17 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
     try {
       setIsSubmitting(true);
 
-      // Create new product object
+      // Create new product object, ensuring all required properties are provided
       const newProduct: Product = {
-        ...data,
         id: existingProduct?.id || Date.now(),
-        image: imagePreview || existingProduct?.image,
+        name: data.name,
+        price: data.price,
+        category: data.category,
+        description: data.description,
+        image: imagePreview,
+        manufacturer: data.manufacturer,
+        weight: data.weight,
+        packaging: data.packaging,
       };
 
       // Save product to storage
