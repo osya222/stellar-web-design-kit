@@ -7,6 +7,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import {
@@ -74,6 +75,9 @@ const CategoryManager = ({ categories, onCategoryAdd, onCategoryDelete }: Catego
         <DialogContent>
           <DialogHeader>
             <DialogTitle>Новая категория</DialogTitle>
+            <DialogDescription>
+              Введите название для новой категории продуктов
+            </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <Input

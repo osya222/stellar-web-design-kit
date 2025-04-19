@@ -6,18 +6,23 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
   DialogTrigger,
 } from "@/components/ui/dialog";
 import ProductForm from "./ProductForm";
 import { Plus } from "lucide-react";
 
-const ProductManager = () => {
+interface ProductManagerProps {
+  onProductAdded: () => void;
+}
+
+const ProductManager = ({ onProductAdded }: ProductManagerProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleSuccess = () => {
     setDialogOpen(false);
-    // Reload the page to show new products
-    window.location.reload();
+    // Call the callback to refresh products
+    onProductAdded();
   };
 
   return (
@@ -31,6 +36,9 @@ const ProductManager = () => {
         <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Добавить новый товар</DialogTitle>
+            <DialogDescription>
+              Заполните информацию о новом товаре
+            </DialogDescription>
           </DialogHeader>
           <ProductForm onSuccess={handleSuccess} />
         </DialogContent>

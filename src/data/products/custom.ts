@@ -12,7 +12,10 @@ export const getCustomProducts = (): Product[] => {
     const productsJson = localStorage.getItem(CUSTOM_PRODUCTS_KEY);
     if (!productsJson) return [];
     
-    return JSON.parse(productsJson) as Product[];
+    const parsed = JSON.parse(productsJson);
+    if (!Array.isArray(parsed)) return [];
+    
+    return parsed as Product[];
   } catch (error) {
     console.error("Error getting custom products from localStorage:", error);
     return [];

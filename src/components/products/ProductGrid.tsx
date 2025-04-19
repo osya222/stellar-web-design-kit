@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { Product } from "@/types/product";
-import { getProductsFromStorage, deleteProductsByCategory } from "@/utils/productStorage";
+import { getProductsFromStorage, deleteProductsByCategory, getAllCategories } from "@/utils/productStorage";
 import ProductManager from "./ProductManager";
 import ProductCard from "./ProductCard";
 import CategoryManager from "./CategoryManager";
@@ -10,6 +10,7 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
 import ProductForm from "./ProductForm";
 
@@ -26,8 +27,9 @@ const ProductGrid = () => {
   const loadProducts = () => {
     const loadedProducts = getProductsFromStorage();
     setProducts(loadedProducts);
-    // Extract unique categories
-    const uniqueCategories = Array.from(new Set(loadedProducts.map(p => p.category)));
+    
+    // Get unique categories
+    const uniqueCategories = getAllCategories();
     setCategories(uniqueCategories);
   };
 
@@ -38,21 +40,26 @@ const ProductGrid = () => {
   };
 
   const handleCategoryAdd = (newCategory: string) => {
-    setCategories(prev => [...prev, newCategory]);
+    if (!categories.includes(newCategory)) {
+      setCategories(prev => [...prev, newCategory]);
+    }
   };
 
   const handleCategoryDelete = (categoryToDelete: string) => {
-    deleteProductsByCategory(categoryToDelete);
-    setCategories(prev => prev.filter(c => c !== categoryToDelete));
-    loadProducts();
+    deleteProductsByCategory(categoryToDelete)
+      .then(() => {
+        setCategories(prev => prev.filter(c => c !== categoryToDelete));
+        loadProducts();
+      });
   };
 
   // Group products by category
   const productsByCategory = products.reduce((acc, product) => {
-    if (!acc[product.category]) {
-      acc[product.category] = [];
+    const category = product.category || "Без категории";
+    if (!acc[category]) {
+      acc[category] = [];
     }
-    acc[product.category].push(product);
+    acc[category].push(product);
     return acc;
   }, {} as Record<string, Product[]>);
 
@@ -61,7 +68,7 @@ const ProductGrid = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold">Наш каталог</h2>
-          <ProductManager />
+          <ProductManager onProductAdded={loadProducts} />
         </div>
 
         <CategoryManager
@@ -95,6 +102,9 @@ const ProductGrid = () => {
         <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Редактировать товар</DialogTitle>
+            <DialogDescription>
+              Внесите изменения в информацию о товаре
+            </DialogDescription>
           </DialogHeader>
           <ProductForm
             existingProduct={editingProduct || undefined}
