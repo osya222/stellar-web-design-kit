@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Mail, Phone, MapPin, Clock } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const Contacts = () => {
   return (
@@ -12,14 +11,14 @@ const Contacts = () => {
         </h2>
         
         <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="border-blue-100 hover:shadow-lg transition-shadow duration-300">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-blue-800">
+          <div className="border border-blue-100 rounded-lg shadow hover:shadow-lg transition-shadow duration-300 bg-white overflow-hidden">
+            <div className="p-4 bg-blue-50">
+              <h3 className="flex items-center gap-2 text-xl font-semibold text-blue-800">
                 <Phone className="w-5 h-5" />
                 Связаться с нами
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+              </h3>
+            </div>
+            <div className="p-6 space-y-4">
               <div className="flex items-center gap-3">
                 <Phone className="w-5 h-5 text-blue-600" />
                 <div>
@@ -39,17 +38,17 @@ const Contacts = () => {
                   </a>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          <Card className="border-blue-100 hover:shadow-lg transition-shadow duration-300">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-blue-800">
+          <div className="border border-blue-100 rounded-lg shadow hover:shadow-lg transition-shadow duration-300 bg-white overflow-hidden">
+            <div className="p-4 bg-blue-50">
+              <h3 className="flex items-center gap-2 text-xl font-semibold text-blue-800">
                 <MapPin className="w-5 h-5" />
                 Как нас найти
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
+              </h3>
+            </div>
+            <div className="p-6 space-y-4">
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-blue-600 mt-1" />
                 <div>
@@ -67,8 +66,8 @@ const Contacts = () => {
                   <p className="text-gray-600">Вс: Выходной</p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
       </div>
     </section>

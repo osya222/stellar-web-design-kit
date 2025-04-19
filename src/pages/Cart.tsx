@@ -1,7 +1,7 @@
+
 import React, { useState } from 'react';
 import { useCart } from '@/context/CartContext';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { ShoppingCart, Trash2, Plus, Minus, ArrowLeft, Fish, ShellIcon, Soup, GanttChart, CreditCard, Phone } from "lucide-react";
 import { formatPrice } from '@/lib/formatters';
 import { Link } from 'react-router-dom';
@@ -63,15 +63,15 @@ const Cart = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2">
-            <Card>
-              <CardHeader className="bg-blue-50">
-                <CardTitle className="flex items-center">
+            <div className="border rounded-lg shadow-sm">
+              <div className="bg-blue-50 p-4 rounded-t-lg">
+                <h2 className="text-lg font-semibold flex items-center">
                   <ShoppingCart className="w-6 h-6 mr-2" />
                   Корзина ({getTotalItems()})
-                </CardTitle>
-              </CardHeader>
+                </h2>
+              </div>
               
-              <CardContent className="p-6">
+              <div className="p-6">
                 {items.length === 0 ? (
                   <div className="text-center py-10">
                     <p className="text-gray-500 mb-4">Ваша корзина пуста</p>
@@ -152,10 +152,10 @@ const Cart = () => {
                     })}
                   </div>
                 )}
-              </CardContent>
+              </div>
               
               {items.length > 0 && (
-                <CardFooter className="flex justify-between p-6 bg-gray-50">
+                <div className="flex justify-between p-6 bg-gray-50 rounded-b-lg border-t">
                   <Button 
                     variant="outline" 
                     onClick={clearCart}
@@ -163,38 +163,37 @@ const Cart = () => {
                     <Trash2 className="w-4 h-4 mr-2" />
                     Очистить корзину
                   </Button>
-                </CardFooter>
+                </div>
               )}
-            </Card>
+            </div>
           </div>
 
           {items.length > 0 && (
             <div className="lg:col-span-1">
-              <Card className="sticky top-24">
-                <CardHeader className="bg-blue-50">
-                  <CardTitle className="text-lg">Сводка заказа</CardTitle>
-                </CardHeader>
-                <CardContent className="p-6 space-y-4">
-                  <div className="flex justify-between">
-                    <span className="text-gray-500">Товары ({getTotalItems()}):</span>
-                    <span className="font-medium">{formatPrice(getTotalPrice())}</span>
+              <div className="border rounded-lg shadow-sm p-6 bg-white sticky top-24 space-y-6">
+                <div className="border-b pb-4">
+                  <h3 className="text-lg font-semibold mb-4">Сводка заказа</h3>
+                  <div className="space-y-4">
+                    <div className="flex justify-between">
+                      <span className="text-gray-500">Товары ({getTotalItems()}):</span>
+                      <span className="font-medium">{formatPrice(getTotalPrice())}</span>
+                    </div>
+                    
+                    <div className="flex justify-between pt-2 border-t border-gray-200 text-lg font-bold">
+                      <span>Итого:</span>
+                      <span>{formatPrice(getTotalPrice())}</span>
+                    </div>
                   </div>
-                  
-                  <div className="flex justify-between pt-2 border-t border-gray-200 text-lg font-bold">
-                    <span>Итого:</span>
-                    <span>{formatPrice(getTotalPrice())}</span>
-                  </div>
-                </CardContent>
-                <CardFooter className="p-6 pt-0">
-                  <Button 
-                    size="lg" 
-                    className="w-full bg-green-600 hover:bg-green-700"
-                    onClick={handleCheckout}
-                  >
-                    Оформить заказ
-                  </Button>
-                </CardFooter>
-              </Card>
+                </div>
+                
+                <Button 
+                  size="lg" 
+                  className="w-full bg-green-600 hover:bg-green-700"
+                  onClick={handleCheckout}
+                >
+                  Оформить заказ
+                </Button>
+              </div>
             </div>
           )}
         </div>
