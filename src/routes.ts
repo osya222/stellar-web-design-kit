@@ -10,12 +10,11 @@ export const apiRoutes = {
     try {
       console.log("API route called:", req.method, req.url);
       
-      if (req.method === 'POST') {
-        console.log("Forwarding to handleUpload");
-        return await handleUpload(req);
-      }
-      
-      return new Response(JSON.stringify({ message: 'Upload API is working' }), {
+      return new Response(JSON.stringify({ 
+        error: 'Upload functionality has been disabled',
+        success: false
+      }), { 
+        status: 400,
         headers: {
           'Content-Type': 'application/json',
           'Cache-Control': 'no-cache'
@@ -61,7 +60,6 @@ export const getImageUrl = (path: string | undefined): string => {
 // Function to get the URL for uploaded images
 export const getUploadedImageUrl = (path: string | undefined): string => {
   if (!path) return '/placeholder.svg';
-  console.log("Getting uploaded image URL for path:", path);
   
   // Add timestamp to prevent caching
   const timestamp = Date.now();

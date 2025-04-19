@@ -1,6 +1,6 @@
+
 import React, { useState, useEffect } from 'react';
 import { ArrowRight } from "lucide-react";
-import { storage } from '@/utils/supabase';
 
 interface CategoryCardProps {
   category: {
@@ -18,42 +18,13 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, image, onCategory
   
   useEffect(() => {
     if (image) {
-      // Reset error state when image prop changes
       setImageError(false);
-      
-      try {
-        // Use the image directly if it's a URL, otherwise try to get from storage
-        const resolvedUrl = image.startsWith('http') 
-          ? image 
-          : storage.getPublicUrl(image);
-        
-        console.log(`CategoryCard: Resolved image URL for ${category.name}:`, resolvedUrl);
-        
-        if (resolvedUrl) {
-          // Create an image element to pre-load and verify the image works
-          const img = new Image();
-          img.onload = () => {
-            setCurrentImage(resolvedUrl);
-          };
-          img.onerror = () => {
-            console.error("Image failed to preload:", resolvedUrl);
-            setImageError(true);
-            setCurrentImage(null);
-          };
-          img.src = resolvedUrl;
-        } else {
-          setCurrentImage(null);
-        }
-      } catch (error) {
-        console.error("Error resolving image URL:", error);
-        setImageError(true);
-        setCurrentImage(null);
-      }
+      setCurrentImage(image);
     } else {
       setCurrentImage(null);
       setImageError(false);
     }
-  }, [image, category.name]);
+  }, [image]);
   
   const renderFishIcon = () => {
     return (

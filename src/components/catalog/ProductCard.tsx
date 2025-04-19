@@ -1,11 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
 import { Button } from "@/components/ui/button";
-import { ShoppingCart, Upload, ImageIcon } from "lucide-react";
+import { ShoppingCart } from "lucide-react";
 import { useCart } from '@/context/CartContext';
 import { useToast } from "@/hooks/use-toast";
-import { storage } from '@/utils/supabase';
 import { getUploadedImageUrl } from '@/routes';
 
 interface ProductCardProps {
@@ -16,8 +16,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
   const { toast } = useToast();
   const [imageError, setImageError] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageSrc, setImageSrc] = useState<string>('/placeholder.svg');
   
   useEffect(() => {
@@ -33,7 +31,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       }
       
       const resolvedUrl = getUploadedImageUrl(product.image);
-      console.log(`ProductCard: Resolved image URL for ${product.name}:`, resolvedUrl);
       setImageSrc(resolvedUrl);
     } catch (error) {
       console.error(`Error resolving image URL for ${product.name}:`, error);
@@ -54,100 +51,27 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     setImageError(true);
   };
 
-  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    const maxSizeInBytes = 5 * 1024 * 1024; // 5MB
-    if (file.size > maxSizeInBytes) {
-      toast({
-        variant: "destructive",
-        title: "Ошибка",
-        description: "Файл слишком большой. Максимальный размер: 5MB",
-      });
-      return;
-    }
-
-    const localPreviewUrl = URL.createObjectURL(file);
-    product.image = localPreviewUrl;
-    setImageSrc(localPreviewUrl);
-    setImageError(false);
-    
-    setIsUploading(true);
-
-    try {
-      const timestamp = Date.now();
-      const safeFileName = file.name.replace(/[^\w\s.-]/g, '').toLowerCase();
-      const path = `${product.id}-${timestamp}-${safeFileName}`;
-      
-      await storage.upload(file, path);
-      const publicUrl = storage.getPublicUrl(path);
-      
-      setImageError(false);
-      product.image = publicUrl;
-      
-      setImageSrc(getUploadedImageUrl(publicUrl));
-
-      toast({
-        title: "Успешно",
-        description: "Изображение загружено",
-      });
-      
-      URL.revokeObjectURL(localPreviewUrl);
-    } catch (error) {
-      console.error('Upload error:', error);
-      toast({
-        variant: "destructive",
-        title: "Ошибка",
-        description: `Не удалось загрузить изображение: ${error instanceof Error ? error.message : String(error)}`,
-      });
-      setImageError(true);
-    } finally {
-      setIsUploading(false);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = '';
-      }
-    }
-  };
-
   return (
     <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow h-full flex flex-col overflow-hidden">
       <div className="h-48 bg-white flex items-center justify-center relative overflow-hidden">
-        <input 
-          type="file" 
-          className="hidden" 
-          accept="image/*" 
-          onChange={handleImageUpload}
-          disabled={isUploading}
-          ref={fileInputRef}
-        />
-        
         {!imageSrc || imageSrc === '/placeholder.svg' || imageError ? (
-          <div 
-            className="w-full h-full flex flex-col items-center justify-center bg-gray-100 cursor-pointer hover:bg-gray-200 transition-colors"
-            onClick={() => fileInputRef.current?.click()}
-          >
-            <Upload className={`w-12 h-12 ${isUploading ? 'animate-bounce text-gray-600' : 'text-gray-400'} mb-2`} />
-            <span className="text-sm text-gray-500">
-              {isUploading ? 'Загрузка...' : 'Загрузить изображение'}
-            </span>
+          <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100">
+            <div className="w-12 h-12 text-gray-400 mb-2">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                <polyline points="21 15 16 10 5 21"></polyline>
+              </svg>
+            </div>
+            <span className="text-sm text-gray-500">Изображение недоступно</span>
           </div>
         ) : (
-          <div className="relative w-full h-full group">
-            <img 
-              src={imageSrc} 
-              alt={product.name} 
-              className="object-contain w-full h-full p-2"
-              onError={handleImageError}
-              onLoad={() => console.log(`Image loaded successfully for ${product.name}: ${imageSrc}`)}
-            />
-            <div 
-              className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"
-              onClick={() => fileInputRef.current?.click()}
-            >
-              <Upload className="w-8 h-8 text-white" />
-            </div>
-          </div>
+          <img 
+            src={imageSrc} 
+            alt={product.name} 
+            className="object-contain w-full h-full p-2"
+            onError={handleImageError}
+          />
         )}
       </div>
       
