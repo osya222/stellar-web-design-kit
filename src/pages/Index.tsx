@@ -1,8 +1,6 @@
+
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import ProductCatalog from "@/components/ProductCatalog";
-import { useCart } from "@/context/CartContext";
-import ProductShowcase from "@/components/catalog/ProductShowcase";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Hero from "@/components/home/Hero";
@@ -53,16 +51,6 @@ const Index = () => {
 
       {/* Hero section */}
       <Hero />
-      
-      {/* Product Showcase */}
-      <ProductShowcase />
-      
-      {/* Product catalog section */}
-      <section className="section-padding bg-white" id="catalog">
-        <div className="container-custom">
-          <ProductCatalog />
-        </div>
-      </section>
 
       {/* Delivery Info Section */}
       <DeliveryInfo />
