@@ -1,3 +1,4 @@
+
 import { Product } from '@/types/product';
 import { products as defaultProducts } from '@/data/products';
 import { getCustomProducts, saveCustomProduct, deleteCustomProduct } from '@/data/products/custom';
@@ -17,7 +18,7 @@ export const getProductsFromStorage = (): Product[] => {
     return [...defaultProducts, ...customProducts];
   } catch (error) {
     console.error("Error loading products from storage:", error);
-    return [];
+    return defaultProducts; // Return at least default products if there's an error
   }
 };
 
@@ -25,31 +26,44 @@ export const getProductsFromStorage = (): Product[] => {
  * Save a product to the project
  */
 export const saveProductToProject = async (
-  product: Product, 
-  allProducts?: Product[]
+  product: Product
 ): Promise<void> => {
   try {
     // Get existing custom products
-    const customProducts = JSON.parse(localStorage.getItem(CUSTOM_PRODUCTS_KEY) || '[]') as Product[];
+    let customProducts: Product[] = [];
+    try {
+      const storedProducts = localStorage.getItem(CUSTOM_PRODUCTS_KEY);
+      customProducts = storedProducts ? JSON.parse(storedProducts) : [];
+      
+      // Ensure customProducts is an array
+      if (!Array.isArray(customProducts)) {
+        customProducts = [];
+      }
+    } catch (e) {
+      console.error("Error parsing stored products:", e);
+      customProducts = [];
+    }
+    
+    // Ensure product has a valid ID
+    const newProduct = { ...product };
     
     // Check if product already exists (for updates)
-    const existingIndex = customProducts.findIndex(p => p.id === product.id);
+    const existingIndex = customProducts.findIndex(p => p.id === newProduct.id);
     
     if (existingIndex >= 0) {
       // Update existing product
-      customProducts[existingIndex] = product;
+      customProducts[existingIndex] = newProduct;
     } else {
       // Add new product with next available ID
-      customProducts.push({
-        ...product,
-        id: product.id || Math.max(0, ...customProducts.map(p => p.id)) + 1
-      });
+      const maxId = Math.max(0, ...defaultProducts.map(p => p.id), ...customProducts.map(p => p.id));
+      newProduct.id = newProduct.id || maxId + 1;
+      customProducts.push(newProduct);
     }
     
     // Save updated products to local storage
     localStorage.setItem(CUSTOM_PRODUCTS_KEY, JSON.stringify(customProducts));
     
-    console.log("Product saved successfully:", product);
+    console.log("Product saved successfully:", newProduct);
   } catch (error) {
     console.error("Error saving product:", error);
     throw new Error(`Failed to save product: ${error instanceof Error ? error.message : String(error)}`);

@@ -14,7 +14,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Product } from "@/types/product";
-import { toast } from "@/components/ui/use-toast";
+import { toast } from "@/hooks/use-toast";
 import { saveProductToProject } from "@/utils/productStorage";
 import { Upload } from "lucide-react";
 
@@ -92,32 +92,41 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
         name: data.name,
         price: data.price,
         category: data.category,
-        description: data.description,
-        image: imagePreview || existingProduct?.image,
-        manufacturer: data.manufacturer,
-        weight: data.weight,
-        packaging: data.packaging,
-        size: data.size,
-        catchDate: data.catchDate,
+        description: data.description || "",
+        manufacturer: data.manufacturer || "",
+        weight: data.weight || "",
+        packaging: data.packaging || "",
+        size: data.size || "",
+        catchDate: data.catchDate || "",
       };
 
-      // Save product to storage
-      await saveProductToProject(newProduct);
-
-      toast({
-        title: "Успех",
-        description: `Товар ${existingProduct ? "обновлен" : "добавлен"} успешно`,
-      });
-
-      if (onSuccess) {
-        onSuccess();
+      // Add image if available
+      if (imagePreview) {
+        newProduct.image = imagePreview;
       }
 
-      // Reset form if adding new product
-      if (!existingProduct) {
-        form.reset();
-        setImageFile(null);
-        setImagePreview(undefined);
+      // Save product to storage - wrapped in try/catch to handle errors better
+      try {
+        await saveProductToProject(newProduct);
+        
+        toast({
+          title: "Успех",
+          description: `Товар ${existingProduct ? "обновлен" : "добавлен"} успешно`,
+        });
+
+        if (onSuccess) {
+          onSuccess();
+        }
+
+        // Reset form if adding new product
+        if (!existingProduct) {
+          form.reset();
+          setImageFile(null);
+          setImagePreview(undefined);
+        }
+      } catch (error) {
+        console.error("Error in saveProductToProject:", error);
+        throw error; // Re-throw to be caught by outer catch
       }
     } catch (error) {
       console.error("Error saving product:", error);
