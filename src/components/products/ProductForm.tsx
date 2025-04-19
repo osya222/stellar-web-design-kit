@@ -91,7 +91,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
         price: data.price,
         category: data.category,
         description: data.description,
-        image: imagePreview,
+        image: imagePreview || existingProduct?.image,
         manufacturer: data.manufacturer,
         weight: data.weight,
         packaging: data.packaging,

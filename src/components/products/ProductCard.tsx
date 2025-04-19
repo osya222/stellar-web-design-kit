@@ -3,13 +3,14 @@ import { Product } from "@/types/product";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/formatters";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, Edit } from "lucide-react";
 
 interface ProductCardProps {
   product: Product;
+  onEdit?: () => void;
 }
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product, onEdit }: ProductCardProps) => {
   const { addToCart } = useCart();
 
   return (
@@ -43,13 +44,25 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </div>
         <div className="flex items-center justify-between mt-4 pt-4 border-t">
           <span className="font-bold text-lg">{formatPrice(product.price)}</span>
-          <Button 
-            onClick={() => addToCart(product)}
-            className="bg-blue-600 hover:bg-blue-700"
-          >
-            <ShoppingCart className="w-4 h-4 mr-2" />
-            В корзину
-          </Button>
+          <div className="flex gap-2">
+            {onEdit && (
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={onEdit}
+                className="h-9 w-9"
+              >
+                <Edit className="h-4 w-4" />
+              </Button>
+            )}
+            <Button 
+              onClick={() => addToCart(product)}
+              className="bg-blue-600 hover:bg-blue-700"
+            >
+              <ShoppingCart className="w-4 h-4 mr-2" />
+              В корзину
+            </Button>
+          </div>
         </div>
       </div>
     </div>

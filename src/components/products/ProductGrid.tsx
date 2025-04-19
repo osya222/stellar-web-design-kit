@@ -1,18 +1,36 @@
 
 import { useEffect, useState } from "react";
-import ProductCard from "./ProductCard";
 import { Product } from "@/types/product";
 import { getProductsFromStorage } from "@/utils/productStorage";
 import ProductManager from "./ProductManager";
+import ProductCard from "./ProductCard";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import ProductForm from "./ProductForm";
 
 const ProductGrid = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
   useEffect(() => {
-    // Load products from storage
+    loadProducts();
+  }, []);
+
+  const loadProducts = () => {
     const loadedProducts = getProductsFromStorage();
     setProducts(loadedProducts);
-  }, []);
+  };
+
+  const handleEditSuccess = () => {
+    setIsEditDialogOpen(false);
+    setEditingProduct(null);
+    loadProducts();
+  };
 
   // Group products by category
   const productsByCategory = products.reduce((acc, product) => {
@@ -36,13 +54,32 @@ const ProductGrid = () => {
               <h3 className="text-2xl font-semibold text-gray-800">{category}</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {categoryProducts.map((product) => (
-                  <ProductCard key={product.id} product={product} />
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onEdit={() => {
+                      setEditingProduct(product);
+                      setIsEditDialogOpen(true);
+                    }}
+                  />
                 ))}
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Редактировать товар</DialogTitle>
+          </DialogHeader>
+          <ProductForm
+            existingProduct={editingProduct || undefined}
+            onSuccess={handleEditSuccess}
+          />
+        </DialogContent>
+      </Dialog>
     </section>
   );
 };
