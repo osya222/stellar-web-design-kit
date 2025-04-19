@@ -2,7 +2,6 @@
 import { Product } from "@/types/product";
 
 export const products: Product[] = [
-  // Лосось (Чили)
   {
     id: 1,
     name: "Лосось свежемороженый премиум",
@@ -10,11 +9,12 @@ export const products: Product[] = [
     category: "Лосось (Чили)",
     description: "Свежемороженый лосось премиального качества из чистых вод Чили. Богат омега-3 жирными кислотами.",
     manufacturer: "Чили Premium",
+    size: "6-7 кг",
     weight: "1 кг",
     packaging: "Вакуумная упаковка",
+    catchDate: "Январь 2024",
     image: "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png"
   },
-  // Форель (Турция)
   {
     id: 3,
     name: "Форель морская свежемороженая",
@@ -22,11 +22,12 @@ export const products: Product[] = [
     category: "Форель (Турция)",
     description: "Свежемороженая морская форель высшего качества. Выращена в экологически чистых водах Турции.",
     manufacturer: "Турция",
+    size: "4-5 кг",
     weight: "1 кг",
     packaging: "Вакуумная упаковка",
+    catchDate: "Февраль 2024",
     image: "/lovable-uploads/923eda92-d974-48f3-813d-339626f70616.png"
   },
-  // Креветки
   {
     id: 6,
     name: "Креветка ваннамей в глазури",
@@ -34,11 +35,12 @@ export const products: Product[] = [
     category: "Креветки",
     description: "Свежемороженые креветки в глазури. Идеально подходят для салатов и горячих блюд.",
     manufacturer: "Индия",
+    size: "50-70 шт/кг",
     weight: "1 кг",
     packaging: "Пластиковый контейнер",
+    catchDate: "Январь 2024",
     image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
   },
-  // Лангустины
   {
     id: 8,
     name: "Лангустины свежемороженые премиум",
@@ -46,11 +48,12 @@ export const products: Product[] = [
     category: "Лангустины",
     description: "Свежемороженые лангустины премиум класса. Отборный размер, идеальны для особых случаев.",
     manufacturer: "Аргентина",
+    size: "20-30 шт/кг",
     weight: "1 кг",
     packaging: "Пластиковый контейнер",
+    catchDate: "Декабрь 2023",
     image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
   },
-  // Морепродукты
   {
     id: 9,
     name: "Медальоны из морепродуктов",
@@ -58,8 +61,10 @@ export const products: Product[] = [
     category: "Морепродукты",
     description: "Медальоны из отборных морепродуктов. Готовы к приготовлению, идеальны для праздничного стола.",
     manufacturer: "Индия",
+    size: "100-120 г",
     weight: "500 г",
     packaging: "Вакуумная упаковка",
+    catchDate: "Январь 2024",
     image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
   },
   {
@@ -69,31 +74,10 @@ export const products: Product[] = [
     category: "Морепродукты",
     description: "Варено-мороженое мясо мидий. Богато белком и минералами, идеально для салатов и пасты.",
     manufacturer: "Чили",
+    size: "200-300",
     weight: "500 г",
     packaging: "Вакуумная упаковка",
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
-  },
-  // Рыба
-  {
-    id: 11,
-    name: "Сибас икряной",
-    price: 828,
-    category: "Рыба",
-    description: "Мороженый икряной сибас. Деликатесная рыба с нежным вкусом, богатая полезными веществами.",
-    manufacturer: "Турция",
-    weight: "1 кг",
-    packaging: "Вакуумная упаковка",
-    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
-  },
-  {
-    id: 12,
-    name: "Дорадо икряное",
-    price: 895,
-    category: "Рыба",
-    description: "Мороженая икряная дорадо. Изысканный вкус, идеально подходит для запекания целиком.",
-    manufacturer: "Турция",
-    weight: "1 кг",
-    packaging: "Вакуумная упаковка",
+    catchDate: "Февраль 2024",
     image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
   }
 ];

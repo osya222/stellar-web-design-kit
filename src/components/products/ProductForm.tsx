@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -25,9 +24,11 @@ const productSchema = z.object({
   price: z.coerce.number().min(1, { message: "Цена должна быть больше 0" }),
   category: z.string().min(1, { message: "Категория обязательна" }),
   description: z.string().optional(),
-  manufacturer: z.string().optional(),
+  size: z.string().optional(),
   weight: z.string().optional(),
   packaging: z.string().optional(),
+  catchDate: z.string().optional(),
+  manufacturer: z.string().optional(),
 });
 
 type ProductFormProps = {
@@ -42,7 +43,6 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
     existingProduct?.image
   );
 
-  // Initialize form with existing product data or empty values
   const form = useForm<z.infer<typeof productSchema>>({
     resolver: zodResolver(productSchema),
     defaultValues: {
@@ -50,9 +50,11 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
       price: existingProduct?.price || 0,
       category: existingProduct?.category || "",
       description: existingProduct?.description || "",
-      manufacturer: existingProduct?.manufacturer || "",
+      size: existingProduct?.size || "",
       weight: existingProduct?.weight || "",
       packaging: existingProduct?.packaging || "",
+      catchDate: existingProduct?.catchDate || "",
+      manufacturer: existingProduct?.manufacturer || "",
     },
   });
 
@@ -95,6 +97,8 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
         manufacturer: data.manufacturer,
         weight: data.weight,
         packaging: data.packaging,
+        size: data.size,
+        catchDate: data.catchDate,
       };
 
       // Save product to storage
@@ -131,7 +135,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="space-y-4 md:col-span-1">
+          <div className="space-y-4">
             <FormField
               control={form.control}
               name="name"
@@ -151,7 +155,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
               name="price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Цена*</FormLabel>
+                  <FormLabel>Розничная цена*</FormLabel>
                   <FormControl>
                     <Input type="number" min="0" step="0.01" {...field} />
                   </FormControl>
@@ -176,20 +180,18 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
 
             <FormField
               control={form.control}
-              name="manufacturer"
+              name="size"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Производитель</FormLabel>
+                  <FormLabel>Размер</FormLabel>
                   <FormControl>
-                    <Input placeholder="Например: Индия" {...field} />
+                    <Input placeholder="Например: 200-300" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-          </div>
 
-          <div className="space-y-4 md:col-span-1">
             <FormField
               control={form.control}
               name="weight"
@@ -203,7 +205,9 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
                 </FormItem>
               )}
             />
+          </div>
 
+          <div className="space-y-4">
             <FormField
               control={form.control}
               name="packaging"
@@ -211,10 +215,35 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
                 <FormItem>
                   <FormLabel>Упаковка</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Например: Вакуумная упаковка"
-                      {...field}
-                    />
+                    <Input placeholder="Например: Вакуумная упаковка" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="catchDate"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Вылов</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Например: Январь 2024" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="manufacturer"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Производитель</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Например: Чили" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
