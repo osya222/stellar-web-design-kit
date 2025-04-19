@@ -1,4 +1,3 @@
-
 import { Product } from '@/types/product';
 import { products as defaultProducts } from '@/data/products';
 import { getCustomProducts, saveCustomProduct, deleteCustomProduct } from '@/data/products/custom';
@@ -82,5 +81,25 @@ export const deleteProductFromStorage = async (productId: number): Promise<void>
   } catch (error) {
     console.error("Error deleting product:", error);
     throw new Error(`Failed to delete product: ${error instanceof Error ? error.message : String(error)}`);
+  }
+};
+
+/**
+ * Delete all products in a specific category
+ */
+export const deleteProductsByCategory = async (category: string): Promise<void> => {
+  try {
+    const customProducts = getCustomProducts();
+    
+    // Filter out all products in the category
+    const updatedProducts = customProducts.filter(p => p.category !== category);
+    
+    // Save the filtered products back to storage
+    localStorage.setItem(CUSTOM_PRODUCTS_KEY, JSON.stringify(updatedProducts));
+    
+    console.log("Products in category deleted successfully:", category);
+  } catch (error) {
+    console.error("Error deleting products by category:", error);
+    throw new Error(`Failed to delete products in category: ${error instanceof Error ? error.message : String(error)}`);
   }
 };

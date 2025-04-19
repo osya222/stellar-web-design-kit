@@ -1,9 +1,10 @@
 
 import { useEffect, useState } from "react";
 import { Product } from "@/types/product";
-import { getProductsFromStorage } from "@/utils/productStorage";
+import { getProductsFromStorage, deleteProductsByCategory } from "@/utils/productStorage";
 import ProductManager from "./ProductManager";
 import ProductCard from "./ProductCard";
+import CategoryManager from "./CategoryManager";
 import {
   Dialog,
   DialogContent,
@@ -16,6 +17,7 @@ const ProductGrid = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [categories, setCategories] = useState<string[]>([]);
 
   useEffect(() => {
     loadProducts();
@@ -24,11 +26,24 @@ const ProductGrid = () => {
   const loadProducts = () => {
     const loadedProducts = getProductsFromStorage();
     setProducts(loadedProducts);
+    // Extract unique categories
+    const uniqueCategories = Array.from(new Set(loadedProducts.map(p => p.category)));
+    setCategories(uniqueCategories);
   };
 
   const handleEditSuccess = () => {
     setIsEditDialogOpen(false);
     setEditingProduct(null);
+    loadProducts();
+  };
+
+  const handleCategoryAdd = (newCategory: string) => {
+    setCategories(prev => [...prev, newCategory]);
+  };
+
+  const handleCategoryDelete = (categoryToDelete: string) => {
+    deleteProductsByCategory(categoryToDelete);
+    setCategories(prev => prev.filter(c => c !== categoryToDelete));
     loadProducts();
   };
 
@@ -48,6 +63,13 @@ const ProductGrid = () => {
           <h2 className="text-3xl font-bold">Наш каталог</h2>
           <ProductManager />
         </div>
+
+        <CategoryManager
+          categories={categories}
+          onCategoryAdd={handleCategoryAdd}
+          onCategoryDelete={handleCategoryDelete}
+        />
+
         <div className="space-y-12">
           {Object.entries(productsByCategory).map(([category, categoryProducts]) => (
             <div key={category} className="space-y-4">
