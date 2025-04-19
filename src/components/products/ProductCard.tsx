@@ -13,7 +13,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
   const { addToCart } = useCart();
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
       {product.image ? (
         <img 
           src={product.image} 
@@ -26,21 +26,22 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </div>
       )}
       
-      <div className="p-4">
+      <div className="p-4 flex flex-col flex-grow">
         <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
-        <p className="text-gray-600 text-sm mb-2">{product.category}</p>
-        {product.description && (
-          <p className="text-gray-500 text-sm mb-2">{product.description}</p>
-        )}
-        <div className="flex items-center justify-between mb-2">
-          {product.weight && (
-            <span className="text-sm text-gray-500">Вес: {product.weight}</span>
+        <div className="space-y-2 flex-grow">
+          {product.description && (
+            <p className="text-gray-500 text-sm">{product.description}</p>
           )}
-          {product.packaging && (
-            <span className="text-sm text-gray-500">Упаковка: {product.packaging}</span>
-          )}
+          <div className="flex items-center justify-between">
+            {product.weight && (
+              <span className="text-sm text-gray-500">Вес: {product.weight}</span>
+            )}
+            {product.packaging && (
+              <span className="text-sm text-gray-500">Упаковка: {product.packaging}</span>
+            )}
+          </div>
         </div>
-        <div className="flex items-center justify-between mt-4">
+        <div className="flex items-center justify-between mt-4 pt-4 border-t">
           <span className="font-bold text-lg">{formatPrice(product.price)}</span>
           <Button 
             onClick={() => addToCart(product)}
