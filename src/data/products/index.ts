@@ -10,6 +10,7 @@ export const products: Product[] = [
     description: "Свежая форель высшего качества",
     weight: "1 кг",
     packaging: "Вакуумная упаковка",
+    manufacturer: "Морепродукт",
     image: "/lovable-uploads/923eda92-d974-48f3-813d-339626f70616.png"
   },
   {
@@ -20,6 +21,7 @@ export const products: Product[] = [
     description: "Премиальный лосось из Чили",
     weight: "1 кг",
     packaging: "Вакуумная упаковка",
+    manufacturer: "Морепродукт",
     image: "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png"
   },
   {
@@ -30,6 +32,7 @@ export const products: Product[] = [
     description: "Крупные тигровые креветки",
     weight: "500 г",
     packaging: "Пластиковый контейнер",
+    manufacturer: "Морепродукт",
     image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
   }
 ];

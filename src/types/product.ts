@@ -8,4 +8,5 @@ export interface Product {
   image?: string;
   weight?: string;
   packaging?: string;
+  manufacturer?: string;
 }
