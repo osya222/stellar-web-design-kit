@@ -11,11 +11,11 @@ export const getProductsFromStorage = (): Product[] => {
     // Get custom products
     const customProducts = getCustomProducts();
     
-    // Combine default and custom products
+    // Combine default and custom products (both are empty now)
     return [...defaultProducts, ...customProducts];
   } catch (error) {
     console.error("Error loading products from storage:", error);
-    return [...defaultProducts];
+    return [];
   }
 };
 
@@ -27,9 +27,8 @@ export const saveProductToProject = async (
   allProducts?: Product[]
 ): Promise<void> => {
   try {
-    // Save the product using the custom products module
-    saveCustomProduct(product);
-    console.log(`Product ${product.id} saved successfully`);
+    // Function is now a stub since we've removed product functionality
+    console.log("Product saving functionality has been removed");
   } catch (error) {
     console.error("Error saving product:", error);
     throw new Error(`Failed to save product: ${error instanceof Error ? error.message : String(error)}`);
@@ -41,9 +40,8 @@ export const saveProductToProject = async (
  */
 export const deleteProductFromStorage = async (productId: number): Promise<void> => {
   try {
-    // Delete the product using the custom products module
-    deleteCustomProduct(productId);
-    console.log(`Product ${productId} deleted successfully`);
+    // Function is now a stub since we've removed product functionality
+    console.log("Product deletion functionality has been removed");
   } catch (error) {
     console.error("Error deleting product:", error);
     throw new Error(`Failed to delete product: ${error instanceof Error ? error.message : String(error)}`);

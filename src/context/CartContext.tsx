@@ -2,7 +2,6 @@
 import React, { createContext, useState, useContext } from 'react';
 import { Product } from '@/types/product';
 import { toast } from '@/hooks/use-toast';
-import { getProductImage } from '@/data/productImages';
 
 interface CartItem {
   product: Product;
@@ -26,11 +25,6 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
 
   const addToCart = (product: Product) => {
-    // Если у продукта нет изображения, попробуем его получить
-    const productWithImage = product.image 
-      ? product 
-      : { ...product, image: getProductImage(product) };
-
     setItems(currentItems => {
       const existingItem = currentItems.find(item => item.product.id === product.id);
       
@@ -49,7 +43,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         toast({
           description: `"${product.name}" добавлен в корзину`,
         });
-        return [...currentItems, { product: productWithImage, quantity: 1 }];
+        return [...currentItems, { product, quantity: 1 }];
       }
     });
   };
