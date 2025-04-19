@@ -1,5 +1,4 @@
-
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import ProductPrices from './ProductPrices';
@@ -8,6 +7,7 @@ import { ShoppingCart, Upload, ImageIcon } from "lucide-react";
 import { useCart } from '@/context/CartContext';
 import { useToast } from "@/hooks/use-toast";
 import { storage } from '@/utils/supabase';
+import { getUploadedImageUrl } from '@/routes';
 
 interface ProductCardProps {
   product: Product;
@@ -19,14 +19,31 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [imageError, setImageError] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imageSrc, setImageSrc] = useState<string>('/placeholder.svg');
   
-  // Add timestamp to prevent caching
-  const timestamp = Date.now();
-  const imageSrc = imageError || !product.image 
-    ? '/placeholder.svg' 
-    : product.image.startsWith('http') 
-      ? `${product.image}?t=${timestamp}` 
-      : `${storage.getPublicUrl(product.image)}?t=${timestamp}`;
+  // Set up the image source when the component mounts or when the product image changes
+  useEffect(() => {
+    if (!product.image || imageError) {
+      setImageSrc('/placeholder.svg');
+      return;
+    }
+    
+    try {
+      // If it's already a blob URL (local preview), use it directly
+      if (product.image.startsWith('blob:')) {
+        setImageSrc(product.image);
+        return;
+      }
+      
+      // Otherwise, use getUploadedImageUrl to resolve the path with timestamp
+      const resolvedUrl = getUploadedImageUrl(product.image);
+      console.log(`ProductCard: Resolved image URL for ${product.name}:`, resolvedUrl);
+      setImageSrc(resolvedUrl);
+    } catch (error) {
+      console.error(`Error resolving image URL for ${product.name}:`, error);
+      setImageSrc('/placeholder.svg');
+    }
+  }, [product.image, imageError]);
 
   const handleAddToCart = () => {
     addToCart(product);
@@ -58,6 +75,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     // Create immediate preview with blob URL
     const localPreviewUrl = URL.createObjectURL(file);
     product.image = localPreviewUrl;
+    setImageSrc(localPreviewUrl);
     setImageError(false);
     
     setIsUploading(true);
@@ -72,6 +90,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       
       setImageError(false);
       product.image = publicUrl;
+      
+      // Update the image source after upload
+      setImageSrc(getUploadedImageUrl(publicUrl));
 
       toast({
         title: "Успешно",
@@ -108,7 +129,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           ref={fileInputRef}
         />
         
-        {!imageSrc || imageError ? (
+        {!imageSrc || imageSrc === '/placeholder.svg' || imageError ? (
           <div 
             className="w-full h-full flex flex-col items-center justify-center bg-gray-100 cursor-pointer hover:bg-gray-200 transition-colors"
             onClick={() => fileInputRef.current?.click()}
@@ -125,7 +146,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               alt={product.name} 
               className="object-contain w-full h-full p-2"
               onError={handleImageError}
-              onLoad={() => console.log(`Image loaded successfully for ${product.name}`)}
+              onLoad={() => console.log(`Image loaded successfully for ${product.name}: ${imageSrc}`)}
             />
             <div 
               className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer"

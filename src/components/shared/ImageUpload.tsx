@@ -1,9 +1,9 @@
-
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Upload, Loader2, X, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
 import { storage } from '@/utils/supabase';
+import { getUploadedImageUrl } from '@/routes';
 
 interface ImageUploadProps {
   initialImage?: string;
@@ -16,10 +16,23 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   onImageUploaded,
   productId 
 }) => {
-  const [previewUrl, setPreviewUrl] = useState<string | null>(initialImage || null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+
+  // Initialize preview URL from initialImage
+  useEffect(() => {
+    if (initialImage) {
+      const resolvedUrl = initialImage.startsWith('blob:') 
+        ? initialImage 
+        : getUploadedImageUrl(initialImage);
+      
+      setPreviewUrl(resolvedUrl);
+    } else {
+      setPreviewUrl(null);
+    }
+  }, [initialImage]);
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -51,13 +64,13 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       // Upload using the storage service (either Supabase or localStorage fallback)
       const result = await storage.upload(file, path);
       
-      // Get the public URL with timestamp to prevent caching
-      const publicUrl = `${storage.getPublicUrl(path)}?t=${timestamp}`;
+      // Get the public URL
+      const publicUrl = storage.getPublicUrl(path);
       
       console.log("Uploaded image URL:", publicUrl);
       
-      // Update preview with the final URL
-      setPreviewUrl(publicUrl);
+      // Update preview with the final URL (keep using blob URL for now for immediate display)
+      // setPreviewUrl(getUploadedImageUrl(publicUrl));
       
       // Notify parent component
       onImageUploaded(publicUrl);
@@ -67,8 +80,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         description: "Изображение загружено",
       });
 
-      // Cleanup the local preview URL
-      URL.revokeObjectURL(localPreviewUrl);
+      // We'll keep the blob URL for preview until component is unmounted or image is changed
     } catch (error) {
       console.error(`Upload error:`, error);
       toast({
