@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { products } from "@/data/products/index";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -8,7 +9,7 @@ import { ImageUpload } from '../shared/ImageUpload';
 import { Button } from "../ui/button";
 import { Edit2, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { getImageUrl, getUploadedImageUrl } from '@/routes';
+import { getImageUrl } from '@/routes';
 
 const ProductShowcase: React.FC = () => {
   const isMobile = useIsMobile();
@@ -40,7 +41,8 @@ const ProductShowcase: React.FC = () => {
         const savedImage = localStorage.getItem(`category-image-${category.name}`);
         if (savedImage) {
           console.log(`Loaded saved image for category ${category.name}:`, savedImage);
-          savedImages[category.name] = savedImage;
+          // Add timestamp to force refresh
+          savedImages[category.name] = `${savedImage}?t=${Date.now()}`;
         } else {
           const defaultImage = getProductImage({ category: category.name, name: "default" });
           if (defaultImage) {
@@ -101,13 +103,15 @@ const ProductShowcase: React.FC = () => {
       
       console.log(`Saving category image for ${categoryName}:`, uploadedUrl);
       
-      // Save to state and localStorage
+      // Save to state and localStorage - strip any timestamp parameters first
+      const cleanUrl = uploadedUrl.split('?')[0];
+      
       setCategoryImages(prev => ({
         ...prev,
-        [categoryName]: uploadedUrl
+        [categoryName]: uploadedUrl // Keep timestamp for immediate display
       }));
       
-      localStorage.setItem(`category-image-${categoryName}`, uploadedUrl);
+      localStorage.setItem(`category-image-${categoryName}`, cleanUrl);
       
       toast({
         title: "Изображение загружено",

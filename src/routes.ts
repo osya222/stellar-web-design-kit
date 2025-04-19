@@ -1,3 +1,4 @@
+
 // Define route handlers for API endpoints
 import { handleUpload } from './api/upload';
 
@@ -39,12 +40,16 @@ export const apiRoutes = {
 export const getImageUrl = (path: string | undefined): string => {
   if (!path) return '/placeholder.svg';
   
-  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/images/')) {
-    return path;
+  // Add timestamp to prevent caching
+  const timestamp = Date.now();
+  
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    return `${path}?t=${timestamp}`;
+  } else if (path.startsWith('/images/')) {
+    return `${path}?t=${timestamp}`;
   }
   
   const resolvedPath = path.startsWith('/') ? path : `/${path}`;
-  const timestamp = Date.now();
   return `${resolvedPath}?t=${timestamp}`;
 };
 
@@ -53,11 +58,16 @@ export const getUploadedImageUrl = (path: string | undefined): string => {
   if (!path) return '/placeholder.svg';
   console.log("Getting uploaded image URL for path:", path);
   
-  if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('/images/')) {
-    return path;
+  // Add timestamp to prevent caching
+  const timestamp = Date.now();
+  
+  if (path.startsWith('http://') || path.startsWith('https://')) {
+    return `${path}?t=${timestamp}`;
+  } else if (path.startsWith('/images/')) {
+    return `${path}?t=${timestamp}`;
   }
   
   // Normalize the path and use the new products directory
   const normalizedPath = path.startsWith('/') ? path.substring(1) : path;
-  return getImageUrl(`${UPLOADS_DIR}/${normalizedPath}`);
+  return `${UPLOADS_DIR}/${normalizedPath}?t=${timestamp}`;
 };

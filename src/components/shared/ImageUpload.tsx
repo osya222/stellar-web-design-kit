@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { Upload, Loader2, X, ImageIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -34,7 +35,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       return;
     }
 
-    // Create immediate preview
+    // Create immediate preview with a timestamp to force refresh
     const localPreviewUrl = URL.createObjectURL(file);
     setPreviewUrl(localPreviewUrl);
 
@@ -50,8 +51,10 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       // Upload using the storage service (either Supabase or localStorage fallback)
       const result = await storage.upload(file, path);
       
-      // Get the public URL
-      const publicUrl = storage.getPublicUrl(path);
+      // Get the public URL with timestamp to prevent caching
+      const publicUrl = `${storage.getPublicUrl(path)}?t=${timestamp}`;
+      
+      console.log("Uploaded image URL:", publicUrl);
       
       // Update preview with the final URL
       setPreviewUrl(publicUrl);

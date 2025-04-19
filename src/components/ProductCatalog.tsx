@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import {
   Card,
@@ -27,6 +26,30 @@ const ProductCatalog: React.FC = () => {
   useEffect(() => {
     // Use a timestamp to force refresh
     setRefreshTrigger(Date.now());
+    
+    // Clear any stale image caches
+    if (typeof window !== 'undefined') {
+      try {
+        // Clear image cache from localStorage
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && (key.startsWith('image_url_cache_') || key.startsWith('image_data_'))) {
+            localStorage.removeItem(key);
+          }
+        }
+        
+        // Also try to clear browser cache for images by forcing a reload
+        const images = document.querySelectorAll('img');
+        images.forEach(img => {
+          if (img.src && !img.src.includes('data:') && !img.src.includes('blob:')) {
+            const src = img.src.split('?')[0];
+            img.src = `${src}?t=${Date.now()}`;
+          }
+        });
+      } catch (error) {
+        console.error("Error clearing image cache:", error);
+      }
+    }
   }, []);
   
   // Load products including custom ones with refresh trigger
@@ -38,20 +61,6 @@ const ProductCatalog: React.FC = () => {
     const customProducts = getCustomProducts();
     const allProducts = [...defaultProducts, ...customProducts];
     console.log("ProductCatalog: Refreshing products list with", allProducts.length, "items");
-    
-    // Clear localStorage cache for image URLs that might be stale
-    if (typeof window !== 'undefined') {
-      try {
-        for (let i = 0; i < localStorage.length; i++) {
-          const key = localStorage.key(i);
-          if (key && key.startsWith('image_url_cache_')) {
-            localStorage.removeItem(key);
-          }
-        }
-      } catch (error) {
-        console.error("Error clearing localStorage:", error);
-      }
-    }
     
     setProducts(allProducts);
     

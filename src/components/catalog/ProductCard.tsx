@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,11 +20,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   
+  // Add timestamp to prevent caching
+  const timestamp = Date.now();
   const imageSrc = imageError || !product.image 
     ? '/placeholder.svg' 
     : product.image.startsWith('http') 
-      ? product.image 
-      : storage.getPublicUrl(product.image);
+      ? `${product.image}?t=${timestamp}` 
+      : `${storage.getPublicUrl(product.image)}?t=${timestamp}`;
 
   const handleAddToCart = () => {
     addToCart(product);
@@ -52,6 +55,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       return;
     }
 
+    // Create immediate preview with blob URL
+    const localPreviewUrl = URL.createObjectURL(file);
+    product.image = localPreviewUrl;
+    setImageError(false);
+    
     setIsUploading(true);
 
     try {
@@ -69,6 +77,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         title: "Успешно",
         description: "Изображение загружено",
       });
+      
+      // Cleanup the local preview URL
+      URL.revokeObjectURL(localPreviewUrl);
     } catch (error) {
       console.error('Upload error:', error);
       toast({
