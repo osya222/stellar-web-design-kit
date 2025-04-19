@@ -34,6 +34,10 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       return;
     }
 
+    // Create immediate preview
+    const localPreviewUrl = URL.createObjectURL(file);
+    setPreviewUrl(localPreviewUrl);
+
     setIsUploading(true);
 
     try {
@@ -49,7 +53,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
       // Get the public URL
       const publicUrl = storage.getPublicUrl(path);
       
-      // Update preview
+      // Update preview with the final URL
       setPreviewUrl(publicUrl);
       
       // Notify parent component
@@ -59,6 +63,9 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         title: "Успешно",
         description: "Изображение загружено",
       });
+
+      // Cleanup the local preview URL
+      URL.revokeObjectURL(localPreviewUrl);
     } catch (error) {
       console.error(`Upload error:`, error);
       toast({
@@ -66,6 +73,7 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
         title: "Ошибка",
         description: `Не удалось загрузить изображение: ${error instanceof Error ? error.message : String(error)}`,
       });
+      // Keep the preview even if upload failed
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) {
@@ -75,6 +83,9 @@ export const ImageUpload: React.FC<ImageUploadProps> = ({
   };
 
   const handleRemoveImage = () => {
+    if (previewUrl?.startsWith('blob:')) {
+      URL.revokeObjectURL(previewUrl);
+    }
     setPreviewUrl(null);
     onImageUploaded('');
   };
