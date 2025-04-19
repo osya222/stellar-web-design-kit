@@ -1,8 +1,19 @@
 
-import { products } from "@/data/products";
+import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
+import { Product } from "@/types/product";
+import { getProductsFromStorage } from "@/utils/productStorage";
+import ProductManager from "./ProductManager";
 
 const ProductGrid = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    // Load products from storage
+    const loadedProducts = getProductsFromStorage();
+    setProducts(loadedProducts);
+  }, []);
+
   // Group products by category
   const productsByCategory = products.reduce((acc, product) => {
     if (!acc[product.category]) {
@@ -10,12 +21,15 @@ const ProductGrid = () => {
     }
     acc[product.category].push(product);
     return acc;
-  }, {} as Record<string, typeof products>);
+  }, {} as Record<string, Product[]>);
 
   return (
     <section className="py-12" id="catalog">
       <div className="container mx-auto px-4">
-        <h2 className="text-3xl font-bold text-center mb-8">Наш каталог</h2>
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-bold">Наш каталог</h2>
+          <ProductManager />
+        </div>
         <div className="space-y-12">
           {Object.entries(productsByCategory).map(([category, categoryProducts]) => (
             <div key={category} className="space-y-4">
