@@ -38,6 +38,10 @@ const ProductCard = ({ product, onEdit }: ProductCardProps) => {
           )}
           
           <div className="space-y-1">
+            <div className="flex justify-between">
+              <span>Производитель:</span>
+              <span className="font-medium text-gray-800">{product.manufacturer}</span>
+            </div>
             {product.size && (
               <div className="flex justify-between">
                 <span>Размер:</span>
@@ -60,12 +64,6 @@ const ProductCard = ({ product, onEdit }: ProductCardProps) => {
               <div className="flex justify-between">
                 <span>Вылов:</span>
                 <span className="font-medium text-gray-800">{product.catchDate}</span>
-              </div>
-            )}
-            {product.manufacturer && (
-              <div className="flex justify-between">
-                <span>Производитель:</span>
-                <span className="font-medium text-gray-800">{product.manufacturer}</span>
               </div>
             )}
           </div>
