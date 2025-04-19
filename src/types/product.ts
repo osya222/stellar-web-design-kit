@@ -2,11 +2,10 @@
 export interface Product {
   id: number;
   name: string;
-  price?: number;
-  category?: string;
-  manufacturer?: string;
-  image?: string;
-  size?: string;
-  packaging?: string;
+  price: number;
+  category: string;
   description?: string;
+  image?: string;
+  weight?: string;
+  packaging?: string;
 }

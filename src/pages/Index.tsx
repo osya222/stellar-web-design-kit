@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
 import Header from "@/components/layout/Header";
@@ -7,6 +6,7 @@ import Hero from "@/components/home/Hero";
 import About from "@/components/home/About";
 import Contacts from "@/components/home/Contacts";
 import DeliveryInfo from "@/components/home/DeliveryInfo";
+import ProductGrid from "@/components/products/ProductGrid";
 
 const Index = () => {
   const location = useLocation();
@@ -46,22 +46,12 @@ const Index = () => {
 
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Header */}
       <Header />
-
-      {/* Hero section */}
       <Hero />
-
-      {/* Delivery Info Section */}
+      <ProductGrid />
       <DeliveryInfo />
-
-      {/* About Us Section */}
       <About />
-
-      {/* Contacts section */}
       <Contacts />
-
-      {/* Footer */}
       <Footer />
     </div>
   );
