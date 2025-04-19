@@ -2,74 +2,138 @@
 import { Product } from "@/types/product";
 
 export const products: Product[] = [
-  // Форель категория
+  // Лосось (Чили)
   {
     id: 1,
-    name: "Форель охлажденная",
-    price: 1200,
-    category: "Форель (Турция)",
-    description: "Свежая форель высшего качества",
+    name: "Лосось свежемороженый",
+    price: 1413,
+    category: "Лосось (Чили)",
+    description: "Свежемороженый лосось премиального качества",
+    manufacturer: "Чили Premium",
     weight: "1 кг",
     packaging: "Вакуумная упаковка",
-    manufacturer: "Морепродукт",
-    image: "/lovable-uploads/923eda92-d974-48f3-813d-339626f70616.png"
+    image: "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png"
   },
   {
     id: 2,
-    name: "Форель стейк",
-    price: 950,
-    category: "Форель (Турция)",
-    description: "Стейк из свежей форели",
-    weight: "500 г",
-    packaging: "Вакуумная упаковка",
-    manufacturer: "Морепродукт",
-    image: "/lovable-uploads/923eda92-d974-48f3-813d-339626f70616.png"
-  },
-  // Лосось категория
-  {
-    id: 3,
-    name: "Лосось премиум",
-    price: 1500,
+    name: "Лосось свежемороженый",
+    price: 1457,
     category: "Лосось (Чили)",
-    description: "Премиальный лосось из Чили",
+    description: "Свежемороженый лосось премиального качества",
+    manufacturer: "Чили Premium",
     weight: "1 кг",
     packaging: "Вакуумная упаковка",
-    manufacturer: "Морепродукт",
     image: "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png"
+  },
+  // Форель (Турция)
+  {
+    id: 3,
+    name: "Форель свежемороженая морская",
+    price: 1014,
+    category: "Форель (Турция)",
+    description: "Свежемороженая морская форель высшего качества",
+    manufacturer: "Турция",
+    weight: "1 кг",
+    packaging: "Вакуумная упаковка",
+    image: "/lovable-uploads/923eda92-d974-48f3-813d-339626f70616.png"
   },
   {
     id: 4,
-    name: "Лосось филе",
-    price: 1300,
-    category: "Лосось (Чили)", 
-    description: "Филе лосося без костей",
-    weight: "500 г",
+    name: "Форель свежемороженая морская",
+    price: 1064,
+    category: "Форель (Турция)",
+    description: "Свежемороженая морская форель высшего качества",
+    manufacturer: "Турция",
+    weight: "1 кг",
     packaging: "Вакуумная упаковка",
-    manufacturer: "Морепродукт",
-    image: "/lovable-uploads/af68b77a-0b8f-4a9d-8d21-c6b1f7b9ea54.png"
+    image: "/lovable-uploads/923eda92-d974-48f3-813d-339626f70616.png"
   },
-  // Креветки категория
   {
     id: 5,
-    name: "Креветки тигровые",
-    price: 1800,
+    name: "Форель свежемороженая морская",
+    price: 1166,
+    category: "Форель (Турция)",
+    description: "Свежемороженая морская форель высшего качества",
+    manufacturer: "Турция",
+    weight: "1 кг",
+    packaging: "Вакуумная упаковка",
+    image: "/lovable-uploads/923eda92-d974-48f3-813d-339626f70616.png"
+  },
+  // Креветки и морепродукты
+  {
+    id: 6,
+    name: "Креветка ваннамей свежемороженая в глазури",
+    price: 1002,
     category: "Креветки и морепродукты",
-    description: "Крупные тигровые креветки",
-    weight: "500 г",
+    description: "Свежемороженые креветки в глазури",
+    manufacturer: "Индия",
+    weight: "1 кг",
     packaging: "Пластиковый контейнер",
-    manufacturer: "Морепродукт",
     image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
   },
   {
-    id: 6,
-    name: "Креветки королевские",
-    price: 2100,
+    id: 7,
+    name: "Лангустины свежемороженые L2",
+    price: 795,
     category: "Креветки и морепродукты",
-    description: "Королевские креветки премиум качества",
-    weight: "500 г",
+    description: "Свежемороженые лангустины размера L2",
+    manufacturer: "Аргентина",
+    weight: "1 кг",
     packaging: "Пластиковый контейнер",
-    manufacturer: "Морепродукт",
+    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
+  },
+  {
+    id: 8,
+    name: "Лангустины свежемороженые L1",
+    price: 884,
+    category: "Креветки и морепродукты",
+    description: "Свежемороженые лангустины премиум размера L1",
+    manufacturer: "Аргентина",
+    weight: "1 кг",
+    packaging: "Пластиковый контейнер",
+    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
+  },
+  {
+    id: 9,
+    name: "Медальоны из морепродуктов",
+    price: 1199,
+    category: "Креветки и морепродукты",
+    description: "Медальоны из отборных морепродуктов",
+    manufacturer: "Индия",
+    weight: "500 г",
+    packaging: "Вакуумная упаковка",
+    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
+  },
+  {
+    id: 10,
+    name: "Мясо мидий варено-мороженое",
+    price: 520,
+    category: "Креветки и морепродукты",
+    description: "Варено-мороженое мясо мидий",
+    manufacturer: "Чили",
+    weight: "500 г",
+    packaging: "Вакуумная упаковка",
+    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
+  },
+  // Другие виды рыбы
+  {
+    id: 11,
+    name: "Сибас икряной мороженый",
+    price: 828,
+    category: "Другие виды рыбы",
+    description: "Мороженый икряной сибас",
+    weight: "1 кг",
+    packaging: "Вакуумная упаковка",
+    image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
+  },
+  {
+    id: 12,
+    name: "Сорадо икряное мороженое",
+    price: 895,
+    category: "Другие виды рыбы",
+    description: "Мороженая икряная рыба сорадо",
+    weight: "1 кг",
+    packaging: "Вакуумная упаковка",
     image: "/lovable-uploads/0632a158-3850-45ef-a601-a34a94ab758a.png"
   }
 ];
-
