@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { ArrowRight } from "lucide-react";
 import { storage } from '@/utils/supabase';
@@ -76,7 +75,7 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ category, image, onCategory
   };
 
   return (
-    <div className="overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 bg-white card-hover">
+    <div className="overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-all duration-300 bg-white">
       <div className="relative h-40 md:h-60 bg-gradient-to-br from-blue-50 to-blue-100 flex items-center justify-center">
         {currentImage && !imageError ? (
           <img 

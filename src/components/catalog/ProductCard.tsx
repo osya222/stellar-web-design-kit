@@ -1,8 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import ProductPrices from './ProductPrices';
 import { Product } from '@/types/product';
+import { Button } from "@/components/ui/button";
 import { ShoppingCart, Upload, ImageIcon } from "lucide-react";
 import { useCart } from '@/context/CartContext';
 import { useToast } from "@/hooks/use-toast";
@@ -21,7 +20,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [imageSrc, setImageSrc] = useState<string>('/placeholder.svg');
   
-  // Set up the image source when the component mounts or when the product image changes
   useEffect(() => {
     if (!product.image || imageError) {
       setImageSrc('/placeholder.svg');
@@ -29,13 +27,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     }
     
     try {
-      // If it's already a blob URL (local preview), use it directly
       if (product.image.startsWith('blob:')) {
         setImageSrc(product.image);
         return;
       }
       
-      // Otherwise, use getUploadedImageUrl to resolve the path with timestamp
       const resolvedUrl = getUploadedImageUrl(product.image);
       console.log(`ProductCard: Resolved image URL for ${product.name}:`, resolvedUrl);
       setImageSrc(resolvedUrl);
@@ -72,7 +68,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       return;
     }
 
-    // Create immediate preview with blob URL
     const localPreviewUrl = URL.createObjectURL(file);
     product.image = localPreviewUrl;
     setImageSrc(localPreviewUrl);
@@ -91,7 +86,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       setImageError(false);
       product.image = publicUrl;
       
-      // Update the image source after upload
       setImageSrc(getUploadedImageUrl(publicUrl));
 
       toast({
@@ -99,7 +93,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         description: "Изображение загружено",
       });
       
-      // Cleanup the local preview URL
       URL.revokeObjectURL(localPreviewUrl);
     } catch (error) {
       console.error('Upload error:', error);
@@ -118,7 +111,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   return (
-    <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
+    <div className="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow h-full flex flex-col overflow-hidden">
       <div className="h-48 bg-white flex items-center justify-center relative overflow-hidden">
         <input 
           type="file" 
@@ -158,7 +151,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         )}
       </div>
       
-      <CardContent className="p-4 flex flex-col flex-grow">
+      <div className="p-4 flex flex-col flex-grow">
         <h3 className="font-bold text-base line-clamp-2 h-12 mb-2 text-black" title={product.name}>
           {product.name}
         </h3>
@@ -197,8 +190,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             </Button>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 

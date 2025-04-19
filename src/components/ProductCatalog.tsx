@@ -1,10 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import ProductFilters from './catalog/ProductFilters';
 import ProductListing from './catalog/ProductListing';
 import { products as defaultProducts } from '@/data/products/index';
@@ -22,15 +16,11 @@ const ProductCatalog: React.FC = () => {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [isRefreshing, setIsRefreshing] = useState(false);
   
-  // Force refresh when component mounts or when navigation occurs
   useEffect(() => {
-    // Use a timestamp to force refresh
     setRefreshTrigger(Date.now());
     
-    // Clear any stale image caches
     if (typeof window !== 'undefined') {
       try {
-        // Clear image cache from localStorage
         for (let i = 0; i < localStorage.length; i++) {
           const key = localStorage.key(i);
           if (key && (key.startsWith('image_url_cache_') || key.startsWith('image_data_'))) {
@@ -38,7 +28,6 @@ const ProductCatalog: React.FC = () => {
           }
         }
         
-        // Also try to clear browser cache for images by forcing a reload
         const images = document.querySelectorAll('img');
         images.forEach(img => {
           if (img.src && !img.src.includes('data:') && !img.src.includes('blob:')) {
@@ -52,29 +41,23 @@ const ProductCatalog: React.FC = () => {
     }
   }, []);
   
-  // Load products including custom ones with refresh trigger
   useEffect(() => {
-    // Start refreshing indicator
     setIsRefreshing(true);
     
-    // Combine default and custom products
     const customProducts = getCustomProducts();
     const allProducts = [...defaultProducts, ...customProducts];
     console.log("ProductCatalog: Refreshing products list with", allProducts.length, "items");
     
     setProducts(allProducts);
     
-    // End refreshing indicator after a short delay
     setTimeout(() => {
       setIsRefreshing(false);
     }, 500);
   }, [refreshTrigger]);
   
-  // Get unique categories and manufacturers for filtering
   const categories = Array.from(new Set(products.map(product => product.category)));
   const manufacturers = Array.from(new Set(products.map(product => product.manufacturer).filter(Boolean)));
   
-  // Filter products based on search term and selected filters
   const filteredProducts = products.filter(product => {
     return (
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
@@ -83,24 +66,22 @@ const ProductCatalog: React.FC = () => {
     );
   });
   
-  // Reset filters
   const handleResetFilters = () => {
     setSearchTerm('');
     setSelectedManufacturer('all');
     setSelectedCategory('all');
   };
   
-  // Function to manually trigger a refresh
   const handleRefresh = () => {
     console.log("Manually refreshing catalog...");
     setRefreshTrigger(Date.now());
   };
   
   return (
-    <Card className="border-0 shadow-lg rounded-xl overflow-hidden">
-      <CardHeader className="bg-gradient-to-r from-blue-50 to-blue-100 py-8">
+    <div className="bg-white rounded-xl shadow-lg overflow-hidden">
+      <div className="bg-gradient-to-r from-blue-50 to-blue-100 py-8 px-6">
         <div className="flex justify-between items-center mb-4">
-          <CardTitle className="text-3xl font-bold text-blue-800">Каталог Морепродуктов</CardTitle>
+          <h1 className="text-3xl font-bold text-blue-800">Каталог Морепродуктов</h1>
           <Button 
             variant="outline" 
             size="sm" 
@@ -127,16 +108,16 @@ const ProductCatalog: React.FC = () => {
           categories={categories}
           manufacturers={manufacturers}
         />
-      </CardHeader>
+      </div>
       
-      <CardContent className="px-4 py-8">
+      <div className="px-4 py-8">
         <ProductListing 
           selectedCategory={selectedCategory}
           filteredProducts={filteredProducts}
           categories={categories}
         />
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 };
 
