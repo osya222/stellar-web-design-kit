@@ -1,4 +1,3 @@
-
 import { Product } from "@/types/product";
 
 const PRODUCTS: Product[] = [
@@ -8,7 +7,8 @@ const PRODUCTS: Product[] = [
     category: "Лосось (Чили)",
     manufacturer: "Чили Premium",
     price: 1413,
-    inStock: true
+    inStock: true,
+    imageUrl: "/placeholder.svg"
   },
   {
     id: "2",
@@ -16,7 +16,8 @@ const PRODUCTS: Product[] = [
     category: "Лосось (Чили)", 
     manufacturer: "Чили Premium",
     price: 1457,
-    inStock: true
+    inStock: true,
+    imageUrl: "/placeholder.svg"
   },
   {
     id: "3",
@@ -24,7 +25,8 @@ const PRODUCTS: Product[] = [
     category: "Форель (Турция)",
     manufacturer: "Турция",
     price: 1014,
-    inStock: true
+    inStock: true,
+    imageUrl: "/placeholder.svg"
   },
   {
     id: "4", 
@@ -32,7 +34,8 @@ const PRODUCTS: Product[] = [
     category: "Форель (Турция)",
     manufacturer: "Турция",
     price: 1064,
-    inStock: true
+    inStock: true,
+    imageUrl: "/placeholder.svg"
   },
   {
     id: "5",
@@ -40,7 +43,8 @@ const PRODUCTS: Product[] = [
     category: "Форель (Турция)",
     manufacturer: "Турция",
     price: 1166,
-    inStock: true
+    inStock: true,
+    imageUrl: "/placeholder.svg"
   },
   {
     id: "6",
@@ -48,7 +52,8 @@ const PRODUCTS: Product[] = [
     category: "Креветки и морепродукты",
     manufacturer: "Индия",
     price: 1002,
-    inStock: true
+    inStock: true,
+    imageUrl: "/placeholder.svg"
   },
   {
     id: "7",
@@ -56,7 +61,8 @@ const PRODUCTS: Product[] = [
     category: "Креветки и морепродукты",
     manufacturer: "Индия",
     price: 1004,
-    inStock: true
+    inStock: true,
+    imageUrl: "/placeholder.svg"
   },
   {
     id: "8",
@@ -64,7 +70,8 @@ const PRODUCTS: Product[] = [
     category: "Креветки и морепродукты",
     manufacturer: "Индия",
     price: 1071,
-    inStock: true
+    inStock: true,
+    imageUrl: "/placeholder.svg"
   },
   {
     id: "9",
@@ -72,7 +79,8 @@ const PRODUCTS: Product[] = [
     category: "Креветки и морепродукты",
     manufacturer: "Индия",
     price: 1240,
-    inStock: true
+    inStock: true,
+    imageUrl: "/placeholder.svg"
   },
   {
     id: "10",
@@ -80,7 +88,8 @@ const PRODUCTS: Product[] = [
     category: "Креветки и морепродукты",
     manufacturer: "Аргентина",
     price: 795,
-    inStock: true
+    inStock: true,
+    imageUrl: "/placeholder.svg"
   },
   {
     id: "11",
@@ -88,7 +97,8 @@ const PRODUCTS: Product[] = [
     category: "Креветки и морепродукты",
     manufacturer: "Аргентина",
     price: 884,
-    inStock: true
+    inStock: true,
+    imageUrl: "/placeholder.svg"
   },
   {
     id: "12",
@@ -96,7 +106,8 @@ const PRODUCTS: Product[] = [
     category: "Креветки и морепродукты",
     manufacturer: "Аргентина",
     price: 1022,
-    inStock: true
+    inStock: true,
+    imageUrl: "/placeholder.svg"
   },
   {
     id: "13",
@@ -104,7 +115,8 @@ const PRODUCTS: Product[] = [
     category: "Креветки и морепродукты",
     manufacturer: "Китай",
     price: 1192,
-    inStock: true
+    inStock: true,
+    imageUrl: "/placeholder.svg"
   },
   {
     id: "14",
@@ -112,7 +124,8 @@ const PRODUCTS: Product[] = [
     category: "Мидии",
     manufacturer: "Чили",
     price: 391,
-    inStock: true
+    inStock: true,
+    imageUrl: "/placeholder.svg"
   },
   {
     id: "15",
@@ -120,7 +133,8 @@ const PRODUCTS: Product[] = [
     category: "Мидии",
     manufacturer: "Чили",
     price: 483,
-    inStock: true
+    inStock: true,
+    imageUrl: "/placeholder.svg"
   },
   {
     id: "16",
@@ -128,7 +142,8 @@ const PRODUCTS: Product[] = [
     category: "Мидии",
     manufacturer: "Чили",
     price: 520,
-    inStock: true
+    inStock: true,
+    imageUrl: "/placeholder.svg"
   },
   {
     id: "17",
@@ -136,7 +151,8 @@ const PRODUCTS: Product[] = [
     category: "Мидии",
     manufacturer: "Чили",
     price: 509,
-    inStock: true
+    inStock: true,
+    imageUrl: "/placeholder.svg"
   },
   {
     id: "18",
@@ -144,7 +160,8 @@ const PRODUCTS: Product[] = [
     category: "Другие виды рыбы",
     manufacturer: "Турция",
     price: 0,
-    inStock: false
+    inStock: false,
+    imageUrl: "/placeholder.svg"
   },
   {
     id: "19",
@@ -152,7 +169,8 @@ const PRODUCTS: Product[] = [
     category: "Другие виды рыбы",
     manufacturer: "Турция",
     price: 895,
-    inStock: true
+    inStock: true,
+    imageUrl: "/placeholder.svg"
   },
   {
     id: "20",
@@ -160,7 +178,8 @@ const PRODUCTS: Product[] = [
     category: "Другие виды рыбы",
     manufacturer: "Турция",
     price: 828,
-    inStock: true
+    inStock: true,
+    imageUrl: "/placeholder.svg"
   },
   {
     id: "21",
@@ -168,7 +187,8 @@ const PRODUCTS: Product[] = [
     category: "Другие виды рыбы",
     manufacturer: "Фарерские о-ва",
     price: 266,
-    inStock: true
+    inStock: true,
+    imageUrl: "/placeholder.svg"
   }
 ];
 
@@ -181,20 +201,16 @@ export async function fetchProductById(id: string): Promise<Product | null> {
   return product || null;
 }
 
-// Функция для получения списка всех категорий
 export async function fetchCategories(): Promise<string[]> {
   const categories = Array.from(new Set(PRODUCTS.map(p => p.category)));
   return categories;
 }
 
-// Функция для получения всех производителей
 export async function fetchManufacturers(): Promise<string[]> {
   const manufacturers = Array.from(new Set(PRODUCTS.map(p => p.manufacturer)));
   return manufacturers;
 }
 
-// Функция для получения URL изображения для героя
 export function getHeroImageUrl(): string {
-  // Возвращаем URL-адрес изображения для героя
   return "https://images.unsplash.com/photo-1498654200943-1088dd4438ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80";
 }

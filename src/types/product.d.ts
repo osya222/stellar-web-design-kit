@@ -6,7 +6,7 @@ export interface Product {
   manufacturer: string; 
   price: number;
   description?: string;
-  imageUrl?: string;
+  imageUrl: string;
   inStock?: boolean;
   weight?: number;
   unit?: 'кг' | 'г' | 'шт';
