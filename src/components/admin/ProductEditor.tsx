@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -36,9 +35,9 @@ interface ProductEditorProps {
   manufacturers: string[];
   onSaveComplete: () => void;
   onCancel: () => void;
+  uploadActive?: boolean;
 }
 
-// Form validation schema
 const productSchema = z.object({
   id: z.string().optional(),
   name: z.string().min(3, 'Название должно содержать минимум 3 символа'),
@@ -61,6 +60,7 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
   manufacturers,
   onSaveComplete,
   onCancel,
+  uploadActive = true
 }) => {
   const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
@@ -68,7 +68,6 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
     product?.imageUrl || '/placeholder.svg'
   );
 
-  // Initialize form with default values or existing product data
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     defaultValues: product || {
@@ -86,7 +85,6 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
     },
   });
 
-  // Try to load image from localStorage if available
   React.useEffect(() => {
     if (product?.id) {
       const cachedImage = getProductImage(product.id);
@@ -98,7 +96,6 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
     }
   }, [product]);
 
-  // Function to compress image before saving
   const compressImage = (file: File, maxWidth = 800, maxHeight = 600, quality = 0.7): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -112,7 +109,6 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
           let width = img.width;
           let height = img.height;
           
-          // Calculate new dimensions while maintaining aspect ratio
           if (width > height) {
             if (width > maxWidth) {
               height = Math.round(height * maxWidth / width);
@@ -131,7 +127,6 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
           const ctx = canvas.getContext('2d');
           ctx?.drawImage(img, 0, 0, width, height);
           
-          // Get compressed image as base64 string
           const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
           resolve(compressedDataUrl);
         };
@@ -172,16 +167,13 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
     try {
       setIsUploading(true);
       
-      // Compress the image
       const compressedDataUrl = await compressImage(file, 800, 600, 0.7);
       
-      // Generate unique filename
       const productId = form.getValues('id');
-      const ext = 'jpg'; // Save as JPG after compression
+      const ext = 'jpg';
       const uniqueFilename = `product_${productId}_${Date.now()}.${ext}`;
       const imagePath = `/images/products/${uniqueFilename}`;
       
-      // Update form value and preview
       form.setValue('imageUrl', imagePath);
       setImagePreview(compressedDataUrl);
       
@@ -205,7 +197,6 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
       let savedProduct: Product;
       
       if (product) {
-        // Update existing product
         savedProduct = await updateProduct({
           ...data,
           id: product.id
@@ -215,7 +206,6 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
           description: "Продукт обновлен",
         });
       } else {
-        // Create new product
         savedProduct = await createProduct(data);
         toast({
           title: "Успешно",
@@ -223,7 +213,6 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
         });
       }
       
-      // If we have a new image and it's not the default placeholder
       if (imagePreview !== '/placeholder.svg' && imagePreview !== product?.imageUrl) {
         await updateProductImage(savedProduct.id, data.imageUrl, imagePreview);
       }
@@ -265,28 +254,37 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
                   }}
                 />
               </AspectRatio>
-              <div className="flex flex-col gap-2">
-                <Button variant="outline" className="w-full relative" disabled={isUploading}>
-                  <input
-                    type="file"
-                    className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                    onChange={handleImageUpload}
-                    accept="image/*"
-                    disabled={isUploading}
-                  />
-                  {isUploading ? (
-                    <>
-                      <div className="animate-spin h-4 w-4 mr-2 border-2 border-primary border-t-transparent rounded-full" />
-                      Загрузка...
-                    </>
-                  ) : (
-                    <>
-                      <Upload className="mr-2 h-4 w-4" />
-                      Загрузить изображение
-                    </>
-                  )}
-                </Button>
-              </div>
+              {uploadActive ? (
+                <div className="flex flex-col gap-2">
+                  <Button variant="outline" className="w-full relative" disabled={isUploading}>
+                    <input
+                      type="file"
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      onChange={handleImageUpload}
+                      accept="image/*"
+                      disabled={isUploading}
+                    />
+                    {isUploading ? (
+                      <>
+                        <div className="animate-spin h-4 w-4 mr-2 border-2 border-primary border-t-transparent rounded-full" />
+                        Загрузка...
+                      </>
+                    ) : (
+                      <>
+                        <Upload className="mr-2 h-4 w-4" />
+                        Загрузить изображение
+                      </>
+                    )}
+                  </Button>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-2">
+                  <Button variant="outline" className="w-full relative" disabled>
+                    <Upload className="mr-2 h-4 w-4" />
+                    Загрузка изображений отключена
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
 
