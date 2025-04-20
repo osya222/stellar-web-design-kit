@@ -238,6 +238,27 @@ const persistProductData = () => {
   }
 };
 
+// In-memory cache for product images previews
+const productImageCache: Record<string, string> = {};
+
+/**
+ * Get product image URL from cache
+ * @param productId Product ID
+ * @returns Image URL from cache or null if not found
+ */
+export function getProductImage(productId: string): string | null {
+  return productImageCache[productId] || null;
+}
+
+/**
+ * Cache product image preview for temporary use
+ * @param productId Product ID
+ * @param imageUrl Image URL
+ */
+export function cacheProductImage(productId: string, imageUrl: string): void {
+  productImageCache[productId] = imageUrl;
+}
+
 export async function fetchProducts(): Promise<Product[]> {
   return activeProducts;
 }
@@ -335,7 +356,10 @@ export async function deleteProduct(productId: string): Promise<boolean> {
 }
 
 /**
- * Обновляет путь картинки продукта
+ * Updates product image path
+ * @param productId ID of the product
+ * @param imagePath Path to the image
+ * @returns Updated product or null if not found
  */
 export async function updateProductImage(
   productId: string, 
