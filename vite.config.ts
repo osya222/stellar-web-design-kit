@@ -10,6 +10,7 @@ import { dirname } from 'path';
 import type { ServerResponse } from 'http';
 import type { Request } from 'express';
 import type { NextFunction } from 'connect';
+import type { ConfigEnv, ProxyOptions } from 'vite';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -32,7 +33,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // https://vitejs.dev/config/
-export default defineConfig(({ mode }) => ({
+export default defineConfig(({ mode }: ConfigEnv) => ({
   server: {
     host: "::",
     port: 8080,
@@ -72,17 +73,19 @@ export default defineConfig(({ mode }) => ({
                   path: `/images/products/${file.filename}` 
                 }));
               });
-              return true;
+              // Return undefined instead of boolean to match expected type
+              return undefined;
             } catch (error) {
               console.error("Server error:", error);
               res.statusCode = 500;
               res.end(JSON.stringify({ error: 'Ошибка сервера' }));
-              return true;
+              // Return undefined instead of boolean to match expected type
+              return undefined;
             }
           }
           return false;
         }
-      }
+      } as ProxyOptions
     }
   },
   plugins: [
