@@ -73,12 +73,15 @@ const updateProductsInSource = (products: Product[]) => {
     console.log('Saving product data to source code');
     
     // Use Lovable API to update the file
-    fetch('/_lovable/api/source/data/products/index.ts', {
+    fetch('/api/_lovable/sourcecode', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ content })
+      body: JSON.stringify({ 
+        path: 'src/data/products/index.ts',
+        content 
+      })
     }).then(() => {
       console.log("Products data updated in source code");
     }).catch(error => {
