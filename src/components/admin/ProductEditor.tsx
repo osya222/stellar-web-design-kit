@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -64,8 +63,6 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
   uploadActive = true
 }) => {
   const { toast } = useToast();
-  // Remove: const [isUploading, setIsUploading] = useState(false);
-  // Remove: const [imagePreview, setImagePreview] = useState<string>(...)
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
@@ -84,24 +81,10 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
     },
   });
 
-  const [imagePreview, setImagePreview] = useState<string>(
-    product?.imageUrl || '/placeholder.svg'
-  );
+  const imageUrl = form.watch('imageUrl');
 
-  React.useEffect(() => {
-    if (product?.id) {
-      const cachedImage = getProductImage(product.id);
-      if (cachedImage) {
-        setImagePreview(cachedImage);
-      } else if (product.imageUrl) {
-        setImagePreview(product.imageUrl);
-      }
-    }
-  }, [product]);
-
-  const handleImageChange = (imagePath: string, preview: string) => {
-    form.setValue('imageUrl', imagePath);
-    setImagePreview(preview);
+  const handleImageChange = (imagePath: string) => {
+    form.setValue('imageUrl', imagePath, { shouldDirty: true, shouldValidate: true });
   };
 
   const onSubmit = async (data: ProductFormValues) => {
@@ -123,11 +106,6 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
           title: "Успешно",
           description: "Продукт создан",
         });
-      }
-
-      // Обновить изображение, если data.imageUrl отличается от product?.imageUrl
-      if (imagePreview !== '/placeholder.svg' && imagePreview !== product?.imageUrl) {
-        await updateProductImage(savedProduct.id, data.imageUrl, imagePreview);
       }
 
       onSaveComplete();
@@ -158,7 +136,7 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
             <ProductImageUpload
               productId={form.getValues('id')}
               initialPreview={product?.imageUrl || '/placeholder.svg'}
-              imageUrl={form.getValues('imageUrl')}
+              imageUrl={imageUrl}
               uploadActive={uploadActive}
               onImageChange={handleImageChange}
             />

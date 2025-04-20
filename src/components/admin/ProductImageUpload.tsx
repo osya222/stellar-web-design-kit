@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
@@ -9,7 +10,7 @@ interface ProductImageUploadProps {
   initialPreview: string;
   imageUrl: string;
   uploadActive?: boolean;
-  onImageChange: (imagePath: string, preview: string) => void;
+  onImageChange: (imagePath: string) => void;
 }
 
 export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
@@ -21,57 +22,14 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
 }) => {
   const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string>(
-    imageUrl || initialPreview || '/placeholder.svg'
-  );
 
-  const compressImage = (file: File, maxWidth = 800, maxHeight = 600, quality = 0.7): Promise<Blob> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (event) => {
-        const img = document.createElement('img');
-        img.src = event.target?.result as string;
-
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
-          if (width > height) {
-            if (width > maxWidth) {
-              height = Math.round(height * maxWidth / width);
-              width = maxWidth;
-            }
-          } else {
-            if (height > maxHeight) {
-              width = Math.round(width * maxHeight / height);
-              height = maxHeight;
-            }
-          }
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0, width, height);
-          canvas.toBlob(
-            (blob) => {
-              if (blob) resolve(blob);
-              else reject(new Error('Compression failed'));
-            },
-            'image/jpeg',
-            quality
-          );
-        };
-
-        img.onerror = (error) => {
-          reject(error);
-        };
-      };
-
-      reader.onerror = (error) => {
-        reject(error);
-      };
-    });
-  };
+  // Показываем превью только реального пути
+  const previewUrl =
+    imageUrl && imageUrl !== '/placeholder.svg'
+      ? imageUrl
+      : initialPreview && initialPreview !== '/placeholder.svg'
+        ? initialPreview
+        : '/placeholder.svg';
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -98,19 +56,9 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
     try {
       setIsUploading(true);
 
-      const compressedBlob = await compressImage(file, 800, 600, 0.7);
-
-      const previewDataUrl = await new Promise<string>((resolve, reject) => {
-        const r = new FileReader();
-        r.readAsDataURL(compressedBlob);
-        r.onloadend = () => resolve(r.result as string);
-        r.onerror = reject;
-      });
-      setImagePreview(previewDataUrl);
-
       const formData = new FormData();
-      const filename = `product_${productId || 'new'}_${Date.now()}.jpg`;
-      formData.append('image', compressedBlob, filename);
+      const filename = `product_${productId || 'new'}_${Date.now()}.${file.name.split('.').pop() || 'jpg'}`;
+      formData.append('image', file, filename);
 
       const response = await fetch('/api/upload', {
         method: 'POST',
@@ -127,11 +75,12 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
         throw new Error('Некорректный ответ сервера при загрузке изображения');
       }
 
-      onImageChange(result.path, previewDataUrl);
+      // Передаём путь для хранения в продукте и для превью
+      onImageChange(result.path);
 
       toast({
         title: "Изображение загружено",
-        description: "Изображение сохранено на сервере и будет привязано к продукту",
+        description: "Изображение сохранено и связано с продуктом",
       });
 
     } catch (error) {
@@ -150,7 +99,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
       <p className="text-sm font-medium mb-2">Изображение продукта</p>
       <AspectRatio ratio={4 / 3} className="bg-gray-100 rounded-md overflow-hidden mb-4">
         <img
-          src={imagePreview}
+          src={previewUrl}
           alt="Product preview"
           className="w-full h-full object-cover"
           onError={(e) => {
