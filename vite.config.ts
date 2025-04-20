@@ -36,7 +36,7 @@ const storage = multer.diskStorage({
       cb(null, uploadPath);
     } catch (error) {
       console.error("[Upload] Directory or permission error:", error);
-      // Fix: Pass null as first parameter and handle the error differently
+      // Pass null as first parameter and handle the error separately
       cb(null, uploadPath);
       // Log the error instead of passing it to callback
       console.error(`Upload directory error: ${(error as Error).message}`);
@@ -49,7 +49,6 @@ const storage = multer.diskStorage({
     const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
     
     if (!allowedExtensions.includes(ext)) {
-      // Fix: Create a different approach for invalid file types
       console.error("[Upload] Invalid file extension:", ext);
       // Return empty string for filename, we'll handle this error later
       cb(null, '');
@@ -108,34 +107,32 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
             console.log("[Upload] Processing POST upload request");
             
             try {
-              // Configure multer with reduced file size and strict validation
+              // Configure multer with extremely reduced file size and strict validation
               const upload = multer({ 
                 storage,
-                limits: { fileSize: 1 * 1024 * 1024 }, // Reduced to 1MB for better reliability
+                limits: { fileSize: 500 * 1024 }, // Reduced to 500KB for better reliability
                 fileFilter: (req, file, cb) => {
                   // Only allow image files
                   if (!file.mimetype.startsWith('image/')) {
                     console.error("[Upload] Invalid file type:", file.mimetype);
-                    // Fix: Use a different approach to handle invalid file types
-                    // Instead of throwing an error, reject the file silently
                     return cb(null, false);
                   }
                   cb(null, true);
                 }
               }).single('image');
               
-              // Use an even shorter timeout to prevent EPIPE errors
+              // Use a shorter timeout to prevent EPIPE errors
               const uploadTimeout = setTimeout(() => {
                 console.error("[Upload] Request timed out");
                 if (!res.headersSent) {
-                  res.statusCode = 408; // Use 408 Request Timeout instead of 500
+                  res.statusCode = 408; 
                   res.setHeader('Content-Type', 'application/json');
                   res.end(JSON.stringify({ 
                     error: 'Upload timeout', 
                     details: 'Request took too long to process' 
                   }));
                 }
-              }, 5000); // 5-second timeout - reduced from 10 seconds
+              }, 3000); // 3-second timeout - reduced from 5 seconds
               
               // Process the upload with specific error handling for EPIPE
               upload(req as unknown as Request, res as unknown as Response, (err: any) => {
@@ -153,7 +150,19 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
                     res.statusCode = 503; // Service Unavailable
                     res.end(JSON.stringify({ 
                       error: 'Connection error', 
-                      details: 'The server connection was interrupted. Try a smaller image or try again later.'
+                      details: 'write EPIPE',
+                      message: 'The server connection was interrupted. Try a smaller image or try again later.'
+                    }));
+                    return;
+                  }
+                  
+                  // Handle file size limits
+                  if (err.code === 'LIMIT_FILE_SIZE') {
+                    res.statusCode = 413; // Payload Too Large
+                    res.end(JSON.stringify({
+                      error: 'File too large',
+                      details: 'The file exceeds the 500KB limit',
+                      message: 'Please use a smaller image (max 500KB)'
                     }));
                     return;
                   }
@@ -189,14 +198,17 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
                   fs.accessSync(fullPath, fs.constants.F_OK);
                   console.log("[Upload] File verified:", fullPath);
                   
-                  // Return success response
-                  res.statusCode = 200;
-                  const responseData = { 
-                    success: true,
-                    path: imagePath
-                  };
-                  
-                  res.end(JSON.stringify(responseData));
+                  // Delay response slightly to prevent connection issues
+                  setTimeout(() => {
+                    // Return success response
+                    res.statusCode = 200;
+                    const responseData = { 
+                      success: true,
+                      path: imagePath
+                    };
+                    
+                    res.end(JSON.stringify(responseData));
+                  }, 100);
                 } catch (fileErr) {
                   console.error("[Upload] File verification failed:", fileErr);
                   res.statusCode = 500;
