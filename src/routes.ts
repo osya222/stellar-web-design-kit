@@ -1,8 +1,7 @@
 
-// Define route handlers for API endpoints
 export const apiRoutes = {};
 
-// Simple function to get placeholder image
-export const getImageUrl = (): string => {
-  return '/placeholder.svg';
+export const getImageUrl = (image?: string): string => {
+  if (!image) return '/placeholder.svg';
+  return `/images/products/${image}`;
 };

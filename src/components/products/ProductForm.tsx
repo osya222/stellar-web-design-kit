@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -17,14 +16,15 @@ import {
 import { Product } from "@/types/product";
 import { useToast } from "@/hooks/use-toast";
 import { saveProduct } from "@/utils/productStorage";
+import { Image } from "lucide-react";
 
-// Validation schema for the product form
 const productSchema = z.object({
   name: z.string().min(3, { message: "Название должно содержать минимум 3 символа" }),
   price: z.coerce.number().min(1, { message: "Цена должна быть больше 0" }),
   category: z.string().min(1, { message: "Категория обязательна" }),
   description: z.string().optional(),
   manufacturer: z.string().min(1, { message: "Производитель обязателен" }),
+  image: z.string().optional(),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -37,6 +37,7 @@ type ProductFormProps = {
 const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
@@ -46,24 +47,39 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
       category: existingProduct?.category || "",
       description: existingProduct?.description || "",
       manufacturer: existingProduct?.manufacturer || "",
+      image: existingProduct?.image || "",
     },
   });
 
   const onSubmit = async (data: ProductFormValues) => {
     try {
       setIsSubmitting(true);
+
+      let imageName = existingProduct?.image || "";
+
+      if (selectedImage) {
+        const formData = new FormData();
+        formData.append('image', selectedImage);
+        
+        const response = await fetch('/lov-upload', {
+          method: 'POST',
+          body: formData
+        });
+        
+        if (response.ok) {
+          const result = await response.json();
+          imageName = result.filename;
+        } else {
+          throw new Error('Failed to upload image');
+        }
+      }
       
-      // Prepare product data
       const productData: Product = {
-        id: existingProduct?.id || Date.now(), // Use existing ID or generate new one
-        name: data.name,
-        price: data.price,
-        category: data.category,
-        description: data.description,
-        manufacturer: data.manufacturer,
+        id: existingProduct?.id || Date.now(),
+        ...data,
+        image: imageName || undefined,
       };
 
-      // Save product to storage
       saveProduct(productData);
       
       toast({
@@ -73,12 +89,10 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
           : "Товар успешно добавлен",
       });
 
-      // Call success callback if provided
       if (onSuccess) {
         onSuccess();
       }
 
-      // Reset form if adding new product
       if (!existingProduct) {
         form.reset({
           name: "",
@@ -86,7 +100,9 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
           category: "",
           description: "",
           manufacturer: "",
+          image: "",
         });
+        setSelectedImage(null);
       }
     } catch (error) {
       console.error("Error saving product:", error);
@@ -100,11 +116,48 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
     }
   };
 
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedImage(file);
+    }
+  };
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {/* Product Details */}
         <div className="space-y-4">
+          <div className="space-y-2">
+            <FormLabel>Изображение товара</FormLabel>
+            <div className="flex items-center gap-4">
+              {(existingProduct?.image || selectedImage) && (
+                <div className="relative w-24 h-24 border rounded-lg overflow-hidden bg-gray-50">
+                  <img
+                    src={selectedImage ? URL.createObjectURL(selectedImage) : existingProduct?.image ? `/images/products/${existingProduct.image}` : '/placeholder.svg'}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+              <Button
+                type="button"
+                variant="outline"
+                className="gap-2"
+                onClick={() => document.getElementById('image-upload')?.click()}
+              >
+                <Image className="w-4 h-4" />
+                {existingProduct?.image || selectedImage ? 'Изменить фото' : 'Добавить фото'}
+              </Button>
+              <input
+                id="image-upload"
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleImageChange}
+              />
+            </div>
+          </div>
+
           <FormField
             control={form.control}
             name="name"
