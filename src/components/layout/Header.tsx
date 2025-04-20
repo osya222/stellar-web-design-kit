@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ShoppingCart, Menu, X } from "lucide-react";
@@ -42,6 +43,26 @@ const Header = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
+
+  const handleCatalogClick = () => {
+    setIsMenuOpen(false);
+    navigate('/');
+    
+    // We need to wait for navigation to complete if we're not already on the homepage
+    if (location.pathname !== '/') {
+      setTimeout(() => {
+        const element = document.getElementById("catalog");
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const element = document.getElementById("catalog");
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
   
   const DesktopNav = () => (
     <nav>
@@ -57,7 +78,7 @@ const Header = () => {
         <li>
           <button 
             className="hover:text-blue-200 transition-colors bg-transparent border-0"
-            onClick={() => scrollToSection("catalog")}
+            onClick={handleCatalogClick}
           >
             Каталог
           </button>
@@ -126,7 +147,7 @@ const Header = () => {
             </button>
             <button 
               className="text-lg font-medium hover:text-blue-200 transition-colors text-left bg-transparent border-0" 
-              onClick={() => scrollToSection("catalog")}
+              onClick={handleCatalogClick}
             >
               Каталог
             </button>

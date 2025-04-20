@@ -28,6 +28,25 @@ const Footer = () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   };
+
+  const handleCatalogClick = () => {
+    navigate('/');
+    
+    // We need to wait for navigation to complete if we're not already on the homepage
+    if (location.pathname !== '/') {
+      setTimeout(() => {
+        const element = document.getElementById("catalog");
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    } else {
+      const element = document.getElementById("catalog");
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  };
   
   return (
     <footer className="bg-gradient-to-b from-blue-900 to-blue-950 text-white py-12 mt-auto">
@@ -55,7 +74,7 @@ const Footer = () => {
                 <Button 
                   variant="ghost" 
                   className="text-blue-200 hover:text-white hover:bg-white/10 transition-colors p-2 h-auto w-full text-left justify-start"
-                  onClick={() => scrollToSection("catalog")}
+                  onClick={handleCatalogClick}
                 >
                   Каталог
                 </Button>
