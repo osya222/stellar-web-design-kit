@@ -1,4 +1,5 @@
 
+
 export interface Product {
   id: number;
   name: string;
@@ -8,3 +9,4 @@ export interface Product {
   description?: string;
   imagePath?: string; // Add the imagePath property as optional
 }
+
