@@ -49,6 +49,9 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadingImage, setUploadingImage] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    existingProduct?.image ? getImageUrl(existingProduct.image) : null
+  );
   const { toast } = useToast();
 
   useEffect(() => {
@@ -67,6 +70,17 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
     },
   });
 
+  // Update image preview when form value changes
+  useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      if (name === 'image' && value.image) {
+        setImagePreview(getImageUrl(value.image as string));
+      }
+    });
+    
+    return () => subscription.unsubscribe();
+  }, [form.watch]);
+
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -80,20 +94,28 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
       const filename = file.name.toLowerCase().replace(/[^a-z0-9.]/g, '-');
       const uploadPath = `/images/products/${filename}`;
       
-      await fetch('/_upload', {
+      const response = await fetch('/_upload', {
         method: 'POST',
         body: formData,
         headers: {
           'X-Upload-Path': uploadPath,
         },
       });
+      
+      if (!response.ok) {
+        throw new Error(`Upload failed with status: ${response.status}`);
+      }
 
       // Store just the filename in the form, not the full path
       form.setValue('image', filename);
+      setImagePreview(getImageUrl(filename));
+      
       toast({
         title: "Успех",
         description: "Изображение успешно загружено",
       });
+      
+      console.log("Image uploaded successfully:", filename);
     } catch (error) {
       console.error("Error uploading image:", error);
       toast({
@@ -142,6 +164,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
           manufacturer: "",
           image: "",
         });
+        setImagePreview(null);
       }
     } catch (error) {
       console.error("Error saving product:", error);
@@ -222,10 +245,10 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
               <FormItem>
                 <FormLabel>Изображение</FormLabel>
                 <div className="flex items-center gap-4">
-                  {field.value && (
+                  {imagePreview && (
                     <div className="relative w-20 h-20 border rounded-md overflow-hidden">
                       <img 
-                        src={getImageUrl(field.value)} 
+                        src={imagePreview} 
                         alt="Preview" 
                         className="w-full h-full object-cover"
                       />

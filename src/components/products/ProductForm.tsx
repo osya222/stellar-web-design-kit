@@ -81,20 +81,27 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
       
       const uploadPath = `/images/products/${filename}`;
       
-      await fetch('/_upload', {
+      const response = await fetch('/_upload', {
         method: 'POST',
         body: formData,
         headers: {
           'X-Upload-Path': uploadPath,
         },
       });
+      
+      if (!response.ok) {
+        throw new Error(`Upload failed with status: ${response.status}`);
+      }
 
       form.setValue('image', filename);
       setImagePreview(getImageUrl(filename));
+      
       toast({
         title: "Успех",
         description: "Изображение успешно загружено",
       });
+      
+      console.log("Image uploaded successfully:", filename);
     } catch (error) {
       console.error("Error uploading image:", error);
       toast({
@@ -143,6 +150,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
           manufacturer: "",
           image: "",
         });
+        setImagePreview(null);
       }
     } catch (error) {
       console.error("Error saving product:", error);
