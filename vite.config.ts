@@ -1,10 +1,11 @@
-
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { handleFileUpload } from "./src/api/upload";
-import type { ViteDevServer, Connect } from 'vite';
+import type { ViteDevServer } from 'vite';
+import type { IncomingMessage, ServerResponse } from 'http';
+import type { NextFunction } from 'connect';
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 
@@ -15,7 +16,7 @@ export default defineConfig(({ mode }) => ({
     port: 8080,
     middleware: [
       // Add middleware function directly here
-      async function(req, res, next) {
+      async function(req: IncomingMessage, res: ServerResponse, next: NextFunction) {
         // Check if the request is for our API
         if (req.url && req.url.startsWith('/api/upload')) {
           try {
@@ -96,7 +97,7 @@ export default defineConfig(({ mode }) => ({
         next();
       }
     ],
-    setupMiddleware: (middleware: Connect.Server, server: ViteDevServer) => {
+    setupMiddleware: (middleware: any, server: ViteDevServer) => {
       // Создаем директорию для загрузок, если она не существует
       const uploadDir = path.join(process.cwd(), 'public', 'uploads');
       if (!fs.existsSync(uploadDir)) {
