@@ -5,6 +5,14 @@ import { getProducts, getCategories, saveCategory } from "@/utils/dataService";
 import ProductCard from "./ProductCard";
 import ProductSearch from "./ProductSearch";
 import ImageUpload from "@/components/shared/ImageUpload";
+import ProductForm from "@/components/admin/products/ProductForm";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+} from "@/components/ui/dialog";
 import {
   Accordion,
   AccordionContent,
