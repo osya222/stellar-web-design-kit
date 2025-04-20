@@ -107,10 +107,10 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
             console.log("[Upload] Processing POST upload request");
             
             try {
-              // Configure multer with extremely reduced file size and strict validation
+              // Configure multer with reduced file size (200KB) and strict validation
               const upload = multer({ 
                 storage,
-                limits: { fileSize: 500 * 1024 }, // Reduced to 500KB for better reliability
+                limits: { fileSize: 200 * 1024 }, // Reduced to 200KB for better reliability
                 fileFilter: (req, file, cb) => {
                   // Only allow image files
                   if (!file.mimetype.startsWith('image/')) {
@@ -132,7 +132,7 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
                     details: 'Request took too long to process' 
                   }));
                 }
-              }, 3000); // 3-second timeout - reduced from 5 seconds
+              }, 3000); // 3-second timeout
               
               // Process the upload with specific error handling for EPIPE
               upload(req as unknown as Request, res as unknown as Response, (err: any) => {
@@ -161,8 +161,8 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
                     res.statusCode = 413; // Payload Too Large
                     res.end(JSON.stringify({
                       error: 'File too large',
-                      details: 'The file exceeds the 500KB limit',
-                      message: 'Please use a smaller image (max 500KB)'
+                      details: 'The file exceeds the 200KB limit',
+                      message: 'Please use a smaller image (max 200KB)'
                     }));
                     return;
                   }

@@ -75,12 +75,12 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
       return;
     }
 
-    // Strict size check - reduced to 500KB for better reliability
-    if (file.size > 500 * 1024) {
+    // Strict size check - reduced to 200KB for better reliability
+    if (file.size > 200 * 1024) {
       setFileSizeErrorOpen(true);
       toast({
         title: "Ошибка",
-        description: "Размер файла не должен превышать 500KB",
+        description: "Размер файла не должен превышать 200KB",
         variant: "destructive"
       });
       return;
@@ -108,7 +108,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
       // Create abort controller for the fetch
       const controller = new AbortController();
       
-      // Set timeout to abort after 3 seconds (reduced from 5)
+      // Set timeout to abort after 3 seconds
       uploadTimeoutRef.current = window.setTimeout(() => {
         console.log("Upload timeout triggered, aborting");
         controller.abort();
@@ -155,7 +155,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
         // Handle file size limits
         if (response.status === 413 || parsedError.error === 'File too large') {
           setFileSizeErrorOpen(true);
-          throw new Error('Файл слишком большой (максимум 500KB)');
+          throw new Error('Файл слишком большой (максимум 200KB)');
         }
         
         throw new Error(`Ошибка загрузки: ${response.status} - ${parsedError.details || errorText}`);
@@ -214,7 +214,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
       setErrorDetails(errorMessage);
       
       // Don't show generic error dialog if we're showing a specific one
-      if (!errorMessage.includes('EPIPE') && !errorMessage.includes('500KB')) {
+      if (!errorMessage.includes('EPIPE') && !errorMessage.includes('200KB')) {
         setErrorDialogOpen(true);
       }
       
@@ -275,7 +275,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
                 ) : (
                   <>
                     <Upload className="mr-2 h-4 w-4" />
-                    Загрузить изображение (макс. 500KB)
+                    Загрузить изображение (макс. 200KB)
                   </>
                 )}
               </Button>
@@ -293,7 +293,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
                   <div className="space-y-2">
                     <h4 className="font-medium">Ограничения загрузки:</h4>
                     <ul className="text-sm list-disc pl-4 space-y-1">
-                      <li>Максимальный размер: 500KB</li>
+                      <li>Максимальный размер: 200KB</li>
                       <li>Форматы: JPG, PNG, WebP, GIF</li>
                       <li>Соотношение сторон: 4:3</li>
                     </ul>
@@ -306,7 +306,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
               <AlertTriangle className="h-4 w-4" />
               <AlertTitle>Важно!</AlertTitle>
               <AlertDescription>
-                Используйте изображения до 500KB для избежания ошибок загрузки
+                Используйте изображения до 200KB для избежания ошибок загрузки
               </AlertDescription>
             </Alert>
           </div>
@@ -327,7 +327,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
             <AlertDialogTitle>Файл слишком большой</AlertDialogTitle>
             <AlertDialogDescription>
               <div className="space-y-4">
-                <p>Загружаемое изображение превышает лимит в 500KB.</p>
+                <p>Загружаемое изображение превышает лимит в 200KB.</p>
                 <div className="mt-4 p-3 bg-gray-100 rounded space-y-2">
                   <h4 className="font-medium">Что делать:</h4>
                   <ul className="list-disc pl-5 space-y-1">
@@ -359,7 +359,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
                 <div className="mt-4 p-3 bg-gray-100 rounded space-y-2">
                   <h4 className="font-medium">Решения:</h4>
                   <ul className="list-disc pl-5 space-y-1">
-                    <li><strong>Используйте изображение меньшего размера (до 300KB)</strong></li>
+                    <li><strong>Используйте изображение меньшего размера (до 150KB)</strong></li>
                     <li>Сожмите изображение перед загрузкой с помощью онлайн-сервисов</li>
                     <li>Попробуйте другой формат изображения (например, JPG вместо PNG)</li>
                     <li>Подождите несколько минут и попробуйте снова</li>
@@ -417,7 +417,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
             
             <div>
               <h4 className="font-medium mb-1">Максимальный размер:</h4>
-              <p className="text-sm">500 килобайт (500KB)</p>
+              <p className="text-sm">200 килобайт (200KB)</p>
             </div>
             
             <div>
@@ -428,10 +428,10 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
             <div>
               <h4 className="font-medium mb-1">При возникновении ошибок:</h4>
               <ul className="list-disc pl-5 text-sm space-y-1">
-                <li>Убедитесь, что изображение не превышает 500KB</li>
+                <li>Убедитесь, что изображение не превышает 200KB</li>
                 <li>Используйте сжатие изображений перед загрузкой</li>
                 <li>Попробуйте другой формат изображения (например, JPG вместо PNG)</li>
-                <li>Если ошибка "write EPIPE", попробуйте изображение размером до 300KB</li>
+                <li>Если ошибка "write EPIPE", попробуйте изображение размером до 150KB</li>
               </ul>
             </div>
           </div>
