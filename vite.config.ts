@@ -55,7 +55,7 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
           });
         },
         handle: (req: IncomingMessage, res: ServerResponse) => {
-          if (req.url === '/api/upload' && req.method === 'POST') {
+          if (req.url === '/api/upload') {
             try {
               console.log("Обработка запроса загрузки");
               
@@ -71,44 +71,48 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
                 return true;
               }
               
-              // Обработка загрузки
-              upload.single('image')(req as unknown as Request, res as unknown as Response, (err: any) => {
-                // Всегда устанавливаем правильный Content-Type
-                res.setHeader('Content-Type', 'application/json');
+              // Обработка загрузки только для POST запросов
+              if (req.method === 'POST') {
+                upload.single('image')(req as unknown as Request, res as unknown as Response, (err: any) => {
+                  // Всегда устанавливаем правильный Content-Type
+                  res.setHeader('Content-Type', 'application/json');
+                  
+                  if (err) {
+                    console.error("Ошибка загрузки:", err);
+                    res.statusCode = 500;
+                    res.end(JSON.stringify({ error: 'Ошибка загрузки файла', details: err.message }));
+                    return;
+                  }
+                  
+                  const file = (req as any).file;
+                  if (!file) {
+                    console.error("Файл не загружен");
+                    res.statusCode = 400;
+                    res.end(JSON.stringify({ error: 'Файл не был загружен' }));
+                    return;
+                  }
+                  
+                  console.log("Файл успешно загружен:", file.filename);
+                  
+                  // Формируем путь к файлу для клиента
+                  const imagePath = `/images/products/${file.filename}`;
+                  
+                  // Отправка успешного ответа
+                  res.statusCode = 200;
+                  const responseData = { 
+                    success: true,
+                    path: imagePath
+                  };
+                  
+                  const responseJson = JSON.stringify(responseData);
+                  console.log("Отправляем ответ:", responseJson);
+                  res.end(responseJson);
+                });
                 
-                if (err) {
-                  console.error("Ошибка загрузки:", err);
-                  res.statusCode = 500;
-                  res.end(JSON.stringify({ error: 'Ошибка загрузки файла', details: err.message }));
-                  return;
-                }
-                
-                const file = (req as any).file;
-                if (!file) {
-                  console.error("Файл не загружен");
-                  res.statusCode = 400;
-                  res.end(JSON.stringify({ error: 'Файл не был загружен' }));
-                  return;
-                }
-                
-                console.log("Файл успешно загружен:", file.filename);
-                
-                // Формируем путь к файлу для клиента
-                const imagePath = `/images/products/${file.filename}`;
-                
-                // Отправка успешного ответа
-                res.statusCode = 200;
-                const responseData = { 
-                  success: true,
-                  path: imagePath
-                };
-                
-                const responseJson = JSON.stringify(responseData);
-                console.log("Отправляем ответ:", responseJson);
-                res.end(responseJson);
-              });
+                return true;
+              }
               
-              return true;
+              return false;
             } catch (error) {
               console.error("Ошибка сервера:", error);
               res.statusCode = 500;
