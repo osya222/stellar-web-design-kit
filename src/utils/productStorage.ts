@@ -2,28 +2,50 @@
 import { Product } from '@/types/product';
 import { products as defaultProducts } from '@/data/products';
 
+// Переменная для кеширования продуктов в памяти
+let cachedProducts: Product[] = [];
+let isInitialized = false;
+
+/**
+ * Инициализация кеша продуктов
+ */
+const initializeCache = () => {
+  if (!isInitialized) {
+    cachedProducts = [...defaultProducts];
+    isInitialized = true;
+  }
+};
+
 /**
  * Get all products
  */
 export const getProducts = (): Product[] => {
-  return [...defaultProducts];
+  initializeCache();
+  return [...cachedProducts];
 };
 
 /**
  * Save a product to the project
  */
 export const saveProduct = (product: Product): void => {
-  const existingIndex = defaultProducts.findIndex(p => p.id === product.id);
+  initializeCache();
+  
+  const existingIndex = cachedProducts.findIndex(p => p.id === product.id);
   
   if (existingIndex >= 0) {
     // Update existing product
-    defaultProducts[existingIndex] = { ...product };
+    cachedProducts[existingIndex] = { ...product };
   } else {
     // Add new product with next available ID
-    const maxId = Math.max(0, ...defaultProducts.map(p => p.id));
+    const maxId = Math.max(0, ...cachedProducts.map(p => p.id));
     const newProduct = { ...product, id: product.id || maxId + 1 };
-    defaultProducts.push(newProduct);
+    cachedProducts.push(newProduct);
   }
+  
+  // Обновляем исходный массив defaultProducts для сохранения между перезагрузками
+  Object.assign(defaultProducts, []);
+  defaultProducts.length = 0;
+  cachedProducts.forEach(p => defaultProducts.push({...p}));
   
   // Save changes to source code via Lovable's internal API
   updateProductsFile();
@@ -33,9 +55,16 @@ export const saveProduct = (product: Product): void => {
  * Delete a product
  */
 export const deleteProduct = (productId: number): void => {
-  const index = defaultProducts.findIndex(p => p.id === productId);
+  initializeCache();
+  
+  const index = cachedProducts.findIndex(p => p.id === productId);
   if (index >= 0) {
-    defaultProducts.splice(index, 1);
+    cachedProducts.splice(index, 1);
+    
+    // Обновляем исходный массив defaultProducts для сохранения между перезагрузками
+    Object.assign(defaultProducts, []);
+    defaultProducts.length = 0;
+    cachedProducts.forEach(p => defaultProducts.push({...p}));
     
     // Save changes to source code
     updateProductsFile();
@@ -52,7 +81,7 @@ const updateProductsFile = () => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      content: `import { Category } from "../categories";\n\nexport interface Product {\n  id: number;\n  name: string;\n  price: number;\n  categoryId: number;\n  description?: string;\n  manufacturer: string;\n  image?: string;\n}\n\nexport const products: Product[] = ${JSON.stringify(defaultProducts, null, 2)};`
+      content: `import { Category } from "../categories";\n\nexport interface Product {\n  id: number;\n  name: string;\n  price: number;\n  categoryId: number;\n  description?: string;\n  manufacturer: string;\n  image?: string;\n}\n\nexport const products: Product[] = ${JSON.stringify(cachedProducts, null, 2)};`
     })
   }).then(() => {
     console.log("Products data updated in source code");
