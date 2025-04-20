@@ -17,14 +17,14 @@ export const uploadFile = async (file: File, destination: string = 'images/produ
   const fullPath = `/${destination}/${filename}`;
 
   try {
-    // Prepare form data for upload
+    // Create FormData for file upload
     const formData = new FormData();
     formData.append('file', file);
-
+    
     console.log(`Uploading file to path: ${fullPath}`);
     
-    // Send file to server via Lovable API
-    const response = await fetch('/_api/upload', {
+    // Use the correct Lovable API endpoint for file uploads
+    const response = await fetch('/_lovable/api/upload', {
       method: 'POST',
       body: formData,
       headers: {
