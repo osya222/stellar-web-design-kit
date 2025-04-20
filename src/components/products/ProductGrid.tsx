@@ -13,6 +13,7 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ChevronDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import ProductForm from "@/components/admin/products/ProductForm";
 
 interface ProductGridProps {
   showAdmin?: boolean;
