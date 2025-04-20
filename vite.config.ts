@@ -7,8 +7,9 @@ import fs from 'fs';
 import multer from 'multer';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import type { IncomingMessage, ServerResponse } from 'http';
+import type { ServerResponse } from 'http';
 import type { NextFunction } from 'connect';
+import type { Request } from 'express';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -36,10 +37,10 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
     middleware: [
-      async (req: IncomingMessage, res: ServerResponse, next: NextFunction) => {
+      async (req: Request, res: ServerResponse, next: NextFunction) => {
         if (req.url === '/api/upload' && req.method === 'POST') {
           try {
-            upload.single('image')(req, res, async (err) => {
+            upload.single('image')(req as any, res as any, async (err) => {
               if (err) {
                 res.statusCode = 500;
                 res.end(JSON.stringify({ error: 'Upload failed' }));
@@ -82,4 +83,3 @@ export default defineConfig(({ mode }) => ({
     },
   },
 }));
-
