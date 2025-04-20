@@ -23,6 +23,55 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     setProductImage(product.imageUrl || '/placeholder.svg');
   }, [product.imageUrl]);
   
+  // Function to compress image before saving
+  const compressImage = (file: File, maxWidth = 800, maxHeight = 600, quality = 0.7): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target?.result as string;
+        
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+          
+          // Calculate new dimensions while maintaining aspect ratio
+          if (width > height) {
+            if (width > maxWidth) {
+              height = Math.round(height * maxWidth / width);
+              width = maxWidth;
+            }
+          } else {
+            if (height > maxHeight) {
+              width = Math.round(width * maxHeight / height);
+              height = maxHeight;
+            }
+          }
+          
+          canvas.width = width;
+          canvas.height = height;
+          
+          const ctx = canvas.getContext('2d');
+          ctx?.drawImage(img, 0, 0, width, height);
+          
+          // Get compressed image as base64 string
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+          resolve(compressedDataUrl);
+        };
+        
+        img.onerror = (error) => {
+          reject(error);
+        };
+      };
+      
+      reader.onerror = (error) => {
+        reject(error);
+      };
+    });
+  };
+  
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -36,10 +85,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
+    if (file.size > 10 * 1024 * 1024) { // 10MB max upload size before compression
       toast({
         title: "Ошибка",
-        description: "Размер файла не должен превышать 5MB",
+        description: "Размер файла не должен превышать 10MB",
         variant: "destructive"
       });
       return;
@@ -48,80 +97,41 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     try {
       setIsUploading(true);
       
-      // Read the file as a base64 string
-      const reader = new FileReader();
+      // Compress the image
+      const compressedDataUrl = await compressImage(file);
       
-      reader.onload = async (e) => {
-        try {
-          if (!e.target?.result) {
-            throw new Error('Не удалось прочитать файл');
-          }
-          
-          const base64String = e.target.result.toString();
-          
-          // Generate a unique filename
-          const ext = file.name.split('.').pop() || 'jpg';
-          const uniqueFilename = `product_${product.id}_${Date.now()}.${ext}`;
-          const imagePath = `/images/products/${uniqueFilename}`;
-          
-          // Save the image in localStorage with the path
-          const imageData = {
-            path: imagePath,
-            content: base64String
-          };
-          
-          localStorage.setItem(`image_${imagePath}`, JSON.stringify(imageData));
-          
-          // Update product with new image path
-          const updatedProduct = await updateProductImage(product.id, imagePath);
-          
-          if (updatedProduct) {
-            setProductImage(imagePath);
-            toast({
-              title: "Успешно",
-              description: "Изображение загружено и сохранено",
-            });
-          } else {
-            throw new Error('Не удалось обновить данные продукта');
-          }
-        } catch (error) {
-          console.error('Ошибка сохранения:', error);
-          toast({
-            title: "Ошибка",
-            description: (error as Error).message || 'Не удалось сохранить изображение',
-            variant: "destructive"
-          });
-          setProductImage(product.imageUrl || '/placeholder.svg');
-        } finally {
-          setIsUploading(false);
-        }
-      };
+      // Generate a unique filename
+      const ext = 'jpg'; // We'll always save as JPG after compression
+      const uniqueFilename = `product_${product.id}_${Date.now()}.${ext}`;
+      const imagePath = `/images/products/${uniqueFilename}`;
       
-      reader.onerror = () => {
+      // Update product with new image path
+      const updatedProduct = await updateProductImage(product.id, imagePath, compressedDataUrl);
+      
+      if (updatedProduct) {
+        setProductImage(imagePath);
         toast({
-          title: "Ошибка",
-          description: "Не удалось прочитать файл",
-          variant: "destructive"
+          title: "Успешно",
+          description: "Изображение загружено и сохранено",
         });
-        setIsUploading(false);
-      };
-      
-      reader.readAsDataURL(file);
-      
+      } else {
+        throw new Error('Не удалось обновить данные продукта');
+      }
     } catch (error) {
-      console.error('Ошибка загрузки:', error);
+      console.error('Ошибка сохранения:', error);
       toast({
         title: "Ошибка",
-        description: (error as Error).message || 'Не удалось загрузить изображение',
+        description: (error as Error).message || 'Не удалось сохранить изображение',
         variant: "destructive"
       });
       setProductImage(product.imageUrl || '/placeholder.svg');
+    } finally {
       setIsUploading(false);
-    }
-    
-    // Clear the file input for future uploads
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
+      
+      // Clear the file input for future uploads
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
@@ -133,20 +143,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           alt={product.name}
           className="object-cover w-full h-full"
           onError={(e) => {
-            // Check if there's a saved image in localStorage
-            try {
-              const savedImageKey = `image_${productImage}`;
-              const savedImage = localStorage.getItem(savedImageKey);
-              
-              if (savedImage) {
-                const imageData = JSON.parse(savedImage);
-                (e.target as HTMLImageElement).src = imageData.content;
-              } else {
-                (e.target as HTMLImageElement).src = '/placeholder.svg';
-              }
-            } catch (err) {
-              (e.target as HTMLImageElement).src = '/placeholder.svg';
-            }
+            // Fallback to placeholder if image fails to load
+            (e.target as HTMLImageElement).src = '/placeholder.svg';
           }}
         />
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">

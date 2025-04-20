@@ -196,6 +196,7 @@ const PRODUCTS: Product[] = [
 
 // Local storage key for product data
 const PRODUCTS_STORAGE_KEY = 'productsData';
+const IMAGES_STORAGE_KEY_PREFIX = 'product_image_';
 
 // Load persistent product data if available
 let activeProducts: Product[] = [];
@@ -239,6 +240,36 @@ const persistProductData = () => {
   }
 };
 
+// Helper function to store image in localStorage with a more efficient approach
+const storeProductImage = (productId: string, imagePath: string, imageData: string): boolean => {
+  try {
+    if (typeof window !== 'undefined') {
+      // Use a more specific key to avoid collisions
+      const imageKey = `${IMAGES_STORAGE_KEY_PREFIX}${productId}`;
+      localStorage.setItem(imageKey, imageData);
+      return true;
+    }
+    return false;
+  } catch (error) {
+    console.error('Error storing product image:', error);
+    return false;
+  }
+};
+
+// Helper function to retrieve product image from localStorage
+export const getProductImage = (productId: string): string | null => {
+  try {
+    if (typeof window !== 'undefined') {
+      const imageKey = `${IMAGES_STORAGE_KEY_PREFIX}${productId}`;
+      return localStorage.getItem(imageKey);
+    }
+    return null;
+  } catch (error) {
+    console.error('Error retrieving product image:', error);
+    return null;
+  }
+};
+
 export async function fetchProducts(): Promise<Product[]> {
   return activeProducts;
 }
@@ -266,9 +297,14 @@ export function getHeroImageUrl(): string {
  * Updates a product's image and persists the change
  * @param productId ID of the product
  * @param imagePath Path to the image
+ * @param imageData Base64 string of the compressed image
  * @returns Updated product or null if not found
  */
-export async function updateProductImage(productId: string, imagePath: string): Promise<Product | null> {
+export async function updateProductImage(
+  productId: string, 
+  imagePath: string,
+  imageData?: string
+): Promise<Product | null> {
   // Find the product index
   const productIndex = activeProducts.findIndex(p => p.id === productId);
   
@@ -282,6 +318,14 @@ export async function updateProductImage(productId: string, imagePath: string): 
     ...activeProducts[productIndex],
     imageUrl: imagePath
   };
+  
+  // Store image data if provided
+  if (imageData) {
+    const stored = storeProductImage(productId, imagePath, imageData);
+    if (!stored) {
+      console.warn('Failed to store image data, but product was updated');
+    }
+  }
   
   // Persist the updated data
   persistProductData();
