@@ -1,12 +1,11 @@
 
 import React from 'react';
-import { Waves } from 'lucide-react';
 
 const Hero = () => {
   return (
     <section className="relative overflow-hidden py-0">
       {/* Анимированный фон волн */}
-      <div className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-br from-blue-100 to-blue-200 overflow-hidden">
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
         <div className="absolute bottom-0 left-0 right-0 h-1/2 wave-container">
           <svg 
             className="wave-animation absolute bottom-0 w-full h-full" 
