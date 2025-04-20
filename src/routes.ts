@@ -1,3 +1,4 @@
+
 /**
  * Получить URL изображения
  * @param imageFileName имя файла изображения или путь
@@ -8,8 +9,8 @@ export const getImageUrl = (imageFileName?: string): string => {
     return '/placeholder.svg';
   }
 
-  // Проверяем, если путь уже абсолютный, возвращаем его
-  if (imageFileName.startsWith('/')) {
+  // Проверяем, если путь уже абсолютный или полный (начинается с http/https)
+  if (imageFileName.startsWith('/') || imageFileName.startsWith('http')) {
     return imageFileName;
   }
   

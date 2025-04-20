@@ -16,6 +16,9 @@ interface ProductCardProps {
 const ProductCard = ({ product, category, onEdit }: ProductCardProps) => {
   const { addToCart } = useCart();
   const imageUrl = getImageUrl(product.image);
+  
+  console.log("Product image path:", product.image);
+  console.log("Full image URL:", imageUrl);
 
   return (
     <div className="group bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-100">
@@ -24,6 +27,11 @@ const ProductCard = ({ product, category, onEdit }: ProductCardProps) => {
           src={imageUrl}
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+          onError={(e) => {
+            console.error(`Error loading image: ${imageUrl}`);
+            // Fallback to placeholder if image fails to load
+            (e.target as HTMLImageElement).src = '/placeholder.svg';
+          }}
         />
         {onEdit && (
           <Button

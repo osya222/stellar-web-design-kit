@@ -11,10 +11,17 @@ let isInitialized = false;
  */
 const initializeCache = () => {
   if (!isInitialized) {
-    // Создаем глубокую копию исходных товаров
-    cachedProducts = JSON.parse(JSON.stringify(defaultProducts));
-    isInitialized = true;
-    console.log('Инициализирован кеш продуктов:', cachedProducts.length);
+    try {
+      // Создаем глубокую копию исходных товаров
+      cachedProducts = JSON.parse(JSON.stringify(defaultProducts));
+      isInitialized = true;
+      console.log('Инициализирован кеш продуктов:', cachedProducts.length);
+    } catch (error) {
+      console.error('Ошибка инициализации кеша продуктов:', error);
+      // В случае ошибки используем пустой массив
+      cachedProducts = [];
+      isInitialized = true;
+    }
   }
 };
 
@@ -47,13 +54,17 @@ export const saveProduct = (product: Product): void => {
   }
   
   // Обновляем исходный массив defaultProducts для сохранения между перезагрузками
-  // Сначала очищаем массив
-  defaultProducts.length = 0;
-  // Затем добавляем все товары из кеша
-  cachedProducts.forEach(p => defaultProducts.push({...p}));
-  
-  // Сохраняем изменения в исходный код через API Lovable
-  updateProductsFile();
+  try {
+    // Сначала очищаем массив
+    defaultProducts.length = 0;
+    // Затем добавляем все товары из кеша
+    cachedProducts.forEach(p => defaultProducts.push({...p}));
+    
+    // Сохраняем изменения в исходный код через API Lovable
+    updateProductsFile();
+  } catch (error) {
+    console.error('Ошибка при обновлении исходного массива товаров:', error);
+  }
 };
 
 /**
@@ -67,12 +78,16 @@ export const deleteProduct = (productId: number): void => {
     cachedProducts.splice(index, 1);
     console.log('Удален товар с ID:', productId);
     
-    // Обновляем исходный массив defaultProducts для сохранения между перезагрузками
-    defaultProducts.length = 0;
-    cachedProducts.forEach(p => defaultProducts.push({...p}));
-    
-    // Save changes to source code
-    updateProductsFile();
+    try {
+      // Обновляем исходный массив defaultProducts для сохранения между перезагрузками
+      defaultProducts.length = 0;
+      cachedProducts.forEach(p => defaultProducts.push({...p}));
+      
+      // Save changes to source code
+      updateProductsFile();
+    } catch (error) {
+      console.error('Ошибка при обновлении исходного массива после удаления:', error);
+    }
   }
 };
 
@@ -81,7 +96,7 @@ export const deleteProduct = (productId: number): void => {
  */
 const updateProductsFile = () => {
   try {
-    const content = `import { Category } from "../categories";\n\nexport interface Product {\n  id: number;\n  name: string;\n  price: number;\n  categoryId: number;\n  description?: string;\n  manufacturer: string;\n  image?: string;\n}\n\nexport const products: Product[] = ${JSON.stringify(cachedProducts, null, 2)};`;
+    const content = `import { Product } from "@/types/product";\n\nexport const products: Product[] = ${JSON.stringify(cachedProducts, null, 2)};`;
     
     console.log('Сохраняем данные товаров в исходный код');
     

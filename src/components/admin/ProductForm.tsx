@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -123,12 +122,8 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
           const uploadedPath = await uploadFile(selectedFile);
           console.log("Image successfully uploaded to:", uploadedPath);
           
-          // Получаем только имя файла из пути для сохранения в базе
-          const fileName = uploadedPath.startsWith('/') 
-            ? uploadedPath // Если начинается с /, сохраняем полный путь
-            : uploadedPath.split('/').pop() || ''; // Иначе берем только имя файла
-            
-          data.image = uploadedPath; // Сохраняем полный путь
+          // Сохраняем полный путь изображения
+          data.image = uploadedPath;
         } catch (error) {
           console.error("Failed to upload image:", error);
           toast({

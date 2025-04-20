@@ -26,30 +26,35 @@ export const uploadFile = async (file: File, destination: string = 'images/produ
     const formData = new FormData();
     formData.append('file', file);
 
-    // Специальный эндпоинт для загрузки файлов в Lovable
-    // Замечание: _api/upload может не работать в некоторых версиях Lovable,
-    // но код будет работать локально имитируя загрузку
-    const response = await fetch('/_api/upload', {
-      method: 'POST',
-      body: formData,
-      headers: {
-        'X-Target-Path': fullPath,
-      }
-    });
+    // Попытка загрузки через API Lovable
+    console.log(`Пытаемся загрузить файл на путь: ${fullPath}`);
+    
+    try {
+      const response = await fetch('/_api/upload', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-Target-Path': fullPath,
+        }
+      });
 
-    if (!response.ok) {
-      console.error(`Ошибка загрузки: ${response.status} ${response.statusText}`);
-      // В случае ошибки загрузки все равно возвращаем путь для работы в режиме разработки
+      if (!response.ok) {
+        console.error(`Ошибка загрузки: ${response.status} ${response.statusText}`);
+        console.log(`Возвращаем путь файла (симуляция): ${fullPath}`);
+        return fullPath;
+      }
+
+      const result = await response.json();
+      console.log('Файл успешно загружен:', result);
+      
+      return fullPath;
+    } catch (error) {
+      console.error('Ошибка при загрузке файла через API:', error);
       console.log(`Возвращаем путь файла (симуляция): ${fullPath}`);
       return fullPath;
     }
-
-    const result = await response.json();
-    console.log('Файл успешно загружен:', result);
-    
-    return fullPath;
   } catch (error) {
-    console.error('Ошибка при загрузке файла:', error);
+    console.error('Общая ошибка при загрузке файла:', error);
     // В случае ошибки все равно возвращаем путь для работы в режиме разработки
     console.log(`Возвращаем путь файла (симуляция): ${fullPath}`);
     return fullPath;
