@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Upload } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { v4 as uuidv4 } from 'uuid';
 
 const ImageUploader = () => {
   const [isUploading, setIsUploading] = useState(false);
@@ -12,7 +13,7 @@ const ImageUploader = () => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Check if the file is an image
+    // Проверяем тип файла
     if (!file.type.startsWith('image/')) {
       toast({
         title: "Ошибка",
@@ -22,7 +23,7 @@ const ImageUploader = () => {
       return;
     }
 
-    // Check file size (max 5MB)
+    // Проверяем размер файла (макс 5MB)
     if (file.size > 5 * 1024 * 1024) {
       toast({
         title: "Ошибка",
@@ -34,8 +35,11 @@ const ImageUploader = () => {
 
     setIsUploading(true);
     try {
+      const fileExtension = file.name.split('.').pop();
+      const fileName = `${uuidv4()}.${fileExtension}`;
       const formData = new FormData();
       formData.append('image', file);
+      formData.append('fileName', fileName);
 
       const response = await fetch('/api/upload', {
         method: 'POST',
@@ -46,13 +50,21 @@ const ImageUploader = () => {
         throw new Error('Ошибка загрузки');
       }
 
-      const data = await response.json();
+      const imagePath = `/images/products/${fileName}`;
+      
       toast({
         title: "Успешно",
         description: "Изображение загружено",
       });
 
-      console.log('Uploaded image URL:', data.url);
+      // Копируем путь в буфер обмена для удобства
+      await navigator.clipboard.writeText(imagePath);
+      toast({
+        title: "Путь скопирован",
+        description: "Путь к изображению скопирован в буфер обмена",
+      });
+
+      console.log('Путь к загруженному изображению:', imagePath);
     } catch (error) {
       toast({
         title: "Ошибка",
@@ -87,6 +99,14 @@ const ImageUploader = () => {
       <p className="text-sm text-gray-500">
         Поддерживаемые форматы: JPG, PNG, GIF. Максимальный размер: 5MB
       </p>
+      <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+        <h3 className="font-medium mb-2">Инструкция:</h3>
+        <ol className="list-decimal list-inside space-y-1 text-sm text-gray-600">
+          <li>Загрузите изображение</li>
+          <li>Путь к файлу будет автоматически скопирован в буфер обмена</li>
+          <li>Вставьте путь в поле imageUrl соответствующего товара</li>
+        </ol>
+      </div>
     </div>
   );
 };
