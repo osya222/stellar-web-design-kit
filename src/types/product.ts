@@ -6,4 +6,5 @@ export interface Product {
   category: string;
   manufacturer: string;
   description?: string;
+  image?: string; // Path to the product image
 }

@@ -1,4 +1,5 @@
 
 export const getImageUrl = (image?: string): string => {
-  return '/placeholder.svg';
+  if (!image) return '/placeholder.svg';
+  return `/images/products/${image}`;
 };

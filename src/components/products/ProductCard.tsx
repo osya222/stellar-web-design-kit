@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/formatters";
 import { ShoppingCart, Edit } from "lucide-react";
+import { getImageUrl } from "@/routes";
 
 interface ProductCardProps {
   product: Product;
@@ -17,7 +18,7 @@ const ProductCard = ({ product, onEdit }: ProductCardProps) => {
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
       <div className="aspect-square overflow-hidden bg-gray-100">
         <img 
-          src="/placeholder.svg"
+          src={getImageUrl(product.image)}
           alt={product.name}
           className="w-full h-full object-cover"
         />
