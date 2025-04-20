@@ -244,10 +244,45 @@ const persistProductData = () => {
 const storeProductImage = (productId: string, imagePath: string, imageData: string): boolean => {
   try {
     if (typeof window !== 'undefined') {
-      // Use a more specific key to avoid collisions
-      const imageKey = `${IMAGES_STORAGE_KEY_PREFIX}${productId}`;
-      localStorage.setItem(imageKey, imageData);
-      return true;
+      // Try to store the image, handling quota errors
+      try {
+        // Use a more specific key to avoid collisions
+        const imageKey = `${IMAGES_STORAGE_KEY_PREFIX}${productId}`;
+        localStorage.setItem(imageKey, imageData);
+        return true;
+      } catch (storageError) {
+        // If quota exceeded, try to clear some space
+        if ((storageError as Error).name === 'QuotaExceededError') {
+          console.error('Error storing product image:', storageError);
+          
+          // Try to find old product images to clear
+          const keysToRemove: string[] = [];
+          
+          for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            // Find old image keys that aren't for the current product
+            if (key && key.startsWith(IMAGES_STORAGE_KEY_PREFIX) && 
+                !key.includes(productId)) {
+              keysToRemove.push(key);
+            }
+          }
+          
+          // Clear up to 3 old images
+          const removeCount = Math.min(keysToRemove.length, 3);
+          for (let i = 0; i < removeCount; i++) {
+            localStorage.removeItem(keysToRemove[i]);
+            console.log('Removed old image:', keysToRemove[i]);
+          }
+          
+          // Try again
+          if (removeCount > 0) {
+            const imageKey = `${IMAGES_STORAGE_KEY_PREFIX}${productId}`;
+            localStorage.setItem(imageKey, imageData);
+            return true;
+          }
+        }
+        return false;
+      }
     }
     return false;
   } catch (error) {

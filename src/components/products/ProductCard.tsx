@@ -7,7 +7,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { updateProductImage } from '@/utils/dataService';
+import { updateProductImage, getProductImage } from '@/utils/dataService';
 
 interface ProductCardProps {
   product: Product;
@@ -19,12 +19,42 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [productImage, setProductImage] = useState<string>(product.imageUrl || '/placeholder.svg');
   const fileInputRef = useRef<HTMLInputElement>(null);
   
+  // Try to load image from local storage on component mount
   useEffect(() => {
+    // First try to use the path directly
     setProductImage(product.imageUrl || '/placeholder.svg');
-  }, [product.imageUrl]);
+    
+    // Try to get image from localStorage if it exists
+    const cachedImage = getProductImage(product.id);
+    if (cachedImage) {
+      // Set a flag to track if the image from path failed to load
+      let pathImageFailed = false;
+      
+      // Create an image element to test if the path image loads
+      const testImg = new Image();
+      testImg.onload = () => {
+        // Path image loaded successfully, no need to use cached
+        pathImageFailed = false;
+      };
+      
+      testImg.onerror = () => {
+        // Path image failed, use cached image
+        pathImageFailed = true;
+        setProductImage(cachedImage);
+      };
+      
+      // Start loading test image
+      testImg.src = product.imageUrl || '';
+      
+      // If path is not set or is placeholder, use cached immediately
+      if (!product.imageUrl || product.imageUrl === '/placeholder.svg') {
+        setProductImage(cachedImage);
+      }
+    }
+  }, [product.id, product.imageUrl]);
   
   // Function to compress image before saving
-  const compressImage = (file: File, maxWidth = 800, maxHeight = 600, quality = 0.7): Promise<string> => {
+  const compressImage = (file: File, maxWidth = 600, maxHeight = 400, quality = 0.5): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -56,7 +86,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           const ctx = canvas.getContext('2d');
           ctx?.drawImage(img, 0, 0, width, height);
           
-          // Get compressed image as base64 string
+          // Get compressed image as base64 string with lower quality
           const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
           resolve(compressedDataUrl);
         };
@@ -97,19 +127,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     try {
       setIsUploading(true);
       
-      // Compress the image
-      const compressedDataUrl = await compressImage(file);
+      // Compress the image with lower quality and size
+      const compressedDataUrl = await compressImage(file, 600, 400, 0.5);
       
       // Generate a unique filename
       const ext = 'jpg'; // We'll always save as JPG after compression
       const uniqueFilename = `product_${product.id}_${Date.now()}.${ext}`;
       const imagePath = `/images/products/${uniqueFilename}`;
       
+      // Update product with new image path and show immediate feedback
+      setProductImage(compressedDataUrl);
+      
       // Update product with new image path
       const updatedProduct = await updateProductImage(product.id, imagePath, compressedDataUrl);
       
       if (updatedProduct) {
-        setProductImage(imagePath);
         toast({
           title: "Успешно",
           description: "Изображение загружено и сохранено",
@@ -119,11 +151,23 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       }
     } catch (error) {
       console.error('Ошибка сохранения:', error);
-      toast({
-        title: "Ошибка",
-        description: (error as Error).message || 'Не удалось сохранить изображение',
-        variant: "destructive"
-      });
+      
+      // Check if it's a localStorage quota error
+      if ((error as Error).name === 'QuotaExceededError') {
+        toast({
+          title: "Превышен лимит хранилища",
+          description: "Попробуйте уменьшить размер изображения или очистить кэш браузера",
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Ошибка",
+          description: (error as Error).message || 'Не удалось сохранить изображение',
+          variant: "destructive"
+        });
+      }
+      
+      // Reset to original image path if error occurs
       setProductImage(product.imageUrl || '/placeholder.svg');
     } finally {
       setIsUploading(false);
@@ -143,8 +187,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           alt={product.name}
           className="object-cover w-full h-full"
           onError={(e) => {
-            // Fallback to placeholder if image fails to load
-            (e.target as HTMLImageElement).src = '/placeholder.svg';
+            // If the image from path fails to load, try to get from localStorage
+            const cachedImage = getProductImage(product.id);
+            if (cachedImage && (e.target as HTMLImageElement).src !== cachedImage) {
+              (e.target as HTMLImageElement).src = cachedImage;
+            } else {
+              // Final fallback to placeholder
+              (e.target as HTMLImageElement).src = '/placeholder.svg';
+            }
           }}
         />
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
