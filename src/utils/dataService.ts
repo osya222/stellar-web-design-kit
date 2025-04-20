@@ -329,6 +329,90 @@ export function getHeroImageUrl(): string {
 }
 
 /**
+ * Creates a new product and persists it
+ * @param product Product to create
+ * @returns Created product
+ */
+export async function createProduct(product: Partial<Product>): Promise<Product> {
+  // Ensure required fields are present
+  if (!product.id || !product.name || !product.category || !product.manufacturer) {
+    throw new Error('Required product fields are missing');
+  }
+
+  // Create the new product
+  const newProduct: Product = {
+    id: product.id,
+    name: product.name,
+    category: product.category,
+    manufacturer: product.manufacturer,
+    price: product.price ?? 0,
+    description: product.description ?? '',
+    imageUrl: product.imageUrl ?? '/placeholder.svg',
+    inStock: product.inStock ?? true,
+    weight: product.weight,
+    unit: product.unit as Product['unit'],
+    isPopular: product.isPopular ?? false
+  };
+
+  // Add to products array
+  activeProducts.push(newProduct);
+  
+  // Persist changes
+  persistProductData();
+  
+  return newProduct;
+}
+
+/**
+ * Updates an existing product
+ * @param product Product with updated fields
+ * @returns Updated product or null if not found
+ */
+export async function updateProduct(product: Partial<Product> & { id: string }): Promise<Product> {
+  const index = activeProducts.findIndex(p => p.id === product.id);
+  
+  if (index === -1) {
+    throw new Error(`Product with ID ${product.id} not found`);
+  }
+  
+  // Update product preserving any fields not included in the update
+  activeProducts[index] = {
+    ...activeProducts[index],
+    ...product
+  };
+  
+  // Persist changes
+  persistProductData();
+  
+  return activeProducts[index];
+}
+
+/**
+ * Deletes a product by ID
+ * @param productId ID of the product to delete
+ * @returns boolean indicating success
+ */
+export async function deleteProduct(productId: string): Promise<boolean> {
+  const initialLength = activeProducts.length;
+  activeProducts = activeProducts.filter(p => p.id !== productId);
+  
+  // If product was removed, persist changes
+  if (initialLength !== activeProducts.length) {
+    persistProductData();
+    
+    // Also remove any stored images for this product
+    if (typeof window !== 'undefined') {
+      const imageKey = `${IMAGES_STORAGE_KEY_PREFIX}${productId}`;
+      localStorage.removeItem(imageKey);
+    }
+    
+    return true;
+  }
+  
+  return false;
+}
+
+/**
  * Updates a product's image and persists the change
  * @param productId ID of the product
  * @param imagePath Path to the image
