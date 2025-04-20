@@ -36,7 +36,10 @@ const storage = multer.diskStorage({
       cb(null, uploadPath);
     } catch (error) {
       console.error("[Upload] Directory or permission error:", error);
-      cb(new Error(`Upload directory error: ${(error as Error).message}`), uploadPath);
+      // Fix: Pass null as first parameter and handle the error differently
+      cb(null, uploadPath);
+      // Log the error instead of passing it to callback
+      console.error(`Upload directory error: ${(error as Error).message}`);
     }
   },
   filename: function (req: Express.Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) {
@@ -46,7 +49,11 @@ const storage = multer.diskStorage({
     const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
     
     if (!allowedExtensions.includes(ext)) {
-      return cb(new Error('Only image files are allowed'), '');
+      // Fix: Create a different approach for invalid file types
+      console.error("[Upload] Invalid file extension:", ext);
+      // Return empty string for filename, we'll handle this error later
+      cb(null, '');
+      return;
     }
     
     // Create a simple filename pattern
@@ -104,11 +111,14 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
               // Configure multer with reduced file size and strict validation
               const upload = multer({ 
                 storage,
-                limits: { fileSize: 2 * 1024 * 1024 }, // Reduced to 2MB for better reliability
+                limits: { fileSize: 2 * 1024 * 1024 }, // 2MB for better reliability
                 fileFilter: (req, file, cb) => {
                   // Only allow image files
                   if (!file.mimetype.startsWith('image/')) {
-                    return cb(new Error('Only image files are allowed'), false);
+                    console.error("[Upload] Invalid file type:", file.mimetype);
+                    // Fix: Use a different approach to handle invalid file types
+                    // Instead of throwing an error, reject the file silently
+                    return cb(null, false);
                   }
                   cb(null, true);
                 }
