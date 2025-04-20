@@ -3,22 +3,25 @@ import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import ProductGrid from '@/components/products/ProductGrid';
-import ProductManager from '@/components/products/ProductManager';
-import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import ProductList from '@/components/admin/ProductList';
+import CategoryList from '@/components/admin/CategoryList';
+import ProductManager from '@/components/admin/ProductManager';
+import CategoryManager from '@/components/admin/CategoryManager';
 import { useToast } from '@/hooks/use-toast';
-import { Trash2, Settings } from 'lucide-react';
+import { Settings } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const Admin = () => {
   const { toast } = useToast();
   const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  const handleProductAdded = () => {
+  const handleProductUpdated = () => {
     setRefreshTrigger(prev => prev + 1);
-    toast({
-      title: "Успех",
-      description: "Товар успешно добавлен в каталог",
-    });
+  };
+
+  const handleCategoryUpdated = () => {
+    setRefreshTrigger(prev => prev + 1);
   };
 
   const handleInfoClick = () => {
@@ -32,7 +35,7 @@ const Admin = () => {
   return (
     <>
       <Helmet>
-        <title>Панель администратора | Управление товарами</title>
+        <title>Панель администратора | Управление товарами и категориями</title>
       </Helmet>
       
       <Header />
@@ -44,27 +47,47 @@ const Admin = () => {
               <div>
                 <h1 className="text-3xl font-bold mb-2 text-purple-900">Панель администратора</h1>
                 <p className="text-gray-600">
-                  Управление каталогом товаров
+                  Управление каталогом товаров и категориями
                 </p>
               </div>
               
-              <div className="flex gap-4">
-                <ProductManager onProductAdded={handleProductAdded} />
-                <Button variant="outline" onClick={handleInfoClick}>
-                  <Settings className="h-4 w-4 mr-2" />
-                  Информация
-                </Button>
-              </div>
+              <Button variant="outline" onClick={handleInfoClick}>
+                <Settings className="h-4 w-4 mr-2" />
+                Информация
+              </Button>
             </div>
             
             <div className="bg-purple-50 rounded-lg p-4 mb-6 text-purple-800 text-sm">
               <p>
-                <strong>Инструкция:</strong> Для добавления нового товара нажмите кнопку "Добавить товар". 
-                Для редактирования существующего товара нажмите на иконку карандаша в его карточке.
+                <strong>Инструкция:</strong> Используйте вкладки ниже для управления товарами и категориями. 
+                Все изменения сохраняются автоматически.
               </p>
             </div>
             
-            <ProductGrid showAdmin={true} key={refreshTrigger} />
+            <Tabs defaultValue="products" className="w-full">
+              <TabsList className="mb-6">
+                <TabsTrigger value="products">Товары</TabsTrigger>
+                <TabsTrigger value="categories">Категории</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="products" className="space-y-6">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-2xl font-bold text-gray-900">Управление товарами</h2>
+                  <ProductManager onProductAdded={handleProductUpdated} />
+                </div>
+                
+                <ProductList onProductUpdated={handleProductUpdated} />
+              </TabsContent>
+              
+              <TabsContent value="categories" className="space-y-6">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-2xl font-bold text-gray-900">Управление категориями</h2>
+                  <CategoryManager onCategoryAdded={handleCategoryUpdated} />
+                </div>
+                
+                <CategoryList onCategoryUpdated={handleCategoryUpdated} />
+              </TabsContent>
+            </Tabs>
           </div>
         </div>
       </main>

@@ -1,7 +1,9 @@
 
 import { useEffect, useState } from "react";
 import { Product } from "@/types/product";
+import { Category } from "@/data/categories";
 import { getProducts } from "@/utils/productStorage";
+import { getCategories } from "@/utils/categoryStorage";
 import ProductCard from "./ProductCard";
 import {
   Dialog,
@@ -10,7 +12,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import ProductForm from "./ProductForm";
+import ProductForm from "../admin/ProductForm";
 import { useToast } from "@/hooks/use-toast";
 
 interface ProductGridProps {
@@ -19,6 +21,7 @@ interface ProductGridProps {
 
 const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const { toast } = useToast();
@@ -30,8 +33,8 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
 
   const loadData = () => {
     try {
-      const loadedProducts = getProducts();
-      setProducts(loadedProducts);
+      setProducts(getProducts());
+      setCategories(getCategories());
     } catch (error) {
       toast({
         title: "Ошибка",
@@ -39,6 +42,10 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
         variant: "destructive",
       });
     }
+  };
+
+  const findCategory = (categoryId: number) => {
+    return categories.find(cat => cat.id === categoryId);
   };
 
   const handleEditSuccess = () => {
@@ -68,6 +75,7 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
               <ProductCard
                 key={product.id}
                 product={product}
+                category={findCategory(product.categoryId)}
                 onEdit={showAdmin ? () => {
                   setEditingProduct(product);
                   setIsEditDialogOpen(true);

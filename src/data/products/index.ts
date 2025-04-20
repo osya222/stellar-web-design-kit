@@ -1,12 +1,22 @@
 
-import { Product } from "@/types/product";
+import { Category } from "../categories";
+
+export interface Product {
+  id: number;
+  name: string;
+  price: number;
+  categoryId: number;
+  description?: string;
+  manufacturer: string;
+  image?: string;
+}
 
 export const products: Product[] = [
   {
     id: 1,
     name: "Лосось свежемороженый",
     price: 1457,
-    category: "Лосось",
+    categoryId: 1,
     description: "Свежемороженый лосось премиального качества",
     manufacturer: "Чили Premium"
   },
@@ -14,7 +24,7 @@ export const products: Product[] = [
     id: 2,
     name: "Форель свежемороженая морская",
     price: 1166,
-    category: "Форель",
+    categoryId: 2,
     description: "Свежемороженая морская форель высшего качества",
     manufacturer: "Турция"
   },
@@ -22,7 +32,7 @@ export const products: Product[] = [
     id: 3,
     name: "Креветка ваннамей в глазури",
     price: 1002,
-    category: "Морепродукты",
+    categoryId: 3,
     description: "Свежемороженые креветки в глазури",
     manufacturer: "Индия"
   },
@@ -30,7 +40,7 @@ export const products: Product[] = [
     id: 4,
     name: "Лангустины свежемороженые L1",
     price: 884,
-    category: "Морепродукты",
+    categoryId: 3,
     description: "Свежемороженые лангустины премиум класса",
     manufacturer: "Аргентина"
   },
@@ -38,7 +48,7 @@ export const products: Product[] = [
     id: 5,
     name: "Медальоны из морепродуктов",
     price: 1199,
-    category: "Морепродукты",
+    categoryId: 3,
     description: "Медальоны из отборных морепродуктов",
     manufacturer: "Индия"
   },
@@ -46,7 +56,7 @@ export const products: Product[] = [
     id: 6,
     name: "Мясо мидий варено-мороженое",
     price: 520,
-    category: "Морепродукты",
+    categoryId: 3,
     description: "Варено-мороженое мясо мидий",
     manufacturer: "Чили"
   }

@@ -3,14 +3,14 @@ import { Product } from '@/types/product';
 import { products as defaultProducts } from '@/data/products';
 
 /**
- * Get all products (either default or modified)
+ * Get all products
  */
 export const getProducts = (): Product[] => {
-  return defaultProducts;
+  return [...defaultProducts];
 };
 
 /**
- * Save a product to the project (will persist to source code)
+ * Save a product to the project
  */
 export const saveProduct = (product: Product): void => {
   const existingIndex = defaultProducts.findIndex(p => p.id === product.id);
@@ -26,19 +26,7 @@ export const saveProduct = (product: Product): void => {
   }
   
   // Save changes to source code via Lovable's internal API
-  fetch('/_source/data/products/index.ts', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      content: `export const products = ${JSON.stringify(defaultProducts, null, 2)};`
-    })
-  }).then(() => {
-    console.log("Product saved to source code:", product);
-  }).catch(error => {
-    console.error("Error saving to source code:", error);
-  });
+  updateProductsFile();
 };
 
 /**
@@ -50,26 +38,25 @@ export const deleteProduct = (productId: number): void => {
     defaultProducts.splice(index, 1);
     
     // Save changes to source code
-    fetch('/_source/data/products/index.ts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        content: `export const products = ${JSON.stringify(defaultProducts, null, 2)};`
-      })
-    }).then(() => {
-      console.log("Product deleted from source code:", productId);
-    }).catch(error => {
-      console.error("Error saving to source code:", error);
-    });
+    updateProductsFile();
   }
 };
 
 /**
- * Check if data has been modified since app start
+ * Update products file
  */
-export const hasDataBeenModified = (): boolean => {
-  return false; // Now always false since changes are saved to source
+const updateProductsFile = () => {
+  fetch('/_source/data/products/index.ts', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      content: `import { Category } from "../categories";\n\nexport interface Product {\n  id: number;\n  name: string;\n  price: number;\n  categoryId: number;\n  description?: string;\n  manufacturer: string;\n  image?: string;\n}\n\nexport const products: Product[] = ${JSON.stringify(defaultProducts, null, 2)};`
+    })
+  }).then(() => {
+    console.log("Products data updated in source code");
+  }).catch(error => {
+    console.error("Error saving to source code:", error);
+  });
 };
-

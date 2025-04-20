@@ -1,5 +1,6 @@
 
 import { Product } from "@/types/product";
+import { Category } from "@/data/categories";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/formatters";
@@ -8,10 +9,11 @@ import { getImageUrl } from "@/routes";
 
 interface ProductCardProps {
   product: Product;
+  category?: Category;
   onEdit?: () => void;
 }
 
-const ProductCard = ({ product, onEdit }: ProductCardProps) => {
+const ProductCard = ({ product, category, onEdit }: ProductCardProps) => {
   const { addToCart } = useCart();
 
   return (
@@ -36,7 +38,7 @@ const ProductCard = ({ product, onEdit }: ProductCardProps) => {
       
       <div className="p-4 flex flex-col flex-grow">
         <h3 className="font-medium text-lg mb-1">{product.name}</h3>
-        <div className="text-sm text-purple-600 mb-2">{product.category}</div>
+        <div className="text-sm text-purple-600 mb-2">{category?.name || ''}</div>
         
         <div className="space-y-2 mb-3 flex-grow">
           {product.description && (
