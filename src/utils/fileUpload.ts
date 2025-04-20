@@ -3,6 +3,8 @@
  * Утилита для загрузки изображений товаров
  */
 
+import { v4 as uuidv4 } from 'uuid';
+
 /**
  * Загрузить файл на сервер
  * @param file Файл для загрузки
@@ -10,11 +12,21 @@
  */
 export const uploadFile = async (file: File): Promise<string> => {
   try {
+    if (!file) {
+      throw new Error('Файл не был выбран');
+    }
+
+    // Проверяем тип файла
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+      throw new Error('Неподдерживаемый тип файла. Разрешены только JPEG, PNG, GIF и WEBP');
+    }
+    
     // Создаем объект FormData для загрузки файла
     const formData = new FormData();
     formData.append('file', file);
     
-    // Отправляем файл на сервер
+    // Отправляем файл на сервер (в этой реализации используем встроенный сервер Vite)
     const response = await fetch('/api/upload', {
       method: 'POST',
       body: formData

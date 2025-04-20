@@ -8,7 +8,7 @@ export const products: Product[] = [
     price: 1002,
     categoryId: 3,
     description: "Свежемороженые креветки в глазури",
-    image: "/placeholder.svg"
+    image: ""
   },
   {
     id: 2,
@@ -16,6 +16,6 @@ export const products: Product[] = [
     price: 1457,
     categoryId: 1,
     description: "Свежемороженый лосось премиального качества",
-    image: "/placeholder.svg"
+    image: ""
   }
 ];
