@@ -4,8 +4,13 @@ import { useCart } from '@/context/CartContext';
 import { formatPrice } from '@/lib/formatters';
 import { Minus, Plus, Trash } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { CartItem as CartItemType } from '@/types/product';
 
-const CartItem = ({ item }) => {
+interface CartItemProps {
+  item: CartItemType;
+}
+
+const CartItem = ({ item }: CartItemProps) => {
   const { 
     increaseQuantity, 
     decreaseQuantity, 
