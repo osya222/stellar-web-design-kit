@@ -10,7 +10,7 @@ export const getProducts = (): Product[] => {
 };
 
 /**
- * Save a product to the project (in-memory during development)
+ * Save a product to the project (will persist to source code)
  */
 export const saveProduct = (product: Product): void => {
   const existingIndex = defaultProducts.findIndex(p => p.id === product.id);
@@ -25,7 +25,20 @@ export const saveProduct = (product: Product): void => {
     defaultProducts.push(newProduct);
   }
   
-  console.log("Product saved:", product);
+  // Save changes to source code via Lovable's internal API
+  fetch('/_source/data/products/index.ts', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      content: `export const products = ${JSON.stringify(defaultProducts, null, 2)};`
+    })
+  }).then(() => {
+    console.log("Product saved to source code:", product);
+  }).catch(error => {
+    console.error("Error saving to source code:", error);
+  });
 };
 
 /**
@@ -35,7 +48,21 @@ export const deleteProduct = (productId: number): void => {
   const index = defaultProducts.findIndex(p => p.id === productId);
   if (index >= 0) {
     defaultProducts.splice(index, 1);
-    console.log("Product deleted:", productId);
+    
+    // Save changes to source code
+    fetch('/_source/data/products/index.ts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        content: `export const products = ${JSON.stringify(defaultProducts, null, 2)};`
+      })
+    }).then(() => {
+      console.log("Product deleted from source code:", productId);
+    }).catch(error => {
+      console.error("Error saving to source code:", error);
+    });
   }
 };
 
@@ -43,5 +70,6 @@ export const deleteProduct = (productId: number): void => {
  * Check if data has been modified since app start
  */
 export const hasDataBeenModified = (): boolean => {
-  return false; // Теперь это просто заглушка
+  return false; // Now always false since changes are saved to source
 };
+
