@@ -6,5 +6,4 @@ export interface Product {
   category: string;
   manufacturer: string;
   description?: string;
-  imagePath?: string; // Path to the image in /public/images/products/
 }
