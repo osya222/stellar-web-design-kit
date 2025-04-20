@@ -23,9 +23,8 @@ export const uploadFile = async (file: File, destination: string = 'images/produ
     
     console.log(`Uploading file to path: ${fullPath}`);
     
-    // Use the correct endpoint for Lovable file uploads
-    // The correct endpoint is /api/fileupload with a special header
-    const response = await fetch('/api/fileupload', {
+    // Use the correct Lovable API endpoint for file uploads
+    const response = await fetch('/_lovable/fileupload', {
       method: 'POST',
       body: formData,
       headers: {
