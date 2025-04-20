@@ -50,41 +50,55 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       const ext = file.name.split('.').pop() || 'jpg';
       const filename = `product-${uniqueSuffix}.${ext}`;
       
-      // Create a mockup server response with the image path
-      // This is a fallback since we're having network issues
-      const imagePath = `/images/products/${filename}`;
+      // Create FormData for file upload
+      const formData = new FormData();
+      formData.append('image', file);
       
-      // Simulate a delay for upload
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Update the UI with the new image
-      setProductImage(imagePath);
-      
-      // Update product data
-      await updateProductImage(product.id, imagePath);
-      
-      toast({
-        title: "Успешно",
-        description: "Изображение обновлено",
+      // Send the image to the server using the API endpoint
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
       });
       
-      // Create an object URL from the file for preview
-      const objectUrl = URL.createObjectURL(file);
-      const img = new Image();
-      img.src = objectUrl;
-      img.onload = () => {
-        // Display the image in preview
-        setProductImage(objectUrl);
-        
-        // Clean up object URL
-        setTimeout(() => URL.revokeObjectURL(objectUrl), 60000);
-      };
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Ошибка загрузки:', errorText);
+        throw new Error(`Ошибка загрузки: ${response.status}`);
+      }
+      
+      // Check response type before parsing
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Сервер вернул не JSON-ответ');
+      }
+      
+      // Get response from server
+      const data = await response.json();
+      
+      if (!data.success || !data.path) {
+        throw new Error(data.error || 'Ошибка загрузки изображения');
+      }
+      
+      // Update the UI with the new image path
+      setProductImage(data.path);
+      
+      // Update product data in the dataService
+      const updatedProduct = await updateProductImage(product.id, data.path);
+      
+      if (updatedProduct) {
+        toast({
+          title: "Успешно",
+          description: "Изображение загружено и сохранено",
+        });
+      } else {
+        throw new Error('Не удалось обновить данные продукта');
+      }
 
     } catch (error) {
-      console.error('Ошибка обновления:', error);
+      console.error('Ошибка загрузки:', error);
       toast({
         title: "Ошибка",
-        description: (error as Error).message || 'Не удалось обновить изображение',
+        description: (error as Error).message || 'Не удалось загрузить изображение',
         variant: "destructive"
       });
     } finally {

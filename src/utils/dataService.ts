@@ -1,7 +1,9 @@
 
 import { Product } from "@/types/product";
+import fs from 'fs';
+import path from 'path';
 
-// Изначальные данные продуктов
+// Initial product data
 const PRODUCTS: Product[] = [
   {
     id: "1",
@@ -194,22 +196,56 @@ const PRODUCTS: Product[] = [
   }
 ];
 
+// File path for saving product data
+const PRODUCTS_DATA_PATH = path.join(process.cwd(), 'src/utils/productsData.json');
+
+// Load persistent product data if available
+let loadedProducts: Product[] = [];
+try {
+  if (typeof window !== 'undefined') {
+    // Client-side: try to load from localStorage
+    const savedData = localStorage.getItem('productsData');
+    if (savedData) {
+      loadedProducts = JSON.parse(savedData);
+      console.log('Loaded products from localStorage');
+    }
+  }
+} catch (error) {
+  console.error('Error loading product data:', error);
+}
+
+// Use loaded products or fallback to initial data
+const activeProducts: Product[] = loadedProducts.length > 0 ? loadedProducts : PRODUCTS;
+
+// Helper function to persist product data
+const persistProductData = () => {
+  try {
+    if (typeof window !== 'undefined') {
+      // Client-side: save to localStorage
+      localStorage.setItem('productsData', JSON.stringify(activeProducts));
+      console.log('Products saved to localStorage');
+    }
+  } catch (error) {
+    console.error('Error saving product data:', error);
+  }
+};
+
 export async function fetchProducts(): Promise<Product[]> {
-  return PRODUCTS;
+  return activeProducts;
 }
 
 export async function fetchProductById(id: string): Promise<Product | null> {
-  const product = PRODUCTS.find(p => p.id === id);
+  const product = activeProducts.find(p => p.id === id);
   return product || null;
 }
 
 export async function fetchCategories(): Promise<string[]> {
-  const categories = Array.from(new Set(PRODUCTS.map(p => p.category)));
+  const categories = Array.from(new Set(activeProducts.map(p => p.category)));
   return categories;
 }
 
 export async function fetchManufacturers(): Promise<string[]> {
-  const manufacturers = Array.from(new Set(PRODUCTS.map(p => p.manufacturer)));
+  const manufacturers = Array.from(new Set(activeProducts.map(p => p.manufacturer)));
   return manufacturers;
 }
 
@@ -218,25 +254,28 @@ export function getHeroImageUrl(): string {
 }
 
 /**
- * Обновляет изображение продукта
- * @param productId ID продукта
- * @param imagePath Путь к изображению
- * @returns Обновленный продукт
+ * Updates a product's image and persists the change
+ * @param productId ID of the product
+ * @param imagePath Path to the image
+ * @returns Updated product or null if not found
  */
 export async function updateProductImage(productId: string, imagePath: string): Promise<Product | null> {
-  // Находим индекс продукта
-  const productIndex = PRODUCTS.findIndex(p => p.id === productId);
+  // Find the product index
+  const productIndex = activeProducts.findIndex(p => p.id === productId);
   
   if (productIndex === -1) {
-    console.error(`Продукт с ID ${productId} не найден`);
+    console.error(`Product with ID ${productId} not found`);
     return null;
   }
   
-  // Обновляем imageUrl
-  PRODUCTS[productIndex] = {
-    ...PRODUCTS[productIndex],
+  // Update imageUrl
+  activeProducts[productIndex] = {
+    ...activeProducts[productIndex],
     imageUrl: imagePath
   };
   
-  return PRODUCTS[productIndex];
+  // Persist the updated data
+  persistProductData();
+  
+  return activeProducts[productIndex];
 }
