@@ -14,53 +14,25 @@ import type { ConfigEnv, ProxyOptions } from 'vite';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Simplify storage configuration for better reliability
+// Настройка multer для загрузки файлов
 const storage = multer.diskStorage({
   destination: function (req: Express.Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) {
-    // Use public/images directory for improved compatibility across environments
     const uploadPath = path.join(__dirname, 'public/images/products');
-    
-    try {
-      // Ensure directory exists
-      if (!fs.existsSync(uploadPath)) {
-        fs.mkdirSync(uploadPath, { recursive: true });
-        console.log("[Upload] Directory created:", uploadPath);
-      }
-      
-      // Verify write permissions by writing a test file
-      const testFile = path.join(uploadPath, '.test-write-permission');
-      fs.writeFileSync(testFile, 'test', { flag: 'w' });
-      fs.unlinkSync(testFile); // Remove test file
-      console.log("[Upload] Write permission verified for:", uploadPath);
-      
-      cb(null, uploadPath);
-    } catch (error) {
-      console.error("[Upload] Directory or permission error:", error);
-      // Pass null as first parameter and handle the error separately
-      cb(null, uploadPath);
-      // Log the error instead of passing it to callback
-      console.error(`Upload directory error: ${(error as Error).message}`);
+    // Убедимся, что директория существует
+    if (!fs.existsSync(uploadPath)) {
+      fs.mkdirSync(uploadPath, { recursive: true });
     }
+    cb(null, uploadPath);
   },
   filename: function (req: Express.Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) {
-    // Simplified file naming for better compatibility
-    const uniqueSuffix = Date.now();
-    const ext = path.extname(file.originalname).toLowerCase();
-    const allowedExtensions = ['.jpg', '.jpeg', '.png', '.webp', '.gif'];
-    
-    if (!allowedExtensions.includes(ext)) {
-      console.error("[Upload] Invalid file extension:", ext);
-      // Return empty string for filename, we'll handle this error later
-      cb(null, '');
-      return;
-    }
-    
-    // Create a simple filename pattern
-    const filename = `product_${uniqueSuffix}${ext}`;
-    console.log("[Upload] Generated filename:", filename);
-    cb(null, filename);
+    // Уникальное имя файла на основе времени и оригинального имени
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const ext = path.extname(file.originalname);
+    cb(null, uniqueSuffix + ext);
   }
 });
+
+const upload = multer({ storage: storage });
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }: ConfigEnv) => ({
@@ -76,101 +48,47 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
         changeOrigin: true,
         configure: (proxy, _options) => {
           proxy.on('error', (err, _req, res) => {
-            console.error('[Proxy] Error:', err);
+            console.error('Proxy error:', err);
             if (res.headersSent) return;
             res.writeHead(500, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Proxy error', details: err.message }));
           });
         },
         handle: (req: IncomingMessage, res: ServerResponse) => {
-          console.log("[Upload] Request received:", req.method, req.url);
-          
-          // Check if this is an upload request
+          // Проверяем, что это запрос на /api/upload
           if (req.url !== '/api/upload') {
             return false;
           }
 
-          // Set CORS headers
+          // Устанавливаем CORS заголовки
           res.setHeader('Access-Control-Allow-Origin', '*');
           res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
           res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
           
-          // Handle preflight request
+          // Обработка OPTIONS запроса
           if (req.method === 'OPTIONS') {
             res.statusCode = 204;
             res.end();
             return true;
           }
           
-          // Handle file upload request
+          // Обработка POST запроса для загрузки файла
           if (req.method === 'POST') {
-            console.log("[Upload] Processing POST upload request");
-            
             try {
-              // Configure multer with reduced file size (200KB) and strict validation
-              const upload = multer({ 
-                storage,
-                limits: { fileSize: 200 * 1024 }, // 200KB for better reliability
-                fileFilter: (req, file, cb) => {
-                  // Only allow image files
-                  if (!file.mimetype.startsWith('image/')) {
-                    console.error("[Upload] Invalid file type:", file.mimetype);
-                    return cb(null, false);
-                  }
-                  cb(null, true);
-                }
-              }).single('image');
+              console.log("Обработка POST запроса на загрузку");
               
-              // Use a shorter timeout to prevent EPIPE errors
-              const uploadTimeout = setTimeout(() => {
-                console.error("[Upload] Request timed out");
-                if (!res.headersSent) {
-                  res.statusCode = 408; 
-                  res.setHeader('Content-Type', 'application/json');
-                  res.end(JSON.stringify({ 
-                    error: 'Upload timeout', 
-                    details: 'Request took too long to process' 
-                  }));
-                }
-              }, 3000); // 3-second timeout
+              // Используем multer для обработки загрузки одного файла
+              const uploadSingle = upload.single('image');
               
-              // Process the upload with specific error handling for EPIPE
-              upload(req as unknown as Request, res as unknown as Response, (err: any) => {
-                clearTimeout(uploadTimeout);
-                console.log("[Upload] Multer processing completed");
-                
+              uploadSingle(req as unknown as Request, res as unknown as Response, (err: any) => {
+                // Устанавливаем Content-Type заголовок для JSON
                 res.setHeader('Content-Type', 'application/json');
                 
                 if (err) {
-                  console.error("[Upload] Error:", err);
-                  
-                  // Specific handling for EPIPE errors
-                  if (err.code === 'EPIPE' || err.message.includes('EPIPE')) {
-                    console.error("[Upload] EPIPE error detected, this is a connection issue");
-                    res.statusCode = 503; // Service Unavailable
-                    res.end(JSON.stringify({ 
-                      error: 'Connection error', 
-                      details: 'write EPIPE',
-                      message: 'The server connection was interrupted. Try a smaller image or try again later.'
-                    }));
-                    return;
-                  }
-                  
-                  // Handle file size limits
-                  if (err.code === 'LIMIT_FILE_SIZE') {
-                    res.statusCode = 413; // Payload Too Large
-                    res.end(JSON.stringify({
-                      error: 'File too large',
-                      details: 'The file exceeds the 200KB limit',
-                      message: 'Please use a smaller image (max 200KB)'
-                    }));
-                    return;
-                  }
-                  
-                  // Handle other errors
+                  console.error("Ошибка multer при загрузке:", err);
                   res.statusCode = 500;
                   res.end(JSON.stringify({ 
-                    error: 'Upload failed', 
+                    error: 'Ошибка загрузки файла', 
                     details: err.message 
                   }));
                   return;
@@ -178,61 +96,43 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
                 
                 const file = (req as any).file;
                 if (!file) {
-                  console.error("[Upload] No file received");
+                  console.error("Файл не получен multer");
                   res.statusCode = 400;
                   res.end(JSON.stringify({ 
-                    error: 'No file received'
+                    error: 'Файл не был получен'
                   }));
                   return;
                 }
                 
-                console.log("[Upload] File successfully saved:", file.filename);
+                console.log("Файл успешно загружен:", file.filename);
                 
-                // Format the path for client
+                // Формируем относительный путь к файлу для клиента
                 const imagePath = `/images/products/${file.filename}`;
                 
-                // Verify file exists before returning success
-                const fullPath = path.join(__dirname, 'public', imagePath);
+                // Отправляем успешный ответ
+                res.statusCode = 200;
+                const responseData = { 
+                  success: true,
+                  path: imagePath
+                };
                 
-                try {
-                  fs.accessSync(fullPath, fs.constants.F_OK);
-                  console.log("[Upload] File verified:", fullPath);
-                  
-                  // Delay response slightly to prevent connection issues
-                  setTimeout(() => {
-                    // Return success response
-                    res.statusCode = 200;
-                    const responseData = { 
-                      success: true,
-                      path: imagePath
-                    };
-                    
-                    res.end(JSON.stringify(responseData));
-                  }, 100);
-                } catch (fileErr) {
-                  console.error("[Upload] File verification failed:", fileErr);
-                  res.statusCode = 500;
-                  res.end(JSON.stringify({ 
-                    error: 'File verification failed',
-                    details: (fileErr as Error).message
-                  }));
-                }
+                res.end(JSON.stringify(responseData));
               });
               
               return true;
-            } catch (criticalErr) {
-              console.error("[Upload] Critical error:", criticalErr);
+            } catch (error) {
+              console.error("Ошибка при обработке загрузки:", error);
               res.statusCode = 500;
               res.setHeader('Content-Type', 'application/json');
               res.end(JSON.stringify({ 
-                error: 'Server error', 
-                details: (criticalErr as Error).message 
+                error: 'Ошибка сервера', 
+                details: (error as Error).message 
               }));
               return true;
             }
           }
           
-          // Method not allowed for other requests
+          // Для других методов возвращаем 405 Method Not Allowed
           res.statusCode = 405;
           res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify({ error: 'Method Not Allowed' }));
