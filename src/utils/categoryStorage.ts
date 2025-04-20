@@ -112,12 +112,15 @@ const updateCategoriesFile = () => {
     
     console.log('Сохраняем данные категорий в исходный код');
     
-    fetch('/_source/data/categories.ts', {
+    fetch('/_lovable/sourcecode', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ content })
+      body: JSON.stringify({
+        path: 'src/data/categories.ts',
+        content 
+      })
     }).then(() => {
       console.log("Categories data updated in source code");
     }).catch(error => {
