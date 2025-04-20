@@ -11,12 +11,19 @@ export const getImageUrl = (imageFileName?: string): string => {
     return '/placeholder.svg';
   }
 
-  // Если путь начинается с /lovable-uploads/, проверяем localStorage
+  // Проверка путей старого формата (для совместимости)
   if (imageFileName.startsWith('/lovable-uploads/')) {
     const cachedImage = getImageFromLocalStorage(imageFileName);
     if (cachedImage) {
       return cachedImage;
     }
+    // Если изображение не найдено в localStorage, возвращаем плейсхолдер
+    return '/placeholder.svg';
+  }
+
+  // Если путь новый (сохраненный на сервере)
+  if (imageFileName.startsWith('/uploads/')) {
+    return imageFileName;
   }
 
   // If path is already absolute or complete (starts with http/https)

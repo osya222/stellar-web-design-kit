@@ -22,7 +22,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | undefined>(currentImage);
 
-  // Пытаемся загрузить изображение из localStorage при монтировании
+  // Загружаем изображение при монтировании
   useEffect(() => {
     if (currentImage && currentImage.startsWith('/lovable-uploads/')) {
       const cachedImage = getImageFromLocalStorage(currentImage);
@@ -46,24 +46,18 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       const localPreview = URL.createObjectURL(file);
       setPreviewImage(localPreview);
       
-      // Затем загружаем файл
+      // Затем загружаем файл на сервер
       const imagePath = await uploadFile(file);
       
       // После загрузки обновляем путь к изображению
-      // Проверяем, есть ли изображение в localStorage
-      const cachedImage = getImageFromLocalStorage(imagePath);
-      if (cachedImage) {
-        setPreviewImage(cachedImage);
-      } else {
-        setPreviewImage(imagePath);
-      }
+      setPreviewImage(imagePath);
       
       // Сообщаем родительскому компоненту о новом пути
       onImageUploaded(imagePath);
       
       toast({
         title: "Успешно",
-        description: "Изображение загружено",
+        description: "Изображение загружено на сервер",
       });
     } catch (error: any) {
       console.error('Ошибка загрузки:', error);
@@ -108,15 +102,6 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     md: 'h-10 w-10',
     lg: 'h-12 w-12'
   };
-  
-  // Определяем фактический URL для изображения с проверкой localStorage
-  const imageUrl = React.useMemo(() => {
-    if (previewImage && previewImage.startsWith('/lovable-uploads/')) {
-      const cachedImage = getImageFromLocalStorage(previewImage);
-      return cachedImage || previewImage;
-    }
-    return previewImage;
-  }, [previewImage]);
 
   return (
     <div className={`relative group ${className}`}>
@@ -129,9 +114,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       />
       
       {/* Показываем загруженное изображение или плейсхолдер */}
-      {imageUrl ? (
+      {previewImage ? (
         <img
-          src={imageUrl}
+          src={previewImage}
           alt="Загруженное изображение"
           className="w-full h-full object-contain"
           onError={handleImageError}

@@ -1,10 +1,11 @@
 
 import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
+import path from 'path';
 
 /**
  * Обработчик API для загрузки файлов
- * Имитирует серверное хранилище, используя localStorage в демонстрационных целях
- * В реальном приложении здесь был бы обработчик загрузки на сервер
+ * Сохраняет файлы в директорию public/uploads
  */
 export async function handleFileUpload(request: Request): Promise<Response> {
   try {
@@ -52,7 +53,26 @@ export async function handleFileUpload(request: Request): Promise<Response> {
       // Создаем уникальное имя файла
       const fileExtension = file.name.split('.').pop() || 'jpg';
       const fileName = `${uuidv4()}.${fileExtension}`;
-      const filePath = `/lovable-uploads/${fileName}`;
+      
+      // Путь для сохранения файла (относительно public)
+      const uploadDir = 'uploads';
+      const filePath = `/${uploadDir}/${fileName}`;
+      const fullSavePath = path.join(process.cwd(), 'public', uploadDir);
+      
+      // Создаем директорию, если она не существует
+      if (!fs.existsSync(fullSavePath)) {
+        fs.mkdirSync(fullSavePath, { recursive: true });
+      }
+      
+      // Преобразуем File в Buffer для сохранения
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      
+      // Сохраняем файл
+      const fullFilePath = path.join(fullSavePath, fileName);
+      fs.writeFileSync(fullFilePath, buffer);
+      
+      console.log(`Файл сохранен: ${fullFilePath}`);
       
       // Возвращаем успешный ответ с путем к файлу
       return new Response(

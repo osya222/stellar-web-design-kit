@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Product } from "@/types/product";
 import { Category } from "@/types/category";
 import { formatPrice } from "@/lib/formatters";
@@ -19,16 +19,6 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product, category, onEdit }) => {
   const { addToCart } = useCart();
   const [currentImage, setCurrentImage] = useState<string | undefined>(product.image);
-
-  // Проверяем localStorage при монтировании компонента
-  useEffect(() => {
-    if (product.image && product.image.startsWith('/lovable-uploads/')) {
-      const cachedImage = getImageFromLocalStorage(product.image);
-      if (cachedImage) {
-        setCurrentImage(product.image); // Путь остается тем же, но изображение будет взято из localStorage
-      }
-    }
-  }, [product.image]);
 
   const handleAddToCart = () => {
     addToCart(product);

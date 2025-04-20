@@ -6,6 +6,7 @@ import { componentTagger } from "lovable-tagger";
 import { handleFileUpload } from "./src/api/upload";
 import type { ViteDevServer, Connect } from 'vite';
 import { v4 as uuidv4 } from 'uuid';
+import fs from 'fs';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -13,6 +14,12 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
     setupMiddleware: (middleware: Connect.Server, server: ViteDevServer) => {
+      // Создаем директорию для загрузок, если она не существует
+      const uploadDir = path.join(process.cwd(), 'public', 'uploads');
+      if (!fs.existsSync(uploadDir)) {
+        fs.mkdirSync(uploadDir, { recursive: true });
+      }
+      
       // Настройка API роутов для загрузки файлов
       server.middlewares.use('/api/upload', async (req: Connect.IncomingMessage, res: any) => {
         try {
