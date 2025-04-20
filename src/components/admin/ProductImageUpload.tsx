@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Upload } from 'lucide-react';
@@ -25,6 +25,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
   const [imagePreview, setImagePreview] = useState<string>(
     imageUrl || initialPreview || '/placeholder.svg'
   );
+  const uploadTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Функция отправки файла на сервер (/api/upload)
   const uploadFile = async (file: File): Promise<string | null> => {
@@ -32,10 +33,23 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
     formData.append('image', file);
 
     try {
+      // Устанавливаем таймаут для запроса
+      const abortController = new AbortController();
+      const timeoutId = setTimeout(() => abortController.abort(), 30000); // 30 секунд таймаут
+      
+      uploadTimeoutRef.current = timeoutId;
+      
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
+        signal: abortController.signal,
       });
+      
+      if (uploadTimeoutRef.current) {
+        clearTimeout(uploadTimeoutRef.current);
+        uploadTimeoutRef.current = null;
+      }
+      
       const result = await response.json();
 
       if (response.ok && result?.path) {
@@ -44,11 +58,19 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
         throw new Error(result?.error || 'Ошибка загрузки');
       }
     } catch (error: any) {
-      toast({
-        title: "Ошибка",
-        description: error.message ?? "Не удалось загрузить изображение",
-        variant: "destructive"
-      });
+      if (error.name === 'AbortError') {
+        toast({
+          title: "Ошибка",
+          description: "Превышено время ожидания загрузки",
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Ошибка",
+          description: error.message ?? "Не удалось загрузить изображение",
+          variant: "destructive"
+        });
+      }
       return null;
     }
   };
@@ -66,10 +88,10 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
       return;
     }
 
-    if (file.size > 10 * 1024 * 1024) {
+    if (file.size > 5 * 1024 * 1024) {
       toast({
         title: "Ошибка",
-        description: "Размер файла не должен превышать 10MB",
+        description: "Размер файла не должен превышать 5MB",
         variant: "destructive"
       });
       return;
@@ -92,10 +114,26 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
           description: "Изображение загружено",
         });
       }
+    } catch (error) {
+      console.error("Ошибка при загрузке изображения:", error);
+      toast({
+        title: "Ошибка",
+        description: "Произошла ошибка при загрузке изображения",
+        variant: "destructive"
+      });
     } finally {
       setIsUploading(false);
     }
   };
+
+  // Очистка таймаута при размонтировании компонента
+  React.useEffect(() => {
+    return () => {
+      if (uploadTimeoutRef.current) {
+        clearTimeout(uploadTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="mb-4">
