@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -97,7 +96,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
       
       // Предварительно установим имя файла в форму
       const filename = file.name.toLowerCase().replace(/[^a-z0-9.]/g, '-');
-      form.setValue('image', `/images/products/${filename}`);
+      form.setValue('image', filename);
       
       toast({
         title: "Предпросмотр",
@@ -125,7 +124,9 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
       if (selectedFile) {
         try {
           const uploadedPath = await uploadFile(selectedFile);
-          data.image = uploadedPath;
+          // Получаем только имя файла из пути
+          const fileName = uploadedPath.split('/').pop() || '';
+          data.image = fileName;
           console.log("Image successfully uploaded to:", uploadedPath);
         } catch (error) {
           console.error("Failed to upload image:", error);
@@ -139,7 +140,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
       }
       
       const productData: Product = {
-        id: existingProduct?.id || Date.now(),
+        id: existingProduct?.id || 0,
         name: data.name,
         price: data.price,
         categoryId: data.categoryId,

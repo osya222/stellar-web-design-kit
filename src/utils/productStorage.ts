@@ -11,8 +11,10 @@ let isInitialized = false;
  */
 const initializeCache = () => {
   if (!isInitialized) {
-    cachedProducts = [...defaultProducts];
+    // Создаем глубокую копию исходных товаров
+    cachedProducts = defaultProducts.map(p => ({...p}));
     isInitialized = true;
+    console.log('Инициализирован кеш продуктов:', cachedProducts.length);
   }
 };
 
@@ -43,7 +45,6 @@ export const saveProduct = (product: Product): void => {
   }
   
   // Обновляем исходный массив defaultProducts для сохранения между перезагрузками
-  Object.assign(defaultProducts, []);
   defaultProducts.length = 0;
   cachedProducts.forEach(p => defaultProducts.push({...p}));
   
@@ -62,7 +63,6 @@ export const deleteProduct = (productId: number): void => {
     cachedProducts.splice(index, 1);
     
     // Обновляем исходный массив defaultProducts для сохранения между перезагрузками
-    Object.assign(defaultProducts, []);
     defaultProducts.length = 0;
     cachedProducts.forEach(p => defaultProducts.push({...p}));
     
