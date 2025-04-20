@@ -45,6 +45,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
   const [errorDetails, setErrorDetails] = useState("");
   const [showHelpDialog, setShowHelpDialog] = useState(false);
   const uploadTimeoutRef = useRef<number | null>(null);
+  const [connectionErrorOpen, setConnectionErrorOpen] = useState(false);
 
   // Show preview based on proper path hierarchy
   const previewUrl =
@@ -68,11 +69,11 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
       return;
     }
 
-    // Size check - reduced to 2MB for better reliability
-    if (file.size > 2 * 1024 * 1024) {
+    // Strict size check - reduced to 1MB for better reliability
+    if (file.size > 1 * 1024 * 1024) {
       toast({
         title: "Ошибка",
-        description: "Размер файла не должен превышать 2MB",
+        description: "Размер файла не должен превышать 1MB",
         variant: "destructive"
       });
       return;
@@ -100,14 +101,14 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
       // Create abort controller for the fetch
       const controller = new AbortController();
       
-      // Set timeout to abort after 10 seconds
+      // Set timeout to abort after 5 seconds (reduced from 10)
       uploadTimeoutRef.current = window.setTimeout(() => {
         console.log("Upload timeout triggered, aborting");
         controller.abort();
         
         // Clear the timeout reference
         uploadTimeoutRef.current = null;
-      }, 10000);
+      }, 5000);
       
       console.log("Sending upload request to server");
       const response = await fetch('/api/upload', {
@@ -133,6 +134,18 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
           parsedError = JSON.parse(errorText);
         } catch (e) {
           parsedError = { error: "Unknown server error", details: errorText };
+        }
+        
+        // Handle EPIPE or connection errors specifically
+        if (
+          response.status === 503 || 
+          errorText.includes('EPIPE') || 
+          errorText.includes('write EPIPE') ||
+          (parsedError.details && parsedError.details.includes('EPIPE'))
+        ) {
+          console.log("Detected EPIPE/connection error");
+          setConnectionErrorOpen(true);
+          throw new Error('Проблема с подключением к серверу');
         }
         
         throw new Error(`Ошибка загрузки: ${response.status} - ${parsedError.details || errorText}`);
@@ -247,7 +260,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
               ) : (
                 <>
                   <Upload className="mr-2 h-4 w-4" />
-                  Загрузить изображение (макс. 2MB)
+                  Загрузить изображение (макс. 1MB)
                 </>
               )}
             </Button>
@@ -256,7 +269,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
               <AlertTriangle className="h-4 w-4" />
               <AlertTitle>Рекомендации</AlertTitle>
               <AlertDescription>
-                Используйте изображения в формате JPG, PNG или WebP, размером до 2MB
+                Используйте изображения в формате JPG, PNG или WebP, размером до 1MB
               </AlertDescription>
             </Alert>
           </div>
@@ -276,7 +289,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
           <AlertDialogHeader>
             <AlertDialogTitle>Ошибка загрузки изображения</AlertDialogTitle>
             <AlertDialogDescription>
-              <div className="mb-4">{errorDetails}</div>
+              <p className="mb-4">{errorDetails}</p>
               <div className="mt-4 p-3 bg-gray-100 rounded text-sm">
                 <p className="font-medium mb-2">Возможные причины:</p>
                 <ul className="list-disc pl-5 mt-2 space-y-1">
@@ -289,6 +302,33 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Закрыть</AlertDialogCancel>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Connection Error Dialog */}
+      <AlertDialog open={connectionErrorOpen} onOpenChange={setConnectionErrorOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Ошибка загрузки: 500 - write EPIPE</AlertDialogTitle>
+            <AlertDialogDescription>
+              <p className="mb-4">
+                Произошла ошибка подключения при попытке загрузить изображение. Эта ошибка (EPIPE) 
+                обычно возникает из-за проблем с передачей данных.
+              </p>
+              <div className="mt-4 p-3 bg-gray-100 rounded text-sm">
+                <p className="font-medium mb-2">Решения:</p>
+                <ul className="list-disc pl-5 mt-2 space-y-1">
+                  <li>Используйте изображение меньшего размера (до 500KB)</li>
+                  <li>Сожмите изображение перед загрузкой с помощью онлайн-сервисов</li>
+                  <li>Попробуйте другой формат изображения (например, JPG вместо PNG)</li>
+                  <li>Подождите несколько минут и попробуйте снова</li>
+                </ul>
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Понятно</AlertDialogCancel>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
@@ -311,7 +351,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
             
             <div>
               <h4 className="font-medium mb-1">Максимальный размер:</h4>
-              <p className="text-sm">2 мегабайта (2MB)</p>
+              <p className="text-sm">1 мегабайт (1MB)</p>
             </div>
             
             <div>
@@ -322,9 +362,10 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
             <div>
               <h4 className="font-medium mb-1">При возникновении ошибок:</h4>
               <ul className="list-disc pl-5 text-sm space-y-1">
-                <li>Убедитесь, что изображение не превышает 2MB</li>
-                <li>Попробуйте другой формат изображения (например, JPG вместо PNG)</li>
+                <li>Убедитесь, что изображение не превышает 1MB</li>
                 <li>Используйте сжатие изображений перед загрузкой</li>
+                <li>Попробуйте другой формат изображения (например, JPG вместо PNG)</li>
+                <li>Если ошибка "write EPIPE", попробуйте изображение размером до 500KB</li>
               </ul>
             </div>
           </div>

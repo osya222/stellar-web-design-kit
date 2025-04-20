@@ -111,7 +111,7 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
               // Configure multer with reduced file size and strict validation
               const upload = multer({ 
                 storage,
-                limits: { fileSize: 2 * 1024 * 1024 }, // 2MB for better reliability
+                limits: { fileSize: 1 * 1024 * 1024 }, // Reduced to 1MB for better reliability
                 fileFilter: (req, file, cb) => {
                   // Only allow image files
                   if (!file.mimetype.startsWith('image/')) {
@@ -124,20 +124,20 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
                 }
               }).single('image');
               
-              // Use a shorter timeout for the upload process
+              // Use an even shorter timeout to prevent EPIPE errors
               const uploadTimeout = setTimeout(() => {
                 console.error("[Upload] Request timed out");
                 if (!res.headersSent) {
-                  res.statusCode = 500;
+                  res.statusCode = 408; // Use 408 Request Timeout instead of 500
                   res.setHeader('Content-Type', 'application/json');
                   res.end(JSON.stringify({ 
                     error: 'Upload timeout', 
                     details: 'Request took too long to process' 
                   }));
                 }
-              }, 10000); // 10-second timeout
+              }, 5000); // 5-second timeout - reduced from 10 seconds
               
-              // Process the upload
+              // Process the upload with specific error handling for EPIPE
               upload(req as unknown as Request, res as unknown as Response, (err: any) => {
                 clearTimeout(uploadTimeout);
                 console.log("[Upload] Multer processing completed");
@@ -146,6 +146,19 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
                 
                 if (err) {
                   console.error("[Upload] Error:", err);
+                  
+                  // Specific handling for EPIPE errors
+                  if (err.code === 'EPIPE' || err.message.includes('EPIPE')) {
+                    console.error("[Upload] EPIPE error detected, this is a connection issue");
+                    res.statusCode = 503; // Service Unavailable
+                    res.end(JSON.stringify({ 
+                      error: 'Connection error', 
+                      details: 'The server connection was interrupted. Try a smaller image or try again later.'
+                    }));
+                    return;
+                  }
+                  
+                  // Handle other errors
                   res.statusCode = 500;
                   res.end(JSON.stringify({ 
                     error: 'Upload failed', 
@@ -169,7 +182,7 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
                 // Format the path for client
                 const imagePath = `/images/products/${file.filename}`;
                 
-                // Verify file exists
+                // Verify file exists before returning success
                 const fullPath = path.join(__dirname, 'public', imagePath);
                 
                 try {
