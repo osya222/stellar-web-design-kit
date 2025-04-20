@@ -7,7 +7,7 @@ import ProductGrid from '@/components/products/ProductGrid';
 import ProductManager from '@/components/products/ProductManager';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { hasDataBeenModified } from '@/utils/productStorage';
+import { Trash2, Settings } from 'lucide-react';
 
 const Admin = () => {
   const { toast } = useToast();
@@ -15,12 +15,16 @@ const Admin = () => {
 
   const handleProductAdded = () => {
     setRefreshTrigger(prev => prev + 1);
+    toast({
+      title: "Успех",
+      description: "Товар успешно добавлен в каталог",
+    });
   };
 
-  const handleNotifyToSave = () => {
+  const handleInfoClick = () => {
     toast({
-      title: "Данные в памяти браузера",
-      description: "Обратите внимание, что эти изменения хранятся только в памяти браузера. Чтобы сохранить их навсегда, внесите изменения в исходный код проекта.",
+      title: "Информация о сохранении",
+      description: "Все изменения сохраняются автоматически в исходном коде проекта.",
       duration: 6000,
     });
   };
@@ -35,28 +39,30 @@ const Admin = () => {
       
       <main className="min-h-screen bg-gray-50">
         <div className="container mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-8">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">Панель администратора</h1>
-              <p className="text-gray-600">
-                Управление товарами
-              </p>
+          <div className="bg-white shadow-sm rounded-lg p-6 mb-8">
+            <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-8">
+              <div>
+                <h1 className="text-3xl font-bold mb-2 text-purple-900">Панель администратора</h1>
+                <p className="text-gray-600">
+                  Управление каталогом товаров
+                </p>
+              </div>
+              
+              <div className="flex gap-4">
+                <ProductManager onProductAdded={handleProductAdded} />
+                <Button variant="outline" onClick={handleInfoClick}>
+                  <Settings className="h-4 w-4 mr-2" />
+                  Информация
+                </Button>
+              </div>
             </div>
             
-            <div className="flex gap-4">
-              <ProductManager onProductAdded={handleProductAdded} />
-              <Button variant="outline" onClick={handleNotifyToSave}>
-                О сохранении данных
-              </Button>
+            <div className="bg-purple-50 rounded-lg p-4 mb-6 text-purple-800 text-sm">
+              <p>
+                <strong>Инструкция:</strong> Для добавления нового товара нажмите кнопку "Добавить товар". 
+                Для редактирования существующего товара нажмите на иконку карандаша в его карточке.
+              </p>
             </div>
-          </div>
-          
-          <div className="bg-white shadow-md rounded-lg p-6 mb-8">
-            <h2 className="text-xl font-semibold mb-4">Управление товарами</h2>
-            <p className="text-gray-600 mb-6">
-              Здесь вы можете добавлять, редактировать и удалять товары. 
-              Для редактирования товара нажмите на иконку карандаша в его карточке.
-            </p>
             
             <ProductGrid showAdmin={true} key={refreshTrigger} />
           </div>

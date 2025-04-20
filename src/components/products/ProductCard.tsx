@@ -15,55 +15,49 @@ const ProductCard = ({ product, onEdit }: ProductCardProps) => {
   const { addToCart } = useCart();
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
-      <div className="aspect-square overflow-hidden bg-gray-100">
+    <div className="group bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-100">
+      <div className="aspect-square overflow-hidden bg-gray-50 relative">
         <img 
           src={getImageUrl(product.image)}
           alt={product.name}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />
+        {onEdit && (
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={onEdit}
+            className="absolute top-2 right-2 h-8 w-8 bg-white/80 hover:bg-white"
+          >
+            <Edit className="h-4 w-4" />
+          </Button>
+        )}
       </div>
       
       <div className="p-4 flex flex-col flex-grow">
-        <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
+        <h3 className="font-medium text-lg mb-1">{product.name}</h3>
+        <div className="text-sm text-purple-600 mb-2">{product.category}</div>
         
-        <div className="space-y-2 text-sm text-gray-600 flex-grow">
+        <div className="space-y-2 mb-3 flex-grow">
           {product.description && (
-            <p className="text-gray-500">{product.description}</p>
+            <p className="text-sm text-gray-600">{product.description}</p>
           )}
           
-          <div className="space-y-1">
-            <div className="flex justify-between">
-              <span>Производитель:</span>
-              <span className="font-medium text-gray-800">{product.manufacturer}</span>
-            </div>
+          <div className="text-sm text-gray-500">
+            Производитель: <span className="font-medium text-gray-700">{product.manufacturer}</span>
           </div>
         </div>
 
-        <div className="flex items-center justify-between mt-4 pt-4 border-t">
-          <div className="flex flex-col">
-            <span className="text-sm text-gray-500">Розничная цена:</span>
-            <span className="font-bold text-lg">{formatPrice(product.price)}</span>
-          </div>
-          <div className="flex gap-2">
-            {onEdit && (
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={onEdit}
-                className="h-9 w-9"
-              >
-                <Edit className="h-4 w-4" />
-              </Button>
-            )}
-            <Button 
-              onClick={() => addToCart(product)}
-              className="bg-blue-600 hover:bg-blue-700"
-            >
-              <ShoppingCart className="w-4 h-4 mr-2" />
-              В корзину
-            </Button>
-          </div>
+        <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-100">
+          <div className="font-bold text-lg text-gray-900">{formatPrice(product.price)}</div>
+          <Button 
+            onClick={() => addToCart(product)}
+            className="bg-purple-600 hover:bg-purple-700"
+            size="sm"
+          >
+            <ShoppingCart className="w-4 h-4 mr-2" />
+            В корзину
+          </Button>
         </div>
       </div>
     </div>

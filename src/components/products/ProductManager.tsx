@@ -26,10 +26,10 @@ const ProductManager = ({ onProductAdded }: ProductManagerProps) => {
   };
 
   return (
-    <div className="py-4">
+    <div>
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>
-          <Button className="gap-2">
+          <Button className="gap-2 bg-purple-600 hover:bg-purple-700">
             <Plus className="h-4 w-4" /> Добавить товар
           </Button>
         </DialogTrigger>

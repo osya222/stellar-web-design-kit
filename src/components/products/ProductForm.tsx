@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -182,7 +183,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
                     <img 
                       src={getImageUrl(field.value)} 
                       alt="Preview" 
-                      className="w-20 h-20 object-cover rounded"
+                      className="w-20 h-20 object-cover rounded-md border"
                     />
                   )}
                   <FormControl>
@@ -196,7 +197,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
                       />
                       <label
                         htmlFor="image-upload"
-                        className="cursor-pointer inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2"
+                        className="cursor-pointer inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-purple-600 text-white hover:bg-purple-700 h-10 px-4 py-2"
                       >
                         <Upload className="mr-2 h-4 w-4" />
                         {uploadingImage ? "Загрузка..." : "Загрузить изображение"}
@@ -257,7 +258,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
           />
         </div>
 
-        <Button type="submit" className="w-full" disabled={isSubmitting}>
+        <Button type="submit" className="w-full bg-purple-600 hover:bg-purple-700" disabled={isSubmitting}>
           {isSubmitting
             ? "Сохранение..."
             : existingProduct
