@@ -2,8 +2,9 @@
 import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
-import { Upload } from 'lucide-react';
+import { Upload, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 interface ProductImageUploadProps {
   productId: string | undefined;
@@ -22,10 +23,21 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
 }) => {
   const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   const [imagePreview, setImagePreview] = useState<string>(
     imageUrl || initialPreview || '/placeholder.svg'
   );
-  const uploadTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Очистка при размонтировании компонента
+  React.useEffect(() => {
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, []);
 
   // Функция отправки файла на сервер (/api/upload)
   const uploadFile = async (file: File): Promise<string | null> => {
@@ -33,58 +45,60 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
     formData.append('image', file);
 
     try {
-      // Устанавливаем таймаут для запроса
-      const abortController = new AbortController();
-      const timeoutId = setTimeout(() => abortController.abort(), 30000); // 30 секунд таймаут
+      // Устанавливаем новый контроллер отмены для каждого запроса
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
       
-      uploadTimeoutRef.current = timeoutId;
+      abortControllerRef.current = new AbortController();
       
       console.log('Отправка запроса на /api/upload...');
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
-        signal: abortController.signal,
+        signal: abortControllerRef.current.signal,
         headers: {
           'Accept': 'application/json',
           'X-Requested-With': 'XMLHttpRequest'
         }
       });
       
-      if (uploadTimeoutRef.current) {
-        clearTimeout(uploadTimeoutRef.current);
-        uploadTimeoutRef.current = null;
-      }
-      
       console.log('Статус ответа:', response.status);
       
+      // Проверка HTTP статуса
       if (!response.ok) {
-        const errorText = await response.text();
+        let errorText = '';
+        try {
+          const errorData = await response.json();
+          errorText = errorData.details || errorData.error || `HTTP ошибка: ${response.status}`;
+        } catch (e) {
+          errorText = await response.text() || `HTTP ошибка: ${response.status}`;
+        }
+        
         console.error('Ошибка загрузки, ответ сервера:', errorText);
-        throw new Error(`Ошибка загрузки: ${response.status} - ${errorText}`);
+        throw new Error(`Ошибка загрузки: ${errorText}`);
       }
       
       const result = await response.json();
-      console.log('Ответ сервера:', result);
+      console.log('Успешный ответ сервера:', result);
 
-      if (result?.path) {
+      if (result?.success && result?.path) {
         console.log('Путь к загруженному изображению:', result.path);
+        setUploadError(null);
         return result.path as string;
       } else {
-        console.error('Ошибка в ответе сервера:', result);
-        throw new Error(result?.error || 'Ошибка загрузки: неверный формат ответа');
+        console.error('Неожиданный формат ответа:', result);
+        throw new Error(result?.error || 'Неверный формат ответа от сервера');
       }
     } catch (error: any) {
-      console.error('Ошибка при загрузке файла:', error);
-      if (error.name === 'AbortError') {
+      // Если это не ошибка отмены, то показываем ее
+      if (error.name !== 'AbortError') {
+        console.error('Ошибка при загрузке файла:', error);
+        setUploadError(error.message || 'Неизвестная ошибка при загрузке');
+        
         toast({
           title: "Ошибка",
-          description: "Превышено время ожидания загрузки",
-          variant: "destructive"
-        });
-      } else {
-        toast({
-          title: "Ошибка",
-          description: error.message ?? "Не удалось загрузить изображение",
+          description: error.message || "Не удалось загрузить изображение",
           variant: "destructive"
         });
       }
@@ -96,7 +110,11 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
     const file = event.target.files?.[0];
     if (!file) return;
 
+    setUploadError(null);
+
+    // Проверка типа файла
     if (!file.type.startsWith('image/')) {
+      setUploadError('Выберите файл изображения (JPEG, PNG, GIF, и т.д.)');
       toast({
         title: "Ошибка",
         description: "Пожалуйста, выберите файл изображения",
@@ -105,7 +123,9 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
       return;
     }
 
+    // Проверка размера файла
     if (file.size > 5 * 1024 * 1024) {
+      setUploadError('Размер файла превышает 5MB');
       toast({
         title: "Ошибка",
         description: "Размер файла не должен превышать 5MB",
@@ -117,7 +137,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
     setIsUploading(true);
     
     try {
-      // Создаем превью изображения
+      // Создаем превью изображения для быстрого отображения
       const reader = new FileReader();
       
       reader.onload = async (ev) => {
@@ -143,51 +163,51 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
             // Если загрузка не удалась, восстанавливаем предыдущее превью
             console.error('Загрузка не удалась, восстанавливаем превью');
             setImagePreview(imageUrl || initialPreview || '/placeholder.svg');
-            toast({
-              title: "Ошибка",
-              description: "Не удалось загрузить изображение на сервер",
-              variant: "destructive"
-            });
           }
         } catch (error) {
           console.error('Ошибка в обработчике загрузки превью:', error);
           setImagePreview(imageUrl || initialPreview || '/placeholder.svg');
+        } finally {
+          setIsUploading(false);
         }
       };
       
       reader.onerror = () => {
         console.error('Ошибка чтения файла');
+        setUploadError('Не удалось прочитать файл изображения');
+        setImagePreview(imageUrl || initialPreview || '/placeholder.svg');
+        setIsUploading(false);
+        
         toast({
           title: "Ошибка",
           description: "Не удалось прочитать файл изображения",
           variant: "destructive"
         });
-        setImagePreview(imageUrl || initialPreview || '/placeholder.svg');
       };
       
       // Запускаем чтение файла для создания превью
       reader.readAsDataURL(file);
     } catch (error) {
-      console.error("Ошибка при загрузке изображения:", error);
+      console.error("Критическая ошибка при обработке изображения:", error);
+      setUploadError('Произошла критическая ошибка при обработке изображения');
+      setImagePreview(imageUrl || initialPreview || '/placeholder.svg');
+      setIsUploading(false);
+      
       toast({
         title: "Ошибка",
         description: "Произошла ошибка при загрузке изображения",
         variant: "destructive"
       });
-      setImagePreview(imageUrl || initialPreview || '/placeholder.svg');
-    } finally {
-      setIsUploading(false);
     }
   };
 
-  // Очистка таймаута при размонтировании компонента
-  React.useEffect(() => {
-    return () => {
-      if (uploadTimeoutRef.current) {
-        clearTimeout(uploadTimeoutRef.current);
-      }
-    };
-  }, []);
+  const handleRetry = () => {
+    setUploadError(null);
+    // Позволяем выбрать тот же файл повторно
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  };
 
   return (
     <div className="mb-4">
@@ -198,14 +218,32 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
           alt="Product preview"
           className="w-full h-full object-cover"
           onError={(e) => {
+            console.error("Ошибка загрузки изображения:", imagePreview);
             (e.target as HTMLImageElement).src = '/placeholder.svg';
           }}
         />
       </AspectRatio>
+      
+      {uploadError && (
+        <Alert variant="destructive" className="mb-4">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle>Ошибка загрузки</AlertTitle>
+          <AlertDescription>
+            {uploadError}
+          </AlertDescription>
+        </Alert>
+      )}
+      
       {uploadActive ? (
         <div className="flex flex-col gap-2">
-          <Button variant="outline" className="w-full relative" disabled={isUploading}>
+          <Button 
+            variant="outline" 
+            className="w-full relative" 
+            disabled={isUploading}
+            onClick={() => uploadError ? handleRetry() : null}
+          >
             <input
+              ref={fileInputRef}
               type="file"
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               onChange={handleImageUpload}
@@ -216,6 +254,11 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
               <>
                 <div className="animate-spin h-4 w-4 mr-2 border-2 border-primary border-t-transparent rounded-full" />
                 Загрузка...
+              </>
+            ) : uploadError ? (
+              <>
+                <Upload className="mr-2 h-4 w-4" />
+                Повторить загрузку
               </>
             ) : (
               <>

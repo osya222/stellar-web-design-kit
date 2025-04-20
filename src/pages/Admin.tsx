@@ -6,8 +6,7 @@ import {
   Plus,
   Search,
   Package,
-  Edit,
-  Trash2
+  Upload,
 } from 'lucide-react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
@@ -26,6 +25,10 @@ import { ProductEditor } from '@/components/admin/ProductEditor';
 import { ProductList } from '@/components/admin/ProductList';
 import type { Product } from '@/types/product';
 import { Switch } from '@/components/ui/switch';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+
+// Ключ для хранения состояния загрузки
+const UPLOAD_ACTIVE_STORAGE_KEY = 'uploadActiveState';
 
 const Admin = () => {
   const { toast } = useToast();
@@ -34,23 +37,38 @@ const Admin = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
   const [uploadActive, setUploadActive] = useState(true);
+  const [lastUploadError, setLastUploadError] = useState<string | null>(null);
 
   // Load uploadActive state from localStorage on component mount
   useEffect(() => {
     try {
-      const savedUploadState = localStorage.getItem('uploadActiveState');
+      const savedUploadState = localStorage.getItem(UPLOAD_ACTIVE_STORAGE_KEY);
       if (savedUploadState !== null) {
         setUploadActive(JSON.parse(savedUploadState));
       }
     } catch (error) {
       console.error('Error loading upload state:', error);
     }
+    
+    // Проверка доступности директории загрузок
+    fetch('/api/upload', { method: 'OPTIONS' })
+      .then(response => {
+        if (response.status !== 204) {
+          setLastUploadError('Сервер загрузки изображений недоступен');
+        } else {
+          setLastUploadError(null);
+        }
+      })
+      .catch(error => {
+        console.error('Error checking upload server:', error);
+        setLastUploadError('Сервер загрузки изображений недоступен');
+      });
   }, []);
 
   // Save uploadActive state to localStorage when it changes
   useEffect(() => {
     try {
-      localStorage.setItem('uploadActiveState', JSON.stringify(uploadActive));
+      localStorage.setItem(UPLOAD_ACTIVE_STORAGE_KEY, JSON.stringify(uploadActive));
     } catch (error) {
       console.error('Error saving upload state:', error);
     }
@@ -174,19 +192,31 @@ const Admin = () => {
               <div className="flex flex-col md:flex-row md:justify-between gap-4 mb-6">
                 <h1 className="text-2xl font-bold">Панель администратора</h1>
                 <div className="flex items-center gap-4 mt-2 md:mt-0">
-                  <Switch
-                    checked={uploadActive}
-                    onCheckedChange={handleToggleUpload}
-                    id="toggle-image-upload"
-                  />
-                  <label 
-                    htmlFor="toggle-image-upload" 
-                    className="select-none cursor-pointer"
-                  >
-                    Включить загрузку изображений
-                  </label>
+                  <div className="flex items-center space-x-2">
+                    <Upload className={`h-4 w-4 ${uploadActive ? 'text-green-500' : 'text-gray-400'}`} />
+                    <Switch
+                      checked={uploadActive}
+                      onCheckedChange={handleToggleUpload}
+                      id="toggle-image-upload"
+                    />
+                    <label 
+                      htmlFor="toggle-image-upload" 
+                      className="select-none cursor-pointer"
+                    >
+                      {uploadActive ? 'Загрузка изображений включена' : 'Загрузка изображений отключена'}
+                    </label>
+                  </div>
                 </div>
               </div>
+
+              {lastUploadError && (
+                <Alert variant="destructive" className="mb-6">
+                  <AlertTitle>Проблема с загрузкой изображений</AlertTitle>
+                  <AlertDescription>
+                    {lastUploadError}. Пожалуйста, убедитесь, что сервер работает корректно.
+                  </AlertDescription>
+                </Alert>
+              )}
 
               <div className="mb-6">
                 <div className="relative">

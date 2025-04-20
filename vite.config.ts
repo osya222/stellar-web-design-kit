@@ -14,26 +14,29 @@ import type { ConfigEnv, ProxyOptions } from 'vite';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// Упростим путь загрузки изображений
+const UPLOAD_DIRECTORY = path.join(__dirname, 'public/images/products');
+
+// Убедимся, что директория существует
+if (!fs.existsSync(UPLOAD_DIRECTORY)) {
+  fs.mkdirSync(UPLOAD_DIRECTORY, { recursive: true });
+  console.log(`Created upload directory: ${UPLOAD_DIRECTORY}`);
+}
+
 // Настройка multer для загрузки файлов
 const storage = multer.diskStorage({
   destination: function (req: Express.Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) {
-    const uploadPath = path.join(__dirname, 'public/images/products');
-    // Убедимся, что директория существует
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath, { recursive: true });
-    }
-    cb(null, uploadPath);
+    cb(null, UPLOAD_DIRECTORY);
   },
   filename: function (req: Express.Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) {
-    // Уникальное имя файла на основе времени и оригинального имени
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+    // Простое, но уникальное имя файла
+    const uniqueName = `product-${Date.now()}${path.extname(file.originalname)}`;
+    cb(null, uniqueName);
   }
 });
 
-// Добавляем ограничения по размеру и типу файлов
-const upload = multer({ 
+// Настройка multer с проверками
+const upload = multer({
   storage: storage,
   limits: {
     fileSize: 5 * 1024 * 1024, // 5MB макс размер
@@ -46,7 +49,7 @@ const upload = multer({
       cb(new Error('Только изображения могут быть загружены!') as any, false);
     }
   }
-});
+}).single('image'); // Обратите внимание: здесь сразу применяем .single('image')
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }: ConfigEnv) => ({
@@ -60,6 +63,7 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
       '/api/upload': {
         target: 'http://localhost:8080',
         changeOrigin: true,
+        selfHandleResponse: true, // Важно для предотвращения дублирования ответов
         configure: (proxy, _options) => {
           proxy.on('error', (err, _req, res) => {
             console.error('Proxy error:', err);
@@ -75,7 +79,7 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
             return false;
           }
 
-          // Устанавливаем CORS заголовки
+          // Установка CORS заголовков
           res.setHeader('Access-Control-Allow-Origin', '*');
           res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
           res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, X-Requested-With');
@@ -92,33 +96,30 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
             try {
               console.log("Обработка POST запроса на загрузку файла");
               
-              // Используем multer для обработки загрузки одного файла
-              const uploadSingle = upload.single('image');
-              
-              // Добавляем обработку ошибок и завершение запроса
-              uploadSingle(req as unknown as Request, res as unknown as Response, (err: any) => {
-                try {
-                  // Устанавливаем Content-Type заголовок для JSON
+              // Создаем обработчик промиса для загрузки
+              return new Promise((resolve) => {
+                // Мы используем upload, который уже настроен как single('image')
+                upload(req as unknown as Request, res as unknown as Response, (err: any) => {
                   res.setHeader('Content-Type', 'application/json');
                   
                   if (err) {
-                    console.error("Ошибка multer при загрузке:", err);
+                    console.error("Ошибка при загрузке файла:", err);
                     res.statusCode = 500;
                     res.end(JSON.stringify({ 
                       error: 'Ошибка загрузки файла', 
                       details: err.message 
                     }));
-                    return;
+                    return resolve(true);
                   }
                   
                   const file = (req as any).file;
                   if (!file) {
-                    console.error("Файл не получен multer");
+                    console.error("Файл не получен");
                     res.statusCode = 400;
                     res.end(JSON.stringify({ 
                       error: 'Файл не был получен'
                     }));
-                    return;
+                    return resolve(true);
                   }
                   
                   console.log("Файл успешно загружен:", file.filename);
@@ -134,27 +135,16 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
                   };
                   
                   res.end(JSON.stringify(responseData));
-                } catch (innerError) {
-                  console.error("Внутренняя ошибка при обработке ответа:", innerError);
-                  if (!res.headersSent) {
-                    res.statusCode = 500;
-                    res.setHeader('Content-Type', 'application/json');
-                    res.end(JSON.stringify({ 
-                      error: 'Внутренняя ошибка сервера', 
-                      details: (innerError as Error).message 
-                    }));
-                  }
-                }
+                  return resolve(true);
+                });
               });
-              
-              return true;
             } catch (error) {
-              console.error("Ошибка при обработке загрузки:", error);
+              console.error("Критическая ошибка при обработке загрузки:", error);
               if (!res.headersSent) {
                 res.statusCode = 500;
                 res.setHeader('Content-Type', 'application/json');
                 res.end(JSON.stringify({ 
-                  error: 'Ошибка сервера', 
+                  error: 'Критическая ошибка сервера', 
                   details: (error as Error).message 
                 }));
               }

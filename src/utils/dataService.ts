@@ -195,15 +195,19 @@ const PRODUCTS: Product[] = [
 
 // Local storage key for product data
 const PRODUCTS_STORAGE_KEY = 'productsData';
+// Новое хранилище для кеширования изображений
+const IMAGE_CACHE_STORAGE_KEY = 'productImagesCache';
 
 // Load persistent product data if available
 let activeProducts: Product[] = [];
+// Глобальный кеш для изображений
+let imageCache: Record<string, string> = {};
 
-// Initialize products from localStorage or default data
+// Initialize products and image cache from localStorage
 const initializeProducts = () => {
   try {
     if (typeof window !== 'undefined') {
-      // Client-side: try to load from localStorage
+      // Загрузка продуктов
       const savedData = localStorage.getItem(PRODUCTS_STORAGE_KEY);
       if (savedData) {
         activeProducts = JSON.parse(savedData);
@@ -215,14 +219,27 @@ const initializeProducts = () => {
         localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(activeProducts));
         console.log('Initialized products with default data');
       }
+      
+      // Загрузка кеша изображений
+      const savedImageCache = localStorage.getItem(IMAGE_CACHE_STORAGE_KEY);
+      if (savedImageCache) {
+        imageCache = JSON.parse(savedImageCache);
+        console.log('Loaded image cache from localStorage');
+      } else {
+        // Инициализация пустого кеша
+        imageCache = {};
+        localStorage.setItem(IMAGE_CACHE_STORAGE_KEY, JSON.stringify(imageCache));
+        console.log('Initialized empty image cache');
+      }
     }
   } catch (error) {
-    console.error('Error loading product data:', error);
+    console.error('Error loading data:', error);
     activeProducts = [...PRODUCTS]; // Fallback to default products
+    imageCache = {}; // Empty cache as fallback
   }
 };
 
-// Initialize products on module load
+// Initialize on module load
 initializeProducts();
 
 // Helper function to persist product data
@@ -238,8 +255,17 @@ const persistProductData = () => {
   }
 };
 
-// In-memory cache for product images previews
-const productImageCache: Record<string, string> = {};
+// Helper function to persist image cache
+const persistImageCache = () => {
+  try {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem(IMAGE_CACHE_STORAGE_KEY, JSON.stringify(imageCache));
+      console.log('Image cache saved to localStorage');
+    }
+  } catch (error) {
+    console.error('Error saving image cache:', error);
+  }
+};
 
 /**
  * Get product image URL from cache
@@ -247,7 +273,7 @@ const productImageCache: Record<string, string> = {};
  * @returns Image URL from cache or null if not found
  */
 export function getProductImage(productId: string): string | null {
-  return productImageCache[productId] || null;
+  return imageCache[productId] || null;
 }
 
 /**
@@ -256,9 +282,22 @@ export function getProductImage(productId: string): string | null {
  * @param imageUrl Image URL
  */
 export function cacheProductImage(productId: string, imageUrl: string): void {
-  productImageCache[productId] = imageUrl;
+  imageCache[productId] = imageUrl;
+  persistImageCache();
 }
 
+/**
+ * Clears the image cache for a specific product
+ * @param productId Product ID
+ */
+export function clearProductImageCache(productId: string): void {
+  if (imageCache[productId]) {
+    delete imageCache[productId];
+    persistImageCache();
+  }
+}
+
+// Основные функции для работы с продуктами
 export async function fetchProducts(): Promise<Product[]> {
   return activeProducts;
 }
@@ -288,6 +327,8 @@ export function getHeroImageUrl(): string {
  * @returns Created product
  */
 export async function createProduct(product: Partial<Product>): Promise<Product> {
+  console.log('Creating product with data:', product);
+  
   // Ensure required fields are present
   if (!product.id || !product.name || !product.category || !product.manufacturer) {
     throw new Error('Required product fields are missing');
@@ -318,6 +359,8 @@ export async function createProduct(product: Partial<Product>): Promise<Product>
  * @returns Updated product or null if not found
  */
 export async function updateProduct(product: Partial<Product> & { id: string }): Promise<Product> {
+  console.log('Updating product with data:', product);
+  
   const index = activeProducts.findIndex(p => p.id === product.id);
   
   if (index === -1) {
@@ -342,13 +385,15 @@ export async function updateProduct(product: Partial<Product> & { id: string }):
  * @returns boolean indicating success
  */
 export async function deleteProduct(productId: string): Promise<boolean> {
+  console.log('Deleting product with ID:', productId);
+  
   const initialLength = activeProducts.length;
   activeProducts = activeProducts.filter(p => p.id !== productId);
   
-  // If product was removed, persist changes
+  // If product was removed, persist changes and clear image cache
   if (initialLength !== activeProducts.length) {
     persistProductData();
-    
+    clearProductImageCache(productId);
     return true;
   }
   
@@ -365,15 +410,22 @@ export async function updateProductImage(
   productId: string, 
   imagePath: string
 ): Promise<Product | null> {
+  console.log('Updating product image:', productId, imagePath);
+  
   const productIndex = activeProducts.findIndex(p => p.id === productId);
   if (productIndex === -1) {
     console.error(`Product with ID ${productId} not found`);
     return null;
   }
+  
   activeProducts[productIndex] = {
     ...activeProducts[productIndex],
     imageUrl: imagePath
   };
+  
+  // Очищаем кеш изображения, т.к. теперь используем постоянный путь
+  clearProductImageCache(productId);
+  
   persistProductData();
   return activeProducts[productIndex];
 }

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -69,10 +70,18 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
   uploadActive = true
 }) => {
   const { toast } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imageChanged, setImageChanged] = useState(false);
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
-    defaultValues: product || {
+    defaultValues: product ? {
+      ...product,
+      // Исправление для правильной обработки undefined значений
+      description: product.description || '',
+      weight: product.weight || undefined,
+      unit: product.unit || undefined,
+    } : {
       id: uuidv4(),
       name: '',
       category: '',
@@ -91,7 +100,7 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
     product?.imageUrl || '/placeholder.svg'
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (product?.id) {
       const cachedImage = getProductImage(product.id);
       if (cachedImage) {
@@ -107,17 +116,26 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
     
     form.setValue('imageUrl', imagePath);
     setImagePreview(preview);
+    setImageChanged(true);
     
     const productId = form.getValues('id');
     if (productId) {
-      console.log('Кеширование превью для п��одукта:', productId);
+      console.log('Кеширование превью для продукта:', productId);
       cacheProductImage(productId, preview);
     }
   };
 
   const onSubmit = async (data: ProductFormValues) => {
     try {
+      setIsSubmitting(true);
       console.log('Сохранение продукта:', data);
+      
+      // Для вывода в консоль перед сохранением
+      console.log('Значения перед сохранением:');
+      console.log('description:', data.description);
+      console.log('weight:', data.weight);
+      console.log('unit:', data.unit);
+      
       let savedProduct: Product;
 
       if (product) {
@@ -127,7 +145,8 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
         });
         console.log('Продукт обновлен:', savedProduct);
         
-        if (data.imageUrl !== product.imageUrl) {
+        // Обновляем изображение только если оно было изменено
+        if (imageChanged && data.imageUrl !== product.imageUrl) {
           console.log('Обновление изображения продукта:', data.imageUrl);
           await updateProductImage(savedProduct.id, data.imageUrl);
         }
@@ -139,6 +158,12 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
       } else {
         savedProduct = await createProduct(data);
         console.log('Продукт создан:', savedProduct);
+        
+        // Если было установлено изображение, обновляем его
+        if (imageChanged && data.imageUrl !== '/placeholder.svg') {
+          console.log('Сохранение изображения для нового продукта:', data.imageUrl);
+          await updateProductImage(savedProduct.id, data.imageUrl);
+        }
         
         toast({
           title: "Успешно",
@@ -154,6 +179,8 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
         description: "Не удалось сохранить продукт",
         variant: "destructive"
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -384,12 +411,21 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
                 </div>
 
                 <div className="flex justify-end gap-4 pt-4">
-                  <Button type="button" variant="outline" onClick={onCancel}>
+                  <Button type="button" variant="outline" onClick={onCancel} disabled={isSubmitting}>
                     Отмена
                   </Button>
-                  <Button type="submit">
-                    <Save className="mr-2 h-4 w-4" />
-                    Сохранить
+                  <Button type="submit" disabled={isSubmitting}>
+                    {isSubmitting ? (
+                      <>
+                        <div className="animate-spin h-4 w-4 mr-2 border-2 border-white border-t-transparent rounded-full" />
+                        Сохранение...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="mr-2 h-4 w-4" />
+                        Сохранить
+                      </>
+                    )}
                   </Button>
                 </div>
               </form>
