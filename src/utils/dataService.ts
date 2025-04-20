@@ -1,7 +1,5 @@
 
 import { Product } from "@/types/product";
-import fs from 'fs';
-import path from 'path';
 
 // Initial product data
 const PRODUCTS: Product[] = [
@@ -196,33 +194,44 @@ const PRODUCTS: Product[] = [
   }
 ];
 
-// File path for saving product data
-const PRODUCTS_DATA_PATH = path.join(process.cwd(), 'src/utils/productsData.json');
+// Local storage key for product data
+const PRODUCTS_STORAGE_KEY = 'productsData';
 
 // Load persistent product data if available
-let loadedProducts: Product[] = [];
-try {
-  if (typeof window !== 'undefined') {
-    // Client-side: try to load from localStorage
-    const savedData = localStorage.getItem('productsData');
-    if (savedData) {
-      loadedProducts = JSON.parse(savedData);
-      console.log('Loaded products from localStorage');
-    }
-  }
-} catch (error) {
-  console.error('Error loading product data:', error);
-}
+let activeProducts: Product[] = [];
 
-// Use loaded products or fallback to initial data
-const activeProducts: Product[] = loadedProducts.length > 0 ? loadedProducts : PRODUCTS;
+// Initialize products from localStorage or default data
+const initializeProducts = () => {
+  try {
+    if (typeof window !== 'undefined') {
+      // Client-side: try to load from localStorage
+      const savedData = localStorage.getItem(PRODUCTS_STORAGE_KEY);
+      if (savedData) {
+        activeProducts = JSON.parse(savedData);
+        console.log('Loaded products from localStorage');
+      } else {
+        // If no data in localStorage, use default products
+        activeProducts = [...PRODUCTS];
+        // Save initial data to localStorage
+        localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(activeProducts));
+        console.log('Initialized products with default data');
+      }
+    }
+  } catch (error) {
+    console.error('Error loading product data:', error);
+    activeProducts = [...PRODUCTS]; // Fallback to default products
+  }
+};
+
+// Initialize products on module load
+initializeProducts();
 
 // Helper function to persist product data
 const persistProductData = () => {
   try {
     if (typeof window !== 'undefined') {
       // Client-side: save to localStorage
-      localStorage.setItem('productsData', JSON.stringify(activeProducts));
+      localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(activeProducts));
       console.log('Products saved to localStorage');
     }
   } catch (error) {
