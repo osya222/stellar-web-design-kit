@@ -15,14 +15,18 @@ const Hero = () => {
             Поставляем свежую рыбу и морепродукты для ресторанов, магазинов и оптовых покупателей в Москве и области
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Button asChild size="lg" className="bg-blue-600 hover:bg-blue-700">
+            <Button 
+              asChild 
+              size="lg" 
+              className="bg-blue-500 hover:bg-blue-600 text-white px-8 py-3 rounded-lg text-lg"
+            >
               <a href="#products">Смотреть каталог</a>
             </Button>
             <Button 
               asChild 
               variant="outline" 
               size="lg" 
-              className="border-blue-600 text-blue-600 hover:bg-blue-50"
+              className="border-blue-500 text-blue-500 hover:bg-blue-50 px-8 py-3 rounded-lg text-lg"
             >
               <Link to="/cart">Оформить заказ</Link>
             </Button>
