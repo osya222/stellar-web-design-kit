@@ -1,35 +1,35 @@
 
 /**
- * Утилита для обработки загрузки файлов
- * Эмулирует сохранение файла на сервере для локальной разработки
+ * Utility for handling file uploads
+ * Emulates saving files on the server for local development
  */
 
 /**
- * Функция сохранения файла
- * @param file - Файл для загрузки
- * @param destination - Целевая папка (относительно /public)
- * @returns Путь к сохраненному файлу
+ * Save a file
+ * @param file - File to upload
+ * @param destination - Target folder (relative to /public)
+ * @returns Path to the saved file
  */
 export const uploadFile = async (file: File, destination: string = 'images/products'): Promise<string> => {
   if (!file) {
-    throw new Error('Файл не предоставлен');
+    throw new Error('File not provided');
   }
 
-  // Создаем уникальное имя файла с датой для избежания коллизий
+  // Create a unique filename with date to avoid collisions
   const timestamp = new Date().toISOString().replace(/:/g, '-').replace(/\..+/, '');
   const cleanFilename = file.name.toLowerCase().replace(/[^a-z0-9.]/g, '-');
   const filename = `${timestamp}-${cleanFilename}`;
   const fullPath = `/${destination}/${filename}`;
 
   try {
-    // Формируем данные для загрузки
+    // Prepare form data for upload
     const formData = new FormData();
     formData.append('file', file);
 
     console.log(`Uploading file to path: ${fullPath}`);
     
     try {
-      // Отправляем файл на сервер через API Lovable
+      // Send file to server via Lovable API
       const response = await fetch('/_api/upload', {
         method: 'POST',
         body: formData,
@@ -40,7 +40,7 @@ export const uploadFile = async (file: File, destination: string = 'images/produ
 
       if (!response.ok) {
         console.error(`Upload error: ${response.status} ${response.statusText}`);
-        return fullPath; // Возвращаем путь даже в случае ошибки, чтобы не блокировать работу
+        throw new Error('Failed to upload file');
       }
 
       const result = await response.json();
@@ -48,13 +48,11 @@ export const uploadFile = async (file: File, destination: string = 'images/produ
       
       return fullPath;
     } catch (error) {
-      console.error('Error while uploading file via API:', error);
-      // Возвращаем путь даже в случае ошибки для режима разработки
-      return fullPath;
+      console.error('Error while uploading file:', error);
+      throw error;
     }
   } catch (error) {
     console.error('General error during file upload:', error);
-    // В случае ошибки все равно возвращаем путь для работы в режиме разработки
-    return fullPath;
+    throw error;
   }
 };

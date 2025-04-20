@@ -16,9 +16,6 @@ interface ProductCardProps {
 const ProductCard = ({ product, category, onEdit }: ProductCardProps) => {
   const { addToCart } = useCart();
   const imageUrl = getImageUrl(product.image);
-  
-  console.log("Путь изображения продукта:", product.image);
-  console.log("Полный URL изображения:", imageUrl);
 
   return (
     <div className="group bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-100">
@@ -28,8 +25,7 @@ const ProductCard = ({ product, category, onEdit }: ProductCardProps) => {
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           onError={(e) => {
-            console.error(`Ошибка загрузки изображения: ${imageUrl}`);
-            // Если изображение не загрузилось, используем заглушку
+            console.error(`Error loading image: ${imageUrl}`);
             (e.target as HTMLImageElement).src = '/placeholder.svg';
           }}
         />
@@ -55,7 +51,7 @@ const ProductCard = ({ product, category, onEdit }: ProductCardProps) => {
           )}
           
           <div className="text-sm text-gray-500">
-            Производитель: <span className="font-medium text-gray-700">{product.manufacturer}</span>
+            Manufacturer: <span className="font-medium text-gray-700">{product.manufacturer}</span>
           </div>
         </div>
 
@@ -67,7 +63,7 @@ const ProductCard = ({ product, category, onEdit }: ProductCardProps) => {
             size="sm"
           >
             <ShoppingCart className="w-4 h-4 mr-2" />
-            В корзину
+            Add to cart
           </Button>
         </div>
       </div>

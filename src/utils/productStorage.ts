@@ -1,110 +1,76 @@
 
 import { Product } from '@/types/product';
-import { products as defaultProducts } from '@/data/products';
-
-// Переменная для кеширования продуктов в памяти
-let cachedProducts: Product[] = [];
-let isInitialized = false;
-
-/**
- * Инициализация кеша продуктов
- */
-const initializeCache = () => {
-  if (!isInitialized) {
-    try {
-      // Создаем глубокую копию исходных товаров
-      cachedProducts = JSON.parse(JSON.stringify(defaultProducts));
-      isInitialized = true;
-      console.log('Инициализирован кеш продуктов:', cachedProducts.length);
-    } catch (error) {
-      console.error('Ошибка инициализации кеша продуктов:', error);
-      // В случае ошибки используем пустой массив
-      cachedProducts = [];
-      isInitialized = true;
-    }
-  }
-};
+import { products as initialProducts } from '@/data/products';
 
 /**
  * Get all products
  */
 export const getProducts = (): Product[] => {
-  initializeCache();
-  return [...cachedProducts];
+  return [...initialProducts];
 };
 
 /**
  * Save a product to the project
  */
-export const saveProduct = (product: Product): void => {
-  initializeCache();
+export const saveProduct = (product: Product): Product => {
+  const products = [...initialProducts];
   
-  const existingIndex = cachedProducts.findIndex(p => p.id === product.id);
+  const existingIndex = products.findIndex(p => p.id === product.id);
   
-  if (existingIndex >= 0 && product.id !== 0) {
+  let savedProduct: Product;
+  
+  if (existingIndex >= 0) {
     // Update existing product
-    cachedProducts[existingIndex] = { ...product };
-    console.log('Обновлен существующий товар:', product.id);
+    products[existingIndex] = { ...product };
+    savedProduct = products[existingIndex];
+    console.log('Updated existing product:', product.id);
   } else {
     // Add new product with next available ID
-    const maxId = Math.max(0, ...cachedProducts.map(p => p.id));
-    const newProduct = { ...product, id: maxId + 1 };
-    cachedProducts.push(newProduct);
-    console.log('Добавлен новый товар с ID:', newProduct.id);
+    const maxId = Math.max(0, ...products.map(p => p.id));
+    savedProduct = { ...product, id: maxId + 1 };
+    products.push(savedProduct);
+    console.log('Added new product with ID:', savedProduct.id);
   }
   
-  // Обновляем исходный массив defaultProducts для сохранения между перезагрузками
-  try {
-    // Сначала очищаем массив
-    while (defaultProducts.length > 0) {
-      defaultProducts.pop();
-    }
-    
-    // Затем добавляем все товары из кеша
-    cachedProducts.forEach(p => defaultProducts.push({...p}));
-    
-    // Сохраняем изменения в исходный код
-    updateProductsFile();
-  } catch (error) {
-    console.error('Ошибка при обновлении исходного массива товаров:', error);
-  }
+  // Update source products array
+  updateProductsInSource(products);
+  
+  return savedProduct;
 };
 
 /**
  * Delete a product
  */
 export const deleteProduct = (productId: number): void => {
-  initializeCache();
+  const products = [...initialProducts];
   
-  const index = cachedProducts.findIndex(p => p.id === productId);
+  const index = products.findIndex(p => p.id === productId);
   if (index >= 0) {
-    cachedProducts.splice(index, 1);
-    console.log('Удален товар с ID:', productId);
+    products.splice(index, 1);
+    console.log('Deleted product with ID:', productId);
     
-    try {
-      // Обновляем исходный массив defaultProducts для сохранения между перезагрузками
-      while (defaultProducts.length > 0) {
-        defaultProducts.pop();
-      }
-      
-      cachedProducts.forEach(p => defaultProducts.push({...p}));
-      
-      // Save changes to source code
-      updateProductsFile();
-    } catch (error) {
-      console.error('Ошибка при обновлении исходного массива после удаления:', error);
-    }
+    // Update source products array
+    updateProductsInSource(products);
   }
 };
 
 /**
- * Update products file
+ * Update products in source code
  */
-const updateProductsFile = () => {
+const updateProductsInSource = (products: Product[]) => {
   try {
-    const content = `import { Product } from "@/types/product";\n\nexport const products: Product[] = ${JSON.stringify(cachedProducts, null, 2)};`;
+    // Clear original array
+    while (initialProducts.length > 0) {
+      initialProducts.pop();
+    }
     
-    console.log('Сохраняем данные товаров в исходный код');
+    // Add updated products
+    products.forEach(p => initialProducts.push({...p}));
+    
+    // Update source code file
+    const content = `import { Product } from "@/types/product";\n\nexport const products: Product[] = ${JSON.stringify(products, null, 2)};`;
+    
+    console.log('Saving product data to source code');
     
     fetch('/_source/data/products/index.ts', {
       method: 'POST',

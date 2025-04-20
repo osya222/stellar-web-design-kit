@@ -4,9 +4,9 @@ import { Helmet } from 'react-helmet';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import ProductList from '@/components/admin/ProductList';
+import ProductList from '@/components/admin/product/ProductList';
 import CategoryList from '@/components/admin/CategoryList';
-import ProductManager from '@/components/admin/ProductManager';
+import ProductManager from '@/components/admin/product/ProductManager';
 import CategoryManager from '@/components/admin/CategoryManager';
 import { useToast } from '@/hooks/use-toast';
 import { Settings } from 'lucide-react';
@@ -26,8 +26,8 @@ const Admin = () => {
 
   const handleInfoClick = () => {
     toast({
-      title: "Информация о сохранении",
-      description: "Все изменения сохраняются автоматически в исходном коде проекта.",
+      title: "Information about saving",
+      description: "All changes are saved automatically to the project source code.",
       duration: 6000,
     });
   };
@@ -35,7 +35,7 @@ const Admin = () => {
   return (
     <>
       <Helmet>
-        <title>Панель администратора | Управление товарами и категориями</title>
+        <title>Admin Panel | Manage Products and Categories</title>
       </Helmet>
       
       <Header />
@@ -45,34 +45,34 @@ const Admin = () => {
           <div className="bg-white shadow-sm rounded-lg p-6 mb-8">
             <div className="flex flex-col md:flex-row justify-between items-start gap-4 mb-8">
               <div>
-                <h1 className="text-3xl font-bold mb-2 text-purple-900">Панель администратора</h1>
+                <h1 className="text-3xl font-bold mb-2 text-purple-900">Admin Panel</h1>
                 <p className="text-gray-600">
-                  Управление каталогом товаров и категориями
+                  Manage products and categories
                 </p>
               </div>
               
               <Button variant="outline" onClick={handleInfoClick}>
                 <Settings className="h-4 w-4 mr-2" />
-                Информация
+                Information
               </Button>
             </div>
             
             <div className="bg-purple-50 rounded-lg p-4 mb-6 text-purple-800 text-sm">
               <p>
-                <strong>Инструкция:</strong> Используйте вкладки ниже для управления товарами и категориями. 
-                Все изменения сохраняются автоматически.
+                <strong>Instructions:</strong> Use the tabs below to manage products and categories. 
+                All changes are saved automatically to the source code.
               </p>
             </div>
             
             <Tabs defaultValue="products" className="w-full">
               <TabsList className="mb-6">
-                <TabsTrigger value="products">Товары</TabsTrigger>
-                <TabsTrigger value="categories">Категории</TabsTrigger>
+                <TabsTrigger value="products">Products</TabsTrigger>
+                <TabsTrigger value="categories">Categories</TabsTrigger>
               </TabsList>
               
               <TabsContent value="products" className="space-y-6">
                 <div className="flex justify-between items-center">
-                  <h2 className="text-2xl font-bold text-gray-900">Управление товарами</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">Product Management</h2>
                   <ProductManager onProductAdded={handleProductUpdated} />
                 </div>
                 
@@ -81,7 +81,7 @@ const Admin = () => {
               
               <TabsContent value="categories" className="space-y-6">
                 <div className="flex justify-between items-center">
-                  <h2 className="text-2xl font-bold text-gray-900">Управление категориями</h2>
+                  <h2 className="text-2xl font-bold text-gray-900">Category Management</h2>
                   <CategoryManager onCategoryAdded={handleCategoryUpdated} />
                 </div>
                 

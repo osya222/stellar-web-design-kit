@@ -21,7 +21,6 @@ import {
   DialogHeader,
   DialogTitle,
   DialogDescription,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import {
   AlertDialog,
@@ -41,7 +40,7 @@ interface ProductListProps {
   onProductUpdated: () => void;
 }
 
-const ProductList = ({ onProductUpdated }: ProductListProps) => {
+const ProductList: React.FC<ProductListProps> = ({ onProductUpdated }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
@@ -61,7 +60,7 @@ const ProductList = ({ onProductUpdated }: ProductListProps) => {
   }, []);
 
   const getCategoryName = (categoryId: number) => {
-    return categories.find(cat => cat.id === categoryId)?.name || 'Без категории';
+    return categories.find(cat => cat.id === categoryId)?.name || 'Uncategorized';
   };
 
   const handleEdit = (product: Product) => {
@@ -81,8 +80,8 @@ const ProductList = ({ onProductUpdated }: ProductListProps) => {
       loadData();
       onProductUpdated();
       toast({
-        title: "Успех",
-        description: "Товар успешно удален",
+        title: "Success",
+        description: "Product deleted successfully",
       });
     }
   };
@@ -95,23 +94,21 @@ const ProductList = ({ onProductUpdated }: ProductListProps) => {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-bold">Список товаров</h2>
-      
-      {products.length === 0 ? (
-        <div className="bg-muted/30 p-8 text-center rounded-lg">
-          <p className="text-muted-foreground">Нет товаров в каталоге</p>
-        </div>
-      ) : (
-        <div className="border rounded-md overflow-hidden">
+      <div className="border rounded-md overflow-hidden">
+        {products.length === 0 ? (
+          <div className="p-8 text-center">
+            <p className="text-muted-foreground">No products found</p>
+          </div>
+        ) : (
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[80px]">ID</TableHead>
-                <TableHead className="w-[80px]">Фото</TableHead>
-                <TableHead>Название</TableHead>
-                <TableHead>Категория</TableHead>
-                <TableHead>Цена</TableHead>
-                <TableHead className="text-right">Действия</TableHead>
+                <TableHead className="w-[80px]">Image</TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Category</TableHead>
+                <TableHead>Price</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -124,10 +121,13 @@ const ProductList = ({ onProductUpdated }: ProductListProps) => {
                         src={getImageUrl(product.image)} 
                         alt={product.name} 
                         className="w-12 h-12 object-cover rounded-md"
+                        onError={(e) => {
+                          (e.target as HTMLImageElement).src = '/placeholder.svg';
+                        }}
                       />
                     ) : (
                       <div className="w-12 h-12 bg-muted rounded-md flex items-center justify-center">
-                        <span className="text-xs text-muted-foreground">Нет фото</span>
+                        <span className="text-xs text-muted-foreground">No image</span>
                       </div>
                     )}
                   </TableCell>
@@ -148,21 +148,21 @@ const ProductList = ({ onProductUpdated }: ProductListProps) => {
               ))}
             </TableBody>
           </Table>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Edit Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Редактировать товар</DialogTitle>
+            <DialogTitle>Edit Product</DialogTitle>
             <DialogDescription>
-              Внесите изменения в данные товара и нажмите "Сохранить"
+              Make changes to product details and click save
             </DialogDescription>
           </DialogHeader>
           {editingProduct && (
             <ProductForm 
-              existingProduct={editingProduct} 
+              product={editingProduct} 
               onSuccess={handleEditSuccess} 
             />
           )}
@@ -173,15 +173,15 @@ const ProductList = ({ onProductUpdated }: ProductListProps) => {
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Вы уверены?</AlertDialogTitle>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
             <AlertDialogDescription>
-              Это действие нельзя отменить. Товар будет навсегда удален из каталога.
+              This action cannot be undone. This will permanently delete the product.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Отмена</AlertDialogCancel>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground">
-              Удалить
+              Delete
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

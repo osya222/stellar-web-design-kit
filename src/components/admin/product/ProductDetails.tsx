@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { UseFormReturn } from "react-hook-form";
 import { ProductFormValues } from "./types";
+import { Category } from "@/data/categories";
 import {
   Select,
   SelectContent,
@@ -12,14 +13,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Category } from "@/data/categories";
 
-interface ProductDetailsFieldsProps {
+interface ProductDetailsProps {
   form: UseFormReturn<ProductFormValues>;
   categories: Category[];
 }
 
-export const ProductDetailsFields = ({ form, categories }: ProductDetailsFieldsProps) => {
+const ProductDetails: React.FC<ProductDetailsProps> = ({ form, categories }) => {
   return (
     <>
       <FormField
@@ -27,9 +27,9 @@ export const ProductDetailsFields = ({ form, categories }: ProductDetailsFieldsP
         name="name"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Название*</FormLabel>
+            <FormLabel>Name*</FormLabel>
             <FormControl>
-              <Input placeholder="Введите название товара" {...field} />
+              <Input placeholder="Enter product name" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -41,7 +41,7 @@ export const ProductDetailsFields = ({ form, categories }: ProductDetailsFieldsP
         name="price"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Розничная цена*</FormLabel>
+            <FormLabel>Price*</FormLabel>
             <FormControl>
               <Input type="number" min="0" step="0.01" {...field} />
             </FormControl>
@@ -55,14 +55,14 @@ export const ProductDetailsFields = ({ form, categories }: ProductDetailsFieldsP
         name="categoryId"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Категория*</FormLabel>
+            <FormLabel>Category*</FormLabel>
             <Select
               onValueChange={(value) => field.onChange(parseInt(value))}
               defaultValue={field.value ? field.value.toString() : undefined}
             >
               <FormControl>
                 <SelectTrigger>
-                  <SelectValue placeholder="Выберите категорию" />
+                  <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
               </FormControl>
               <SelectContent>
@@ -83,9 +83,9 @@ export const ProductDetailsFields = ({ form, categories }: ProductDetailsFieldsP
         name="manufacturer"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Производитель*</FormLabel>
+            <FormLabel>Manufacturer*</FormLabel>
             <FormControl>
-              <Input placeholder="Например: Чили" {...field} />
+              <Input placeholder="E.g., Chile" {...field} />
             </FormControl>
             <FormMessage />
           </FormItem>
@@ -97,10 +97,10 @@ export const ProductDetailsFields = ({ form, categories }: ProductDetailsFieldsP
         name="description"
         render={({ field }) => (
           <FormItem>
-            <FormLabel>Описание</FormLabel>
+            <FormLabel>Description</FormLabel>
             <FormControl>
               <Textarea
-                placeholder="Описание товара"
+                placeholder="Product description"
                 className="min-h-[80px]"
                 {...field}
               />
@@ -112,3 +112,5 @@ export const ProductDetailsFields = ({ form, categories }: ProductDetailsFieldsP
     </>
   );
 };
+
+export default ProductDetails;

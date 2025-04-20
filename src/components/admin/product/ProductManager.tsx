@@ -16,12 +16,11 @@ interface ProductManagerProps {
   onProductAdded: () => void;
 }
 
-const ProductManager = ({ onProductAdded }: ProductManagerProps) => {
+const ProductManager: React.FC<ProductManagerProps> = ({ onProductAdded }) => {
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleSuccess = () => {
     setDialogOpen(false);
-    // Call the callback to refresh products
     onProductAdded();
   };
 
@@ -30,14 +29,14 @@ const ProductManager = ({ onProductAdded }: ProductManagerProps) => {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>
           <Button className="gap-2 bg-purple-600 hover:bg-purple-700">
-            <Plus className="h-4 w-4" /> Добавить товар
+            <Plus className="h-4 w-4" /> Add product
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Добавить новый товар</DialogTitle>
+            <DialogTitle>Add New Product</DialogTitle>
             <DialogDescription>
-              Заполните информацию о новом товаре
+              Fill in the product details and click save
             </DialogDescription>
           </DialogHeader>
           <ProductForm onSuccess={handleSuccess} />
