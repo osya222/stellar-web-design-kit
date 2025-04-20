@@ -23,7 +23,9 @@ export const getImageUrl = (imageFileName?: string): string => {
 
   // Если путь новый (сохраненный на сервере)
   if (imageFileName.startsWith('/uploads/')) {
-    return imageFileName;
+    // Добавляем параметр с временной меткой для предотвращения кэширования
+    const timestamp = new Date().getTime();
+    return `${imageFileName}?t=${timestamp}`;
   }
 
   // If path is already absolute or complete (starts with http/https)

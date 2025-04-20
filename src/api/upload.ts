@@ -8,6 +8,8 @@ import path from 'path';
  * Сохраняет файлы в директорию public/uploads
  */
 export async function handleFileUpload(request: Request): Promise<Response> {
+  console.log('Начинаем обработку файла...');
+  
   try {
     // Проверяем метод запроса
     if (request.method !== 'POST') {
@@ -23,6 +25,8 @@ export async function handleFileUpload(request: Request): Promise<Response> {
     // Получаем данные формы из запроса
     const formData = await request.formData();
     const file = formData.get('file') as File | null;
+
+    console.log('Получен файл:', file ? file.name : 'файл отсутствует');
 
     if (!file) {
       return new Response(
@@ -58,6 +62,8 @@ export async function handleFileUpload(request: Request): Promise<Response> {
       const uploadDir = 'uploads';
       const filePath = `/${uploadDir}/${fileName}`;
       const fullSavePath = path.join(process.cwd(), 'public', uploadDir);
+      
+      console.log('Сохранение файла в:', fullSavePath);
       
       // Создаем директорию, если она не существует
       if (!fs.existsSync(fullSavePath)) {

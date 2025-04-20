@@ -46,8 +46,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       const localPreview = URL.createObjectURL(file);
       setPreviewImage(localPreview);
       
+      console.log('Начинаем загрузку файла на сервер:', file.name);
+      
       // Затем загружаем файл на сервер
       const imagePath = await uploadFile(file);
+      
+      console.log('Загрузка успешна, путь к файлу:', imagePath);
       
       // После загрузки обновляем путь к изображению
       setPreviewImage(imagePath);
@@ -109,7 +113,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         type="file"
         ref={fileInputRef}
         onChange={handleFileChange}
-        accept="image/*"
+        accept="image/jpeg,image/png,image/gif,image/webp"
         className="hidden"
       />
       
@@ -133,6 +137,14 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       >
         <Upload className={`w-4 h-4 ${isUploading ? 'animate-pulse' : ''}`} />
       </div>
+      
+      {isUploading && (
+        <div className="absolute inset-0 bg-black/10 flex items-center justify-center">
+          <div className="bg-white rounded-md p-2 shadow-lg">
+            <div className="loading-spinner h-6 w-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

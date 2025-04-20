@@ -26,17 +26,27 @@ export const uploadFile = async (file: File): Promise<string> => {
     const formData = new FormData();
     formData.append('file', file);
     
+    // Добавляем временную метку к запросу для предотвращения кэширования
+    const timestamp = new Date().getTime();
+    
     try {
-      const response = await fetch('/api/upload', {
+      console.log('Отправка файла на сервер...');
+      const response = await fetch(`/api/upload?t=${timestamp}`, {
         method: 'POST',
         body: formData
       });
 
+      console.log('Статус ответа:', response.status);
+      
       if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Текст ошибки от сервера:', errorText);
         throw new Error('Ошибка при загрузке файла на сервер');
       }
       
       const data = await response.json();
+      console.log('Ответ сервера:', data);
+      
       if (!data.success) {
         throw new Error(data.message || 'Ошибка загрузки файла на сервер');
       }

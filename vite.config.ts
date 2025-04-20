@@ -23,6 +23,8 @@ export default defineConfig(({ mode }) => ({
       // Настройка API роутов для загрузки файлов
       server.middlewares.use('/api/upload', async (req: Connect.IncomingMessage, res: any) => {
         try {
+          console.log(`Получен запрос: ${req.method} ${req.url}`);
+          
           if (req.method === 'OPTIONS') {
             // Handle preflight requests
             res.statusCode = 204;
@@ -30,6 +32,13 @@ export default defineConfig(({ mode }) => ({
             res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
             res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
             res.end();
+            return;
+          }
+          
+          if (req.method !== 'POST') {
+            res.statusCode = 405;
+            res.setHeader('Content-Type', 'application/json');
+            res.end(JSON.stringify({ success: false, message: 'Метод не разрешен' }));
             return;
           }
           
@@ -42,21 +51,19 @@ export default defineConfig(({ mode }) => ({
           });
           
           // Создаем объект Request
-          let body = null;
-          if (req.method !== 'GET' && req.method !== 'HEAD') {
-            // Собираем буферы данных
-            const chunks: Buffer[] = [];
-            for await (const chunk of req) {
-              chunks.push(Buffer.from(chunk));
-            }
-            body = Buffer.concat(chunks);
+          const chunks: Buffer[] = [];
+          for await (const chunk of req) {
+            chunks.push(Buffer.from(chunk));
           }
+          const body = Buffer.concat(chunks);
           
           const request = new Request(url.toString(), {
-            method: req.method || 'GET',
+            method: 'POST',
             headers,
             body
           });
+          
+          console.log('Обработка загрузки файла...');
           
           // Обрабатываем запрос нашим API хендлером
           const response = await handleFileUpload(request);
@@ -71,6 +78,7 @@ export default defineConfig(({ mode }) => ({
           
           // Отправляем тело ответа
           const responseBody = await response.text();
+          console.log('Отправка ответа:', responseBody);
           res.end(responseBody);
         } catch (error) {
           console.error('Ошибка при обработке загрузки файла:', error);
