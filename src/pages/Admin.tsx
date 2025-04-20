@@ -3,7 +3,6 @@ import React from 'react';
 import { Helmet } from 'react-helmet';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
-import ImageUploader from '@/components/admin/ImageUploader';
 
 const Admin = () => {
   return (
@@ -17,8 +16,8 @@ const Admin = () => {
         <div className="container mx-auto px-4">
           <div className="bg-white rounded-lg shadow-sm p-6">
             <h1 className="text-2xl font-bold mb-6">Панель администратора</h1>
-            <div className="space-y-8">
-              <ImageUploader />
+            <div className="p-4 border rounded-md bg-yellow-50 text-amber-700">
+              <p>Функционал административной панели находится в разработке.</p>
             </div>
           </div>
         </div>

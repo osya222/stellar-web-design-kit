@@ -9,23 +9,23 @@ import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import type { ServerResponse, IncomingMessage } from 'http';
 import type { Request, Response } from 'express';
-import type { NextFunction } from 'connect';
 import type { ConfigEnv, ProxyOptions } from 'vite';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Configure multer for file uploads
+// Настройка multer для загрузки файлов
 const storage = multer.diskStorage({
   destination: function (req: Express.Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) {
     const uploadPath = path.join(__dirname, 'public/images/products');
-    // Ensure the directory exists
+    // Убедимся, что директория существует
     if (!fs.existsSync(uploadPath)) {
       fs.mkdirSync(uploadPath, { recursive: true });
     }
     cb(null, uploadPath);
   },
   filename: function (req: Express.Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) {
+    // Используем оригинальное имя файла
     cb(null, file.originalname);
   }
 });
@@ -44,30 +44,21 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
       '/api/upload': {
         target: 'http://localhost:8080',
         changeOrigin: true,
-        configure: (proxy, options) => {
-          // Add a custom handler for the /api/upload endpoint
-          proxy.on('proxyReq', (proxyReq, req, res) => {
-            if (req.url === '/api/upload' && req.method === 'POST') {
-              // This is just to log the request
-              console.log('Proxying upload request');
-            }
-          });
-        },
         handle: (req: IncomingMessage, res: ServerResponse) => {
           if (req.url === '/api/upload' && req.method === 'POST') {
             try {
-              console.log("Handling upload request");
+              console.log("Обработка запроса загрузки");
               
-              // Set content type for all responses to ensure JSON is properly returned
+              // Установка Content-Type для всех ответов
               res.setHeader('Content-Type', 'application/json');
               
-              // Create a simplified handler that doesn't rely on middleware chaining
+              // Обработка загрузки
               const handleUpload = () => {
                 try {
-                  // Process the form with multer
+                  // Обработка формы с multer
                   upload.single('image')(req as unknown as Request, res as unknown as Response, (err: any) => {
                     if (err) {
-                      console.error("Multer error:", err);
+                      console.error("Ошибка multer:", err);
                       res.statusCode = 500;
                       res.end(JSON.stringify({ error: 'Ошибка загрузки файла', details: err.message }));
                       return;
@@ -75,26 +66,26 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
                     
                     const file = (req as any).file;
                     if (!file) {
-                      console.error("No file uploaded");
+                      console.error("Файл не загружен");
                       res.statusCode = 400;
                       res.end(JSON.stringify({ error: 'Файл не был загружен' }));
                       return;
                     }
                     
-                    console.log("File uploaded successfully:", file.filename);
+                    console.log("Файл успешно загружен:", file.filename);
                     
-                    // Return success as JSON
+                    // Отправка успешного ответа в формате JSON
                     res.statusCode = 200;
                     const responseData = { 
                       success: true,
                       path: `/images/products/${file.filename}` 
                     };
                     const responseJson = JSON.stringify(responseData);
-                    console.log("Sending response:", responseJson);
+                    console.log("Отправка ответа:", responseJson);
                     res.end(responseJson);
                   });
                 } catch (innerError) {
-                  console.error("Inner error during upload:", innerError);
+                  console.error("Внутренняя ошибка при загрузке:", innerError);
                   res.statusCode = 500;
                   res.end(JSON.stringify({ error: 'Внутренняя ошибка сервера', details: (innerError as Error).message }));
                 }
@@ -103,8 +94,7 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
               handleUpload();
               return true;
             } catch (error) {
-              console.error("Server error:", error);
-              // Ensure error response is also JSON
+              console.error("Ошибка сервера:", error);
               res.statusCode = 500;
               res.setHeader('Content-Type', 'application/json');
               res.end(JSON.stringify({ error: 'Ошибка сервера', details: (error as Error).message }));
