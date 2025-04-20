@@ -5,7 +5,7 @@ import { formatPrice } from '@/lib/formatters';
 import type { Product } from '@/types/product';
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
-import { Upload, Image, AlertCircle } from "lucide-react";
+import { Upload, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { v4 as uuidv4 } from 'uuid';
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
@@ -64,12 +64,23 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
       console.log('Response status:', response.status);
       
+      // Try to parse the response as text first to debug
+      const responseText = await response.text();
+      console.log('Response text:', responseText);
+      
+      // Check if the response is valid JSON
+      let data;
+      try {
+        data = JSON.parse(responseText);
+      } catch (e) {
+        console.error('Response is not valid JSON:', e);
+        throw new Error('Сервер вернул неверный формат ответа');
+      }
+      
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Ошибка загрузки' }));
-        throw new Error(errorData.error || 'Ошибка загрузки');
+        throw new Error(data.error || 'Ошибка загрузки');
       }
 
-      const data = await response.json();
       console.log('Upload successful:', data);
       
       toast({

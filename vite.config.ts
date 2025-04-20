@@ -37,7 +37,6 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
   server: {
     host: "::",
     port: 8080,
-    middlewareMode: true,
     fs: {
       strict: false,
     },
@@ -45,9 +44,21 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
       '/api/upload': {
         target: 'http://localhost:8080',
         changeOrigin: true,
-        bypass: (req, res, options) => {
+        configure: (proxy, options) => {
+          // Add a custom handler for the /api/upload endpoint
+          proxy.on('proxyReq', (proxyReq, req, res) => {
+            if (req.url === '/api/upload' && req.method === 'POST') {
+              // This is just to log the request
+              console.log('Proxying upload request');
+            }
+          });
+        },
+        handle: (req, res) => {
           if (req.url === '/api/upload' && req.method === 'POST') {
             try {
+              // Set correct content type before handling the upload
+              res.setHeader('Content-Type', 'application/json');
+              
               upload.single('image')(req as any, res as any, (err) => {
                 if (err) {
                   console.error("Upload error:", err);
@@ -66,6 +77,7 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
 
                 console.log("File uploaded successfully:", file.filename);
                 
+                // Explicitly set content type and status code
                 res.statusCode = 200;
                 res.setHeader('Content-Type', 'application/json');
                 res.end(JSON.stringify({ 
@@ -73,14 +85,15 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
                   path: `/images/products/${file.filename}` 
                 }));
               });
-              // Return undefined instead of boolean to match expected type
-              return undefined;
+              
+              return true;
             } catch (error) {
               console.error("Server error:", error);
+              // Ensure error response is also JSON
               res.statusCode = 500;
+              res.setHeader('Content-Type', 'application/json');
               res.end(JSON.stringify({ error: 'Ошибка сервера' }));
-              // Return undefined instead of boolean to match expected type
-              return undefined;
+              return true;
             }
           }
           return false;
