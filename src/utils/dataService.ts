@@ -192,3 +192,9 @@ export async function fetchManufacturers(): Promise<string[]> {
   const manufacturers = Array.from(new Set(PRODUCTS.map(p => p.manufacturer)));
   return manufacturers;
 }
+
+// Функция для получения URL изображения для героя
+export function getHeroImageUrl(): string {
+  // Возвращаем URL-адрес изображения для героя
+  return "https://images.unsplash.com/photo-1498654200943-1088dd4438ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80";
+}
