@@ -29,9 +29,12 @@ export const uploadFile = async (file: File): Promise<string> => {
     // Добавляем временную метку к запросу для предотвращения кэширования
     const timestamp = new Date().getTime();
     
+    // Получаем текущий базовый URL (без путей)
+    const baseUrl = window.location.origin;
+    
     try {
       console.log('Отправка файла на сервер...');
-      const response = await fetch(`/api/upload?t=${timestamp}`, {
+      const response = await fetch(`${baseUrl}/api/upload?t=${timestamp}`, {
         method: 'POST',
         body: formData
       });

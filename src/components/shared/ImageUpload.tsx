@@ -3,6 +3,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Upload } from 'lucide-react';
 import { uploadFile, getImageFromLocalStorage } from '@/utils/fileUpload';
 import { useToast } from '@/hooks/use-toast';
+import { getImageUrl } from '@/routes';
 
 interface ImageUploadProps {
   onImageUploaded: (imagePath: string) => void;
@@ -20,19 +21,16 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
-  const [previewImage, setPreviewImage] = useState<string | undefined>(currentImage);
+  const [previewImage, setPreviewImage] = useState<string | undefined>(
+    currentImage ? getImageUrl(currentImage) : undefined
+  );
 
-  // Загружаем изображение при монтировании
+  // Загружаем изображение при монтировании или изменении currentImage
   useEffect(() => {
-    if (currentImage && currentImage.startsWith('/lovable-uploads/')) {
-      const cachedImage = getImageFromLocalStorage(currentImage);
-      if (cachedImage) {
-        setPreviewImage(cachedImage);
-      } else {
-        setPreviewImage(currentImage);
-      }
+    if (currentImage) {
+      setPreviewImage(getImageUrl(currentImage));
     } else {
-      setPreviewImage(currentImage);
+      setPreviewImage(undefined);
     }
   }, [currentImage]);
 
@@ -54,7 +52,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       console.log('Загрузка успешна, путь к файлу:', imagePath);
       
       // После загрузки обновляем путь к изображению
-      setPreviewImage(imagePath);
+      setPreviewImage(getImageUrl(imagePath));
       
       // Сообщаем родительскому компоненту о новом пути
       onImageUploaded(imagePath);
@@ -72,7 +70,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       });
       
       // Восстанавливаем исходное изображение при ошибке
-      setPreviewImage(currentImage);
+      if (currentImage) {
+        setPreviewImage(getImageUrl(currentImage));
+      } else {
+        setPreviewImage(undefined);
+      }
     } finally {
       setIsUploading(false);
       // Сбрасываем значение input, чтобы позволить повторную загрузку того же файла
@@ -90,8 +92,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     console.warn(`Не удалось загрузить изображение: ${previewImage}`);
     
     // Если изображение с путем из lovable-uploads не загрузилось, попробуем взять из localStorage
-    if (previewImage && previewImage.startsWith('/lovable-uploads/')) {
-      const cachedImage = getImageFromLocalStorage(previewImage);
+    if (previewImage && previewImage.includes('/lovable-uploads/')) {
+      const imagePath = previewImage.split('?')[0]; // Remove any query params
+      const cachedImage = getImageFromLocalStorage(imagePath);
       if (cachedImage) {
         e.currentTarget.src = cachedImage;
         return;

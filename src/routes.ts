@@ -25,7 +25,9 @@ export const getImageUrl = (imageFileName?: string): string => {
   if (imageFileName.startsWith('/uploads/')) {
     // Добавляем параметр с временной меткой для предотвращения кэширования
     const timestamp = new Date().getTime();
-    return `${imageFileName}?t=${timestamp}`;
+    // Используем абсолютный путь к изображению на сервере
+    const baseUrl = window.location.origin;
+    return `${baseUrl}${imageFileName}?t=${timestamp}`;
   }
 
   // If path is already absolute or complete (starts with http/https)
