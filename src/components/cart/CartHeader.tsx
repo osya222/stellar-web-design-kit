@@ -9,7 +9,7 @@ const CartHeader = () => {
   const navigate = useNavigate();
   
   const handleCatalogClick = () => {
-    navigate('/', { state: { scrollTo: 'catalog' } });
+    navigate('/', { state: { scrollTo: 'products' } });
   };
 
   return (

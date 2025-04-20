@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { ShoppingCart, Menu, X } from "lucide-react";
@@ -46,18 +45,11 @@ const Header = () => {
 
   const handleCatalogClick = () => {
     setIsMenuOpen(false);
-    navigate('/');
     
-    // We need to wait for navigation to complete if we're not already on the homepage
     if (location.pathname !== '/') {
-      setTimeout(() => {
-        const element = document.getElementById("catalog");
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
+      navigate('/', { state: { scrollTo: 'products' } });
     } else {
-      const element = document.getElementById("catalog");
+      const element = document.getElementById("products");
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
       }

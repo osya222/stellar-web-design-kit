@@ -1,4 +1,3 @@
-
 import { useLocation, useNavigate } from "react-router-dom";
 import Logo from "@/components/layout/Logo";
 import { Phone, Mail, Building } from "lucide-react";
@@ -30,18 +29,10 @@ const Footer = () => {
   };
 
   const handleCatalogClick = () => {
-    navigate('/');
-    
-    // We need to wait for navigation to complete if we're not already on the homepage
     if (location.pathname !== '/') {
-      setTimeout(() => {
-        const element = document.getElementById("catalog");
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
+      navigate('/', { state: { scrollTo: 'products' } });
     } else {
-      const element = document.getElementById("catalog");
+      const element = document.getElementById("products");
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
       }
