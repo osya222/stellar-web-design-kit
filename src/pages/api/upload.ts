@@ -1,82 +1,77 @@
 
-import { Request, Response } from 'express';
+import type { NextApiRequest, NextApiResponse } from 'next';
+import formidable from 'formidable';
 import fs from 'fs';
 import path from 'path';
-import multer from 'multer';
+import { v4 as uuidv4 } from 'uuid';
 
-// Настройка хранилища для multer
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    // Создаем директорию, если её нет
-    const targetDir = path.join(process.cwd(), 'public', 'images', 'products');
-    
-    if (!fs.existsSync(targetDir)) {
-      fs.mkdirSync(targetDir, { recursive: true });
-    }
-    
-    cb(null, targetDir);
+export const config = {
+  api: {
+    bodyParser: false,
   },
-  filename: function (req, file, cb) {
-    // Создаем уникальное имя файла
-    const timestamp = Date.now();
-    const safeName = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
-    cb(null, `${timestamp}-${safeName}`);
-  }
-});
-
-// Ограничиваем типы файлов
-const fileFilter = (req: any, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
-  const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
-  
-  if (allowedTypes.includes(file.mimetype)) {
-    cb(null, true);
-  } else {
-    cb(new Error('Неподдерживаемый тип файла. Разрешены только JPEG, PNG, GIF и WEBP'));
-  }
 };
 
-// Создаем middleware для загрузки
-const upload = multer({ 
-  storage: storage,
-  fileFilter: fileFilter,
-  limits: {
-    fileSize: 5 * 1024 * 1024 // 5 MB
-  }
-}).single('file');
-
-export default function handler(req: Request, res: Response) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ success: false, message: 'Метод не разрешен' });
   }
 
-  // Оборачиваем multer в промис для лучшей обработки ошибок
-  new Promise<void>((resolve, reject) => {
-    upload(req, res, (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve();
-      }
+  try {
+    const form = new formidable.IncomingForm();
+    form.keepExtensions = true;
+    form.maxFileSize = 5 * 1024 * 1024; // 5 MB
+
+    const { fields, files } = await new Promise<{fields: formidable.Fields, files: formidable.Files}>((resolve, reject) => {
+      form.parse(req, (err, fields, files) => {
+        if (err) reject(err);
+        resolve({ fields, files });
+      });
     });
-  })
-  .then(() => {
-    if (!req.file) {
+    
+    // @ts-ignore
+    const file = files.file;
+    
+    if (!file) {
       return res.status(400).json({ success: false, message: 'Файл не был загружен' });
     }
 
-    // Получаем относительный путь для использования в img src
-    const relativePath = `/images/products/${req.file.filename}`;
+    // @ts-ignore
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    // @ts-ignore
+    if (!allowedTypes.includes(file.mimetype)) {
+      return res.status(400).json({ 
+        success: false, 
+        message: 'Неподдерживаемый тип файла. Разрешены только JPEG, PNG, GIF и WEBP' 
+      });
+    }
 
+    // Создаем директорию, если её нет
+    const uploadsDir = path.join(process.cwd(), 'public/lovable-uploads');
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+
+    // Генерируем уникальное имя файла
+    const fileExt = path.extname(file.originalFilename || 'image.jpg');
+    const fileName = `${uuidv4()}${fileExt}`;
+    const filePath = path.join(uploadsDir, fileName);
+
+    // @ts-ignore
+    const fileData = fs.readFileSync(file.filepath);
+    fs.writeFileSync(filePath, fileData);
+    
+    // Возвращаем путь к файлу
+    const relativePath = `/lovable-uploads/${fileName}`;
+    
     return res.status(200).json({
       success: true,
       filePath: relativePath
     });
-  })
-  .catch((error) => {
+  } catch (error: any) {
     console.error('Ошибка загрузки файла:', error);
     return res.status(500).json({ 
       success: false, 
-      message: error.message || 'Ошибка загрузки файла'
+      message: error.message || 'Ошибка загрузки файла' 
     });
-  });
+  }
 }

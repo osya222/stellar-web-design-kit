@@ -1,7 +1,6 @@
 
 /**
  * Утилита для загрузки изображений товаров
- * Загружает файлы в директорию /public/images/products/
  */
 
 /**
@@ -22,8 +21,18 @@ export const uploadFile = async (file: File): Promise<string> => {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || `Ошибка загрузки: ${response.status} ${response.statusText}`);
+      let errorMessage = `Ошибка загрузки: ${response.status} ${response.statusText}`;
+      
+      try {
+        const errorData = await response.json();
+        if (errorData && errorData.message) {
+          errorMessage = errorData.message;
+        }
+      } catch (jsonError) {
+        console.error('Не удалось распарсить ответ сервера:', jsonError);
+      }
+      
+      throw new Error(errorMessage);
     }
 
     const data = await response.json();
