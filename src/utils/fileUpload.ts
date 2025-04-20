@@ -11,32 +11,38 @@
  */
 export const uploadFile = async (file: File): Promise<string> => {
   try {
-    // Create form data for the file upload
+    // Создаем уникальное имя файла, чтобы избежать конфликтов
+    const timestamp = new Date().getTime();
+    const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+    const uniqueFileName = `${timestamp}-${safeName}`;
+    
+    // Создаем объект FormData для загрузки файла
     const formData = new FormData();
     formData.append('file', file);
     
-    // Set the target path for the file in the public directory
-    const targetPath = `/images/products/${file.name}`;
+    // Устанавливаем целевой путь для файла в публичной директории
+    const targetPath = `/images/products/${uniqueFileName}`;
     
-    // Send the file to the Lovable upload endpoint
-    const response = await fetch('/_lovable/upload', {
+    // Отправляем файл на сервер Lovable
+    const response = await fetch('/api/upload', {
       method: 'POST',
+      body: formData,
       headers: {
-        'X-Target-Path': targetPath,
-      },
-      body: formData
+        'X-Target-Path': targetPath
+      }
     });
 
     if (!response.ok) {
-      throw new Error(`Upload failed: ${response.statusText}`);
+      throw new Error(`Ошибка загрузки: ${response.status} ${response.statusText}`);
     }
 
-    const result = await response.json();
+    const data = await response.json();
+    console.log('Файл успешно загружен:', data);
     
-    // Return the path to the uploaded file
+    // Возвращаем путь к загруженному файлу
     return targetPath;
   } catch (error) {
-    console.error('Error uploading file:', error);
+    console.error('Ошибка загрузки файла:', error);
     throw error;
   }
 };

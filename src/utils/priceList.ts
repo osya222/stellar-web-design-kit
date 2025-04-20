@@ -4,14 +4,14 @@ import { getProducts } from "@/utils/dataService";
 import { formatPrice } from "@/lib/formatters";
 
 export function generatePriceListHTML(): string {
-  // Get products from storage/context
+  // Получаем товары из хранилища
   const products = getProducts();
   
   if (!products || products.length === 0) {
     return "<p>Нет данных для прайс-листа</p>";
   }
   
-  // Create an HTML table for the price list
+  // Создаем HTML-таблицу для прайс-листа
   let html = `
     <table style="width:100%; border-collapse: collapse; margin: 20px 0;">
       <thead>
@@ -23,7 +23,7 @@ export function generatePriceListHTML(): string {
       <tbody>
   `;
   
-  // Add each product to the table
+  // Добавляем каждый товар в таблицу
   products.forEach((product: Product) => {
     html += `
       <tr style="border-bottom: 1px solid #e5e7eb;">
@@ -33,7 +33,7 @@ export function generatePriceListHTML(): string {
     `;
   });
   
-  // Close the table
+  // Закрываем таблицу
   html += `
       </tbody>
     </table>
