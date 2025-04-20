@@ -1,17 +1,18 @@
+/**
+ * Получить URL изображения
+ * @param imageFileName имя файла изображения или путь
+ * @returns полный URL изображения или placeholder, если изображение не указано
+ */
+export const getImageUrl = (imageFileName?: string): string => {
+  if (!imageFileName) {
+    return '/placeholder.svg';
+  }
 
-export const getImageUrl = (image?: string): string => {
-  if (!image) return '/placeholder.svg';
-  
-  // Проверяем, начинается ли путь с http или https (для внешних изображений)
-  if (image.startsWith('http://') || image.startsWith('https://')) {
-    return image;
+  // Проверяем, если путь уже абсолютный, возвращаем его
+  if (imageFileName.startsWith('/')) {
+    return imageFileName;
   }
   
-  // Проверяем, является ли путь к изображению уже полным путем
-  if (image.startsWith('/')) {
-    return image;
-  }
-  
-  // Для файлов, загруженных через панель администратора
-  return `/images/products/${image}`;
+  // Иначе формируем полный путь
+  return `/images/products/${imageFileName}`;
 };

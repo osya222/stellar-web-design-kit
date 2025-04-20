@@ -15,12 +15,13 @@ interface ProductCardProps {
 
 const ProductCard = ({ product, category, onEdit }: ProductCardProps) => {
   const { addToCart } = useCart();
+  const imageUrl = getImageUrl(product.image);
 
   return (
     <div className="group bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-100">
       <div className="aspect-square overflow-hidden bg-gray-50 relative">
         <img 
-          src={getImageUrl(product.image)}
+          src={imageUrl}
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
         />

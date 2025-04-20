@@ -12,7 +12,7 @@ let isInitialized = false;
 const initializeCache = () => {
   if (!isInitialized) {
     // Создаем глубокую копию исходных товаров
-    cachedProducts = defaultProducts.map(p => ({...p}));
+    cachedProducts = JSON.parse(JSON.stringify(defaultProducts));
     isInitialized = true;
     console.log('Инициализирован кеш продуктов:', cachedProducts.length);
   }
@@ -37,18 +37,22 @@ export const saveProduct = (product: Product): void => {
   if (existingIndex >= 0) {
     // Update existing product
     cachedProducts[existingIndex] = { ...product };
+    console.log('Обновлен существующий товар:', product.id);
   } else {
     // Add new product with next available ID
     const maxId = Math.max(0, ...cachedProducts.map(p => p.id));
-    const newProduct = { ...product, id: product.id || maxId + 1 };
+    const newProduct = { ...product, id: maxId + 1 };
     cachedProducts.push(newProduct);
+    console.log('Добавлен новый товар с ID:', newProduct.id);
   }
   
   // Обновляем исходный массив defaultProducts для сохранения между перезагрузками
+  // Сначала очищаем массив
   defaultProducts.length = 0;
+  // Затем добавляем все товары из кеша
   cachedProducts.forEach(p => defaultProducts.push({...p}));
   
-  // Save changes to source code via Lovable's internal API
+  // Сохраняем изменения в исходный код через API Lovable
   updateProductsFile();
 };
 
@@ -61,6 +65,7 @@ export const deleteProduct = (productId: number): void => {
   const index = cachedProducts.findIndex(p => p.id === productId);
   if (index >= 0) {
     cachedProducts.splice(index, 1);
+    console.log('Удален товар с ID:', productId);
     
     // Обновляем исходный массив defaultProducts для сохранения между перезагрузками
     defaultProducts.length = 0;
@@ -75,17 +80,23 @@ export const deleteProduct = (productId: number): void => {
  * Update products file
  */
 const updateProductsFile = () => {
-  fetch('/_source/data/products/index.ts', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      content: `import { Category } from "../categories";\n\nexport interface Product {\n  id: number;\n  name: string;\n  price: number;\n  categoryId: number;\n  description?: string;\n  manufacturer: string;\n  image?: string;\n}\n\nexport const products: Product[] = ${JSON.stringify(cachedProducts, null, 2)};`
-    })
-  }).then(() => {
-    console.log("Products data updated in source code");
-  }).catch(error => {
-    console.error("Error saving to source code:", error);
-  });
+  try {
+    const content = `import { Category } from "../categories";\n\nexport interface Product {\n  id: number;\n  name: string;\n  price: number;\n  categoryId: number;\n  description?: string;\n  manufacturer: string;\n  image?: string;\n}\n\nexport const products: Product[] = ${JSON.stringify(cachedProducts, null, 2)};`;
+    
+    console.log('Сохраняем данные товаров в исходный код');
+    
+    fetch('/_source/data/products/index.ts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ content })
+    }).then(() => {
+      console.log("Products data updated in source code");
+    }).catch(error => {
+      console.error("Error saving to source code:", error);
+    });
+  } catch (error) {
+    console.error("Error preparing products data:", error);
+  }
 };

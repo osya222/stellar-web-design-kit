@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -89,14 +90,10 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
     setUploadingImage(true);
     
     try {
-      // Сохраняем файл для предпросмотра
+      // Create a temporary URL for preview
       const localPreviewUrl = URL.createObjectURL(file);
       setImagePreview(localPreviewUrl);
       setSelectedFile(file);
-      
-      // Предварительно установим имя файла в форму
-      const filename = file.name.toLowerCase().replace(/[^a-z0-9.]/g, '-');
-      form.setValue('image', filename);
       
       toast({
         title: "Предпросмотр",
@@ -120,14 +117,18 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
     try {
       setIsSubmitting(true);
       
-      // Если есть выбранный файл, загружаем его
+      // If there's a selected file, upload it
       if (selectedFile) {
         try {
           const uploadedPath = await uploadFile(selectedFile);
-          // Получаем только имя файла из пути
-          const fileName = uploadedPath.split('/').pop() || '';
-          data.image = fileName;
           console.log("Image successfully uploaded to:", uploadedPath);
+          
+          // Получаем только имя файла из пути для сохранения в базе
+          const fileName = uploadedPath.startsWith('/') 
+            ? uploadedPath // Если начинается с /, сохраняем полный путь
+            : uploadedPath.split('/').pop() || ''; // Иначе берем только имя файла
+            
+          data.image = uploadedPath; // Сохраняем полный путь
         } catch (error) {
           console.error("Failed to upload image:", error);
           toast({
@@ -135,7 +136,6 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
             description: "Не удалось загрузить изображение",
             variant: "destructive",
           });
-          // Продолжаем сохранение товара даже при ошибке загрузки изображения
         }
       }
       

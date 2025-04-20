@@ -79,9 +79,6 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
       setImagePreview(localPreviewUrl);
       setSelectedFile(file);
       
-      const filename = file.name.toLowerCase().replace(/[^a-z0-9.]/g, '-');
-      form.setValue('image', filename);
-      
       toast({
         title: "Предпросмотр",
         description: "Изображение готово к загрузке",
@@ -107,9 +104,8 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
       if (selectedFile) {
         try {
           const uploadedPath = await uploadFile(selectedFile);
-          const fileName = uploadedPath.split('/').pop() || '';
-          data.image = fileName;
           console.log("Image successfully uploaded to:", uploadedPath);
+          data.image = uploadedPath; // Сохраняем полный путь
         } catch (error) {
           console.error("Failed to upload image:", error);
           toast({
