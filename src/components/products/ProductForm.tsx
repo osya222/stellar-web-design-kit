@@ -41,6 +41,9 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(
+    existingProduct?.image ? getImageUrl(existingProduct.image) : null
+  );
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
@@ -53,6 +56,17 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
       image: existingProduct?.image || "",
     },
   });
+
+  // Update the image preview when the form value changes
+  useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      if (name === 'image' && value.image) {
+        setImagePreview(getImageUrl(value.image as string));
+      }
+    });
+    
+    return () => subscription.unsubscribe();
+  }, [form.watch]);
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -76,6 +90,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
       });
 
       form.setValue('image', filename);
+      setImagePreview(getImageUrl(filename));
       toast({
         title: "Успех",
         description: "Изображение успешно загружено",
@@ -203,12 +218,14 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
               <FormItem>
                 <FormLabel>Изображение</FormLabel>
                 <div className="flex items-center gap-4">
-                  {field.value && (
-                    <img 
-                      src={getImageUrl(field.value)} 
-                      alt="Preview" 
-                      className="w-20 h-20 object-cover rounded-md border"
-                    />
+                  {imagePreview && (
+                    <div className="w-20 h-20 border rounded-md overflow-hidden">
+                      <img 
+                        src={imagePreview} 
+                        alt="Preview" 
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                   )}
                   <FormControl>
                     <div className="flex items-center gap-2">
