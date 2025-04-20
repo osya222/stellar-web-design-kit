@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
@@ -26,8 +25,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
     imageUrl || initialPreview || '/placeholder.svg'
   );
 
-  // The compression helper
-  const compressImage = (file: File, maxWidth = 800, maxHeight = 600, quality = 0.7): Promise<string> => {
+  const compressImage = (file: File, maxWidth = 800, maxHeight = 600, quality = 0.7): Promise<Blob> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
@@ -54,8 +52,14 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
           canvas.height = height;
           const ctx = canvas.getContext('2d');
           ctx?.drawImage(img, 0, 0, width, height);
-          const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
-          resolve(compressedDataUrl);
+          canvas.toBlob(
+            (blob) => {
+              if (blob) resolve(blob);
+              else reject(new Error('Compression failed'));
+            },
+            'image/jpeg',
+            quality
+          );
         };
 
         img.onerror = (error) => {
@@ -93,21 +97,47 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
 
     try {
       setIsUploading(true);
-      const compressedDataUrl = await compressImage(file, 800, 600, 0.7);
-      const ext = 'jpg';
-      const uniqueFilename = `product_${productId || 'new'}_${Date.now()}.${ext}`;
-      const imagePath = `/images/products/${uniqueFilename}`;
-      setImagePreview(compressedDataUrl);
-      onImageChange(imagePath, compressedDataUrl);
+
+      const compressedBlob = await compressImage(file, 800, 600, 0.7);
+
+      const previewDataUrl = await new Promise<string>((resolve, reject) => {
+        const r = new FileReader();
+        r.readAsDataURL(compressedBlob);
+        r.onloadend = () => resolve(r.result as string);
+        r.onerror = reject;
+      });
+      setImagePreview(previewDataUrl);
+
+      const formData = new FormData();
+      const filename = `product_${productId || 'new'}_${Date.now()}.jpg`;
+      formData.append('image', compressedBlob, filename);
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error('Ошибка при загрузке изображения на сервер');
+      }
+
+      const result = await response.json();
+
+      if (!result?.success || !result?.path) {
+        throw new Error('Некорректный ответ сервера при загрузке изображения');
+      }
+
+      onImageChange(result.path, previewDataUrl);
 
       toast({
-        title: "Изображение готово",
-        description: "Изображение будет сохранено при сохранении продукта",
+        title: "Изображение загружено",
+        description: "Изображение сохранено на сервере и будет привязано к продукту",
       });
+
     } catch (error) {
       toast({
         title: "Ошибка",
-        description: "Не удалось обработать изображение",
+        description: (error as Error).message || "Не удалось загрузить изображение",
         variant: "destructive"
       });
     } finally {
