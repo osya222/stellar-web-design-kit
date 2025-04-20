@@ -1,10 +1,10 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Minus, Plus, Trash2 } from 'lucide-react';
 import { formatPrice } from '@/lib/formatters';
 import { useCart } from '@/context/CartContext';
 import { renderProductIcon } from './CartUtils';
+import { getImageUrl } from '@/routes';
 
 const CartItem = ({ item }) => {
   const { removeFromCart, increaseQuantity, decreaseQuantity } = useCart();
@@ -16,7 +16,7 @@ const CartItem = ({ item }) => {
         <div className="flex gap-4 items-center">
           <div className="w-16 h-16 bg-blue-50 flex items-center justify-center rounded-md overflow-hidden">
             {item.product.image ? (
-              <img src={item.product.image} alt={item.product.name} className="w-full h-full object-cover" />
+              <img src={getImageUrl(item.product.image)} alt={item.product.name} className="w-full h-full object-cover" />
             ) : (
               renderProductIcon(item.product.category)
             )}

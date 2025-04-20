@@ -62,13 +62,14 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
 
     try {
       const filename = file.name.toLowerCase().replace(/[^a-z0-9.]/g, '-');
-      const path = `/images/products/${filename}`;
+      
+      const uploadPath = `/images/products/${filename}`;
       
       await fetch('/_upload', {
         method: 'POST',
         body: formData,
         headers: {
-          'X-Upload-Path': path,
+          'X-Upload-Path': uploadPath,
         },
       });
 
