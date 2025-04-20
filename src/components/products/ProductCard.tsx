@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { formatPrice } from '@/lib/formatters';
 import type { Product } from '@/types/product';
@@ -18,11 +17,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [productImage, setProductImage] = useState<string>(product.imageUrl || '/placeholder.svg');
   
+  useEffect(() => {
+    setProductImage(product.imageUrl || '/placeholder.svg');
+  }, [product.imageUrl]);
+  
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
     
-    // Check file type
     if (!file.type.startsWith('image/')) {
       toast({
         title: "Ошибка",
@@ -32,7 +34,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       return;
     }
 
-    // Check file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       toast({
         title: "Ошибка",
@@ -45,28 +46,55 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     try {
       setIsUploading(true);
       
-      // Create a client-side URL for preview
-      const localImageUrl = URL.createObjectURL(file);
+      const reader = new FileReader();
       
-      // Update the UI with the local image URL
-      setProductImage(localImageUrl);
+      reader.onload = async (e) => {
+        try {
+          if (!e.target?.result) {
+            throw new Error('Не удалось прочитать файл');
+          }
+          
+          const base64String = e.target.result.toString();
+          
+          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+          const imagePath = `data:${file.type};base64,${base64String.split(',')[1]}`;
+          
+          const updatedProduct = await updateProductImage(product.id, imagePath);
+          
+          if (updatedProduct) {
+            setProductImage(imagePath);
+            
+            toast({
+              title: "Успешно",
+              description: "Изображение загружено и сохранено",
+            });
+          } else {
+            throw new Error('Не удалось обновить данные продукта');
+          }
+        } catch (error) {
+          console.error('Ошибка сохранения:', error);
+          toast({
+            title: "Ошибка",
+            description: (error as Error).message || 'Не удалось сохранить изображение',
+            variant: "destructive"
+          });
+          setProductImage(product.imageUrl || '/placeholder.svg');
+        } finally {
+          setIsUploading(false);
+        }
+      };
       
-      // Create a unique ID for the image based on timestamp
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      const imagePath = `/images/product-${uniqueSuffix}.jpg`;
-      
-      // Update product data in the dataService
-      const updatedProduct = await updateProductImage(product.id, imagePath);
-      
-      if (updatedProduct) {
+      reader.onerror = () => {
         toast({
-          title: "Успешно",
-          description: "Изображение загружено и сохранено",
+          title: "Ошибка",
+          description: "Не удалось прочитать файл",
+          variant: "destructive"
         });
-      } else {
-        throw new Error('Не удалось обновить данные продукта');
-      }
-
+        setIsUploading(false);
+      };
+      
+      reader.readAsDataURL(file);
+      
     } catch (error) {
       console.error('Ошибка загрузки:', error);
       toast({
@@ -74,9 +102,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         description: (error as Error).message || 'Не удалось сохранить изображение',
         variant: "destructive"
       });
-      // Revert to original image on error
       setProductImage(product.imageUrl || '/placeholder.svg');
-    } finally {
       setIsUploading(false);
     }
   };
