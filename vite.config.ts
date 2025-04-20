@@ -14,35 +14,31 @@ import type { ConfigEnv, ProxyOptions } from 'vite';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Настройка multer для загрузки файлов
+// Настройка multer для загрузки файлов с более простой конфигурацией
 const storage = multer.diskStorage({
   destination: function (req: Express.Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) {
+    // Упрощенный путь для загрузки в публичную директорию
     const uploadPath = path.join(__dirname, 'public/images/products');
-    // Убедимся, что директория существует
-    console.log("Создание директории:", uploadPath);
+    
     try {
+      // Проверка и создание директории
       if (!fs.existsSync(uploadPath)) {
         fs.mkdirSync(uploadPath, { recursive: true });
-        console.log("Директория создана:", uploadPath);
+        console.log("[Upload] Директория создана:", uploadPath);
       }
       cb(null, uploadPath);
     } catch (error) {
-      console.error("Ошибка при создании директории:", error);
-      cb(new Error("Не удалось создать директорию для загрузки"), uploadPath);
+      console.error("[Upload] Ошибка при создании директории:", error);
+      cb(new Error(`Не удалось создать директорию: ${(error as Error).message}`), uploadPath);
     }
   },
   filename: function (req: Express.Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) {
-    try {
-      // Уникальное имя файла на основе времени и оригинального имени
-      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      const ext = path.extname(file.originalname);
-      const filename = uniqueSuffix + ext;
-      console.log("Генерация имени файла:", filename);
-      cb(null, filename);
-    } catch (error) {
-      console.error("Ошибка при генерации имени файла:", error);
-      cb(new Error("Не удалось сгенерировать имя файла"), "error.jpg");
-    }
+    // Генерация уникального имени файла
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const ext = path.extname(file.originalname);
+    const filename = file.fieldname + '-' + uniqueSuffix + ext;
+    console.log("[Upload] Генерация имени файла:", filename);
+    cb(null, filename);
   }
 });
 
@@ -60,14 +56,14 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
         changeOrigin: true,
         configure: (proxy, _options) => {
           proxy.on('error', (err, _req, res) => {
-            console.error('Proxy error:', err);
+            console.error('[Proxy] Ошибка:', err);
             if (res.headersSent) return;
             res.writeHead(500, { 'Content-Type': 'application/json' });
             res.end(JSON.stringify({ error: 'Proxy error', details: err.message }));
           });
         },
         handle: (req: IncomingMessage, res: ServerResponse) => {
-          console.log("Получен запрос:", req.method, req.url);
+          console.log("[Upload] Получен запрос:", req.method, req.url);
           
           // Проверяем, что это запрос на /api/upload
           if (req.url !== '/api/upload') {
@@ -88,13 +84,13 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
           
           // Обработка POST запроса для загрузки файла
           if (req.method === 'POST') {
-            console.log("Обработка POST запроса на загрузку");
+            console.log("[Upload] Обработка POST запроса на загрузку");
             
             try {
-              // Инициализируем multer с обработкой ошибок
+              // Используем multer с упрощенными настройками
               const upload = multer({ 
                 storage,
-                limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+                limits: { fileSize: 5 * 1024 * 1024 }, // Уменьшено до 5MB
                 fileFilter: (req, file, cb) => {
                   if (!file.mimetype.startsWith('image/')) {
                     return cb(new Error('Разрешены только изображения'));
@@ -104,13 +100,12 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
               }).single('image');
               
               upload(req as unknown as Request, res as unknown as Response, (err: any) => {
-                console.log("Мультер завершил обработку файла");
+                console.log("[Upload] Multer завершил обработку");
                 
-                // Устанавливаем Content-Type заголовок для JSON
                 res.setHeader('Content-Type', 'application/json');
                 
                 if (err) {
-                  console.error("Ошибка multer при загрузке:", err);
+                  console.error("[Upload] Ошибка при обработке:", err);
                   res.statusCode = 500;
                   res.end(JSON.stringify({ 
                     error: 'Ошибка загрузки файла', 
@@ -121,7 +116,7 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
                 
                 const file = (req as any).file;
                 if (!file) {
-                  console.error("Файл не получен multer");
+                  console.error("[Upload] Файл не получен");
                   res.statusCode = 400;
                   res.end(JSON.stringify({ 
                     error: 'Файл не был получен'
@@ -129,41 +124,45 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
                   return;
                 }
                 
-                console.log("Файл успешно загружен:", file.filename, "в", file.destination);
+                console.log("[Upload] Файл успешно загружен:", file.filename);
                 
                 // Формируем относительный путь к файлу для клиента
                 const imagePath = `/images/products/${file.filename}`;
                 
                 // Проверяем, что файл действительно создан
                 const fullPath = path.join(__dirname, 'public', imagePath);
-                if (!fs.existsSync(fullPath)) {
-                  console.error("Файл не был создан по пути:", fullPath);
+                
+                try {
+                  // Проверка существования файла и его доступности
+                  fs.accessSync(fullPath, fs.constants.F_OK);
+                  console.log("[Upload] Файл проверен и существует:", fullPath);
+                  
+                  // Отправляем успешный ответ
+                  res.statusCode = 200;
+                  const responseData = { 
+                    success: true,
+                    path: imagePath
+                  };
+                  
+                  console.log("[Upload] Отправка успешного ответа:", responseData);
+                  res.end(JSON.stringify(responseData));
+                } catch (fileError) {
+                  console.error("[Upload] Ошибка при проверке файла:", fileError);
                   res.statusCode = 500;
                   res.end(JSON.stringify({ 
-                    error: 'Файл не был сохранен на диск',
-                    details: 'Проверьте права доступа к директории'
+                    error: 'Файл не был сохранен корректно',
+                    details: (fileError as Error).message
                   }));
-                  return;
                 }
-                
-                // Отправляем успешный ответ
-                res.statusCode = 200;
-                const responseData = { 
-                  success: true,
-                  path: imagePath
-                };
-                
-                console.log("Отправка ответа:", responseData);
-                res.end(JSON.stringify(responseData));
               });
               
               return true;
             } catch (error) {
-              console.error("Ошибка при обработке загрузки:", error);
+              console.error("[Upload] Критическая ошибка при обработке:", error);
               res.statusCode = 500;
               res.setHeader('Content-Type', 'application/json');
               res.end(JSON.stringify({ 
-                error: 'Ошибка сервера', 
+                error: 'Критическая ошибка сервера', 
                 details: (error as Error).message 
               }));
               return true;

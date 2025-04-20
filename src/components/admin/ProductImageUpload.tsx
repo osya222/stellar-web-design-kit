@@ -47,10 +47,10 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
       return;
     }
 
-    if (file.size > 10 * 1024 * 1024) {
+    if (file.size > 5 * 1024 * 1024) {
       toast({
         title: "Ошибка",
-        description: "Размер файла не должен превышать 10MB",
+        description: "Размер файла не должен превышать 5MB",
         variant: "destructive"
       });
       return;
@@ -71,7 +71,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
       console.log("Подготовка к отправке файла:", filename, "Размер:", file.size, "Тип:", file.type);
       
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 сек таймаут
+      const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 сек таймаут (уменьшен)
       
       const response = await fetch('/api/upload', {
         method: 'POST',
@@ -191,11 +191,11 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Ошибка загрузки изображения</AlertDialogTitle>
-            <AlertDialogDescription className="space-y-4">
-              <div>{errorDetails}</div>
+            <AlertDialogDescription>
+              <div className="mb-4">{errorDetails}</div>
               <div className="mt-4 p-3 bg-gray-100 rounded text-sm">
-                <p>Возможные причины:</p>
-                <ul className="list-disc pl-5 mt-2">
+                <p className="font-medium mb-2">Возможные причины:</p>
+                <ul className="list-disc pl-5 mt-2 space-y-1">
                   <li>Проблемы с подключением к серверу</li>
                   <li>Недостаточно прав для записи файла</li>
                   <li>Ошибка обработки на сервере</li>
