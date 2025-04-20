@@ -10,18 +10,9 @@ import { saveProduct } from "@/utils/productStorage";
 import { getCategories } from "@/utils/categoryStorage";
 import { Category } from "@/data/categories";
 import { uploadFile } from "@/utils/fileUpload";
-import { productSchema } from "./productSchema";
+import { productSchema, ProductFormValues } from "./productSchema";
 import ProductDetailsFields from "./ProductDetailsFields";
 import ImageUploadField from "./ImageUploadField";
-
-export interface ProductFormValues {
-  name: string;
-  price: number;
-  categoryId: number;
-  description?: string;
-  manufacturer: string;
-  image?: string;
-}
 
 interface ProductFormProps {
   product?: Product;
