@@ -1,7 +1,6 @@
 
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Upload } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { uploadFile } from '@/utils/fileUpload';
 import { useToast } from '@/hooks/use-toast';
 
@@ -20,11 +19,13 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+  const [isUploading, setIsUploading] = useState(false);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
+    setIsUploading(true);
     try {
       const imagePath = await uploadFile(file);
       onImageUploaded(imagePath);
@@ -39,6 +40,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         title: "Ошибка",
         description: error.message || "Не удалось загрузить изображение",
       });
+    } finally {
+      setIsUploading(false);
+      // Сбрасываем значение input, чтобы позволить повторную загрузку того же файла
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
@@ -65,7 +72,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         onClick={handleUploadClick}
         className={`${sizeClasses[size]} opacity-0 group-hover:opacity-100 transition-opacity absolute top-2 right-2 bg-white/80 backdrop-blur-sm hover:bg-white rounded-full flex items-center justify-center cursor-pointer z-10`}
       >
-        <Upload className="w-4 h-4" />
+        <Upload className={`w-4 h-4 ${isUploading ? 'animate-pulse' : ''}`} />
       </div>
     </div>
   );

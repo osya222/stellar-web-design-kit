@@ -12,7 +12,10 @@ export async function handleFileUpload(request: Request): Promise<Response> {
     if (request.method !== 'POST') {
       return new Response(
         JSON.stringify({ success: false, message: 'Метод не разрешен' }),
-        { status: 405, headers: { 'Content-Type': 'application/json' } }
+        { 
+          status: 405, 
+          headers: { 'Content-Type': 'application/json' } 
+        }
       );
     }
 
@@ -23,7 +26,10 @@ export async function handleFileUpload(request: Request): Promise<Response> {
     if (!file) {
       return new Response(
         JSON.stringify({ success: false, message: 'Файл не был загружен' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { 
+          status: 400, 
+          headers: { 'Content-Type': 'application/json' } 
+        }
       );
     }
 
@@ -35,7 +41,10 @@ export async function handleFileUpload(request: Request): Promise<Response> {
           success: false, 
           message: 'Неподдерживаемый тип файла. Разрешены только JPEG, PNG, GIF и WEBP' 
         }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { 
+          status: 400, 
+          headers: { 'Content-Type': 'application/json' } 
+        }
       );
     }
 
@@ -50,7 +59,10 @@ export async function handleFileUpload(request: Request): Promise<Response> {
     // Возвращаем успешный ответ с путем к файлу
     return new Response(
       JSON.stringify({ success: true, filePath }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } }
+      { 
+        status: 200, 
+        headers: { 'Content-Type': 'application/json' } 
+      }
     );
   } catch (error: any) {
     console.error('Ошибка загрузки файла:', error);
@@ -60,7 +72,10 @@ export async function handleFileUpload(request: Request): Promise<Response> {
         success: false, 
         message: error.message || 'Ошибка загрузки файла' 
       }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      { 
+        status: 500, 
+        headers: { 'Content-Type': 'application/json' } 
+      }
     );
   }
 }
