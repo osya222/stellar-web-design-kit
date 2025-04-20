@@ -6,4 +6,5 @@ export interface Product {
   category: string;
   manufacturer: string;
   description?: string;
+  imagePath?: string; // Add the imagePath property as optional
 }

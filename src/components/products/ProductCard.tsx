@@ -15,6 +15,16 @@ const ProductCard = ({ product, onEdit }: ProductCardProps) => {
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
+      {product.imagePath && (
+        <div className="aspect-square overflow-hidden">
+          <img 
+            src={`/images/products/${product.imagePath}`}
+            alt={product.name}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      )}
+      
       <div className="p-4 flex flex-col flex-grow">
         <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
         

@@ -6,8 +6,3 @@ export const apiRoutes = {};
 export const getImageUrl = (path: string | undefined): string => {
   return '/placeholder.svg';
 };
-
-// Function to get product image path (not currently used)
-export const getProductImageUrl = (imagePath: string | undefined): string => {
-  return '/placeholder.svg';
-};
