@@ -9,9 +9,10 @@ import { useCart } from "@/context/CartContext";
 interface ProductCardProps {
   product: Product;
   category?: Category;
+  onEdit?: () => void;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, category }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, category, onEdit }) => {
   const { addToCart } = useCart();
 
   const handleAddToCart = () => {
@@ -51,7 +52,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, category }) => {
         
         <div className="mt-auto flex items-center justify-between">
           <span className="font-bold text-lg">{formatPrice(product.price)}</span>
-          <Button onClick={handleAddToCart} size="sm">В корзину</Button>
+          <div className="flex gap-2">
+            {onEdit && (
+              <Button onClick={onEdit} size="sm" variant="outline">
+                Изменить
+              </Button>
+            )}
+            <Button onClick={handleAddToCart} size="sm">В корзину</Button>
+          </div>
         </div>
       </div>
     </div>

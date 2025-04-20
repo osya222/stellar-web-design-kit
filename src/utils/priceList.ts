@@ -1,40 +1,43 @@
 
+import { Product } from "@/types/product";
+import { getProducts } from "@/utils/dataService";
 import { formatPrice } from "@/lib/formatters";
-import { products } from "@/data/products/index";
-import { toast } from "@/hooks/use-toast";
-import { categories } from "@/data/categories";
 
-export const downloadPriceList = () => {
-  let csvContent = "Наименование,Категория,Производитель,Цена\n";
+export function generatePriceListHTML(): string {
+  // Get products from storage/context
+  const products = getProducts();
   
-  products.forEach(product => {
-    // Find the category name using categoryId
-    const category = categories.find(c => c.id === product.categoryId);
-    const categoryName = category ? category.name : '';
-    
-    const row = [
-      `"${product.name.replace(/"/g, '""')}"`,
-      `"${categoryName}"`,
-      `"${product.manufacturer || ''}"`,
-      formatPrice(product.price || 0).replace(/\s/g, "")
-    ];
-    csvContent += row.join(",") + "\n";
+  if (!products || products.length === 0) {
+    return "<p>Нет данных для прайс-листа</p>";
+  }
+  
+  // Create an HTML table for the price list
+  let html = `
+    <table style="width:100%; border-collapse: collapse; margin: 20px 0;">
+      <thead>
+        <tr style="background-color: #f3f4f6;">
+          <th style="padding: 12px; text-align: left; border-bottom: 2px solid #e5e7eb;">Название</th>
+          <th style="padding: 12px; text-align: right; border-bottom: 2px solid #e5e7eb;">Цена</th>
+        </tr>
+      </thead>
+      <tbody>
+  `;
+  
+  // Add each product to the table
+  products.forEach((product: Product) => {
+    html += `
+      <tr style="border-bottom: 1px solid #e5e7eb;">
+        <td style="padding: 12px; text-align: left;">${product.name}</td>
+        <td style="padding: 12px; text-align: right; font-weight: bold;">${formatPrice(product.price)}</td>
+      </tr>
+    `;
   });
   
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  // Close the table
+  html += `
+      </tbody>
+    </table>
+  `;
   
-  const link = document.createElement('a');
-  
-  const url = URL.createObjectURL(blob);
-  link.setAttribute('href', url);
-  link.setAttribute('download', 'МореПродукт-Прайс-лист.csv');
-  
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-  
-  toast({
-    title: "Прайс-лист скачан",
-    description: "Файл успешно сохранен на ваше устройство",
-  });
-};
+  return html;
+}

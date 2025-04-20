@@ -1,9 +1,8 @@
 
 import { useEffect, useState } from "react";
 import { Product } from "@/types/product";
-import { Category } from "@/data/categories";
-import { getProducts } from "@/utils/productStorage";
-import { getCategories } from "@/utils/categoryStorage";
+import { Category } from "@/types/category";
+import { getProducts, getCategories } from "@/utils/dataService";
 import ProductCard from "./ProductCard";
 import {
   Dialog,
@@ -12,7 +11,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import ProductForm from "../admin/product/ProductForm";
+import ProductForm from "../admin/products/ProductForm";
 import { useToast } from "@/hooks/use-toast";
 
 interface ProductGridProps {
@@ -76,10 +75,6 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
                 key={product.id}
                 product={product}
                 category={findCategory(product.categoryId)}
-                onEdit={showAdmin ? () => {
-                  setEditingProduct(product);
-                  setIsEditDialogOpen(true);
-                } : undefined}
               />
             ))}
           </div>
@@ -97,6 +92,7 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
           {editingProduct && (
             <ProductForm
               product={editingProduct}
+              categories={categories}
               onSuccess={handleEditSuccess}
             />
           )}
