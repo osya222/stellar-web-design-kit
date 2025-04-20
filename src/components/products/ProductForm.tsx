@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -18,6 +17,7 @@ import { Product } from "@/types/product";
 import { useToast } from "@/hooks/use-toast";
 import { saveProduct } from "@/utils/productStorage";
 import { Upload } from "lucide-react";
+import { getImageUrl } from "@/routes";
 
 const productSchema = z.object({
   name: z.string().min(3, { message: "Название должно содержать минимум 3 символа" }),
@@ -64,7 +64,6 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
       const filename = file.name.toLowerCase().replace(/[^a-z0-9.]/g, '-');
       const path = `/images/products/${filename}`;
       
-      // Use Lovable's built-in file upload functionality
       await fetch('/_upload', {
         method: 'POST',
         body: formData,
