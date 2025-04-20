@@ -325,17 +325,15 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Файл слишком большой</AlertDialogTitle>
-            <AlertDialogDescription>
-              <div className="space-y-4">
-                <p>Загружаемое изображение превышает лимит в 200KB.</p>
-                <div className="mt-4 p-3 bg-gray-100 rounded space-y-2">
-                  <h4 className="font-medium">Что делать:</h4>
-                  <ul className="list-disc pl-5 space-y-1">
-                    <li>Используйте изображение меньшего размера</li>
-                    <li>Сожмите изображение перед загрузкой с помощью онлайн-сервисов</li>
-                    <li>Используйте формат JPG вместо PNG для фотографий</li>
-                  </ul>
-                </div>
+            <AlertDialogDescription className="space-y-4">
+              <p>Загружаемое изображение превышает лимит в 200KB.</p>
+              <div className="mt-4 p-3 bg-gray-100 rounded space-y-2">
+                <h4 className="font-medium">Что делать:</h4>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Используйте изображение меньшего размера</li>
+                  <li>Сожмите изображение перед загрузкой с помощью онлайн-сервисов</li>
+                  <li>Используйте формат JPG вместо PNG для фотографий</li>
+                </ul>
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -350,21 +348,19 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Ошибка загрузки: 500 - write EPIPE</AlertDialogTitle>
-            <AlertDialogDescription>
-              <div className="space-y-4">
-                <p>
-                  Произошла ошибка подключения при попытке загрузить изображение. Эта ошибка (EPIPE) 
-                  обычно возникает из-за проблем с передачей данных.
-                </p>
-                <div className="mt-4 p-3 bg-gray-100 rounded space-y-2">
-                  <h4 className="font-medium">Решения:</h4>
-                  <ul className="list-disc pl-5 space-y-1">
-                    <li><strong>Используйте изображение меньшего размера (до 150KB)</strong></li>
-                    <li>Сожмите изображение перед загрузкой с помощью онлайн-сервисов</li>
-                    <li>Попробуйте другой формат изображения (например, JPG вместо PNG)</li>
-                    <li>Подождите несколько минут и попробуйте снова</li>
-                  </ul>
-                </div>
+            <AlertDialogDescription className="space-y-4">
+              <p>
+                Произошла ошибка подключения при попытке загрузить изображение. Эта ошибка (EPIPE) 
+                обычно возникает из-за проблем с передачей данных.
+              </p>
+              <div className="mt-4 p-3 bg-gray-100 rounded space-y-2">
+                <h4 className="font-medium">Решения:</h4>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li><strong>Используйте изображение меньшего размера (до 150KB)</strong></li>
+                  <li>Сожмите изображение перед загрузкой с помощью онлайн-сервисов</li>
+                  <li>Попробуйте другой формат изображения (например, JPG вместо PNG)</li>
+                  <li>Подождите несколько минут и попробуйте снова</li>
+                </ul>
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
@@ -379,17 +375,15 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Ошибка загрузки изображения</AlertDialogTitle>
-            <AlertDialogDescription>
-              <div className="space-y-4">
-                <p>{errorDetails}</p>
-                <div className="mt-4 p-3 bg-gray-100 rounded text-sm">
-                  <h4 className="font-medium mb-2">Возможные причины:</h4>
-                  <ul className="list-disc pl-5 mt-2 space-y-1">
-                    <li>Проблемы с подключением к серверу</li>
-                    <li>Недостаточно прав для записи файла</li>
-                    <li>Ошибка обработки на сервере</li>
-                  </ul>
-                </div>
+            <AlertDialogDescription className="space-y-4">
+              <p>{errorDetails}</p>
+              <div className="mt-4 p-3 bg-gray-100 rounded text-sm">
+                <h4 className="font-medium mb-2">Возможные причины:</h4>
+                <ul className="list-disc pl-5 mt-2 space-y-1">
+                  <li>Проблемы с подключением к серверу</li>
+                  <li>Недостаточно прав для записи файла</li>
+                  <li>Ошибка обработки на сервере</li>
+                </ul>
               </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
