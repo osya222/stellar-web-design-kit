@@ -215,3 +215,27 @@ export async function fetchManufacturers(): Promise<string[]> {
 export function getHeroImageUrl(): string {
   return "https://images.unsplash.com/photo-1498654200943-1088dd4438ae?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2340&q=80";
 }
+
+/**
+ * Обновляет изображение продукта
+ * @param productId ID продукта
+ * @param imagePath Путь к изображению
+ * @returns Обновленный продукт
+ */
+export async function updateProductImage(productId: string, imagePath: string): Promise<Product | null> {
+  // Находим индекс продукта
+  const productIndex = PRODUCTS.findIndex(p => p.id === productId);
+  
+  if (productIndex === -1) {
+    console.error(`Продукт с ID ${productId} не найден`);
+    return null;
+  }
+  
+  // Обновляем imageUrl
+  PRODUCTS[productIndex] = {
+    ...PRODUCTS[productIndex],
+    imageUrl: imagePath
+  };
+  
+  return PRODUCTS[productIndex];
+}

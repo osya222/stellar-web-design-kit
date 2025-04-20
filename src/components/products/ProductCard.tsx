@@ -7,6 +7,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { Pencil } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { updateProductImage } from '@/utils/dataService';
 
 interface ProductCardProps {
   product: Product;
@@ -55,38 +56,38 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
       console.log('Статус ответа:', response.status);
       
-      // Получение текста ответа
-      const responseText = await response.text();
-      console.log('Текст ответа:', responseText);
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Ошибка ответа:', errorText);
+        throw new Error(`Ошибка загрузки: ${response.status} ${response.statusText}`);
+      }
       
-      // Проверка, что ответ не пустой
-      if (!responseText || responseText.trim() === '') {
+      const text = await response.text();
+      console.log('Текст ответа:', text);
+      
+      if (!text || text.trim() === '') {
         throw new Error('Сервер вернул пустой ответ');
       }
       
-      // Попытка разбора JSON ответа
       let data;
       try {
-        data = JSON.parse(responseText);
-        console.log('Разобранные данные ответа:', data);
+        data = JSON.parse(text);
       } catch (e) {
-        console.error('Не удалось разобрать ответ как JSON:', e);
-        throw new Error('Сервер вернул неверный формат ответа');
+        console.error('Не удалось разобрать JSON:', e);
+        throw new Error('Неверный формат ответа от сервера');
       }
       
-      // Проверка на наличие ошибок в ответе
-      if (!response.ok || !data.success) {
-        const errorMessage = data.error || 'Неизвестная ошибка';
-        console.error('Ошибка загрузки:', errorMessage, data);
-        throw new Error(errorMessage);
+      if (!data.success || !data.path) {
+        throw new Error(data.error || 'Ошибка загрузки изображения');
       }
 
-      console.log('Загрузка успешна:', data);
+      console.log('Загрузка успешна, путь:', data.path);
       
       // Обновление отображаемого изображения
-      if (data.path) {
-        setProductImage(data.path);
-      }
+      setProductImage(data.path);
+      
+      // Обновление данных продукта
+      await updateProductImage(product.id, data.path);
       
       toast({
         title: "Успешно",
@@ -95,10 +96,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
     } catch (error) {
       console.error('Ошибка загрузки:', error);
-      const errorMessage = (error as Error).message || 'Не удалось загрузить изображение';
       toast({
         title: "Ошибка",
-        description: errorMessage,
+        description: (error as Error).message || 'Не удалось загрузить изображение',
         variant: "destructive"
       });
     } finally {
@@ -137,9 +137,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
                 Загрузка...
               </span>
             ) : (
-              <Pencil className="mr-2" />
+              <>
+                <Pencil className="mr-2 h-4 w-4" />
+                Изменить фото
+              </>
             )}
-            {!isUploading && 'Изменить фото'}
           </Button>
         </div>
       </AspectRatio>
