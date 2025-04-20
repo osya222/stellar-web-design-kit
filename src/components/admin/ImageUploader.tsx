@@ -13,7 +13,7 @@ const ImageUploader = () => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Проверяем тип файла
+    // Check file type
     if (!file.type.startsWith('image/')) {
       toast({
         title: "Ошибка",
@@ -23,7 +23,7 @@ const ImageUploader = () => {
       return;
     }
 
-    // Проверяем размер файла (макс 5MB)
+    // Check file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
       toast({
         title: "Ошибка",
@@ -37,9 +37,10 @@ const ImageUploader = () => {
     try {
       const fileExtension = file.name.split('.').pop();
       const fileName = `${uuidv4()}.${fileExtension}`;
+      
       const formData = new FormData();
-      formData.append('image', file);
-      formData.append('fileName', fileName);
+      const renamedFile = new File([file], fileName, { type: file.type });
+      formData.append('image', renamedFile);
 
       const response = await fetch('/api/upload', {
         method: 'POST',
@@ -50,21 +51,21 @@ const ImageUploader = () => {
         throw new Error('Ошибка загрузки');
       }
 
-      const imagePath = `/images/products/${fileName}`;
+      const data = await response.json();
       
       toast({
         title: "Успешно",
         description: "Изображение загружено",
       });
 
-      // Копируем путь в буфер обмена для удобства
-      await navigator.clipboard.writeText(imagePath);
+      // Copy path to clipboard for convenience
+      await navigator.clipboard.writeText(data.path);
       toast({
         title: "Путь скопирован",
         description: "Путь к изображению скопирован в буфер обмена",
       });
 
-      console.log('Путь к загруженному изображению:', imagePath);
+      console.log('Uploaded image path:', data.path);
     } catch (error) {
       toast({
         title: "Ошибка",
