@@ -62,6 +62,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
         const formData = new FormData();
         formData.append('image', selectedImage);
         
+        // Using Lovable's built-in upload endpoint
         const response = await fetch('/lov-upload', {
           method: 'POST',
           body: formData
@@ -70,8 +71,10 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
         if (response.ok) {
           const result = await response.json();
           imageName = result.filename;
+          console.log("Image uploaded successfully:", imageName);
         } else {
-          throw new Error('Failed to upload image');
+          console.error("Failed to upload image:", await response.text());
+          throw new Error('Не удалось загрузить изображение');
         }
       }
       
@@ -114,7 +117,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
       console.error("Error saving product:", error);
       toast({
         title: "Ошибка",
-        description: "Не удалось сохранить товар",
+        description: error instanceof Error ? error.message : "Не удалось сохранить товар",
         variant: "destructive",
       });
     } finally {
