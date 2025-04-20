@@ -48,22 +48,37 @@ export async function handleFileUpload(request: Request): Promise<Response> {
       );
     }
 
-    // Создаем уникальное имя файла
-    const fileExtension = file.name.split('.').pop() || 'jpg';
-    const fileName = `${uuidv4()}.${fileExtension}`;
-    
-    // В реальном приложении здесь была бы загрузка на сервер
-    // В демонстрационных целях просто возвращаем путь
-    const filePath = `/lovable-uploads/${fileName}`;
-    
-    // Возвращаем успешный ответ с путем к файлу
-    return new Response(
-      JSON.stringify({ success: true, filePath }),
-      { 
-        status: 200, 
-        headers: { 'Content-Type': 'application/json' } 
-      }
-    );
+    try {
+      // Создаем уникальное имя файла
+      const fileExtension = file.name.split('.').pop() || 'jpg';
+      const fileName = `${uuidv4()}.${fileExtension}`;
+      
+      // В реальном приложении здесь была бы загрузка на сервер
+      // В демонстрационных целях просто возвращаем путь
+      const filePath = `/lovable-uploads/${fileName}`;
+      
+      // Возвращаем успешный ответ с путем к файлу
+      return new Response(
+        JSON.stringify({ success: true, filePath }),
+        { 
+          status: 200, 
+          headers: { 'Content-Type': 'application/json' } 
+        }
+      );
+    } catch (error: any) {
+      console.error('Ошибка при обработке файла:', error);
+      
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          message: error.message || 'Ошибка обработки файла' 
+        }),
+        { 
+          status: 500, 
+          headers: { 'Content-Type': 'application/json' } 
+        }
+      );
+    }
   } catch (error: any) {
     console.error('Ошибка загрузки файла:', error);
     

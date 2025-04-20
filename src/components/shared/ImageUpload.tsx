@@ -20,6 +20,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
+  const [previewImage, setPreviewImage] = useState<string | undefined>(currentImage);
+
+  // Обновляем предпросмотр при изменении currentImage из props
+  React.useEffect(() => {
+    setPreviewImage(currentImage);
+  }, [currentImage]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -27,8 +33,19 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
     setIsUploading(true);
     try {
+      // Сначала показываем локальный предпросмотр для мгновенной обратной связи
+      const localPreview = URL.createObjectURL(file);
+      setPreviewImage(localPreview);
+      
+      // Затем загружаем файл
       const imagePath = await uploadFile(file);
+      
+      // После загрузки обновляем путь к изображению
+      setPreviewImage(imagePath);
+      
+      // Сообщаем родительскому компоненту о новом пути
       onImageUploaded(imagePath);
+      
       toast({
         title: "Успешно",
         description: "Изображение загружено",
@@ -40,6 +57,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         title: "Ошибка",
         description: error.message || "Не удалось загрузить изображение",
       });
+      
+      // Восстанавливаем исходное изображение при ошибке
+      setPreviewImage(currentImage);
     } finally {
       setIsUploading(false);
       // Сбрасываем значение input, чтобы позволить повторную загрузку того же файла
@@ -51,6 +71,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
   const handleUploadClick = () => {
     fileInputRef.current?.click();
+  };
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    console.warn(`Не удалось загрузить изображение: ${previewImage}`);
+    e.currentTarget.src = "/placeholder.svg";
   };
 
   const sizeClasses = {
@@ -68,6 +93,21 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         accept="image/*"
         className="hidden"
       />
+      
+      {/* Показываем загруженное изображение или плейсхолдер */}
+      {previewImage ? (
+        <img
+          src={previewImage}
+          alt="Загруженное изображение"
+          className="w-full h-full object-contain"
+          onError={handleImageError}
+        />
+      ) : (
+        <div className="w-full h-full bg-gray-50 flex items-center justify-center">
+          <span className="text-gray-400">Нет изображения</span>
+        </div>
+      )}
+      
       <div 
         onClick={handleUploadClick}
         className={`${sizeClasses[size]} opacity-0 group-hover:opacity-100 transition-opacity absolute top-2 right-2 bg-white/80 backdrop-blur-sm hover:bg-white rounded-full flex items-center justify-center cursor-pointer z-10`}

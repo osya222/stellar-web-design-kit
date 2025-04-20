@@ -33,61 +33,55 @@ export const uploadFile = async (file: File): Promise<string> => {
         body: formData
       });
 
+      // Преобразовываем файл в Data URL для отображения сразу
+      const fileDataUrl = await fileToDataURL(file);
+      
       if (!response.ok) {
-        // Эмулируем успешную загрузку, создавая Data URL для файла
-        console.warn('API загрузки недоступен или вернул ошибку, эмулируем успешную загрузку');
-        
-        // Генерируем имя файла с уникальным идентификатором
-        const fileExtension = file.name.split('.').pop() || 'jpg';
-        const fileName = `${uuidv4()}.${fileExtension}`;
-        
-        // Читаем файл как Data URL для отображения
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            // Возвращаем Data URL в качестве пути к изображению
-            resolve(reader.result as string);
-          };
-          reader.readAsDataURL(file);
-        });
+        console.warn('API загрузки недоступен или вернул ошибку, используем Data URL');
+        return fileDataUrl;
       }
       
       // Проверяем тип контента ответа
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.includes("application/json")) {
-        const data = await response.json();
-        
-        if (!data.success) {
-          throw new Error(data.message || 'Неизвестная ошибка при загрузке файла');
+        try {
+          const data = await response.json();
+          
+          if (!data.success) {
+            console.warn('Ошибка API:', data.message);
+            return fileDataUrl;
+          }
+          
+          console.log('Файл успешно загружен:', data.filePath);
+          return data.filePath;
+        } catch (jsonError) {
+          console.warn('Ошибка при разборе JSON ответа:', jsonError);
+          return fileDataUrl;
         }
-        
-        console.log('Файл успешно загружен:', data.filePath);
-        return data.filePath;
       } else {
-        // Если ответ не JSON, эмулируем успешную загрузку
-        console.warn('Сервер вернул не JSON ответ, эмулируем локальную загрузку');
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            resolve(reader.result as string);
-          };
-          reader.readAsDataURL(file);
-        });
+        console.warn('Сервер вернул не JSON ответ, используем Data URL');
+        return fileDataUrl;
       }
     } catch (error: any) {
-      console.error('Ошибка загрузки файла:', error);
-      
-      // Эмулируем успешную загрузку в случае ошибки
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          resolve(reader.result as string);
-        };
-        reader.readAsDataURL(file);
-      });
+      console.error('Ошибка при отправке запроса:', error);
+      // В случае сетевой ошибки используем Data URL
+      return fileToDataURL(file);
     }
   } catch (error: any) {
     console.error('Ошибка загрузки файла:', error);
     throw error;
   }
+};
+
+/**
+ * Преобразует файл в Data URL
+ */
+const fileToDataURL = (file: File): Promise<string> => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      resolve(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  });
 };

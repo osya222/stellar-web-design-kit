@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Product } from "@/types/product";
 import { Category } from "@/types/category";
 import { formatPrice } from "@/lib/formatters";
@@ -17,18 +17,20 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, category, onEdit }) => {
   const { addToCart } = useCart();
+  const [currentImage, setCurrentImage] = useState<string | undefined>(product.image);
 
   const handleAddToCart = () => {
     addToCart(product);
   };
 
   const handleImageUploaded = (imagePath: string) => {
+    setCurrentImage(imagePath);
     const updatedProduct = { ...product, image: imagePath };
     saveProduct(updatedProduct);
   };
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    console.warn(`Не удалось загрузить изображение: ${product.image}`);
+    console.warn(`Не удалось загрузить изображение: ${currentImage}`);
     e.currentTarget.src = "/placeholder.svg";
   };
 
@@ -37,22 +39,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, category, onEdit }) 
       <div className="aspect-square w-full relative bg-white p-4">
         <ImageUpload
           onImageUploaded={handleImageUploaded}
-          currentImage={product.image}
+          currentImage={currentImage}
           className="w-full h-full"
         />
-        {product.image ? (
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-full object-contain mix-blend-multiply"
-            onError={handleImageError}
-            loading="lazy"
-          />
-        ) : (
-          <div className="w-full h-full bg-gray-50 flex items-center justify-center">
-            <span className="text-gray-400">Нет изображения</span>
-          </div>
-        )}
         {category && (
           <div className="absolute top-2 right-2 bg-blue-100 text-blue-800 text-xs font-medium px-2 py-1 rounded-lg">
             {category.name}
