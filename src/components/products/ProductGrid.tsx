@@ -4,6 +4,7 @@ import { Product } from "@/types/product";
 import { Category } from "@/types/category";
 import { getProducts, getCategories } from "@/utils/dataService";
 import ProductCard from "./ProductCard";
+import ProductSearch from "./ProductSearch";
 import {
   Accordion,
   AccordionContent,
@@ -21,6 +22,7 @@ interface ProductGridProps {
 
 const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -29,6 +31,10 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
   useEffect(() => {
     loadData();
   }, []);
+
+  useEffect(() => {
+    setFilteredProducts(products);
+  }, [products]);
 
   const loadData = () => {
     try {
@@ -43,10 +49,24 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
     }
   };
 
+  const handleSearch = (query: string) => {
+    const normalizedQuery = query.toLowerCase().trim();
+    if (!normalizedQuery) {
+      setFilteredProducts(products);
+      return;
+    }
+
+    const filtered = products.filter(product => 
+      product.name.toLowerCase().includes(normalizedQuery) ||
+      product.description?.toLowerCase().includes(normalizedQuery)
+    );
+    setFilteredProducts(filtered);
+  };
+
   const groupProductsByCategory = () => {
     return categories.map(category => ({
       ...category,
-      products: products.filter(product => product.categoryId === category.id)
+      products: filteredProducts.filter(product => product.categoryId === category.id)
     }));
   };
 
@@ -65,13 +85,14 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
   return (
     <section className="py-8" id="catalog">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-bold text-gray-900">Наш каталог</h2>
+        <div className="flex flex-col items-center mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-6">Наш каталог</h2>
+          <ProductSearch onSearch={handleSearch} />
         </div>
 
-        {products.length === 0 ? (
+        {filteredProducts.length === 0 ? (
           <div className="text-center py-12 text-gray-500">
-            Пока нет товаров в каталоге
+            {products.length === 0 ? 'Пока нет товаров в каталоге' : 'Товары не найдены'}
           </div>
         ) : (
           <Accordion type="multiple" className="w-full space-y-4">
