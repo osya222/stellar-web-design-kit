@@ -1,13 +1,14 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { formatPrice } from '@/lib/formatters';
 import type { Product } from '@/types/product';
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
-import { Upload } from "lucide-react";
+import { Upload, Image, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { v4 as uuidv4 } from 'uuid';
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 interface ProductCardProps {
   product: Product;
@@ -15,10 +16,15 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { toast } = useToast();
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadError, setUploadError] = useState<string | null>(null);
   
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
+    
+    // Reset previous error state
+    setUploadError(null);
 
     // Check file type
     if (!file.type.startsWith('image/')) {
@@ -41,6 +47,8 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     }
 
     try {
+      setIsUploading(true);
+      
       const fileExtension = file.name.split('.').pop();
       const fileName = `${uuidv4()}.${fileExtension}`;
       
@@ -48,16 +56,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       const renamedFile = new File([file], fileName, { type: file.type });
       formData.append('image', renamedFile);
 
+      console.log('Sending upload request...');
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       });
 
+      console.log('Response status:', response.status);
+      
       if (!response.ok) {
-        throw new Error('Ошибка загрузки');
+        const errorData = await response.json().catch(() => ({ error: 'Ошибка загрузки' }));
+        throw new Error(errorData.error || 'Ошибка загрузки');
       }
 
       const data = await response.json();
+      console.log('Upload successful:', data);
       
       toast({
         title: "Успешно",
@@ -72,12 +85,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       });
 
     } catch (error) {
+      console.error('Upload error:', error);
+      setUploadError((error as Error).message || 'Не удалось загрузить изображение');
       toast({
         title: "Ошибка",
         description: "Не удалось загрузить изображение",
         variant: "destructive"
       });
-      console.error('Upload error:', error);
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -93,20 +109,41 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
             target.src = '/placeholder.svg';
           }}
         />
-        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+        <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-4">
           <Button
             variant="outline"
             className="relative bg-white hover:bg-gray-100"
+            disabled={isUploading}
           >
             <input
               type="file"
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               onChange={handleFileChange}
               accept="image/*"
+              disabled={isUploading}
             />
-            <Upload className="mr-2" />
-            Загрузить
+            {isUploading ? (
+              <span className="flex items-center gap-2">
+                <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full" />
+                Загрузка...
+              </span>
+            ) : (
+              <>
+                <Upload className="mr-2" />
+                Загрузить
+              </>
+            )}
           </Button>
+          
+          {uploadError && (
+            <Alert variant="destructive" className="mt-2 p-2 max-w-[90%]">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle className="text-xs">Ошибка</AlertTitle>
+              <AlertDescription className="text-xs">
+                {uploadError}
+              </AlertDescription>
+            </Alert>
+          )}
         </div>
       </AspectRatio>
       <CardContent className="p-6">

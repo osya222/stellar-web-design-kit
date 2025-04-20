@@ -36,41 +36,54 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
-    middleware: [
-      async (req: Request, res: ServerResponse, next: NextFunction) => {
-        if (req.url === '/api/upload' && req.method === 'POST') {
-          try {
-            upload.single('image')(req as any, res as any, async (err) => {
-              if (err) {
-                res.statusCode = 500;
-                res.end(JSON.stringify({ error: 'Upload failed' }));
-                return;
-              }
-              
-              // @ts-ignore: multer adds file property to req
-              const file = req.file;
-              if (!file) {
-                res.statusCode = 400;
-                res.end(JSON.stringify({ error: 'No file uploaded' }));
-                return;
-              }
+    middlewareMode: true,
+    fs: {
+      strict: false,
+    },
+    proxy: {
+      '/api/upload': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        bypass: (req, res, options) => {
+          if (req.url === '/api/upload' && req.method === 'POST') {
+            try {
+              upload.single('image')(req as any, res as any, (err) => {
+                if (err) {
+                  console.error("Upload error:", err);
+                  res.statusCode = 500;
+                  res.end(JSON.stringify({ error: 'Ошибка загрузки файла' }));
+                  return;
+                }
+                
+                // @ts-ignore: multer adds file property to req
+                const file = req.file;
+                if (!file) {
+                  res.statusCode = 400;
+                  res.end(JSON.stringify({ error: 'Файл не был загружен' }));
+                  return;
+                }
 
-              res.statusCode = 200;
-              res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify({ 
-                success: true,
-                path: `/images/products/${file.filename}` 
-              }));
-            });
-          } catch (error) {
-            res.statusCode = 500;
-            res.end(JSON.stringify({ error: 'Server error' }));
+                console.log("File uploaded successfully:", file.filename);
+                
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'application/json');
+                res.end(JSON.stringify({ 
+                  success: true,
+                  path: `/images/products/${file.filename}` 
+                }));
+              });
+              return true;
+            } catch (error) {
+              console.error("Server error:", error);
+              res.statusCode = 500;
+              res.end(JSON.stringify({ error: 'Ошибка сервера' }));
+              return true;
+            }
           }
-        } else {
-          next();
+          return false;
         }
       }
-    ]
+    }
   },
   plugins: [
     react(),
@@ -83,4 +96,3 @@ export default defineConfig(({ mode }) => ({
     },
   },
 }));
-
