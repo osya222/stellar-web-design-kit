@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { formatPrice } from '@/lib/formatters';
@@ -64,11 +63,31 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
       console.log('Response status:', response.status);
       
-      // Try to parse the response as text first to debug
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Error response:', errorText);
+        
+        let errorMessage = 'Ошибка загрузки';
+        try {
+          const errorData = JSON.parse(errorText);
+          errorMessage = errorData.error || errorMessage;
+        } catch (e) {
+          console.error('Failed to parse error response:', e);
+        }
+        
+        throw new Error(errorMessage);
+      }
+      
+      // Try to get response as text first
       const responseText = await response.text();
       console.log('Response text:', responseText);
       
-      // Check if the response is valid JSON
+      // If empty response, throw error
+      if (!responseText.trim()) {
+        throw new Error('Сервер вернул пустой ответ');
+      }
+      
+      // Parse JSON response
       let data;
       try {
         data = JSON.parse(responseText);
@@ -76,12 +95,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         console.error('Response is not valid JSON:', e);
         throw new Error('Сервер вернул неверный формат ответа');
       }
-      
-      if (!response.ok) {
-        throw new Error(data.error || 'Ошибка загрузки');
-      }
 
       console.log('Upload successful:', data);
+      
+      if (!data.success) {
+        throw new Error(data.error || 'Неизвестная ошибка');
+      }
       
       toast({
         title: "Успешно",
@@ -100,7 +119,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       setUploadError((error as Error).message || 'Не удалось загрузить изображение');
       toast({
         title: "Ошибка",
-        description: "Не удалось загрузить изображение",
+        description: (error as Error).message || "Не удалось загрузить изображение",
         variant: "destructive"
       });
     } finally {

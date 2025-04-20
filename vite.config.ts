@@ -56,10 +56,13 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
         handle: (req: IncomingMessage, res: ServerResponse) => {
           if (req.url === '/api/upload' && req.method === 'POST') {
             try {
-              // Set correct content type before handling the upload
+              // Set correct content type for JSON responses
               res.setHeader('Content-Type', 'application/json');
               
-              upload.single('image')(req as unknown as Request, res as any, (err) => {
+              // Use multer to handle the file upload
+              const uploadSingle = upload.single('image');
+              
+              uploadSingle(req as unknown as Request, res as any, (err) => {
                 if (err) {
                   console.error("Upload error:", err);
                   res.statusCode = 500;
@@ -68,7 +71,7 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
                 }
                 
                 // @ts-ignore: multer adds file property to req
-                const file = req.file;
+                const file = (req as any).file;
                 if (!file) {
                   res.statusCode = 400;
                   res.end(JSON.stringify({ error: 'Файл не был загружен' }));
@@ -77,9 +80,8 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
 
                 console.log("File uploaded successfully:", file.filename);
                 
-                // Explicitly set content type and status code
+                // Return success response with the file path
                 res.statusCode = 200;
-                res.setHeader('Content-Type', 'application/json');
                 res.end(JSON.stringify({ 
                   success: true,
                   path: `/images/products/${file.filename}` 
