@@ -45,10 +45,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     try {
       setIsUploading(true);
       
+      // Создаем FormData для отправки файла
       const formData = new FormData();
       formData.append('image', file);
 
       console.log('Отправка запроса на загрузку...');
+      
+      // Используем fetch для отправки запроса на сервер
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
@@ -56,26 +59,15 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
       console.log('Статус ответа:', response.status);
       
+      // Проверяем успешность запроса
       if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Ошибка ответа:', errorText);
-        throw new Error(`Ошибка загрузки: ${response.status} ${response.statusText}`);
+        const errorData = await response.json().catch(() => null);
+        console.error('Ошибка ответа:', errorData || response.statusText);
+        throw new Error(`Ошибка загрузки: ${response.status} ${errorData?.error || response.statusText}`);
       }
       
-      const text = await response.text();
-      console.log('Текст ответа:', text);
-      
-      if (!text || text.trim() === '') {
-        throw new Error('Сервер вернул пустой ответ');
-      }
-      
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch (e) {
-        console.error('Не удалось разобрать JSON:', e);
-        throw new Error('Неверный формат ответа от сервера');
-      }
+      // Получаем ответ от сервера
+      const data = await response.json();
       
       if (!data.success || !data.path) {
         throw new Error(data.error || 'Ошибка загрузки изображения');

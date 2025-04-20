@@ -55,73 +55,88 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
           });
         },
         handle: (req: IncomingMessage, res: ServerResponse) => {
-          if (req.url === '/api/upload') {
+          // Проверяем, что это запрос на /api/upload
+          if (req.url !== '/api/upload') {
+            return false;
+          }
+
+          // Устанавливаем CORS заголовки
+          res.setHeader('Access-Control-Allow-Origin', '*');
+          res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+          res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+          
+          // Обработка OPTIONS запроса
+          if (req.method === 'OPTIONS') {
+            res.statusCode = 204;
+            res.end();
+            return true;
+          }
+          
+          // Обработка POST запроса для загрузки файла
+          if (req.method === 'POST') {
             try {
-              console.log("Обработка запроса загрузки");
+              console.log("Обработка POST запроса на загрузку");
               
-              // Установка заголовков для CORS если нужно
-              res.setHeader('Access-Control-Allow-Origin', '*');
-              res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-              res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+              // Используем multer для обработки загрузки одного файла
+              const uploadSingle = upload.single('image');
               
-              // Обработка OPTIONS запроса (preflight)
-              if (req.method === 'OPTIONS') {
-                res.statusCode = 204;
-                res.end();
-                return true;
-              }
-              
-              // Обработка загрузки только для POST запросов
-              if (req.method === 'POST') {
-                upload.single('image')(req as unknown as Request, res as unknown as Response, (err: any) => {
-                  // Всегда устанавливаем правильный Content-Type
-                  res.setHeader('Content-Type', 'application/json');
-                  
-                  if (err) {
-                    console.error("Ошибка загрузки:", err);
-                    res.statusCode = 500;
-                    res.end(JSON.stringify({ error: 'Ошибка загрузки файла', details: err.message }));
-                    return;
-                  }
-                  
-                  const file = (req as any).file;
-                  if (!file) {
-                    console.error("Файл не загружен");
-                    res.statusCode = 400;
-                    res.end(JSON.stringify({ error: 'Файл не был загружен' }));
-                    return;
-                  }
-                  
-                  console.log("Файл успешно загружен:", file.filename);
-                  
-                  // Формируем путь к файлу для клиента
-                  const imagePath = `/images/products/${file.filename}`;
-                  
-                  // Отправка успешного ответа
-                  res.statusCode = 200;
-                  const responseData = { 
-                    success: true,
-                    path: imagePath
-                  };
-                  
-                  const responseJson = JSON.stringify(responseData);
-                  console.log("Отправляем ответ:", responseJson);
-                  res.end(responseJson);
-                });
+              uploadSingle(req as unknown as Request, res as unknown as Response, (err: any) => {
+                // Устанавливаем Content-Type заголовок для JSON
+                res.setHeader('Content-Type', 'application/json');
                 
-                return true;
-              }
+                if (err) {
+                  console.error("Ошибка multer при загрузке:", err);
+                  res.statusCode = 500;
+                  res.end(JSON.stringify({ 
+                    error: 'Ошибка загрузки файла', 
+                    details: err.message 
+                  }));
+                  return;
+                }
+                
+                const file = (req as any).file;
+                if (!file) {
+                  console.error("Файл не получен multer");
+                  res.statusCode = 400;
+                  res.end(JSON.stringify({ 
+                    error: 'Файл не был получен'
+                  }));
+                  return;
+                }
+                
+                console.log("Файл успешно загружен:", file.filename);
+                
+                // Формируем относительный путь к файлу для клиента
+                const imagePath = `/images/products/${file.filename}`;
+                
+                // Отправляем успешный ответ
+                res.statusCode = 200;
+                const responseData = { 
+                  success: true,
+                  path: imagePath
+                };
+                
+                res.end(JSON.stringify(responseData));
+              });
               
-              return false;
+              return true;
             } catch (error) {
-              console.error("Ошибка сервера:", error);
+              console.error("Ошибка при обработке загрузки:", error);
               res.statusCode = 500;
               res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify({ error: 'Ошибка сервера', details: (error as Error).message }));
+              res.end(JSON.stringify({ 
+                error: 'Ошибка сервера', 
+                details: (error as Error).message 
+              }));
               return true;
             }
           }
-          return false;
+          
+          // Для других методов возвращаем 405 Method Not Allowed
+          res.statusCode = 405;
+          res.setHeader('Content-Type', 'application/json');
+          res.end(JSON.stringify({ error: 'Method Not Allowed' }));
+          return true;
         }
       } as ProxyOptions
     }
