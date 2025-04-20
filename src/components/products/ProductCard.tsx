@@ -63,6 +63,9 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <div className="space-y-2">
           <h3 className="font-medium text-lg line-clamp-2">{product.name}</h3>
           <p className="text-sm text-gray-500">{product.manufacturer}</p>
+          {product.description && (
+            <p className="text-sm text-gray-700 line-clamp-3">{product.description}</p>
+          )}
           <div className="flex justify-between items-center pt-2">
             <p className="font-bold text-lg">
               {product.price === 0 ? "По запросу" : formatPrice(product.price)}
