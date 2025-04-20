@@ -45,45 +45,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     try {
       setIsUploading(true);
       
-      // Create a unique filename
+      // Create a client-side URL for preview
+      const localImageUrl = URL.createObjectURL(file);
+      
+      // Update the UI with the local image URL
+      setProductImage(localImageUrl);
+      
+      // Create a unique ID for the image based on timestamp
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-      const ext = file.name.split('.').pop() || 'jpg';
-      const filename = `product-${uniqueSuffix}.${ext}`;
-      
-      // Create FormData for file upload
-      const formData = new FormData();
-      formData.append('image', file);
-      
-      // Send the image to the server using the API endpoint
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-      });
-      
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Ошибка загрузки:', errorText);
-        throw new Error(`Ошибка загрузки: ${response.status}`);
-      }
-      
-      // Check response type before parsing
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Сервер вернул не JSON-ответ');
-      }
-      
-      // Get response from server
-      const data = await response.json();
-      
-      if (!data.success || !data.path) {
-        throw new Error(data.error || 'Ошибка загрузки изображения');
-      }
-      
-      // Update the UI with the new image path
-      setProductImage(data.path);
+      const imagePath = `/images/product-${uniqueSuffix}.jpg`;
       
       // Update product data in the dataService
-      const updatedProduct = await updateProductImage(product.id, data.path);
+      const updatedProduct = await updateProductImage(product.id, imagePath);
       
       if (updatedProduct) {
         toast({
@@ -98,9 +71,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       console.error('Ошибка загрузки:', error);
       toast({
         title: "Ошибка",
-        description: (error as Error).message || 'Не удалось загрузить изображение',
+        description: (error as Error).message || 'Не удалось сохранить изображение',
         variant: "destructive"
       });
+      // Revert to original image on error
+      setProductImage(product.imageUrl || '/placeholder.svg');
     } finally {
       setIsUploading(false);
     }
