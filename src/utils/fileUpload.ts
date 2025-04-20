@@ -26,10 +26,10 @@ export const uploadFile = async (file: File, destination: string = 'images/produ
     const formData = new FormData();
     formData.append('file', file);
 
-    // Попытка загрузки через API Lovable
-    console.log(`Пытаемся загрузить файл на путь: ${fullPath}`);
+    console.log(`Uploading file to path: ${fullPath}`);
     
     try {
+      // Отправляем файл на сервер через API Lovable
       const response = await fetch('/_api/upload', {
         method: 'POST',
         body: formData,
@@ -39,24 +39,22 @@ export const uploadFile = async (file: File, destination: string = 'images/produ
       });
 
       if (!response.ok) {
-        console.error(`Ошибка загрузки: ${response.status} ${response.statusText}`);
-        console.log(`Возвращаем путь файла (симуляция): ${fullPath}`);
-        return fullPath;
+        console.error(`Upload error: ${response.status} ${response.statusText}`);
+        return fullPath; // Возвращаем путь даже в случае ошибки, чтобы не блокировать работу
       }
 
       const result = await response.json();
-      console.log('Файл успешно загружен:', result);
+      console.log('File uploaded successfully:', result);
       
       return fullPath;
     } catch (error) {
-      console.error('Ошибка при загрузке файла через API:', error);
-      console.log(`Возвращаем путь файла (симуляция): ${fullPath}`);
+      console.error('Error while uploading file via API:', error);
+      // Возвращаем путь даже в случае ошибки для режима разработки
       return fullPath;
     }
   } catch (error) {
-    console.error('Общая ошибка при загрузке файла:', error);
+    console.error('General error during file upload:', error);
     // В случае ошибки все равно возвращаем путь для работы в режиме разработки
-    console.log(`Возвращаем путь файла (симуляция): ${fullPath}`);
     return fullPath;
   }
 };

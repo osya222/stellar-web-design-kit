@@ -48,13 +48,20 @@ export const saveCategory = (category: Category): void => {
   }
   
   // Обновляем исходный массив defaultCategories для сохранения между перезагрузками
-  // Сначала очищаем массив
-  defaultCategories.length = 0;
-  // Затем добавляем все категории из кеша
-  cachedCategories.forEach(c => defaultCategories.push({...c}));
-  
-  // Save changes to source code
-  updateCategoriesFile();
+  try {
+    // Сначала очищаем массив
+    while (defaultCategories.length > 0) {
+      defaultCategories.pop();
+    }
+    
+    // Затем добавляем все категории из кеша
+    cachedCategories.forEach(c => defaultCategories.push({...c}));
+    
+    // Save changes to source code
+    updateCategoriesFile();
+  } catch (error) {
+    console.error('Ошибка при обновлении исходного массива категорий:', error);
+  }
 };
 
 /**
@@ -76,12 +83,20 @@ export const deleteCategory = (categoryId: number): boolean => {
     cachedCategories.splice(index, 1);
     console.log('Удалена категория с ID:', categoryId);
     
-    // Обновляем исходный массив defaultCategories для сохранения между перезагрузками
-    defaultCategories.length = 0;
-    cachedCategories.forEach(c => defaultCategories.push({...c}));
+    try {
+      // Обновляем исходный массив defaultCategories для сохранения между перезагрузками
+      while (defaultCategories.length > 0) {
+        defaultCategories.pop();
+      }
+      
+      cachedCategories.forEach(c => defaultCategories.push({...c}));
+      
+      // Save changes to source code
+      updateCategoriesFile();
+    } catch (error) {
+      console.error('Ошибка при обновлении исходного массива категорий после удаления:', error);
+    }
     
-    // Save changes to source code
-    updateCategoriesFile();
     return true;
   }
   

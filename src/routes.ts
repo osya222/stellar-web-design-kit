@@ -9,8 +9,10 @@ export const getImageUrl = (imageFileName?: string): string => {
     return '/placeholder.svg';
   }
 
-  // Проверяем, если путь уже абсолютный или полный (начинается с http/https)
-  if (imageFileName.startsWith('/') || imageFileName.startsWith('http')) {
+  // Если путь уже абсолютный или полный (начинается с http/https)
+  if (imageFileName.startsWith('/')) {
+    return imageFileName;
+  } else if (imageFileName.startsWith('http')) {
     return imageFileName;
   }
   

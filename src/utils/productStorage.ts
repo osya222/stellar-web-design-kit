@@ -41,7 +41,7 @@ export const saveProduct = (product: Product): void => {
   
   const existingIndex = cachedProducts.findIndex(p => p.id === product.id);
   
-  if (existingIndex >= 0) {
+  if (existingIndex >= 0 && product.id !== 0) {
     // Update existing product
     cachedProducts[existingIndex] = { ...product };
     console.log('Обновлен существующий товар:', product.id);
@@ -56,11 +56,14 @@ export const saveProduct = (product: Product): void => {
   // Обновляем исходный массив defaultProducts для сохранения между перезагрузками
   try {
     // Сначала очищаем массив
-    defaultProducts.length = 0;
+    while (defaultProducts.length > 0) {
+      defaultProducts.pop();
+    }
+    
     // Затем добавляем все товары из кеша
     cachedProducts.forEach(p => defaultProducts.push({...p}));
     
-    // Сохраняем изменения в исходный код через API Lovable
+    // Сохраняем изменения в исходный код
     updateProductsFile();
   } catch (error) {
     console.error('Ошибка при обновлении исходного массива товаров:', error);
@@ -80,7 +83,10 @@ export const deleteProduct = (productId: number): void => {
     
     try {
       // Обновляем исходный массив defaultProducts для сохранения между перезагрузками
-      defaultProducts.length = 0;
+      while (defaultProducts.length > 0) {
+        defaultProducts.pop();
+      }
+      
       cachedProducts.forEach(p => defaultProducts.push({...p}));
       
       // Save changes to source code

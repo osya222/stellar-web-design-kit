@@ -28,7 +28,10 @@ export const ImageUploadField = ({
     if (!file) return;
 
     try {
+      // Передаём файл родительскому компоненту для последующей загрузки
       onFileSelect(file);
+      
+      // Создаём локальный URL для предпросмотра изображения
       const localPreviewUrl = URL.createObjectURL(file);
       
       toast({
@@ -36,9 +39,9 @@ export const ImageUploadField = ({
         description: "Изображение готово к загрузке",
       });
       
-      console.log("Image preview set with local URL:", localPreviewUrl);
+      console.log("Подготовлено локальное изображение:", localPreviewUrl);
     } catch (error) {
-      console.error("Error handling image:", error);
+      console.error("Ошибка обработки изображения:", error);
       toast({
         title: "Ошибка",
         description: "Не удалось обработать изображение",
@@ -61,6 +64,10 @@ export const ImageUploadField = ({
                   src={imagePreview} 
                   alt="Preview" 
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    console.error(`Ошибка загрузки изображения: ${imagePreview}`);
+                    (e.target as HTMLImageElement).src = '/placeholder.svg';
+                  }}
                 />
               </div>
             )}

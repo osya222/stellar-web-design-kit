@@ -1,12 +1,12 @@
+
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Form,
   FormControl,
   FormField,
   FormItem,
@@ -18,19 +18,11 @@ import { useToast } from "@/hooks/use-toast";
 import { saveProduct } from "@/utils/productStorage";
 import { Upload } from "lucide-react";
 import { getImageUrl } from "@/routes";
-import { categories } from "@/data/categories";
+import { getCategories } from "@/utils/categoryStorage";
+import { Category } from "@/data/categories";
 import { uploadFile } from "@/utils/fileUpload";
-
-const productSchema = z.object({
-  name: z.string().min(3, { message: "Название должно содержать минимум 3 символа" }),
-  price: z.coerce.number().min(1, { message: "Цена должна быть больше 0" }),
-  categoryId: z.coerce.number({ required_error: "Категория обязательна" }),
-  description: z.string().optional(),
-  manufacturer: z.string().min(1, { message: "Производитель обязателен" }),
-  image: z.string().optional(),
-});
-
-type ProductFormValues = z.infer<typeof productSchema>;
+import { productSchema } from "@/components/admin/product-form/types";
+import type { ProductFormValues } from "@/components/admin/product-form/types";
 
 type ProductFormProps = {
   existingProduct?: Product;
@@ -39,19 +31,30 @@ type ProductFormProps = {
 
 const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { toast } = useToast();
   const [uploadingImage, setUploadingImage] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(
     existingProduct?.image ? getImageUrl(existingProduct.image) : null
   );
+  const [categories, setCategories] = useState<Category[]>([]);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const loadCategories = () => {
+      const loadedCategories = getCategories();
+      console.log("Загружены категории:", loadedCategories.length);
+      setCategories(loadedCategories);
+    };
+    
+    loadCategories();
+  }, []);
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: existingProduct?.name || "",
       price: existingProduct?.price || 0,
-      categoryId: existingProduct?.categoryId || 1,
+      categoryId: existingProduct?.categoryId || categories[0]?.id || 1,
       description: existingProduct?.description || "",
       manufacturer: existingProduct?.manufacturer || "",
       image: existingProduct?.image || "",
@@ -84,9 +87,9 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
         description: "Изображение готово к загрузке",
       });
       
-      console.log("Image preview set with local URL:", localPreviewUrl);
+      console.log("Установлен предпросмотр изображения:", localPreviewUrl);
     } catch (error) {
-      console.error("Error handling image:", error);
+      console.error("Ошибка обработки изображения:", error);
       toast({
         title: "Ошибка",
         description: "Не удалось обработать изображение",
@@ -100,19 +103,23 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
   const onSubmit = async (data: ProductFormValues) => {
     try {
       setIsSubmitting(true);
+      console.log("Начинаем сохранение товара, данные:", data);
       
       if (selectedFile) {
+        setUploadingImage(true);
         try {
           const uploadedPath = await uploadFile(selectedFile);
-          console.log("Image successfully uploaded to:", uploadedPath);
-          data.image = uploadedPath; // Сохраняем полный путь
+          console.log("Изображение успешно загружено:", uploadedPath);
+          data.image = uploadedPath;
         } catch (error) {
-          console.error("Failed to upload image:", error);
+          console.error("Не удалось загрузить изображение:", error);
           toast({
             title: "Ошибка загрузки",
             description: "Не удалось загрузить изображение",
             variant: "destructive",
           });
+        } finally {
+          setUploadingImage(false);
         }
       }
       
@@ -126,6 +133,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
         image: data.image,
       };
 
+      console.log("Сохраняем товар:", productData);
       saveProduct(productData);
       
       toast({
@@ -143,7 +151,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
         form.reset({
           name: "",
           price: 0,
-          categoryId: 1,
+          categoryId: categories[0]?.id || 1,
           description: "",
           manufacturer: "",
           image: "",
@@ -152,7 +160,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
         setSelectedFile(null);
       }
     } catch (error) {
-      console.error("Error saving product:", error);
+      console.error("Ошибка сохранения товара:", error);
       toast({
         title: "Ошибка",
         description: error instanceof Error ? error.message : "Не удалось сохранить товар",
@@ -204,7 +212,8 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
                 <FormControl>
                   <select
                     className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                    {...field}
+                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                    value={field.value}
                   >
                     {categories.map((category) => (
                       <option key={category.id} value={category.id}>
@@ -231,6 +240,10 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
                         src={imagePreview} 
                         alt="Preview" 
                         className="w-full h-full object-cover"
+                        onError={(e) => {
+                          console.error(`Ошибка загрузки изображения: ${imagePreview}`);
+                          (e.target as HTMLImageElement).src = '/placeholder.svg';
+                        }}
                       />
                     </div>
                   )}

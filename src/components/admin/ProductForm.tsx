@@ -43,44 +43,55 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
   });
 
   useEffect(() => {
-    setCategories(getCategories());
+    const loadCategories = () => {
+      const loadedCategories = getCategories();
+      console.log("Загружены категории:", loadedCategories.length);
+      setCategories(loadedCategories);
+    };
+    
+    loadCategories();
   }, []);
 
   useEffect(() => {
-    const subscription = form.watch((value, { name }) => {
-      if (name === 'image' && value.image) {
-        setImagePreview(getImageUrl(value.image as string));
-      }
-    });
-    
-    return () => subscription.unsubscribe();
-  }, [form.watch]);
+    if (existingProduct?.image) {
+      const imageUrl = getImageUrl(existingProduct.image);
+      console.log("Установлен превью существующего изображения:", imageUrl);
+      setImagePreview(imageUrl);
+    }
+  }, [existingProduct]);
 
   const handleFileSelect = (file: File) => {
     setSelectedFile(file);
     const localPreviewUrl = URL.createObjectURL(file);
     setImagePreview(localPreviewUrl);
+    console.log("Выбран файл для загрузки:", file.name);
   };
 
   const onSubmit = async (data: ProductFormValues) => {
     try {
       setIsSubmitting(true);
+      console.log("Начало сохранения товара с данными:", data);
       
+      // Загружаем изображение, если оно выбрано
       if (selectedFile) {
+        setUploadingImage(true);
         try {
           const uploadedPath = await uploadFile(selectedFile);
-          console.log("Image successfully uploaded to:", uploadedPath);
+          console.log("Изображение успешно загружено:", uploadedPath);
           data.image = uploadedPath;
         } catch (error) {
-          console.error("Failed to upload image:", error);
+          console.error("Не удалось загрузить изображение:", error);
           toast({
             title: "Ошибка загрузки",
             description: "Не удалось загрузить изображение",
             variant: "destructive",
           });
+        } finally {
+          setUploadingImage(false);
         }
       }
       
+      // Создаем или обновляем товар
       const productData: Product = {
         id: existingProduct?.id || 0,
         name: data.name,
@@ -91,6 +102,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
         image: data.image,
       };
 
+      console.log("Сохраняем товар:", productData);
       saveProduct(productData);
       
       toast({
@@ -117,7 +129,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
         setSelectedFile(null);
       }
     } catch (error) {
-      console.error("Error saving product:", error);
+      console.error("Ошибка сохранения товара:", error);
       toast({
         title: "Ошибка",
         description: error instanceof Error ? error.message : "Не удалось сохранить товар",
