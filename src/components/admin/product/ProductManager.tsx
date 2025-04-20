@@ -29,14 +29,14 @@ const ProductManager: React.FC<ProductManagerProps> = ({ onProductAdded }) => {
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogTrigger asChild>
           <Button className="gap-2 bg-purple-600 hover:bg-purple-700">
-            <Plus className="h-4 w-4" /> Add product
+            <Plus className="h-4 w-4" /> Добавить товар
           </Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Add New Product</DialogTitle>
+            <DialogTitle>Добавить новый товар</DialogTitle>
             <DialogDescription>
-              Fill in the product details and click save
+              Заполните информацию о товаре и нажмите "Добавить"
             </DialogDescription>
           </DialogHeader>
           <ProductForm onSuccess={handleSuccess} />

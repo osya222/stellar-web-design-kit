@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/formatters";
 import { ShoppingCart, Edit } from "lucide-react";
-import { getImageUrl } from "@/routes";
 
 interface ProductCardProps {
   product: Product;
@@ -15,17 +14,16 @@ interface ProductCardProps {
 
 const ProductCard = ({ product, category, onEdit }: ProductCardProps) => {
   const { addToCart } = useCart();
-  const imageUrl = getImageUrl(product.image);
 
   return (
     <div className="group bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-100">
       <div className="aspect-square overflow-hidden bg-gray-50 relative">
         <img 
-          src={imageUrl}
+          src={product.image || '/placeholder.svg'} 
           alt={product.name}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
           onError={(e) => {
-            console.error(`Error loading image: ${imageUrl}`);
+            console.error(`Error loading image: ${product.image}`);
             (e.target as HTMLImageElement).src = '/placeholder.svg';
           }}
         />
@@ -51,7 +49,7 @@ const ProductCard = ({ product, category, onEdit }: ProductCardProps) => {
           )}
           
           <div className="text-sm text-gray-500">
-            Manufacturer: <span className="font-medium text-gray-700">{product.manufacturer}</span>
+            Производитель: <span className="font-medium text-gray-700">{product.manufacturer}</span>
           </div>
         </div>
 
@@ -63,7 +61,7 @@ const ProductCard = ({ product, category, onEdit }: ProductCardProps) => {
             size="sm"
           >
             <ShoppingCart className="w-4 h-4 mr-2" />
-            Add to cart
+            В корзину
           </Button>
         </div>
       </div>

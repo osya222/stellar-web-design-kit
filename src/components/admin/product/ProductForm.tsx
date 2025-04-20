@@ -2,18 +2,26 @@
 import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { Button } from "@/components/ui/button";
 import { Product } from "@/types/product";
 import { useToast } from "@/hooks/use-toast";
 import { saveProduct } from "@/utils/productStorage";
 import { getCategories } from "@/utils/categoryStorage";
 import { Category } from "@/data/categories";
-import { getImageUrl } from "@/routes";
 import { uploadFile } from "@/utils/fileUpload";
-import { productSchema, ProductFormValues } from "./types";
-import ProductDetails from "./ProductDetails";
-import ImageUpload from "./ImageUpload";
+import { productSchema } from "./productSchema";
+import ProductDetailsFields from "./ProductDetailsFields";
+import ImageUploadField from "./ImageUploadField";
+
+export interface ProductFormValues {
+  name: string;
+  price: number;
+  categoryId: number;
+  description?: string;
+  manufacturer: string;
+  image?: string;
+}
 
 interface ProductFormProps {
   product?: Product;
@@ -24,9 +32,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSuccess }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [imageUrl, setImageUrl] = useState<string | null>(
-    product?.image ? getImageUrl(product.image) : null
-  );
+  const [imagePreview, setImagePreview] = useState<string | null>(product?.image || null);
   const { toast } = useToast();
 
   const form = useForm<ProductFormValues>({
@@ -42,38 +48,35 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSuccess }) => {
   });
 
   useEffect(() => {
-    const loadCategories = () => {
-      const loadedCategories = getCategories();
-      setCategories(loadedCategories);
-    };
-    
-    loadCategories();
+    // Load categories when component mounts
+    const loadedCategories = getCategories();
+    setCategories(loadedCategories);
   }, []);
 
   const handleFileSelect = async (file: File) => {
+    if (!file) return;
+
     setIsUploading(true);
     
     try {
-      // Create local preview URL
-      const objectUrl = URL.createObjectURL(file);
-      setImageUrl(objectUrl);
-      
       // Upload file and get the path
       const uploadedPath = await uploadFile(file);
+      
+      // Set form value
       form.setValue("image", uploadedPath);
       
-      toast({
-        title: "Success",
-        description: "Image uploaded successfully",
-      });
+      // Update preview
+      setImagePreview(uploadedPath);
       
-      // Clean up local preview and update with actual path
-      URL.revokeObjectURL(objectUrl);
-      setImageUrl(getImageUrl(uploadedPath));
-    } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to upload image",
+        title: "Успешно",
+        description: "Изображение загружено",
+      });
+    } catch (error) {
+      console.error("Error uploading file:", error);
+      toast({
+        title: "Ошибка",
+        description: "Не удалось загрузить изображение",
         variant: "destructive",
       });
     } finally {
@@ -82,15 +85,15 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSuccess }) => {
   };
 
   const onSubmit = async (data: ProductFormValues) => {
+    setIsSubmitting(true);
+    
     try {
-      setIsSubmitting(true);
-      
       // Prepare product data
       const productData: Product = {
         id: product?.id || 0,
         name: data.name,
-        price: data.price,
-        categoryId: data.categoryId,
+        price: parseFloat(data.price.toString()),
+        categoryId: parseInt(data.categoryId.toString()),
         manufacturer: data.manufacturer,
         description: data.description,
         image: data.image,
@@ -100,8 +103,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSuccess }) => {
       const savedProduct = saveProduct(productData);
       
       toast({
-        title: "Success",
-        description: product ? "Product updated successfully" : "Product added successfully",
+        title: "Успешно",
+        description: product ? "Товар обновлен" : "Товар добавлен",
       });
 
       // Call success callback
@@ -111,20 +114,14 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSuccess }) => {
 
       // Reset form if adding new product
       if (!product) {
-        form.reset({
-          name: "",
-          price: 0,
-          categoryId: 0,
-          description: "",
-          manufacturer: "",
-          image: "",
-        });
-        setImageUrl(null);
+        form.reset();
+        setImagePreview(null);
       }
     } catch (error) {
+      console.error("Error saving product:", error);
       toast({
-        title: "Error",
-        description: "Failed to save product",
+        title: "Ошибка",
+        description: "Не удалось сохранить товар",
         variant: "destructive",
       });
     } finally {
@@ -136,11 +133,11 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSuccess }) => {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-4">
-          <ProductDetails form={form} categories={categories} />
-          <ImageUpload
+          <ProductDetailsFields form={form} categories={categories} />
+          <ImageUploadField 
             form={form}
             onFileSelect={handleFileSelect}
-            imageUrl={imageUrl}
+            imagePreview={imagePreview}
             isUploading={isUploading}
           />
         </div>
@@ -151,10 +148,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSuccess }) => {
           disabled={isSubmitting || isUploading}
         >
           {isSubmitting
-            ? "Saving..."
+            ? "Сохранение..."
             : product
-            ? "Update product"
-            : "Add product"}
+            ? "Обновить товар"
+            : "Добавить товар"}
         </Button>
       </form>
     </Form>

@@ -34,7 +34,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import ProductForm from './ProductForm';
 import { useToast } from '@/hooks/use-toast';
-import { getImageUrl } from '@/routes';
 
 interface ProductListProps {
   onProductUpdated: () => void;
@@ -51,8 +50,17 @@ const ProductList: React.FC<ProductListProps> = ({ onProductUpdated }) => {
   const { toast } = useToast();
 
   const loadData = () => {
-    setProducts(getProducts());
-    setCategories(getCategories());
+    try {
+      setProducts(getProducts());
+      setCategories(getCategories());
+    } catch (error) {
+      console.error("Error loading data:", error);
+      toast({
+        title: "Ошибка",
+        description: "Не удалось загрузить данные",
+        variant: "destructive",
+      });
+    }
   };
 
   useEffect(() => {
@@ -60,7 +68,7 @@ const ProductList: React.FC<ProductListProps> = ({ onProductUpdated }) => {
   }, []);
 
   const getCategoryName = (categoryId: number) => {
-    return categories.find(cat => cat.id === categoryId)?.name || 'Uncategorized';
+    return categories.find(cat => cat.id === categoryId)?.name || 'Без категории';
   };
 
   const handleEdit = (product: Product) => {
@@ -75,14 +83,23 @@ const ProductList: React.FC<ProductListProps> = ({ onProductUpdated }) => {
 
   const confirmDelete = () => {
     if (deletingProductId) {
-      deleteProduct(deletingProductId);
-      setIsDeleteDialogOpen(false);
-      loadData();
-      onProductUpdated();
-      toast({
-        title: "Success",
-        description: "Product deleted successfully",
-      });
+      try {
+        deleteProduct(deletingProductId);
+        setIsDeleteDialogOpen(false);
+        loadData();
+        onProductUpdated();
+        toast({
+          title: "Успешно",
+          description: "Товар удален",
+        });
+      } catch (error) {
+        console.error("Error deleting product:", error);
+        toast({
+          title: "Ошибка",
+          description: "Не удалось удалить товар",
+          variant: "destructive",
+        });
+      }
     }
   };
 
@@ -97,18 +114,18 @@ const ProductList: React.FC<ProductListProps> = ({ onProductUpdated }) => {
       <div className="border rounded-md overflow-hidden">
         {products.length === 0 ? (
           <div className="p-8 text-center">
-            <p className="text-muted-foreground">No products found</p>
+            <p className="text-muted-foreground">Пока нет товаров</p>
           </div>
         ) : (
           <Table>
             <TableHeader>
               <TableRow>
                 <TableHead className="w-[80px]">ID</TableHead>
-                <TableHead className="w-[80px]">Image</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="w-[80px]">Фото</TableHead>
+                <TableHead>Название</TableHead>
+                <TableHead>Категория</TableHead>
+                <TableHead>Цена</TableHead>
+                <TableHead className="text-right">Действия</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -118,7 +135,7 @@ const ProductList: React.FC<ProductListProps> = ({ onProductUpdated }) => {
                   <TableCell>
                     {product.image ? (
                       <img 
-                        src={getImageUrl(product.image)} 
+                        src={product.image} 
                         alt={product.name} 
                         className="w-12 h-12 object-cover rounded-md"
                         onError={(e) => {
@@ -127,7 +144,7 @@ const ProductList: React.FC<ProductListProps> = ({ onProductUpdated }) => {
                       />
                     ) : (
                       <div className="w-12 h-12 bg-muted rounded-md flex items-center justify-center">
-                        <span className="text-xs text-muted-foreground">No image</span>
+                        <span className="text-xs text-muted-foreground">Нет фото</span>
                       </div>
                     )}
                   </TableCell>
@@ -155,9 +172,9 @@ const ProductList: React.FC<ProductListProps> = ({ onProductUpdated }) => {
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Edit Product</DialogTitle>
+            <DialogTitle>Редактировать товар</DialogTitle>
             <DialogDescription>
-              Make changes to product details and click save
+              Внесите изменения в информацию о товаре
             </DialogDescription>
           </DialogHeader>
           {editingProduct && (
@@ -173,15 +190,15 @@ const ProductList: React.FC<ProductListProps> = ({ onProductUpdated }) => {
       <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogTitle>Вы уверены?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the product.
+              Это действие нельзя отменить. Товар будет удален навсегда.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Отмена</AlertDialogCancel>
             <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground">
-              Delete
+              Удалить
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

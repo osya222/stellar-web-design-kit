@@ -67,11 +67,12 @@ const updateProductsInSource = (products: Product[]) => {
     // Add updated products
     products.forEach(p => initialProducts.push({...p}));
     
-    // Update source code file
+    // Create content for products.ts file
     const content = `import { Product } from "@/types/product";\n\nexport const products: Product[] = ${JSON.stringify(products, null, 2)};`;
     
     console.log('Saving product data to source code');
     
+    // Use Lovable API to update the file
     fetch('/_api/source/data/products.ts', {
       method: 'POST',
       headers: {
@@ -87,4 +88,3 @@ const updateProductsInSource = (products: Product[]) => {
     console.error("Error preparing products data:", error);
   }
 };
-

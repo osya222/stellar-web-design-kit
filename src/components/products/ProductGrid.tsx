@@ -94,10 +94,12 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
               Внесите изменения в информацию о товаре
             </DialogDescription>
           </DialogHeader>
-          <ProductForm
-            product={editingProduct || undefined}
-            onSuccess={handleEditSuccess}
-          />
+          {editingProduct && (
+            <ProductForm
+              product={editingProduct}
+              onSuccess={handleEditSuccess}
+            />
+          )}
         </DialogContent>
       </Dialog>
     </section>
