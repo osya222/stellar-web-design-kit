@@ -67,32 +67,37 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
       // Добавляем файл в formData с безопасным именем
       formData.append('image', file, filename);
 
-      // Проверяем, что formData содержит файл перед отправкой
-      console.log("Отправка файла:", filename, "Размер:", file.size);
-
+      // Отладочная информация перед отправкой
+      console.log("Подготовка к отправке файла:", filename, "Размер:", file.size, "Тип:", file.type);
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 сек таймаут
+      
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
-        // Важно: не добавляем Content-Type, браузер сам установит правильный с boundary для formData
+        signal: controller.signal
       });
+      
+      clearTimeout(timeoutId);
 
-      // Выводим отладочную информацию о статусе ответа
       console.log("Статус ответа:", response.status, response.statusText);
       
       if (!response.ok) {
         const errorText = await response.text();
-        console.error("Ошибка ответа:", errorText);
-        throw new Error(`Ошибка при загрузке изображения на сервер: ${response.status} ${response.statusText}`);
+        console.error("Текст ошибки от сервера:", errorText);
+        throw new Error(`Ошибка при загрузке изображения: ${response.status} ${response.statusText}`);
       }
 
-      // Пробуем разобрать ответ как JSON
+      let responseText = await response.text();
+      console.log("Текст ответа:", responseText);
+      
+      // Пробуем разобрать текст как JSON
       let result;
       try {
-        result = await response.json();
+        result = JSON.parse(responseText);
       } catch (parseError) {
         console.error("Ошибка парсинга JSON:", parseError);
-        const text = await response.text();
-        console.log("Текст ответа:", text);
         throw new Error("Некорректный формат ответа сервера");
       }
 
@@ -114,8 +119,14 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
     } catch (error) {
       console.error("Ошибка загрузки:", error);
       
+      const errorMessage = error instanceof Error 
+        ? error.message 
+        : error instanceof DOMException && error.name === "AbortError"
+          ? "Превышено время ожидания ответа от сервера"
+          : "Не удалось загрузить изображение";
+      
       // Сохраняем детали ошибки и открываем диалог
-      setErrorDetails((error as Error).message || "Не удалось загрузить изображение");
+      setErrorDetails(errorMessage);
       setErrorDialogOpen(true);
       
       toast({
@@ -180,10 +191,10 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>Ошибка загрузки изображения</AlertDialogTitle>
-            <AlertDialogDescription>
-              {errorDetails}
-              <div className="mt-4 p-3 bg-gray-100 rounded text-sm font-mono">
-                Возможные причины:
+            <AlertDialogDescription className="space-y-4">
+              <div>{errorDetails}</div>
+              <div className="mt-4 p-3 bg-gray-100 rounded text-sm">
+                <p>Возможные причины:</p>
                 <ul className="list-disc pl-5 mt-2">
                   <li>Проблемы с подключением к серверу</li>
                   <li>Недостаточно прав для записи файла</li>

@@ -19,20 +19,32 @@ const storage = multer.diskStorage({
   destination: function (req: Express.Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) {
     const uploadPath = path.join(__dirname, 'public/images/products');
     // Убедимся, что директория существует
-    if (!fs.existsSync(uploadPath)) {
-      fs.mkdirSync(uploadPath, { recursive: true });
+    console.log("Создание директории:", uploadPath);
+    try {
+      if (!fs.existsSync(uploadPath)) {
+        fs.mkdirSync(uploadPath, { recursive: true });
+        console.log("Директория создана:", uploadPath);
+      }
+      cb(null, uploadPath);
+    } catch (error) {
+      console.error("Ошибка при создании директории:", error);
+      cb(new Error("Не удалось создать директорию для загрузки"), uploadPath);
     }
-    cb(null, uploadPath);
   },
   filename: function (req: Express.Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) {
-    // Уникальное имя файла на основе времени и оригинального имени
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    const ext = path.extname(file.originalname);
-    cb(null, uniqueSuffix + ext);
+    try {
+      // Уникальное имя файла на основе времени и оригинального имени
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+      const ext = path.extname(file.originalname);
+      const filename = uniqueSuffix + ext;
+      console.log("Генерация имени файла:", filename);
+      cb(null, filename);
+    } catch (error) {
+      console.error("Ошибка при генерации имени файла:", error);
+      cb(new Error("Не удалось сгенерировать имя файла"), "error.jpg");
+    }
   }
 });
-
-const upload = multer({ storage: storage });
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }: ConfigEnv) => ({
@@ -55,6 +67,8 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
           });
         },
         handle: (req: IncomingMessage, res: ServerResponse) => {
+          console.log("Получен запрос:", req.method, req.url);
+          
           // Проверяем, что это запрос на /api/upload
           if (req.url !== '/api/upload') {
             return false;
@@ -74,13 +88,24 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
           
           // Обработка POST запроса для загрузки файла
           if (req.method === 'POST') {
+            console.log("Обработка POST запроса на загрузку");
+            
             try {
-              console.log("Обработка POST запроса на загрузку");
+              // Инициализируем multer с обработкой ошибок
+              const upload = multer({ 
+                storage,
+                limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+                fileFilter: (req, file, cb) => {
+                  if (!file.mimetype.startsWith('image/')) {
+                    return cb(new Error('Разрешены только изображения'));
+                  }
+                  cb(null, true);
+                }
+              }).single('image');
               
-              // Используем multer для обработки загрузки одного файла
-              const uploadSingle = upload.single('image');
-              
-              uploadSingle(req as unknown as Request, res as unknown as Response, (err: any) => {
+              upload(req as unknown as Request, res as unknown as Response, (err: any) => {
+                console.log("Мультер завершил обработку файла");
+                
                 // Устанавливаем Content-Type заголовок для JSON
                 res.setHeader('Content-Type', 'application/json');
                 
@@ -104,10 +129,22 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
                   return;
                 }
                 
-                console.log("Файл успешно загружен:", file.filename);
+                console.log("Файл успешно загружен:", file.filename, "в", file.destination);
                 
                 // Формируем относительный путь к файлу для клиента
                 const imagePath = `/images/products/${file.filename}`;
+                
+                // Проверяем, что файл действительно создан
+                const fullPath = path.join(__dirname, 'public', imagePath);
+                if (!fs.existsSync(fullPath)) {
+                  console.error("Файл не был создан по пути:", fullPath);
+                  res.statusCode = 500;
+                  res.end(JSON.stringify({ 
+                    error: 'Файл не был сохранен на диск',
+                    details: 'Проверьте права доступа к директории'
+                  }));
+                  return;
+                }
                 
                 // Отправляем успешный ответ
                 res.statusCode = 200;
@@ -116,6 +153,7 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
                   path: imagePath
                 };
                 
+                console.log("Отправка ответа:", responseData);
                 res.end(JSON.stringify(responseData));
               });
               
