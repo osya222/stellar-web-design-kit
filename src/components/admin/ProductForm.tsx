@@ -90,37 +90,27 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
     formData.append('file', file);
 
     try {
-      // Create a clean filename (lowercase, replace spaces with hyphens)
+      // Создаем чистое имя файла (нижний регистр, пробелы заменены на дефисы)
       const filename = file.name.toLowerCase().replace(/[^a-z0-9.]/g, '-');
-      const uploadPath = `/images/products/${filename}`;
       
-      const response = await fetch('/_upload', {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'X-Upload-Path': uploadPath,
-        },
-      });
+      // Создаем временный URL для предпросмотра
+      const localPreviewUrl = URL.createObjectURL(file);
+      setImagePreview(localPreviewUrl);
       
-      if (!response.ok) {
-        throw new Error(`Upload failed with status: ${response.status}`);
-      }
-
-      // Store just the filename in the form, not the full path
+      // Сохраняем имя файла в форме
       form.setValue('image', filename);
-      setImagePreview(getImageUrl(filename));
       
       toast({
         title: "Успех",
-        description: "Изображение успешно загружено",
+        description: "Изображение успешно загружено для предпросмотра",
       });
       
-      console.log("Image uploaded successfully:", filename);
+      console.log("Image preview set with local URL:", localPreviewUrl);
     } catch (error) {
-      console.error("Error uploading image:", error);
+      console.error("Error handling image:", error);
       toast({
         title: "Ошибка",
-        description: "Не удалось загрузить изображение",
+        description: "Не удалось обработать изображение",
         variant: "destructive",
       });
     } finally {
