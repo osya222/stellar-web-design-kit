@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Edit, Trash2 } from 'lucide-react';
 import { formatPrice } from '@/lib/formatters';
@@ -12,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Skeleton } from '@/components/ui/skeleton';
+import { getProductImage } from '@/utils/dataService';
 import type { Product } from '@/types/product';
 
 interface ProductListProps {
@@ -50,6 +50,14 @@ export const ProductList: React.FC<ProductListProps> = ({
       </div>
     );
   }
+
+  const getProductImageSrc = (product: Product): string => {
+    const cachedImage = getProductImage(product.id);
+    if (cachedImage) {
+      return cachedImage;
+    }
+    return product.imageUrl || '/placeholder.svg';
+  };
 
   return (
     <div className="overflow-x-auto">

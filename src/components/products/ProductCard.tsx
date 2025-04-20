@@ -5,9 +5,10 @@ import { formatPrice } from '@/lib/formatters';
 import type { Product } from '@/types/product';
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
-import { Pencil } from "lucide-react";
+import { Pencil, ShoppingCart } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { updateProductImage, getProductImage } from '@/utils/dataService';
+import { useCart } from '@/context/CartContext';
 
 interface ProductCardProps {
   product: Product;
@@ -15,6 +16,7 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { toast } = useToast();
+  const { addToCart } = useCart();
   const [isUploading, setIsUploading] = useState(false);
   const [productImage, setProductImage] = useState<string>(product.imageUrl || '/placeholder.svg');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -179,6 +181,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     }
   };
 
+  const handleAddToCart = () => {
+    addToCart(product);
+  };
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow group">
       <AspectRatio ratio={4/3} className="relative">
@@ -237,6 +243,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               {product.inStock ? 'В наличии' : 'Нет в наличии'}
             </span>
           </div>
+          
+          {/* Add Buy Button */}
+          <Button 
+            onClick={handleAddToCart}
+            className="w-full mt-4"
+            disabled={!product.inStock || product.price === 0}
+          >
+            <ShoppingCart className="mr-2 h-4 w-4" />
+            В корзину
+          </Button>
         </div>
       </CardContent>
     </Card>
