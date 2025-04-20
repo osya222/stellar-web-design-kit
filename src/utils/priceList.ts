@@ -6,7 +6,6 @@ import { toast } from "@/hooks/use-toast";
 export const downloadPriceList = () => {
   let csvContent = "Наименование,Категория,Производитель,Цена\n";
   
-  // Using our empty products array from the placeholder module
   products.forEach(product => {
     const row = [
       `"${product.name.replace(/"/g, '""')}"`,
@@ -29,12 +28,8 @@ export const downloadPriceList = () => {
   link.click();
   document.body.removeChild(link);
   
-  setTimeout(() => {
-    URL.revokeObjectURL(url);
-  }, 100);
-  
   toast({
-    title: "Прайс-лист загружается",
-    description: "Файл пуст, так как каталог продуктов был удален",
+    title: "Прайс-лист скачан",
+    description: "Файл успешно сохранен на ваше устройство",
   });
 };

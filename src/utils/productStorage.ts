@@ -86,24 +86,6 @@ export const deleteProductsByCategory = (category: string): void => {
 };
 
 /**
- * Save an image for a product
- * This function just returns a filename, since in the real app we would
- * need to actually save the file to the server
- */
-export const saveProductImage = (file: File): Promise<string> => {
-  // Generate a unique filename based on current timestamp and original name
-  const timestamp = new Date().getTime();
-  const sanitizedName = file.name.replace(/[^a-zA-Z0-9.]/g, '_');
-  const filename = `${timestamp}_${sanitizedName}`;
-  
-  console.log(`In a real app, would save image as: ${filename}`);
-  
-  // In a real app, we would actually save the file here
-  // For now, we just return the filename
-  return Promise.resolve(filename);
-};
-
-/**
  * Check if data has been modified since app start
  */
 export const hasDataBeenModified = (): boolean => {

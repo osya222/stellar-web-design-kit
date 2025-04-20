@@ -8,8 +8,7 @@ export const products: Product[] = [
     price: 1457,
     category: "Лосось",
     description: "Свежемороженый лосось премиального качества",
-    manufacturer: "Чили Premium",
-    imagePath: "0fd3ac43-ec30-425b-b149-fd187b22e947.png"
+    manufacturer: "Чили Premium"
   },
   {
     id: 2,
@@ -17,8 +16,7 @@ export const products: Product[] = [
     price: 1166,
     category: "Форель",
     description: "Свежемороженая морская форель высшего качества",
-    manufacturer: "Турция",
-    imagePath: "f96b53d4-ab1d-4752-8c90-925f33c1173c.png"
+    manufacturer: "Турция"
   },
   {
     id: 3,
@@ -26,8 +24,7 @@ export const products: Product[] = [
     price: 1002,
     category: "Морепродукты",
     description: "Свежемороженые креветки в глазури",
-    manufacturer: "Индия",
-    imagePath: "0a745aa0-fdc0-4662-ad63-068c846bdb43.png"
+    manufacturer: "Индия"
   },
   {
     id: 4,
@@ -35,8 +32,7 @@ export const products: Product[] = [
     price: 884,
     category: "Морепродукты",
     description: "Свежемороженые лангустины премиум класса",
-    manufacturer: "Аргентина",
-    imagePath: "de983f8f-acb9-417a-9ba8-54b8f3c696ad.png"
+    manufacturer: "Аргентина"
   },
   {
     id: 5,
@@ -44,8 +40,7 @@ export const products: Product[] = [
     price: 1199,
     category: "Морепродукты",
     description: "Медальоны из отборных морепродуктов",
-    manufacturer: "Индия",
-    imagePath: "9ae097fc-d5b2-4b02-a072-3d1aeb8c211f.png"
+    manufacturer: "Индия"
   },
   {
     id: 6,
@@ -53,7 +48,6 @@ export const products: Product[] = [
     price: 520,
     category: "Морепродукты",
     description: "Варено-мороженое мясо мидий",
-    manufacturer: "Чили",
-    imagePath: "853b74f2-4e98-47dc-9c3f-cebe730d71d0.png"
+    manufacturer: "Чили"
   }
 ];
