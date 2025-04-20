@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { formatPrice } from '@/lib/formatters';
@@ -46,63 +47,48 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     try {
       setIsUploading(true);
       
-      const reader = new FileReader();
+      // Create FormData to send file to server
+      const formData = new FormData();
+      formData.append('image', file);
       
-      reader.onload = async (e) => {
-        try {
-          if (!e.target?.result) {
-            throw new Error('Не удалось прочитать файл');
-          }
-          
-          const base64String = e.target.result.toString();
-          
-          const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-          const imagePath = `data:${file.type};base64,${base64String.split(',')[1]}`;
-          
-          const updatedProduct = await updateProductImage(product.id, imagePath);
-          
-          if (updatedProduct) {
-            setProductImage(imagePath);
-            
-            toast({
-              title: "Успешно",
-              description: "Изображение загружено и сохранено",
-            });
-          } else {
-            throw new Error('Не удалось обновить данные продукта');
-          }
-        } catch (error) {
-          console.error('Ошибка сохранения:', error);
-          toast({
-            title: "Ошибка",
-            description: (error as Error).message || 'Не удалось сохранить изображение',
-            variant: "destructive"
-          });
-          setProductImage(product.imageUrl || '/placeholder.svg');
-        } finally {
-          setIsUploading(false);
-        }
-      };
+      // Upload image to server
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      });
       
-      reader.onerror = () => {
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Ошибка при загрузке изображения');
+      }
+      
+      const data = await response.json();
+      
+      if (!data.path) {
+        throw new Error('Не получен путь к изображению');
+      }
+      
+      // Update product with new image path
+      const updatedProduct = await updateProductImage(product.id, data.path);
+      
+      if (updatedProduct) {
+        setProductImage(data.path);
         toast({
-          title: "Ошибка",
-          description: "Не удалось прочитать файл",
-          variant: "destructive"
+          title: "Успешно",
+          description: "Изображение загружено и сохранено",
         });
-        setIsUploading(false);
-      };
-      
-      reader.readAsDataURL(file);
-      
+      } else {
+        throw new Error('Не удалось обновить данные продукта');
+      }
     } catch (error) {
       console.error('Ошибка загрузки:', error);
       toast({
         title: "Ошибка",
-        description: (error as Error).message || 'Не удалось сохранить изображение',
+        description: (error as Error).message || 'Не удалось загрузить изображение',
         variant: "destructive"
       });
       setProductImage(product.imageUrl || '/placeholder.svg');
+    } finally {
       setIsUploading(false);
     }
   };

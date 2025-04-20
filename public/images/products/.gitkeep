@@ -1,2 +1,2 @@
-
-# This folder contains product images
+# Allow all files in this directory
+!*
