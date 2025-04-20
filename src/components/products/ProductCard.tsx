@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/formatters";
 import { ShoppingCart, Edit } from "lucide-react";
+import { getImageUrl } from "@/routes";
 
 interface ProductCardProps {
   product: Product;
@@ -18,7 +19,7 @@ const ProductCard = ({ product, onEdit }: ProductCardProps) => {
       {product.imagePath && (
         <div className="aspect-square overflow-hidden">
           <img 
-            src={`/images/products/${product.imagePath}`}
+            src={getImageUrl(product.imagePath)}
             alt={product.name}
             className="w-full h-full object-cover"
           />
