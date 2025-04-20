@@ -11,8 +11,9 @@ window.fetch = async (input, init) => {
   
   try {
     // Check if this is an API request
-    for (const [route, handler] of Object.entries(apiRoutes)) {
-      if (url.includes(route)) {
+    const routeEntries = Object.entries(apiRoutes);
+    for (const [route, handler] of routeEntries) {
+      if (url.includes(route) && typeof handler === 'function') {
         console.log(`Intercepting API request to ${route}`);
         
         // Create a new request object
@@ -26,7 +27,7 @@ window.fetch = async (input, init) => {
     }
     
     // Handle requests for image files
-    if (url.includes('/lovable-uploads/') || url.includes('/images/products/')) {
+    if (url.includes('/images/products/')) {
       console.log("Image request:", url);
       
       try {

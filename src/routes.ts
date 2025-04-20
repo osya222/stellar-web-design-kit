@@ -5,11 +5,11 @@ export const apiRoutes = {};
 // Simple function to get placeholder image
 export const getImageUrl = (path: string | undefined): string => {
   if (!path) return '/placeholder.svg';
-  return '/placeholder.svg';
+  return path;
 };
 
-// Function to get the URL for uploaded images (now just returns placeholder)
-export const getUploadedImageUrl = (path: string | undefined): string => {
-  if (!path) return '/placeholder.svg';
-  return '/placeholder.svg';
+// Function to get product image path
+export const getProductImageUrl = (imagePath: string | undefined): string => {
+  if (!imagePath) return '/placeholder.svg';
+  return `/images/products/${imagePath}`;
 };

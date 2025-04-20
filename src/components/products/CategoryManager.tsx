@@ -22,18 +22,24 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
+import { getAllCategories, deleteProductsByCategory } from "@/utils/productStorage";
 
 interface CategoryManagerProps {
-  categories: string[];
-  onCategoryAdd: (category: string) => void;
-  onCategoryDelete: (category: string) => void;
+  onCategoryChanged: () => void;
 }
 
-const CategoryManager = ({ categories, onCategoryAdd, onCategoryDelete }: CategoryManagerProps) => {
+const CategoryManager = ({ onCategoryChanged }: CategoryManagerProps) => {
   const [newCategory, setNewCategory] = useState('');
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<string | null>(null);
+  const [categories, setCategories] = useState<string[]>(getAllCategories());
   const { toast } = useToast();
+
+  // Function to refresh categories from storage
+  const refreshCategories = () => {
+    setCategories(getAllCategories());
+    onCategoryChanged();
+  };
 
   const handleAddCategory = () => {
     if (!newCategory.trim()) {
@@ -54,13 +60,43 @@ const CategoryManager = ({ categories, onCategoryAdd, onCategoryDelete }: Catego
       return;
     }
 
-    onCategoryAdd(newCategory.trim());
-    setNewCategory('');
-    setIsAddDialogOpen(false);
+    // Add this category to a product to make it persist
+    // We'll create a placeholder product in this category
+    const placeholderProduct = {
+      id: Date.now(),
+      name: `Товар из категории ${newCategory}`,
+      price: 0,
+      category: newCategory.trim(),
+      manufacturer: "Не указан",
+      description: "Это временный товар для создания новой категории"
+    };
+    
+    import("@/utils/productStorage").then(({ saveProduct }) => {
+      saveProduct(placeholderProduct);
+      refreshCategories();
+      
+      toast({
+        title: "Успешно",
+        description: "Категория добавлена",
+      });
+      
+      setNewCategory('');
+      setIsAddDialogOpen(false);
+    });
+  };
+
+  const handleDeleteCategory = () => {
+    if (!categoryToDelete) return;
+    
+    deleteProductsByCategory(categoryToDelete);
+    refreshCategories();
+    
     toast({
       title: "Успешно",
-      description: "Категория добавлена",
+      description: "Категория удалена",
     });
+    
+    setCategoryToDelete(null);
   };
 
   return (
@@ -115,16 +151,7 @@ const CategoryManager = ({ categories, onCategoryAdd, onCategoryDelete }: Catego
           <AlertDialogFooter>
             <AlertDialogCancel>Отмена</AlertDialogCancel>
             <AlertDialogAction
-              onClick={() => {
-                if (categoryToDelete) {
-                  onCategoryDelete(categoryToDelete);
-                  setCategoryToDelete(null);
-                  toast({
-                    title: "Успешно",
-                    description: "Категория удалена",
-                  });
-                }
-              }}
+              onClick={handleDeleteCategory}
               className="bg-red-500 hover:bg-red-600"
             >
               Удалить

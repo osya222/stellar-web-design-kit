@@ -1,8 +1,7 @@
 
 import { useEffect, useState } from "react";
 import { Product } from "@/types/product";
-import { getProductsFromStorage, deleteProductsByCategory, getAllCategories } from "@/utils/productStorage";
-import ProductManager from "./ProductManager";
+import { getProducts, getAllCategories } from "@/utils/productStorage";
 import ProductCard from "./ProductCard";
 import CategoryManager from "./CategoryManager";
 import {
@@ -14,21 +13,25 @@ import {
 } from "@/components/ui/dialog";
 import ProductForm from "./ProductForm";
 
-const ProductGrid = () => {
+interface ProductGridProps {
+  showAdmin?: boolean;
+}
+
+const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [categories, setCategories] = useState<string[]>([]);
 
+  // Load products and categories on component mount
   useEffect(() => {
-    loadProducts();
+    loadData();
   }, []);
 
-  const loadProducts = () => {
-    const loadedProducts = getProductsFromStorage();
+  const loadData = () => {
+    const loadedProducts = getProducts();
     setProducts(loadedProducts);
     
-    // Get unique categories
     const uniqueCategories = getAllCategories();
     setCategories(uniqueCategories);
   };
@@ -36,21 +39,11 @@ const ProductGrid = () => {
   const handleEditSuccess = () => {
     setIsEditDialogOpen(false);
     setEditingProduct(null);
-    loadProducts();
+    loadData();
   };
 
-  const handleCategoryAdd = (newCategory: string) => {
-    if (!categories.includes(newCategory)) {
-      setCategories(prev => [...prev, newCategory]);
-    }
-  };
-
-  const handleCategoryDelete = (categoryToDelete: string) => {
-    deleteProductsByCategory(categoryToDelete)
-      .then(() => {
-        setCategories(prev => prev.filter(c => c !== categoryToDelete));
-        loadProducts();
-      });
+  const handleCategoryChanged = () => {
+    loadData();
   };
 
   // Group products by category
@@ -68,33 +61,40 @@ const ProductGrid = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-3xl font-bold">Наш каталог</h2>
-          <ProductManager onProductAdded={loadProducts} />
         </div>
 
-        <CategoryManager
-          categories={categories}
-          onCategoryAdd={handleCategoryAdd}
-          onCategoryDelete={handleCategoryDelete}
-        />
+        {showAdmin && (
+          <CategoryManager onCategoryChanged={handleCategoryChanged} />
+        )}
 
         <div className="space-y-12">
-          {Object.entries(productsByCategory).map(([category, categoryProducts]) => (
-            <div key={category} className="space-y-4">
-              <h3 className="text-2xl font-semibold text-gray-800">{category}</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {categoryProducts.map((product) => (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    onEdit={() => {
-                      setEditingProduct(product);
-                      setIsEditDialogOpen(true);
-                    }}
-                  />
-                ))}
+          {categories.map((category) => {
+            // Only show categories that have products
+            const categoryProducts = productsByCategory[category] || [];
+            if (categoryProducts.length === 0 && !showAdmin) return null;
+
+            return (
+              <div key={category} className="space-y-4">
+                <h3 className="text-2xl font-semibold text-gray-800">{category}</h3>
+                {categoryProducts.length > 0 ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {categoryProducts.map((product) => (
+                      <ProductCard
+                        key={product.id}
+                        product={product}
+                        onEdit={showAdmin ? () => {
+                          setEditingProduct(product);
+                          setIsEditDialogOpen(true);
+                        } : undefined}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-gray-500 italic">В данной категории пока нет товаров</p>
+                )}
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
