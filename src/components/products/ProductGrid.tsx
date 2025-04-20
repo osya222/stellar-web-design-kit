@@ -95,7 +95,7 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
             </DialogDescription>
           </DialogHeader>
           <ProductForm
-            existingProduct={editingProduct || undefined}
+            product={editingProduct || undefined}
             onSuccess={handleEditSuccess}
           />
         </DialogContent>
