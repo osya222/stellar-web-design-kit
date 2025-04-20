@@ -8,7 +8,17 @@ import { componentTagger } from "lovable-tagger";
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
-    port: 8080
+    port: 8080,
+    // If you're implementing a backend API for file uploads,
+    // you may want to add a proxy configuration here:
+    /* 
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true,
+      },
+    },
+    */
   },
   plugins: [
     react(),
