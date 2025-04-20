@@ -1,4 +1,3 @@
-
 import { Product } from "@/types/product";
 
 // Initial product data
@@ -196,7 +195,6 @@ const PRODUCTS: Product[] = [
 
 // Local storage key for product data
 const PRODUCTS_STORAGE_KEY = 'productsData';
-const IMAGES_STORAGE_KEY_PREFIX = 'product_image_';
 
 // Load persistent product data if available
 let activeProducts: Product[] = [];
@@ -240,71 +238,6 @@ const persistProductData = () => {
   }
 };
 
-// Helper function to store image in localStorage with a more efficient approach
-const storeProductImage = (productId: string, imagePath: string, imageData: string): boolean => {
-  try {
-    if (typeof window !== 'undefined') {
-      // Try to store the image, handling quota errors
-      try {
-        // Use a more specific key to avoid collisions
-        const imageKey = `${IMAGES_STORAGE_KEY_PREFIX}${productId}`;
-        localStorage.setItem(imageKey, imageData);
-        return true;
-      } catch (storageError) {
-        // If quota exceeded, try to clear some space
-        if ((storageError as Error).name === 'QuotaExceededError') {
-          console.error('Error storing product image:', storageError);
-          
-          // Try to find old product images to clear
-          const keysToRemove: string[] = [];
-          
-          for (let i = 0; i < localStorage.length; i++) {
-            const key = localStorage.key(i);
-            // Find old image keys that aren't for the current product
-            if (key && key.startsWith(IMAGES_STORAGE_KEY_PREFIX) && 
-                !key.includes(productId)) {
-              keysToRemove.push(key);
-            }
-          }
-          
-          // Clear up to 3 old images
-          const removeCount = Math.min(keysToRemove.length, 3);
-          for (let i = 0; i < removeCount; i++) {
-            localStorage.removeItem(keysToRemove[i]);
-            console.log('Removed old image:', keysToRemove[i]);
-          }
-          
-          // Try again
-          if (removeCount > 0) {
-            const imageKey = `${IMAGES_STORAGE_KEY_PREFIX}${productId}`;
-            localStorage.setItem(imageKey, imageData);
-            return true;
-          }
-        }
-        return false;
-      }
-    }
-    return false;
-  } catch (error) {
-    console.error('Error storing product image:', error);
-    return false;
-  }
-};
-
-// Helper function to retrieve product image from localStorage
-export const getProductImage = (productId: string): string | null => {
-  try {
-    if (typeof window !== 'undefined') {
-      const imageKey = `${IMAGES_STORAGE_KEY_PREFIX}${productId}`;
-      return localStorage.getItem(imageKey);
-    }
-    return null;
-  } catch (error) {
-    console.error('Error retrieving product image:', error);
-    return null;
-  }
-};
-
 export async function fetchProducts(): Promise<Product[]> {
   return activeProducts;
 }
@@ -339,7 +272,6 @@ export async function createProduct(product: Partial<Product>): Promise<Product>
     throw new Error('Required product fields are missing');
   }
 
-  // Create the new product
   const newProduct: Product = {
     id: product.id,
     name: product.name,
@@ -354,12 +286,8 @@ export async function createProduct(product: Partial<Product>): Promise<Product>
     isPopular: product.isPopular ?? false
   };
 
-  // Add to products array
   activeProducts.push(newProduct);
-  
-  // Persist changes
   persistProductData();
-  
   return newProduct;
 }
 
@@ -400,12 +328,6 @@ export async function deleteProduct(productId: string): Promise<boolean> {
   if (initialLength !== activeProducts.length) {
     persistProductData();
     
-    // Also remove any stored images for this product
-    if (typeof window !== 'undefined') {
-      const imageKey = `${IMAGES_STORAGE_KEY_PREFIX}${productId}`;
-      localStorage.removeItem(imageKey);
-    }
-    
     return true;
   }
   
@@ -413,41 +335,21 @@ export async function deleteProduct(productId: string): Promise<boolean> {
 }
 
 /**
- * Updates a product's image and persists the change
- * @param productId ID of the product
- * @param imagePath Path to the image
- * @param imageData Base64 string of the compressed image
- * @returns Updated product or null if not found
+ * Обновляет путь картинки продукта
  */
 export async function updateProductImage(
   productId: string, 
-  imagePath: string,
-  imageData?: string
+  imagePath: string
 ): Promise<Product | null> {
-  // Find the product index
   const productIndex = activeProducts.findIndex(p => p.id === productId);
-  
   if (productIndex === -1) {
     console.error(`Product with ID ${productId} not found`);
     return null;
   }
-  
-  // Update imageUrl
   activeProducts[productIndex] = {
     ...activeProducts[productIndex],
     imageUrl: imagePath
   };
-  
-  // Store image data if provided
-  if (imageData) {
-    const stored = storeProductImage(productId, imagePath, imageData);
-    if (!stored) {
-      console.warn('Failed to store image data, but product was updated');
-    }
-  }
-  
-  // Persist the updated data
   persistProductData();
-  
   return activeProducts[productIndex];
 }

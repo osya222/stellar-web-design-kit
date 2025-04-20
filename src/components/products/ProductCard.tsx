@@ -6,8 +6,6 @@ import type { Product } from '@/types/product';
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { ShoppingCart } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
-import { getProductImage } from '@/utils/dataService';
 import { useCart } from '@/context/CartContext';
 
 interface ProductCardProps {
@@ -16,27 +14,6 @@ interface ProductCardProps {
 
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { addToCart } = useCart();
-  const [productImage, setProductImage] = React.useState<string>(product.imageUrl || '/placeholder.svg');
-
-  // При монтировании пробуем загрузить картинку из localStorage, если есть, иначе используем из продукта
-  React.useEffect(() => {
-    setProductImage(product.imageUrl || '/placeholder.svg');
-    const cachedImage = getProductImage(product.id);
-    if (cachedImage) {
-      // Пробуем загрузить картинку с сервера, если не вышло — используем cached
-      let pathImageFailed = false;
-      const testImg = new window.Image();
-      testImg.onload = () => { pathImageFailed = false; };
-      testImg.onerror = () => {
-        pathImageFailed = true;
-        setProductImage(cachedImage);
-      };
-      testImg.src = product.imageUrl || '';
-      if (!product.imageUrl || product.imageUrl === '/placeholder.svg') {
-        setProductImage(cachedImage);
-      }
-    }
-  }, [product.id, product.imageUrl]);
 
   const handleAddToCart = () => {
     addToCart(product);
@@ -46,16 +23,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     <Card className="overflow-hidden hover:shadow-lg transition-shadow group">
       <AspectRatio ratio={4/3} className="relative">
         <img 
-          src={productImage} 
+          src={product.imageUrl || '/placeholder.svg'} 
           alt={product.name}
           className="object-cover w-full h-full"
           onError={(e) => {
-            const cachedImage = getProductImage(product.id);
-            if (cachedImage && (e.target as HTMLImageElement).src !== cachedImage) {
-              (e.target as HTMLImageElement).src = cachedImage;
-            } else {
-              (e.target as HTMLImageElement).src = '/placeholder.svg';
-            }
+            (e.target as HTMLImageElement).src = '/placeholder.svg';
           }}
         />
       </AspectRatio>
@@ -89,4 +61,3 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 };
 
 export default ProductCard;
-

@@ -26,47 +26,31 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
     imageUrl || initialPreview || '/placeholder.svg'
   );
 
-  // The compression helper
-  const compressImage = (file: File, maxWidth = 800, maxHeight = 600, quality = 0.7): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-      reader.onload = (event) => {
-        const img = document.createElement('img');
-        img.src = event.target?.result as string;
+  // Функция отправки файла на сервер (/api/upload)
+  const uploadFile = async (file: File): Promise<string | null> => {
+    const formData = new FormData();
+    formData.append('image', file);
 
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
-          if (width > height) {
-            if (width > maxWidth) {
-              height = Math.round(height * maxWidth / width);
-              width = maxWidth;
-            }
-          } else {
-            if (height > maxHeight) {
-              width = Math.round(width * maxHeight / height);
-              height = maxHeight;
-            }
-          }
-          canvas.width = width;
-          canvas.height = height;
-          const ctx = canvas.getContext('2d');
-          ctx?.drawImage(img, 0, 0, width, height);
-          const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
-          resolve(compressedDataUrl);
-        };
+    try {
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+      const result = await response.json();
 
-        img.onerror = (error) => {
-          reject(error);
-        };
-      };
-
-      reader.onerror = (error) => {
-        reject(error);
-      };
-    });
+      if (response.ok && result?.path) {
+        return result.path as string;
+      } else {
+        throw new Error(result?.error || 'Ошибка загрузки');
+      }
+    } catch (error: any) {
+      toast({
+        title: "Ошибка",
+        description: error.message ?? "Не удалось загрузить изображение",
+        variant: "destructive"
+      });
+      return null;
+    }
   };
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -91,25 +75,23 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
       return;
     }
 
+    setIsUploading(true);
     try {
-      setIsUploading(true);
-      const compressedDataUrl = await compressImage(file, 800, 600, 0.7);
-      const ext = 'jpg';
-      const uniqueFilename = `product_${productId || 'new'}_${Date.now()}.${ext}`;
-      const imagePath = `/images/products/${uniqueFilename}`;
-      setImagePreview(compressedDataUrl);
-      onImageChange(imagePath, compressedDataUrl);
+      // Для превью: сжимаем локально чтобы отображать, но в продукт кладем только путь
+      const reader = new FileReader();
+      reader.onload = async (ev) => {
+        setImagePreview(ev.target?.result as string || '/placeholder.svg');
+      };
+      reader.readAsDataURL(file);
 
-      toast({
-        title: "Изображение готово",
-        description: "Изображение будет сохранено при сохранении продукта",
-      });
-    } catch (error) {
-      toast({
-        title: "Ошибка",
-        description: "Не удалось обработать изображение",
-        variant: "destructive"
-      });
+      const imagePath = await uploadFile(file);
+      if (imagePath) {
+        onImageChange(imagePath, URL.createObjectURL(file));
+        toast({
+          title: "Готово",
+          description: "Изображение загружено",
+        });
+      }
     } finally {
       setIsUploading(false);
     }
@@ -120,7 +102,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
       <p className="text-sm font-medium mb-2">Изображение продукта</p>
       <AspectRatio ratio={4 / 3} className="bg-gray-100 rounded-md overflow-hidden mb-4">
         <img
-          src={imagePreview}
+          src={imagePreview || '/placeholder.svg'}
           alt="Product preview"
           className="w-full h-full object-cover"
           onError={(e) => {
