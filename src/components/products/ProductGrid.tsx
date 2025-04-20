@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Product } from "@/types/product";
 import { Category } from "@/types/category";
@@ -144,7 +145,9 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
                         <h3 className="text-xl font-bold text-blue-800">
                           {category.name}
                         </h3>
-                        <ChevronDown className="h-5 w-5 text-blue-500 transform transition-transform duration-200" />
+                        <span className="h-5 w-5 text-blue-500 transform transition-transform duration-200">
+                          <ChevronDown className="h-5 w-5" />
+                        </span>
                       </div>
                     </div>
                   </AccordionTrigger>

@@ -61,14 +61,12 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
         accept="image/*"
         className="hidden"
       />
-      <Button
-        variant="outline"
-        size="icon"
+      <div 
         onClick={handleUploadClick}
-        className={`${sizeClasses[size]} opacity-0 group-hover:opacity-100 transition-opacity absolute top-2 right-2 bg-white/80 backdrop-blur-sm hover:bg-white`}
+        className={`${sizeClasses[size]} opacity-0 group-hover:opacity-100 transition-opacity absolute top-2 right-2 bg-white/80 backdrop-blur-sm hover:bg-white rounded-full flex items-center justify-center cursor-pointer z-10`}
       >
         <Upload className="w-4 h-4" />
-      </Button>
+      </div>
     </div>
   );
 };
