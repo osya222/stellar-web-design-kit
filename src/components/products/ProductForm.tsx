@@ -17,7 +17,6 @@ import {
 import { Product } from "@/types/product";
 import { useToast } from "@/hooks/use-toast";
 import { saveProduct } from "@/utils/productStorage";
-import { Image } from "lucide-react";
 
 const productSchema = z.object({
   name: z.string().min(3, { message: "Название должно содержать минимум 3 символа" }),
@@ -25,7 +24,6 @@ const productSchema = z.object({
   category: z.string().min(1, { message: "Категория обязательна" }),
   description: z.string().optional(),
   manufacturer: z.string().min(1, { message: "Производитель обязателен" }),
-  image: z.string().optional(),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -38,7 +36,6 @@ type ProductFormProps = {
 const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
-  const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
@@ -48,45 +45,21 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
       category: existingProduct?.category || "",
       description: existingProduct?.description || "",
       manufacturer: existingProduct?.manufacturer || "",
-      image: existingProduct?.image || "",
     },
   });
 
   const onSubmit = async (data: ProductFormValues) => {
     try {
       setIsSubmitting(true);
-
-      let imageName = existingProduct?.image || "";
-
-      if (selectedImage) {
-        const formData = new FormData();
-        formData.append('image', selectedImage);
-        
-        // Using Lovable's built-in upload endpoint
-        const response = await fetch('/lov-upload', {
-          method: 'POST',
-          body: formData
-        });
-        
-        if (response.ok) {
-          const result = await response.json();
-          imageName = result.filename;
-          console.log("Image uploaded successfully:", imageName);
-        } else {
-          console.error("Failed to upload image:", await response.text());
-          throw new Error('Не удалось загрузить изображение');
-        }
-      }
       
-      // Make sure all required fields have values (not undefined or optional)
+      // Make sure all required fields have values
       const productData: Product = {
         id: existingProduct?.id || Date.now(),
-        name: data.name, // Ensure name is always provided
+        name: data.name,
         price: data.price,
         category: data.category,
         manufacturer: data.manufacturer,
         description: data.description,
-        image: imageName || undefined,
       };
 
       saveProduct(productData);
@@ -109,9 +82,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
           category: "",
           description: "",
           manufacturer: "",
-          image: "",
         });
-        setSelectedImage(null);
       }
     } catch (error) {
       console.error("Error saving product:", error);
@@ -125,48 +96,10 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
     }
   };
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedImage(file);
-    }
-  };
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="space-y-4">
-          <div className="space-y-2">
-            <FormLabel>Изображение товара</FormLabel>
-            <div className="flex items-center gap-4">
-              {(existingProduct?.image || selectedImage) && (
-                <div className="relative w-24 h-24 border rounded-lg overflow-hidden bg-gray-50">
-                  <img
-                    src={selectedImage ? URL.createObjectURL(selectedImage) : existingProduct?.image ? `/images/products/${existingProduct.image}` : '/placeholder.svg'}
-                    alt="Preview"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              )}
-              <Button
-                type="button"
-                variant="outline"
-                className="gap-2"
-                onClick={() => document.getElementById('image-upload')?.click()}
-              >
-                <Image className="w-4 h-4" />
-                {existingProduct?.image || selectedImage ? 'Изменить фото' : 'Добавить фото'}
-              </Button>
-              <input
-                id="image-upload"
-                type="file"
-                accept="image/*"
-                className="hidden"
-                onChange={handleImageChange}
-              />
-            </div>
-          </div>
-
           <FormField
             control={form.control}
             name="name"

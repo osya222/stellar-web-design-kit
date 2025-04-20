@@ -6,5 +6,4 @@ export interface Product {
   category: string;
   manufacturer: string;
   description?: string;
-  image?: string;
 }

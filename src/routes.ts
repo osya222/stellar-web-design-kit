@@ -1,9 +1,4 @@
 
-export const apiRoutes = {
-  upload: '/api/upload',
-};
-
 export const getImageUrl = (image?: string): string => {
-  if (!image) return '/placeholder.svg';
-  return `/images/products/${image}`;
+  return '/placeholder.svg';
 };
