@@ -1,8 +1,10 @@
-import React from 'react';
+
+import React, { useEffect, useState } from 'react';
 import Logo from "@/components/layout/Logo";
 import { ArrowDown } from "lucide-react";
 import { getProducts, saveProduct } from "@/utils/dataService";
 import ImageUpload from "@/components/shared/ImageUpload";
+import { getImageFromLocalStorage } from "@/utils/fileUpload";
 import {
   Carousel,
   CarouselContent,
@@ -16,6 +18,12 @@ const Hero = () => {
     const catalogSection = document.getElementById('catalog');
     if (catalogSection) {
       catalogSection.scrollIntoView({ behavior: 'smooth' });
+    } else {
+      // Скролл к первой секции с товарами, если нет специального ID
+      const productSection = document.querySelector('section:nth-of-type(2)');
+      if (productSection) {
+        productSection.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
@@ -29,6 +37,17 @@ const Hero = () => {
       const updatedProduct = { ...product, image: imagePath };
       saveProduct(updatedProduct);
     }
+  };
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>, imagePath?: string) => {
+    if (imagePath && imagePath.startsWith('/lovable-uploads/')) {
+      const cachedImage = getImageFromLocalStorage(imagePath);
+      if (cachedImage) {
+        e.currentTarget.src = cachedImage;
+        return;
+      }
+    }
+    e.currentTarget.src = "/placeholder.svg";
   };
 
   return (
@@ -61,13 +80,6 @@ const Hero = () => {
                             className="w-full h-full"
                             size="sm"
                           />
-                          {product.image && (
-                            <img
-                              src={product.image}
-                              alt={product.name}
-                              className="absolute inset-0 w-full h-full object-cover"
-                            />
-                          )}
                         </div>
                         <div className="p-3">
                           <h4 className="font-medium text-sm text-gray-900 truncate">{product.name}</h4>
@@ -87,7 +99,7 @@ const Hero = () => {
             onClick={scrollToCatalog}
             className="flex items-center gap-2 mx-auto bg-white hover:bg-gray-50 text-gray-800 font-medium py-3 px-6 rounded-lg transition-colors border border-gray-200 shadow-sm"
           >
-            Перейти к каталогу
+            Перейти к каталогу товаров
             <ArrowDown className="w-4 h-4" />
           </button>
         </div>

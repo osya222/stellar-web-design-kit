@@ -52,9 +52,6 @@ export async function handleFileUpload(request: Request): Promise<Response> {
       // Создаем уникальное имя файла
       const fileExtension = file.name.split('.').pop() || 'jpg';
       const fileName = `${uuidv4()}.${fileExtension}`;
-      
-      // В реальном приложении здесь была бы загрузка на сервер
-      // В демонстрационных целях просто возвращаем путь
       const filePath = `/lovable-uploads/${fileName}`;
       
       // Возвращаем успешный ответ с путем к файлу

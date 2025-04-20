@@ -1,7 +1,7 @@
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Upload } from 'lucide-react';
-import { uploadFile } from '@/utils/fileUpload';
+import { uploadFile, getImageFromLocalStorage } from '@/utils/fileUpload';
 import { useToast } from '@/hooks/use-toast';
 
 interface ImageUploadProps {
@@ -22,9 +22,18 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const [isUploading, setIsUploading] = useState(false);
   const [previewImage, setPreviewImage] = useState<string | undefined>(currentImage);
 
-  // Обновляем предпросмотр при изменении currentImage из props
-  React.useEffect(() => {
-    setPreviewImage(currentImage);
+  // Пытаемся загрузить изображение из localStorage при монтировании
+  useEffect(() => {
+    if (currentImage && currentImage.startsWith('/lovable-uploads/')) {
+      const cachedImage = getImageFromLocalStorage(currentImage);
+      if (cachedImage) {
+        setPreviewImage(cachedImage);
+      } else {
+        setPreviewImage(currentImage);
+      }
+    } else {
+      setPreviewImage(currentImage);
+    }
   }, [currentImage]);
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,7 +50,13 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       const imagePath = await uploadFile(file);
       
       // После загрузки обновляем путь к изображению
-      setPreviewImage(imagePath);
+      // Проверяем, есть ли изображение в localStorage
+      const cachedImage = getImageFromLocalStorage(imagePath);
+      if (cachedImage) {
+        setPreviewImage(cachedImage);
+      } else {
+        setPreviewImage(imagePath);
+      }
       
       // Сообщаем родительскому компоненту о новом пути
       onImageUploaded(imagePath);
@@ -75,6 +90,16 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     console.warn(`Не удалось загрузить изображение: ${previewImage}`);
+    
+    // Если изображение с путем из lovable-uploads не загрузилось, попробуем взять из localStorage
+    if (previewImage && previewImage.startsWith('/lovable-uploads/')) {
+      const cachedImage = getImageFromLocalStorage(previewImage);
+      if (cachedImage) {
+        e.currentTarget.src = cachedImage;
+        return;
+      }
+    }
+    
     e.currentTarget.src = "/placeholder.svg";
   };
 
@@ -83,6 +108,15 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
     md: 'h-10 w-10',
     lg: 'h-12 w-12'
   };
+  
+  // Определяем фактический URL для изображения с проверкой localStorage
+  const imageUrl = React.useMemo(() => {
+    if (previewImage && previewImage.startsWith('/lovable-uploads/')) {
+      const cachedImage = getImageFromLocalStorage(previewImage);
+      return cachedImage || previewImage;
+    }
+    return previewImage;
+  }, [previewImage]);
 
   return (
     <div className={`relative group ${className}`}>
@@ -95,9 +129,9 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       />
       
       {/* Показываем загруженное изображение или плейсхолдер */}
-      {previewImage ? (
+      {imageUrl ? (
         <img
-          src={previewImage}
+          src={imageUrl}
           alt="Загруженное изображение"
           className="w-full h-full object-contain"
           onError={handleImageError}

@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Product } from "@/types/product";
 import { Category } from "@/types/category";
 import { formatPrice } from "@/lib/formatters";
@@ -8,6 +8,7 @@ import { useCart } from "@/context/CartContext";
 import { ShoppingCart } from "lucide-react";
 import ImageUpload from "@/components/shared/ImageUpload";
 import { saveProduct } from "@/utils/dataService";
+import { getImageFromLocalStorage } from "@/utils/fileUpload";
 
 interface ProductCardProps {
   product: Product;
@@ -18,6 +19,16 @@ interface ProductCardProps {
 const ProductCard: React.FC<ProductCardProps> = ({ product, category, onEdit }) => {
   const { addToCart } = useCart();
   const [currentImage, setCurrentImage] = useState<string | undefined>(product.image);
+
+  // Проверяем localStorage при монтировании компонента
+  useEffect(() => {
+    if (product.image && product.image.startsWith('/lovable-uploads/')) {
+      const cachedImage = getImageFromLocalStorage(product.image);
+      if (cachedImage) {
+        setCurrentImage(product.image); // Путь остается тем же, но изображение будет взято из localStorage
+      }
+    }
+  }, [product.image]);
 
   const handleAddToCart = () => {
     addToCart(product);
@@ -31,6 +42,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, category, onEdit }) 
 
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     console.warn(`Не удалось загрузить изображение: ${currentImage}`);
+    
+    // Если изображение с путем из lovable-uploads не загрузилось, попробуем взять из localStorage
+    if (currentImage && currentImage.startsWith('/lovable-uploads/')) {
+      const cachedImage = getImageFromLocalStorage(currentImage);
+      if (cachedImage) {
+        e.currentTarget.src = cachedImage;
+        return;
+      }
+    }
+    
     e.currentTarget.src = "/placeholder.svg";
   };
 
