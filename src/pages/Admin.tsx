@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
 import { useQuery } from '@tanstack/react-query';
 import {
@@ -34,6 +34,27 @@ const Admin = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [currentProduct, setCurrentProduct] = useState<Product | null>(null);
   const [uploadActive, setUploadActive] = useState(true);
+
+  // Load uploadActive state from localStorage on component mount
+  useEffect(() => {
+    try {
+      const savedUploadState = localStorage.getItem('uploadActiveState');
+      if (savedUploadState !== null) {
+        setUploadActive(JSON.parse(savedUploadState));
+      }
+    } catch (error) {
+      console.error('Error loading upload state:', error);
+    }
+  }, []);
+
+  // Save uploadActive state to localStorage when it changes
+  useEffect(() => {
+    try {
+      localStorage.setItem('uploadActiveState', JSON.stringify(uploadActive));
+    } catch (error) {
+      console.error('Error saving upload state:', error);
+    }
+  }, [uploadActive]);
 
   // Fetch products
   const {
@@ -104,6 +125,16 @@ const Admin = () => {
     setCurrentProduct(null);
   };
 
+  const handleToggleUpload = (checked: boolean) => {
+    setUploadActive(checked);
+    toast({
+      title: checked ? "Загрузка изображений включена" : "Загрузка изображений отключена",
+      description: checked 
+        ? "Теперь вы можете загружать изображения продуктов" 
+        : "Загрузка изображений продуктов отключена",
+    });
+  };
+
   if (isEditing) {
     return (
       <>
@@ -145,10 +176,15 @@ const Admin = () => {
                 <div className="flex items-center gap-4 mt-2 md:mt-0">
                   <Switch
                     checked={uploadActive}
-                    onCheckedChange={setUploadActive}
+                    onCheckedChange={handleToggleUpload}
                     id="toggle-image-upload"
                   />
-                  <label htmlFor="toggle-image-upload" className="select-none">Включить загрузку изображений</label>
+                  <label 
+                    htmlFor="toggle-image-upload" 
+                    className="select-none cursor-pointer"
+                  >
+                    Включить загрузку изображений
+                  </label>
                 </div>
               </div>
 
@@ -173,6 +209,12 @@ const Admin = () => {
                 </TabsList>
 
                 <TabsContent value="products">
+                  <div className="flex justify-end mb-4">
+                    <Button onClick={() => setIsEditing(true)}>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Добавить продукт
+                    </Button>
+                  </div>
                   <ProductList
                     products={filteredProducts}
                     isLoading={productsLoading}
