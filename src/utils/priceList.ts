@@ -2,14 +2,19 @@
 import { formatPrice } from "@/lib/formatters";
 import { products } from "@/data/products/index";
 import { toast } from "@/hooks/use-toast";
+import { categories } from "@/data/categories";
 
 export const downloadPriceList = () => {
   let csvContent = "Наименование,Категория,Производитель,Цена\n";
   
   products.forEach(product => {
+    // Find the category name using categoryId
+    const category = categories.find(c => c.id === product.categoryId);
+    const categoryName = category ? category.name : '';
+    
     const row = [
       `"${product.name.replace(/"/g, '""')}"`,
-      `"${product.category}"`,
+      `"${categoryName}"`,
       `"${product.manufacturer || ''}"`,
       formatPrice(product.price || 0).replace(/\s/g, "")
     ];

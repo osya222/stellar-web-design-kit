@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,11 +19,12 @@ import { useToast } from "@/hooks/use-toast";
 import { saveProduct } from "@/utils/productStorage";
 import { Upload } from "lucide-react";
 import { getImageUrl } from "@/routes";
+import { categories } from "@/data/categories";
 
 const productSchema = z.object({
   name: z.string().min(3, { message: "Название должно содержать минимум 3 символа" }),
   price: z.coerce.number().min(1, { message: "Цена должна быть больше 0" }),
-  category: z.string().min(1, { message: "Категория обязательна" }),
+  categoryId: z.coerce.number({ required_error: "Категория обязательна" }),
   description: z.string().optional(),
   manufacturer: z.string().min(1, { message: "Производитель обязателен" }),
   image: z.string().optional(),
@@ -46,7 +47,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
     defaultValues: {
       name: existingProduct?.name || "",
       price: existingProduct?.price || 0,
-      category: existingProduct?.category || "",
+      categoryId: existingProduct?.categoryId || 1,
       description: existingProduct?.description || "",
       manufacturer: existingProduct?.manufacturer || "",
       image: existingProduct?.image || "",
@@ -99,7 +100,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
         id: existingProduct?.id || Date.now(),
         name: data.name,
         price: data.price,
-        category: data.category,
+        categoryId: data.categoryId,
         manufacturer: data.manufacturer,
         description: data.description,
         image: data.image,
@@ -122,7 +123,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
         form.reset({
           name: "",
           price: 0,
-          category: "",
+          categoryId: 1,
           description: "",
           manufacturer: "",
           image: "",
@@ -174,6 +175,29 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
 
           <FormField
             control={form.control}
+            name="categoryId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Категория*</FormLabel>
+                <FormControl>
+                  <select
+                    className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    {...field}
+                  >
+                    {categories.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
+                  </select>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
             name="image"
             render={({ field }) => (
               <FormItem>
@@ -206,20 +230,6 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
                     </div>
                   </FormControl>
                 </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="category"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Категория*</FormLabel>
-                <FormControl>
-                  <Input placeholder="Например: Лосось" {...field} />
-                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
