@@ -20,6 +20,7 @@ import { saveProduct } from "@/utils/productStorage";
 import { Upload } from "lucide-react";
 import { getImageUrl } from "@/routes";
 import { categories } from "@/data/categories";
+import { uploadFile } from "@/utils/fileUpload";
 
 const productSchema = z.object({
   name: z.string().min(3, { message: "Название должно содержать минимум 3 символа" }),
@@ -41,6 +42,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { toast } = useToast();
   const [uploadingImage, setUploadingImage] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(
     existingProduct?.image ? getImageUrl(existingProduct.image) : null
   );
@@ -73,22 +75,20 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
     if (!file) return;
 
     setUploadingImage(true);
-    const formData = new FormData();
-    formData.append('file', file);
-
+    
     try {
-      const filename = file.name.toLowerCase().replace(/[^a-z0-9.]/g, '-');
-      
-      // Создаем временный URL для предпросмотра
+      // Сохраняем файл для предпросмотра
       const localPreviewUrl = URL.createObjectURL(file);
       setImagePreview(localPreviewUrl);
+      setSelectedFile(file);
       
-      // Сохраняем файл напрямую в стандартное хранилище
-      form.setValue('image', filename);
+      // Предварительно установим имя файла в форму
+      const filename = file.name.toLowerCase().replace(/[^a-z0-9.]/g, '-');
+      form.setValue('image', `/images/products/${filename}`);
       
       toast({
-        title: "Успех",
-        description: "Изображение успешно загружено",
+        title: "Предпросмотр",
+        description: "Изображение готово к загрузке",
       });
       
       console.log("Image preview set with local URL:", localPreviewUrl);
@@ -107,6 +107,23 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
   const onSubmit = async (data: ProductFormValues) => {
     try {
       setIsSubmitting(true);
+      
+      // Если есть выбранный файл, загружаем его
+      if (selectedFile) {
+        try {
+          const uploadedPath = await uploadFile(selectedFile);
+          data.image = uploadedPath;
+          console.log("Image successfully uploaded to:", uploadedPath);
+        } catch (error) {
+          console.error("Failed to upload image:", error);
+          toast({
+            title: "Ошибка загрузки",
+            description: "Не удалось загрузить изображение",
+            variant: "destructive",
+          });
+          // Продолжаем сохранение товара даже при ошибке загрузки изображения
+        }
+      }
       
       const productData: Product = {
         id: existingProduct?.id || Date.now(),
@@ -141,6 +158,7 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
           image: "",
         });
         setImagePreview(null);
+        setSelectedFile(null);
       }
     } catch (error) {
       console.error("Error saving product:", error);
