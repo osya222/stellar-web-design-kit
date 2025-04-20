@@ -1,15 +1,33 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { Waves } from 'lucide-react';
 
 const Hero = () => {
   return (
     <section className="relative overflow-hidden py-0">
-      {/* background gradient */}
-      <div className="absolute inset-0 z-0 pointer-events-none" style={{
-        background: 'linear-gradient(108deg, #82c7fc 17.7%, #b2f4dd 91.2%)'
-      }} />
-      {/* big fish/seafood image */}
+      {/* Анимированный фон волн */}
+      <div className="absolute inset-0 z-0 pointer-events-none bg-gradient-to-br from-blue-100 to-blue-200 overflow-hidden">
+        <div className="absolute bottom-0 left-0 right-0 h-1/2 wave-container">
+          <svg 
+            className="wave-animation absolute bottom-0 w-full h-full" 
+            xmlns="http://www.w3.org/2000/svg" 
+            viewBox="0 0 1440 320"
+          >
+            <path 
+              fill="rgba(130, 199, 252, 0.3)" 
+              fillOpacity="1" 
+              d="M0,256L48,250.7C96,245,192,235,288,229.3C384,224,480,224,576,240C672,256,768,288,864,272C960,256,1056,192,1152,181.3C1248,171,1344,213,1392,234.7L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+            />
+            <path 
+              fill="rgba(178, 244, 221, 0.3)" 
+              fillOpacity="1" 
+              d="M0,160L48,165.3C96,171,192,181,288,197.3C384,213,480,235,576,229.3C672,224,768,192,864,197.3C960,203,1056,245,1152,261.3C1248,277,1344,267,1392,261.3L1440,256L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
+            />
+          </svg>
+        </div>
+      </div>
+
+      {/* Изображение рыбы */}
       <div className="absolute inset-0 flex justify-center items-end z-10 pointer-events-none">
         <img
           src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80"
@@ -26,14 +44,6 @@ const Hero = () => {
           <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto animate-fade-in">
             Поставляем свежайшую рыбу и лучшие морепродукты для ресторанов, магазинов и оптовых покупателей Москвы и области
           </p>
-          <div className="flex justify-center">
-            <Button
-              asChild
-              className="bg-blue-500 hover:scale-105 duration-200 text-white px-8 py-3 rounded-lg text-lg hover:bg-blue-600 w-full max-w-xs animate-fade-in shadow-lg"
-            >
-              <a href="#products">Смотреть каталог</a>
-            </Button>
-          </div>
         </div>
       </div>
     </section>
