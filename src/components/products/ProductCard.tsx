@@ -59,11 +59,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
       console.log('Статус ответа:', response.status);
       
-      // Проверяем успешность запроса
       if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        console.error('Ошибка ответа:', errorData || response.statusText);
-        throw new Error(`Ошибка загрузки: ${response.status} ${errorData?.error || response.statusText}`);
+        const errorText = await response.text();
+        console.error('Ошибка ответа текст:', errorText);
+        throw new Error(`Ошибка загрузки: ${response.status}`);
+      }
+      
+      // Проверяем, является ли ответ JSON перед парсингом
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Сервер вернул не JSON-ответ');
       }
       
       // Получаем ответ от сервера
