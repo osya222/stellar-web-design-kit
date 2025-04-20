@@ -2,10 +2,11 @@
 export interface Product {
   id: string;
   name: string;
+  category: string;
+  manufacturer: string; 
+  price: number;
   description?: string;
-  price?: number;
   imageUrl?: string;
-  category?: string;
   inStock?: boolean;
   weight?: number;
   unit?: 'кг' | 'г' | 'шт';
