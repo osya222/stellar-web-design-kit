@@ -29,12 +29,17 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
   );
   const abortControllerRef = useRef<AbortController | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const uploadTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Очистка при размонтировании компонента
   React.useEffect(() => {
     return () => {
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
+      }
+      
+      if (uploadTimeoutRef.current) {
+        clearTimeout(uploadTimeoutRef.current);
       }
     };
   }, []);
@@ -52,6 +57,22 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
       
       abortControllerRef.current = new AbortController();
       
+      // Устанавливаем таймаут на запрос загрузки
+      const timeoutId = setTimeout(() => {
+        if (abortControllerRef.current) {
+          console.log('Прерывание запроса из-за таймаута');
+          abortControllerRef.current.abort();
+          setUploadError('Превышено время ожидания загрузки изображения');
+          toast({
+            title: "Ошибка",
+            description: "Превышено время ожидания загрузки",
+            variant: "destructive"
+          });
+        }
+      }, 20000); // 20 секунд таймаут
+      
+      uploadTimeoutRef.current = timeoutId;
+      
       console.log('Отправка запроса на /api/upload...');
       const response = await fetch('/api/upload', {
         method: 'POST',
@@ -62,6 +83,10 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
           'X-Requested-With': 'XMLHttpRequest'
         }
       });
+      
+      // Очищаем таймаут после получения ответа
+      clearTimeout(timeoutId);
+      uploadTimeoutRef.current = null;
       
       console.log('Статус ответа:', response.status);
       
@@ -138,66 +163,73 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
     
     try {
       // Создаем превью изображения для быстрого отображения
-      const reader = new FileReader();
-      
-      reader.onload = async (ev) => {
-        try {
-          const preview = ev.target?.result as string || '/placeholder.svg';
-          
-          // Показываем превью сразу после выбора файла
-          setImagePreview(preview);
-          
-          // Загружаем файл на сервер
-          console.log('Начинаем загрузку файла на сервер...');
-          const imagePath = await uploadFile(file);
-          
-          if (imagePath) {
-            console.log('Файл успешно загружен, путь:', imagePath);
-            // Обновляем данные продукта с новым путем к изображению
-            onImageChange(imagePath, preview);
-            toast({
-              title: "Готово",
-              description: "Изображение успешно загружено",
-            });
-          } else {
-            // Если загрузка не удалась, восстанавливаем предыдущее превью
-            console.error('Загрузка не удалась, восстанавливаем превью');
-            setImagePreview(imageUrl || initialPreview || '/placeholder.svg');
+      const readerPromise = new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        
+        reader.onload = (ev) => {
+          try {
+            const preview = ev.target?.result as string || '/placeholder.svg';
+            resolve(preview);
+          } catch (err) {
+            reject(err);
           }
-        } catch (error) {
-          console.error('Ошибка в обработчике загрузки превью:', error);
-          setImagePreview(imageUrl || initialPreview || '/placeholder.svg');
-        } finally {
-          setIsUploading(false);
-        }
-      };
+        };
+        
+        reader.onerror = (err) => {
+          reject(err);
+        };
+        
+        // Запускаем чтение файла для создания превью
+        reader.readAsDataURL(file);
+      });
       
-      reader.onerror = () => {
-        console.error('Ошибка чтения файла');
-        setUploadError('Не удалось прочитать файл изображения');
+      try {
+        // Получаем превью
+        const preview = await readerPromise;
+        
+        // Показываем превью сразу после выбора файла
+        setImagePreview(preview);
+        
+        // Загружаем файл на сервер
+        console.log('Начинаем загрузку файла на сервер...');
+        const imagePath = await uploadFile(file);
+        
+        if (imagePath) {
+          console.log('Файл успешно загружен, путь:', imagePath);
+          // Обновляем данные продукта с новым путем к изображению
+          onImageChange(imagePath, preview);
+          toast({
+            title: "Готово",
+            description: "Изображение успешно загружено",
+          });
+        } else {
+          // Если загрузка не удалась, восстанавливаем предыдущее превью
+          console.error('Загрузка не удалась, восстанавливаем превью');
+          setImagePreview(imageUrl || initialPreview || '/placeholder.svg');
+        }
+      } catch (error) {
+        console.error('Ошибка в обработчике загрузки превью:', error);
         setImagePreview(imageUrl || initialPreview || '/placeholder.svg');
-        setIsUploading(false);
+        setUploadError('Не удалось прочитать файл изображения');
         
         toast({
           title: "Ошибка",
           description: "Не удалось прочитать файл изображения",
           variant: "destructive"
         });
-      };
-      
-      // Запускаем чтение файла для создания превью
-      reader.readAsDataURL(file);
+      }
     } catch (error) {
       console.error("Критическая ошибка при обработке изображения:", error);
       setUploadError('Произошла критическая ошибка при обработке изображения');
       setImagePreview(imageUrl || initialPreview || '/placeholder.svg');
-      setIsUploading(false);
       
       toast({
         title: "Ошибка",
         description: "Произошла ошибка при загрузке изображения",
         variant: "destructive"
       });
+    } finally {
+      setIsUploading(false);
     }
   };
 

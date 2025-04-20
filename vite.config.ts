@@ -35,11 +35,13 @@ const storage = multer.diskStorage({
   }
 });
 
-// Настройка multer с проверками
+// Создаем multer uploader за пределами обработчика запросов
+// для избежания утечек памяти и дескрипторов файлов
 const upload = multer({
   storage: storage,
   limits: {
     fileSize: 5 * 1024 * 1024, // 5MB макс размер
+    files: 1 // Ограничиваем до 1 файла за раз
   },
   fileFilter: (req, file, cb) => {
     // Принимаем только изображения
@@ -49,7 +51,7 @@ const upload = multer({
       cb(new Error('Только изображения могут быть загружены!') as any, false);
     }
   }
-}).single('image'); // Обратите внимание: здесь сразу применяем .single('image')
+}).single('image');
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }: ConfigEnv) => ({
@@ -59,11 +61,23 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
     fs: {
       strict: false,
     },
+    watch: {
+      // Уменьшаем количество отслеживаемых файлов
+      usePolling: false,
+      // Игнорируем каталоги с большим количеством файлов
+      ignored: ['**/node_modules/**', '**/dist/**', '**/.git/**'],
+    },
+    // Добавляем опции для предотвращения утечек файловых дескрипторов
+    hmr: {
+      // Используем WebSockets для HMR вместо EventSource
+      protocol: 'ws',
+      timeout: 5000,
+    },
     proxy: {
       '/api/upload': {
         target: 'http://localhost:8080',
         changeOrigin: true,
-        selfHandleResponse: true, // Важно для предотвращения дублирования ответов
+        selfHandleResponse: true,
         configure: (proxy, _options) => {
           proxy.on('error', (err, _req, res) => {
             console.error('Proxy error:', err);
@@ -71,6 +85,19 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
               res.writeHead(500, { 'Content-Type': 'application/json' });
               res.end(JSON.stringify({ error: 'Proxy error', details: err.message }));
             }
+          });
+          
+          // Закрытие соединений по таймауту
+          proxy.on('proxyRes', (proxyRes, req, res) => {
+            const bodyChunks: Buffer[] = [];
+            proxyRes.on('data', (chunk) => {
+              bodyChunks.push(Buffer.from(chunk));
+            });
+            
+            proxyRes.on('end', () => {
+              // Явно закрываем соединение после завершения
+              (req as any).socket?.setKeepAlive(false);
+            });
           });
         },
         handle: (req: IncomingMessage, res: ServerResponse) => {
@@ -96,29 +123,47 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
             try {
               console.log("Обработка POST запроса на загрузку файла");
               
-              // Создаем обработчик промиса для загрузки
-              return new Promise((resolve) => {
-                // Мы используем upload, который уже настроен как single('image')
+              // Создаем обработчик промиса для загрузки с таймаутом
+              const uploadPromise = new Promise<boolean>((resolve) => {
+                const uploadTimeout = setTimeout(() => {
+                  console.error("Timeout on file upload");
+                  if (!res.headersSent) {
+                    res.statusCode = 408;
+                    res.setHeader('Content-Type', 'application/json');
+                    res.end(JSON.stringify({ 
+                      error: 'Timeout on file upload', 
+                      details: 'Request took too long to process' 
+                    }));
+                  }
+                  resolve(true);
+                }, 30000); // 30 секунд таймаут
+                
                 upload(req as unknown as Request, res as unknown as Response, (err: any) => {
+                  clearTimeout(uploadTimeout);
+                  
                   res.setHeader('Content-Type', 'application/json');
                   
                   if (err) {
                     console.error("Ошибка при загрузке файла:", err);
-                    res.statusCode = 500;
-                    res.end(JSON.stringify({ 
-                      error: 'Ошибка загрузки файла', 
-                      details: err.message 
-                    }));
+                    if (!res.headersSent) {
+                      res.statusCode = 500;
+                      res.end(JSON.stringify({ 
+                        error: 'Ошибка загрузки файла', 
+                        details: err.message 
+                      }));
+                    }
                     return resolve(true);
                   }
                   
                   const file = (req as any).file;
                   if (!file) {
                     console.error("Файл не получен");
-                    res.statusCode = 400;
-                    res.end(JSON.stringify({ 
-                      error: 'Файл не был получен'
-                    }));
+                    if (!res.headersSent) {
+                      res.statusCode = 400;
+                      res.end(JSON.stringify({ 
+                        error: 'Файл не был получен'
+                      }));
+                    }
                     return resolve(true);
                   }
                   
@@ -128,16 +173,20 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
                   const imagePath = `/images/products/${file.filename}`;
                   
                   // Отправляем успешный ответ
-                  res.statusCode = 200;
-                  const responseData = { 
-                    success: true,
-                    path: imagePath
-                  };
-                  
-                  res.end(JSON.stringify(responseData));
+                  if (!res.headersSent) {
+                    res.statusCode = 200;
+                    const responseData = { 
+                      success: true,
+                      path: imagePath
+                    };
+                    
+                    res.end(JSON.stringify(responseData));
+                  }
                   return resolve(true);
                 });
               });
+              
+              return uploadPromise;
             } catch (error) {
               console.error("Критическая ошибка при обработке загрузки:", error);
               if (!res.headersSent) {
@@ -149,6 +198,18 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
                 }));
               }
               return true;
+            } finally {
+              // Явно очищаем любые незавершенные запросы
+              setTimeout(() => {
+                if (!res.headersSent) {
+                  try {
+                    res.statusCode = 500;
+                    res.end(JSON.stringify({ error: 'Unknown error occurred' }));
+                  } catch (e) {
+                    console.error('Error ending response:', e);
+                  }
+                }
+              }, 35000); // Дополнительный таймаут безопасности
             }
           }
           
@@ -172,5 +233,11 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
+  },
+  // Уменьшаем нагрузку на файловую систему
+  optimizeDeps: {
+    // Улучшаем кеширование для снижения количества открытых файлов
+    force: false,
+    entries: ['./src/main.tsx']
   },
 }));
