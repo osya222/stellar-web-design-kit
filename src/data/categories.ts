@@ -4,17 +4,27 @@ import { Category } from "@/types/category";
 export const categories: Category[] = [
   {
     id: 1,
-    name: "Лосось",
-    slug: "salmon"
+    name: "Лосось (Чили)",
+    slug: "salmon-chile"
   },
   {
     id: 2,
-    name: "Форель",
-    slug: "trout"
+    name: "Форель (Турция)",
+    slug: "trout-turkey"
   },
   {
     id: 3,
-    name: "Морепродукты",
+    name: "Креветки и морепродукты",
     slug: "seafood"
+  },
+  {
+    id: 4,
+    name: "Мидии",
+    slug: "mussels"
+  },
+  {
+    id: 5,
+    name: "Другие виды рыбы",
+    slug: "other-fish"
   }
 ];
