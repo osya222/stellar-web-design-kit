@@ -1,13 +1,13 @@
 
 /**
- * File upload utility for product images
- * Uploads files to /public/images/products/ directory
+ * Утилита для загрузки изображений товаров
+ * Загружает файлы в директорию /public/images/products/
  */
 
 /**
- * Upload a file to the server
- * @param file The file to upload
- * @returns Promise that resolves to the path of the uploaded file
+ * Загрузить файл на сервер
+ * @param file Файл для загрузки
+ * @returns Promise с путем к загруженному файлу
  */
 export const uploadFile = async (file: File): Promise<string> => {
   try {
@@ -20,10 +20,10 @@ export const uploadFile = async (file: File): Promise<string> => {
     const formData = new FormData();
     formData.append('file', file);
     
-    // Устанавливаем целевой путь для файла в публичной директории
+    // Целевой путь для файла в публичной директории
     const targetPath = `/images/products/${uniqueFileName}`;
     
-    // Отправляем файл на сервер Lovable
+    // Отправляем файл на сервер
     const response = await fetch('/api/upload', {
       method: 'POST',
       body: formData,
@@ -39,7 +39,7 @@ export const uploadFile = async (file: File): Promise<string> => {
     const data = await response.json();
     console.log('Файл успешно загружен:', data);
     
-    // Возвращаем путь к загруженному файлу
+    // Возвращаем полный путь к файлу для использования в src изображения
     return targetPath;
   } catch (error) {
     console.error('Ошибка загрузки файла:', error);

@@ -7,22 +7,28 @@ import fs from 'fs';
 // Настройка multer для обработки файлов
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const targetDir = path.join(process.cwd(), 'public', path.dirname(req.headers['x-target-path'] as string));
+    // Получаем путь назначения из заголовка запроса
+    const targetPath = path.dirname(req.headers['x-target-path'] as string);
+    // Создаем абсолютный путь к директории
+    const absolutePath = path.join(process.cwd(), 'public', targetPath);
     
     // Создаем директорию, если она не существует
-    if (!fs.existsSync(targetDir)) {
-      fs.mkdirSync(targetDir, { recursive: true });
+    if (!fs.existsSync(absolutePath)) {
+      fs.mkdirSync(absolutePath, { recursive: true });
     }
     
-    cb(null, targetDir);
+    cb(null, absolutePath);
   },
   filename: function (req, file, cb) {
-    cb(null, path.basename(req.headers['x-target-path'] as string));
+    // Берем имя файла из заголовка запроса
+    const fileName = path.basename(req.headers['x-target-path'] as string);
+    cb(null, fileName);
   }
 });
 
 const upload = multer({ storage: storage });
 
+// Обработчик загрузки файлов
 export default function handler(req: Request, res: Response) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });

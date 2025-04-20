@@ -9,35 +9,35 @@ let productsCache = [...initialProducts];
 let categoriesCache = [...initialCategories];
 
 /**
- * Get all products
+ * Получить все товары
  */
 export const getProducts = (): Product[] => {
   return [...productsCache];
 };
 
 /**
- * Get a product by ID
+ * Получить товар по ID
  */
 export const getProductById = (id: number): Product | undefined => {
   return productsCache.find(product => product.id === id);
 };
 
 /**
- * Save a product (create or update)
+ * Сохранить товар (создать или обновить)
  */
 export const saveProduct = (product: Product): Product => {
   const products = [...productsCache];
   const existingIndex = products.findIndex(p => p.id === product.id);
   
-  // Create a copy with all properties
+  // Создаем копию со всеми свойствами
   const productToSave = { ...product };
   
   if (existingIndex >= 0) {
-    // Update existing
+    // Обновляем существующий
     products[existingIndex] = productToSave;
     console.log('Товар обновлен:', productToSave.id);
   } else {
-    // Add new with next ID
+    // Добавляем новый со следующим ID
     const maxId = Math.max(0, ...products.map(p => p.id));
     productToSave.id = maxId + 1;
     products.push(productToSave);
@@ -47,18 +47,18 @@ export const saveProduct = (product: Product): Product => {
   // Обновляем кэш
   productsCache = products;
   
-  // Обновить исходный массив
+  // Обновляем исходный массив в модуле
   initialProducts.length = 0;
   products.forEach(p => initialProducts.push({...p}));
   
-  // Update source file
+  // Обновляем исходный файл кода
   updateProductsData(products);
   
   return productToSave;
 };
 
 /**
- * Delete a product
+ * Удалить товар
  */
 export const deleteProduct = (id: number): boolean => {
   const products = [...productsCache];
@@ -70,11 +70,11 @@ export const deleteProduct = (id: number): boolean => {
     // Обновляем кэш
     productsCache = products;
     
-    // Обновить исходный массив
+    // Обновляем исходный массив в модуле
     initialProducts.length = 0;
     products.forEach(p => initialProducts.push({...p}));
     
-    // Update source file
+    // Обновляем исходный файл кода
     updateProductsData(products);
     
     console.log('Товар удален:', id);
@@ -85,35 +85,35 @@ export const deleteProduct = (id: number): boolean => {
 };
 
 /**
- * Get all categories
+ * Получить все категории
  */
 export const getCategories = (): Category[] => {
   return [...categoriesCache];
 };
 
 /**
- * Get a category by ID
+ * Получить категорию по ID
  */
 export const getCategoryById = (id: number): Category | undefined => {
   return categoriesCache.find(category => category.id === id);
 };
 
 /**
- * Save a category (create or update)
+ * Сохранить категорию (создать или обновить)
  */
 export const saveCategory = (category: Category): Category => {
   const categories = [...categoriesCache];
   const existingIndex = categories.findIndex(c => c.id === category.id);
   
-  // Create a copy
+  // Создаем копию
   const categoryToSave = { ...category };
   
   if (existingIndex >= 0) {
-    // Update existing
+    // Обновляем существующую
     categories[existingIndex] = categoryToSave;
     console.log('Категория обновлена:', categoryToSave.id);
   } else {
-    // Add new with next ID
+    // Добавляем новую со следующим ID
     const maxId = Math.max(0, ...categories.map(c => c.id));
     categoryToSave.id = maxId + 1;
     categories.push(categoryToSave);
@@ -123,22 +123,22 @@ export const saveCategory = (category: Category): Category => {
   // Обновляем кэш
   categoriesCache = categories;
   
-  // Обновить исходный массив
+  // Обновляем исходный массив в модуле
   initialCategories.length = 0;
   categories.forEach(c => initialCategories.push({...c}));
   
-  // Update source file
+  // Обновляем исходный файл кода
   updateCategoriesData(categories);
   
   return categoryToSave;
 };
 
 /**
- * Delete a category
- * Returns false if category is in use and can't be deleted
+ * Удалить категорию
+ * Возвращает false, если категория используется и не может быть удалена
  */
 export const deleteCategory = (id: number): boolean => {
-  // Check if any products use this category
+  // Проверяем, используется ли категория в товарах
   const isInUse = productsCache.some(product => product.categoryId === id);
   
   if (isInUse) {
@@ -155,11 +155,11 @@ export const deleteCategory = (id: number): boolean => {
     // Обновляем кэш
     categoriesCache = categories;
     
-    // Обновить исходный массив
+    // Обновляем исходный массив в модуле
     initialCategories.length = 0;
     categories.forEach(c => initialCategories.push({...c}));
     
-    // Update source file
+    // Обновляем исходный файл кода
     updateCategoriesData(categories);
     
     console.log('Категория удалена:', id);
@@ -170,7 +170,7 @@ export const deleteCategory = (id: number): boolean => {
 };
 
 /**
- * Update products data in the source file
+ * Обновить данные о товарах в исходном файле
  */
 const updateProductsData = (products: Product[]) => {
   try {
@@ -198,7 +198,7 @@ const updateProductsData = (products: Product[]) => {
 };
 
 /**
- * Update categories data in the source file
+ * Обновить данные о категориях в исходном файле
  */
 const updateCategoriesData = (categories: Category[]) => {
   try {
