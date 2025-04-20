@@ -4,22 +4,23 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { handleFileUpload } from "./src/api/upload";
+import type { ViteDevServer } from 'vite';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
-    setupMiddleware: (middleware, server) => {
+    setupMiddleware: (middleware, server: ViteDevServer) => {
       // Настройка API роутов для загрузки файлов
-      server.middlewares.use('/api/upload', async (req, res) => {
+      server.middlewares.use('/api/upload', async (req: any, res: any) => {
         try {
           // Конвертируем стандартный запрос в Request из Fetch API
-          const url = new URL(req.url || '', `http://${req.headers.host}`);
+          const url = new URL(req.url || '', `http://${req.headers.host || 'localhost'}`);
           const headers = new Headers();
           
           Object.entries(req.headers).forEach(([key, value]) => {
-            if (value) headers.append(key, Array.isArray(value) ? value.join(', ') : value);
+            if (value) headers.append(key, Array.isArray(value) ? value.join(', ') : String(value));
           });
           
           // Создаем объект Request

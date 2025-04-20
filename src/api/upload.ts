@@ -18,7 +18,7 @@ export async function handleFileUpload(request: Request): Promise<Response> {
 
     // Получаем данные формы из запроса
     const formData = await request.formData();
-    const file = formData.get('file') as File;
+    const file = formData.get('file') as File | null;
 
     if (!file) {
       return new Response(
@@ -43,21 +43,9 @@ export async function handleFileUpload(request: Request): Promise<Response> {
     const fileExtension = file.name.split('.').pop() || 'jpg';
     const fileName = `${uuidv4()}.${fileExtension}`;
     
-    // Читаем содержимое файла
-    const arrayBuffer = await file.arrayBuffer();
-    const blob = new Blob([arrayBuffer]);
-    
-    // В демонстрационных целях сохраняем файл в локальное хранилище
+    // В демонстрационных целях создаем URL для предпросмотра файла
     // В реальном приложении здесь была бы загрузка на сервер
-    const imageUrl = URL.createObjectURL(blob);
-    
-    // Имитация пути к файлу как будто он находится на сервере
     const filePath = `/uploads/${fileName}`;
-    
-    // Сохраняем ссылку на файл в localStorage для демонстрации
-    const uploadedFiles = JSON.parse(localStorage.getItem('uploadedFiles') || '{}');
-    uploadedFiles[filePath] = imageUrl;
-    localStorage.setItem('uploadedFiles', JSON.stringify(uploadedFiles));
     
     // Возвращаем успешный ответ с путем к файлу
     return new Response(

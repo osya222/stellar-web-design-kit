@@ -26,7 +26,7 @@ export const uploadFile = async (file: File): Promise<string> => {
     const formData = new FormData();
     formData.append('file', file);
     
-    // Отправляем файл на сервер (в этой реализации используем встроенный сервер Vite)
+    // Отправляем файл на сервер
     const response = await fetch('/api/upload', {
       method: 'POST',
       body: formData
@@ -55,9 +55,10 @@ export const uploadFile = async (file: File): Promise<string> => {
     
     console.log('Файл успешно загружен:', data.filePath);
     
-    // Возвращаем полный путь к файлу для использования в src изображения
-    return data.filePath;
-  } catch (error) {
+    // В демонстрационных целях для отображения загруженных изображений
+    // мы будем использовать placeholder, поскольку у нас нет настоящего сервера
+    return `/placeholder.svg?filename=${encodeURIComponent(data.filePath)}`;
+  } catch (error: any) {
     console.error('Ошибка загрузки файла:', error);
     throw error;
   }
