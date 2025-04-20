@@ -1,6 +1,7 @@
 
 import { Product } from "@/types/product";
 
+// Изначальные данные продуктов
 const PRODUCTS: Product[] = [
   {
     id: "1",

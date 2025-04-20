@@ -49,23 +49,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       const formData = new FormData();
       formData.append('image', file);
 
-      console.log('Отправка запроса на загрузку...');
-      
-      // Используем fetch для отправки запроса на сервер
+      // Отправляем изображение на сервер
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
       });
-
-      console.log('Статус ответа:', response.status);
       
       if (!response.ok) {
         const errorText = await response.text();
-        console.error('Ошибка ответа текст:', errorText);
+        console.error('Ошибка загрузки:', errorText);
         throw new Error(`Ошибка загрузки: ${response.status}`);
       }
       
-      // Проверяем, является ли ответ JSON перед парсингом
+      // Проверяем тип ответа перед парсингом
       const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
         throw new Error('Сервер вернул не JSON-ответ');
@@ -77,8 +73,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       if (!data.success || !data.path) {
         throw new Error(data.error || 'Ошибка загрузки изображения');
       }
-
-      console.log('Загрузка успешна, путь:', data.path);
       
       // Обновление отображаемого изображения
       setProductImage(data.path);
