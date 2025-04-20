@@ -11,36 +11,31 @@
  */
 export const uploadFile = async (file: File): Promise<string> => {
   try {
-    // Создаем уникальное имя файла, чтобы избежать конфликтов
-    const timestamp = new Date().getTime();
-    const safeName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
-    const uniqueFileName = `${timestamp}-${safeName}`;
-    
     // Создаем объект FormData для загрузки файла
     const formData = new FormData();
     formData.append('file', file);
     
-    // Целевой путь для файла в публичной директории
-    const targetPath = `/images/products/${uniqueFileName}`;
-    
     // Отправляем файл на сервер
     const response = await fetch('/api/upload', {
       method: 'POST',
-      body: formData,
-      headers: {
-        'X-Target-Path': targetPath
-      }
+      body: formData
     });
 
     if (!response.ok) {
-      throw new Error(`Ошибка загрузки: ${response.status} ${response.statusText}`);
+      const errorData = await response.json();
+      throw new Error(errorData.message || `Ошибка загрузки: ${response.status} ${response.statusText}`);
     }
 
     const data = await response.json();
-    console.log('Файл успешно загружен:', data);
+    
+    if (!data.success) {
+      throw new Error(data.message || 'Неизвестная ошибка при загрузке файла');
+    }
+    
+    console.log('Файл успешно загружен:', data.filePath);
     
     // Возвращаем полный путь к файлу для использования в src изображения
-    return targetPath;
+    return data.filePath;
   } catch (error) {
     console.error('Ошибка загрузки файла:', error);
     throw error;

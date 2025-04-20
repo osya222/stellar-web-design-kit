@@ -19,18 +19,22 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, category, onEdit }) 
     addToCart(product);
   };
 
+  // Функция для обработки ошибок загрузки изображений
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    console.warn(`Не удалось загрузить изображение: ${product.image}`);
+    e.currentTarget.src = "/placeholder.svg";
+  };
+
   return (
     <div className="bg-white rounded-lg shadow overflow-hidden flex flex-col transition-all hover:shadow-md">
-      <div className="aspect-[4/3] w-full relative">
+      <div className="aspect-[4/3] w-full relative bg-gray-100">
         {product.image ? (
           <img
             src={product.image}
             alt={product.name}
             className="w-full h-full object-cover"
-            onError={(e) => {
-              console.error(`Image failed to load: ${product.image}`);
-              (e.target as HTMLImageElement).src = "/placeholder.svg";
-            }}
+            onError={handleImageError}
+            loading="lazy"
           />
         ) : (
           <div className="w-full h-full bg-gray-100 flex items-center justify-center">

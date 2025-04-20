@@ -13,7 +13,7 @@ import { Category } from "@/types/category";
 import { productSchema, ProductFormValues } from "@/schemas/productSchema";
 import { saveProduct } from "@/utils/dataService";
 import { uploadFile } from "@/utils/fileUpload";
-import { Upload } from "lucide-react";
+import { Upload, Loader2 } from "lucide-react";
 
 interface ProductFormProps {
   product?: Product;
@@ -47,7 +47,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, categories, onSucces
     
     try {
       const imagePath = await uploadFile(file);
-      form.setValue("image", imagePath);
+      form.setValue("image", imagePath, { shouldValidate: true });
       setImagePreview(imagePath);
       
       toast({
@@ -58,12 +58,17 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, categories, onSucces
       console.error("Ошибка загрузки:", error);
       toast({
         title: "Ошибка загрузки",
-        description: "Не удалось загрузить изображение",
+        description: error instanceof Error ? error.message : "Не удалось загрузить изображение",
         variant: "destructive",
       });
     } finally {
       setIsUploading(false);
     }
+  };
+
+  // Обработчик ошибок загрузки изображения предпросмотра
+  const handlePreviewError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    e.currentTarget.src = "/placeholder.svg";
   };
 
   const onSubmit = async (values: ProductFormValues) => {
@@ -185,9 +190,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, categories, onSucces
                       src={imagePreview} 
                       alt="Предпросмотр" 
                       className="w-full h-full object-cover"
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = '/placeholder.svg';
-                      }}
+                      onError={handlePreviewError}
                     />
                   </div>
                 )}
@@ -196,7 +199,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, categories, onSucces
                     <div className="flex flex-col gap-2">
                       <input
                         type="file"
-                        accept="image/*"
+                        accept="image/jpeg,image/png,image/gif,image/webp"
                         id="product-image"
                         className="hidden"
                         onChange={handleImageUpload}
@@ -205,14 +208,27 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, categories, onSucces
                       <Input type="hidden" {...field} />
                       <label
                         htmlFor="product-image"
-                        className="cursor-pointer inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-fit"
+                        className={`cursor-pointer inline-flex items-center justify-center rounded-md text-sm font-medium 
+                        ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 
+                        focus-visible:ring-ring focus-visible:ring-offset-2 
+                        ${isUploading ? 'opacity-70 pointer-events-none' : 'hover:bg-primary/90'} 
+                        bg-primary text-primary-foreground h-10 px-4 py-2 w-fit`}
                       >
-                        <Upload className="mr-2 h-4 w-4" />
-                        {isUploading ? "Загрузка..." : "Загрузить изображение"}
+                        {isUploading ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Загрузка...
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="mr-2 h-4 w-4" />
+                            Загрузить изображение
+                          </>
+                        )}
                       </label>
                       {!imagePreview && (
                         <p className="text-sm text-gray-500 mt-1">
-                          Загрузите изображение товара
+                          Загрузите изображение товара (JPEG, PNG, GIF, WEBP)
                         </p>
                       )}
                     </div>
@@ -229,11 +245,12 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, categories, onSucces
           className="w-full" 
           disabled={isSubmitting || isUploading}
         >
-          {isSubmitting
-            ? "Сохранение..."
-            : product
-            ? "Обновить товар"
-            : "Добавить товар"}
+          {isSubmitting ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Сохранение...
+            </>
+          ) : product ? "Обновить товар" : "Добавить товар"}
         </Button>
       </form>
     </Form>

@@ -2,9 +2,9 @@
 import React, { useState, useEffect } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
-import { Edit, Trash2, Plus } from "lucide-react";
+import { Edit, Trash2, Plus, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Product } from "@/types/product";
 import { Category } from "@/types/category";
@@ -25,10 +25,22 @@ const ProductList: React.FC<ProductListProps> = ({ onUpdate }) => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [productToDelete, setProductToDelete] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const loadData = () => {
-    setProducts(getProducts());
-    setCategories(getCategories());
+    setIsLoading(true);
+    try {
+      setProducts(getProducts());
+      setCategories(getCategories());
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: "Не удалось загрузить данные",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -81,6 +93,11 @@ const ProductList: React.FC<ProductListProps> = ({ onUpdate }) => {
     if (onUpdate) onUpdate();
   };
 
+  // Обработчик ошибок загрузки изображений
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    e.currentTarget.src = '/placeholder.svg';
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -94,12 +111,17 @@ const ProductList: React.FC<ProductListProps> = ({ onUpdate }) => {
         </Button>
       </div>
 
-      {products.length === 0 ? (
+      {isLoading ? (
+        <div className="bg-muted/20 rounded-md p-8 text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-primary" />
+          <p className="text-muted-foreground">Загрузка данных...</p>
+        </div>
+      ) : products.length === 0 ? (
         <div className="bg-muted/20 rounded-md p-8 text-center">
           <p className="text-muted-foreground">Нет товаров</p>
         </div>
       ) : (
-        <div className="border rounded-md">
+        <div className="border rounded-md overflow-auto">
           <Table>
             <TableHeader>
               <TableRow>
@@ -117,23 +139,22 @@ const ProductList: React.FC<ProductListProps> = ({ onUpdate }) => {
                   <TableCell>{product.id}</TableCell>
                   <TableCell>
                     {product.image ? (
-                      <div className="h-10 w-10 rounded overflow-hidden">
+                      <div className="h-12 w-12 rounded overflow-hidden">
                         <img 
                           src={product.image} 
                           alt={product.name} 
                           className="h-full w-full object-cover"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = '/placeholder.svg';
-                          }}
+                          onError={handleImageError}
+                          loading="lazy"
                         />
                       </div>
                     ) : (
-                      <div className="h-10 w-10 bg-muted rounded flex items-center justify-center">
+                      <div className="h-12 w-12 bg-muted rounded flex items-center justify-center">
                         <span className="text-xs text-muted-foreground">Нет</span>
                       </div>
                     )}
                   </TableCell>
-                  <TableCell>{product.name}</TableCell>
+                  <TableCell className="max-w-[200px] truncate">{product.name}</TableCell>
                   <TableCell>{getCategoryName(product.categoryId)}</TableCell>
                   <TableCell>{formatPrice(product.price)}</TableCell>
                   <TableCell className="text-right">
@@ -166,6 +187,9 @@ const ProductList: React.FC<ProductListProps> = ({ onUpdate }) => {
         <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Добавить товар</DialogTitle>
+            <DialogDescription>
+              Заполните данные о новом товаре
+            </DialogDescription>
           </DialogHeader>
           <ProductForm 
             categories={categories} 
@@ -179,6 +203,9 @@ const ProductList: React.FC<ProductListProps> = ({ onUpdate }) => {
         <DialogContent className="sm:max-w-[550px] max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Редактировать товар</DialogTitle>
+            <DialogDescription>
+              Внесите изменения в информацию о товаре
+            </DialogDescription>
           </DialogHeader>
           {selectedProduct && (
             <ProductForm 
