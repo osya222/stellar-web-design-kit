@@ -72,7 +72,7 @@ const updateProductsInSource = (products: Product[]) => {
     
     console.log('Saving product data to source code');
     
-    fetch('/_source/data/products/index.ts', {
+    fetch('/_api/source/data/products.ts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -87,3 +87,4 @@ const updateProductsInSource = (products: Product[]) => {
     console.error("Error preparing products data:", error);
   }
 };
+
