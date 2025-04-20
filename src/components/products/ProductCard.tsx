@@ -15,20 +15,6 @@ const ProductCard = ({ product, onEdit }: ProductCardProps) => {
 
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow h-full flex flex-col">
-      <div className="relative">
-        {product.image ? (
-          <img 
-            src={product.image} 
-            alt={product.name} 
-            className="w-full h-48 object-cover"
-          />
-        ) : (
-          <div className="w-full h-48 bg-gray-200 flex items-center justify-center">
-            <span className="text-gray-400">Нет изображения</span>
-          </div>
-        )}
-      </div>
-      
       <div className="p-4 flex flex-col flex-grow">
         <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
         
@@ -42,30 +28,6 @@ const ProductCard = ({ product, onEdit }: ProductCardProps) => {
               <span>Производитель:</span>
               <span className="font-medium text-gray-800">{product.manufacturer}</span>
             </div>
-            {product.size && (
-              <div className="flex justify-between">
-                <span>Размер:</span>
-                <span className="font-medium text-gray-800">{product.size}</span>
-              </div>
-            )}
-            {product.weight && (
-              <div className="flex justify-between">
-                <span>Вес:</span>
-                <span className="font-medium text-gray-800">{product.weight}</span>
-              </div>
-            )}
-            {product.packaging && (
-              <div className="flex justify-between">
-                <span>Упаковка:</span>
-                <span className="font-medium text-gray-800">{product.packaging}</span>
-              </div>
-            )}
-            {product.catchDate && (
-              <div className="flex justify-between">
-                <span>Вылов:</span>
-                <span className="font-medium text-gray-800">{product.catchDate}</span>
-              </div>
-            )}
           </div>
         </div>
 

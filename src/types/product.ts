@@ -6,9 +6,4 @@ export interface Product {
   category: string;
   manufacturer: string;
   description?: string;
-  image?: string;
-  size?: string;
-  weight?: string;
-  packaging?: string;
-  catchDate?: string;
 }
