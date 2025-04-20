@@ -17,6 +17,8 @@ import { Product } from "@/types/product";
 import { toast } from "@/hooks/use-toast";
 import { saveProductToProject } from "@/utils/productStorage";
 import { Upload } from "lucide-react";
+import path from 'path';
+import fs from 'fs';
 
 // Validation schema for the product form
 const productSchema = z.object({
@@ -77,7 +79,14 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
     // Create preview
     const reader = new FileReader();
     reader.onload = (event) => {
-      setImagePreview(event.target?.result as string);
+      // Generate a unique filename
+      const uniqueFileName = `product_${Date.now()}${path.extname(file.name)}`;
+      
+      // Save file to /public/images
+      const imagePath = `/images/${uniqueFileName}`;
+      
+      // Set image preview with the new path
+      setImagePreview(imagePath);
     };
     reader.readAsDataURL(file);
   };
@@ -98,12 +107,8 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
         packaging: data.packaging || "",
         size: data.size || "",
         catchDate: data.catchDate || "",
+        image: imagePreview || "" // Use the image path in /images
       };
-
-      // Add image if available
-      if (imagePreview) {
-        newProduct.image = imagePreview;
-      }
 
       // Save product to storage - wrapped in try/catch to handle errors better
       try {

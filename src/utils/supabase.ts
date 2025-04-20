@@ -14,7 +14,7 @@ const createMockStorage = () => {
     },
 
     getPublicUrl: (path: string) => {
-      return `/images/products/${path.split('/').pop()}`;
+      return `/images/${path.split('/').pop()}`;
     },
 
     delete: async () => {
@@ -29,3 +29,4 @@ export const supabase = supabaseUrl && supabaseKey
   : null;
 
 export const storage = createMockStorage();
+
