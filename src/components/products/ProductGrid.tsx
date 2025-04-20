@@ -12,7 +12,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from "@/components/ui/dialog";
-import ProductForm from "../admin/ProductForm";
+import ProductForm from "../admin/product/ProductForm";
 import { useToast } from "@/hooks/use-toast";
 
 interface ProductGridProps {
