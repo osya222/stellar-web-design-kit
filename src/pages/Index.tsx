@@ -20,8 +20,8 @@ export default function Index() {
       <Header />
       <main>
         <Hero />
-        <About />
         <ProductGrid />
+        <About />
         <DeliveryInfo />
         <Contacts />
       </main>

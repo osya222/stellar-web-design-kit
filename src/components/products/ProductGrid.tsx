@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Product } from "@/types/product";
 import { Category } from "@/types/category";
@@ -102,7 +101,7 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
   const groupedProducts = groupProductsByCategory();
 
   return (
-    <section className="py-8 bg-white" id="catalog">
+    <section className="py-8 bg-white">
       <div className="container mx-auto px-4">
         <div className="flex flex-col items-center mb-8">
           <h2 className="text-3xl font-bold text-blue-900 mb-6">Наш каталог</h2>
@@ -116,16 +115,12 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
             {products.length === 0 ? 'Пока нет товаров в каталоге' : 'Товары не найдены'}
           </div>
         ) : (
-          <Accordion type="multiple" className="w-full space-y-6">
+          <div className="space-y-8">
             {groupedProducts.map((category) => (
               category.products.length > 0 && (
-                <AccordionItem
-                  key={category.id}
-                  value={category.id.toString()}
-                  className="border border-blue-100 rounded-xl bg-white shadow-sm overflow-hidden"
-                >
-                  <AccordionTrigger className="px-6 py-4 hover:no-underline [&[data-state=open]>div>img]:opacity-100 bg-blue-50">
-                    <div className="flex items-center w-full gap-5">
+                <div key={category.id} className="bg-white rounded-xl shadow-sm overflow-hidden border border-blue-100">
+                  <div className="px-6 py-4 bg-blue-50">
+                    <div className="flex items-center gap-5">
                       <div className="relative w-16 h-16">
                         <ImageUpload
                           onImageUploaded={handleCategoryImageUploaded(category.id)}
@@ -133,25 +128,13 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
                           className="w-full h-full"
                           size="sm"
                         />
-                        {category.image && (
-                          <img
-                            src={category.image}
-                            alt={category.name}
-                            className="w-16 h-16 rounded-lg object-cover opacity-90 transition-opacity duration-200 shadow-sm"
-                          />
-                        )}
                       </div>
-                      <div className="flex items-center justify-between flex-1">
-                        <h3 className="text-xl font-bold text-blue-800">
-                          {category.name}
-                        </h3>
-                        <span className="h-5 w-5 text-blue-500 transform transition-transform duration-200">
-                          <ChevronDown className="h-5 w-5" />
-                        </span>
-                      </div>
+                      <h3 className="text-xl font-bold text-blue-800">
+                        {category.name}
+                      </h3>
                     </div>
-                  </AccordionTrigger>
-                  <AccordionContent className="px-6 pt-4 pb-6 bg-gradient-to-b from-blue-50/50 to-white">
+                  </div>
+                  <div className="p-6 bg-gradient-to-b from-blue-50/50 to-white">
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
                       {category.products.map((product) => (
                         <ProductCard
@@ -161,11 +144,11 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
                         />
                       ))}
                     </div>
-                  </AccordionContent>
-                </AccordionItem>
+                  </div>
+                </div>
               )
             ))}
-          </Accordion>
+          </div>
         )}
       </div>
 
