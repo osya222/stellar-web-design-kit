@@ -5,12 +5,13 @@ import { Category } from "@/types/category";
 import { getProducts, getCategories } from "@/utils/dataService";
 import ProductCard from "./ProductCard";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
+import { ChevronDown } from "lucide-react";
 import ProductForm from "../admin/products/ProductForm";
 import { useToast } from "@/hooks/use-toast";
 
@@ -25,7 +26,6 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const { toast } = useToast();
 
-  // Load products on component mount
   useEffect(() => {
     loadData();
   }, []);
@@ -43,8 +43,11 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
     }
   };
 
-  const findCategory = (categoryId: number) => {
-    return categories.find(cat => cat.id === categoryId);
+  const groupProductsByCategory = () => {
+    return categories.map(category => ({
+      ...category,
+      products: products.filter(product => product.categoryId === category.id)
+    }));
   };
 
   const handleEditSuccess = () => {
@@ -56,6 +59,8 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
       description: "Товар успешно обновлен",
     });
   };
+
+  const groupedProducts = groupProductsByCategory();
 
   return (
     <section className="py-8" id="catalog">
@@ -69,15 +74,37 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
             Пока нет товаров в каталоге
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {products.map((product) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                category={findCategory(product.categoryId)}
-              />
+          <Accordion type="multiple" className="w-full space-y-4">
+            {groupedProducts.map((category) => (
+              category.products.length > 0 && (
+                <AccordionItem
+                  key={category.id}
+                  value={category.id.toString()}
+                  className="border rounded-lg bg-white shadow-sm"
+                >
+                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                    <div className="flex items-center justify-between w-full">
+                      <h3 className="text-xl font-semibold text-gray-900">
+                        {category.name}
+                      </h3>
+                      <ChevronDown className="h-5 w-5 text-gray-500 transform transition-transform duration-200" />
+                    </div>
+                  </AccordionTrigger>
+                  <AccordionContent className="px-6 pt-2 pb-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                      {category.products.map((product) => (
+                        <ProductCard
+                          key={product.id}
+                          product={product}
+                          category={category}
+                        />
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
+              )
             ))}
-          </div>
+          </Accordion>
         )}
       </div>
 
