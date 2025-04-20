@@ -11,9 +11,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ChevronDown } from "lucide-react";
-import ProductForm from "../admin/products/ProductForm";
 import { useToast } from "@/hooks/use-toast";
 
 interface ProductGridProps {
@@ -101,14 +99,23 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
                 <AccordionItem
                   key={category.id}
                   value={category.id.toString()}
-                  className="border rounded-lg bg-white shadow-sm"
+                  className="border rounded-lg bg-white shadow-sm overflow-hidden"
                 >
-                  <AccordionTrigger className="px-6 py-4 hover:no-underline">
-                    <div className="flex items-center justify-between w-full">
-                      <h3 className="text-xl font-semibold text-gray-900">
-                        {category.name}
-                      </h3>
-                      <ChevronDown className="h-5 w-5 text-gray-500 transform transition-transform duration-200" />
+                  <AccordionTrigger className="px-6 py-4 hover:no-underline [&[data-state=open]>div>img]:opacity-100">
+                    <div className="flex items-center w-full gap-4">
+                      {category.image && (
+                        <img
+                          src={category.image}
+                          alt={category.name}
+                          className="w-16 h-16 rounded-lg object-cover opacity-80 transition-opacity duration-200"
+                        />
+                      )}
+                      <div className="flex items-center justify-between flex-1">
+                        <h3 className="text-xl font-semibold text-gray-900">
+                          {category.name}
+                        </h3>
+                        <ChevronDown className="h-5 w-5 text-gray-500 transform transition-transform duration-200" />
+                      </div>
                     </div>
                   </AccordionTrigger>
                   <AccordionContent className="px-6 pt-2 pb-6">
