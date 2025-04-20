@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { formatPrice } from '@/lib/formatters';
 import type { Product } from '@/types/product';
@@ -17,6 +17,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
   const [productImage, setProductImage] = useState<string>(product.imageUrl || '/placeholder.svg');
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   useEffect(() => {
     setProductImage(product.imageUrl || '/placeholder.svg');
@@ -47,39 +48,66 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     try {
       setIsUploading(true);
       
-      // Create FormData to send file to server
-      const formData = new FormData();
-      formData.append('image', file);
+      // Read the file as a base64 string
+      const reader = new FileReader();
       
-      // Upload image to server
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData
-      });
+      reader.onload = async (e) => {
+        try {
+          if (!e.target?.result) {
+            throw new Error('Не удалось прочитать файл');
+          }
+          
+          const base64String = e.target.result.toString();
+          
+          // Generate a unique filename
+          const ext = file.name.split('.').pop() || 'jpg';
+          const uniqueFilename = `product_${product.id}_${Date.now()}.${ext}`;
+          const imagePath = `/images/products/${uniqueFilename}`;
+          
+          // Save the image in localStorage with the path
+          const imageData = {
+            path: imagePath,
+            content: base64String
+          };
+          
+          localStorage.setItem(`image_${imagePath}`, JSON.stringify(imageData));
+          
+          // Update product with new image path
+          const updatedProduct = await updateProductImage(product.id, imagePath);
+          
+          if (updatedProduct) {
+            setProductImage(imagePath);
+            toast({
+              title: "Успешно",
+              description: "Изображение загружено и сохранено",
+            });
+          } else {
+            throw new Error('Не удалось обновить данные продукта');
+          }
+        } catch (error) {
+          console.error('Ошибка сохранения:', error);
+          toast({
+            title: "Ошибка",
+            description: (error as Error).message || 'Не удалось сохранить изображение',
+            variant: "destructive"
+          });
+          setProductImage(product.imageUrl || '/placeholder.svg');
+        } finally {
+          setIsUploading(false);
+        }
+      };
       
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Ошибка при загрузке изображения');
-      }
-      
-      const data = await response.json();
-      
-      if (!data.path) {
-        throw new Error('Не получен путь к изображению');
-      }
-      
-      // Update product with new image path
-      const updatedProduct = await updateProductImage(product.id, data.path);
-      
-      if (updatedProduct) {
-        setProductImage(data.path);
+      reader.onerror = () => {
         toast({
-          title: "Успешно",
-          description: "Изображение загружено и сохранено",
+          title: "Ошибка",
+          description: "Не удалось прочитать файл",
+          variant: "destructive"
         });
-      } else {
-        throw new Error('Не удалось обновить данные продукта');
-      }
+        setIsUploading(false);
+      };
+      
+      reader.readAsDataURL(file);
+      
     } catch (error) {
       console.error('Ошибка загрузки:', error);
       toast({
@@ -88,8 +116,12 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         variant: "destructive"
       });
       setProductImage(product.imageUrl || '/placeholder.svg');
-    } finally {
       setIsUploading(false);
+    }
+    
+    // Clear the file input for future uploads
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
     }
   };
 
@@ -101,8 +133,20 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           alt={product.name}
           className="object-cover w-full h-full"
           onError={(e) => {
-            const target = e.target as HTMLImageElement;
-            target.src = '/placeholder.svg';
+            // Check if there's a saved image in localStorage
+            try {
+              const savedImageKey = `image_${productImage}`;
+              const savedImage = localStorage.getItem(savedImageKey);
+              
+              if (savedImage) {
+                const imageData = JSON.parse(savedImage);
+                (e.target as HTMLImageElement).src = imageData.content;
+              } else {
+                (e.target as HTMLImageElement).src = '/placeholder.svg';
+              }
+            } catch (err) {
+              (e.target as HTMLImageElement).src = '/placeholder.svg';
+            }
           }}
         />
         <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -117,6 +161,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
               onChange={handleFileChange}
               accept="image/*"
               disabled={isUploading}
+              ref={fileInputRef}
             />
             {isUploading ? (
               <span className="flex items-center gap-2">
