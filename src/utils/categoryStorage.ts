@@ -3,19 +3,19 @@ import { Category } from '@/data/categories';
 import { categories as defaultCategories } from '@/data/categories';
 import { products } from '@/data/products';
 
-// Переменная для кеширования категорий в памяти
+// Variable for caching categories in memory
 let cachedCategories: Category[] = [];
 let isInitialized = false;
 
 /**
- * Инициализация кеша категорий
+ * Initialize the categories cache
  */
 const initializeCache = () => {
   if (!isInitialized) {
-    // Создаем глубокую копию исходных категорий
+    // Create a deep copy of the original categories
     cachedCategories = JSON.parse(JSON.stringify(defaultCategories));
     isInitialized = true;
-    console.log('Инициализирован кеш категорий:', cachedCategories.length);
+    console.log('Categories cache initialized:', cachedCategories.length);
   }
 };
 
@@ -24,6 +24,7 @@ const initializeCache = () => {
  */
 export const getCategories = (): Category[] => {
   initializeCache();
+  console.log('Getting categories:', cachedCategories.length);
   return [...cachedCategories];
 };
 
@@ -38,29 +39,29 @@ export const saveCategory = (category: Category): void => {
   if (existingIndex >= 0) {
     // Update existing category
     cachedCategories[existingIndex] = { ...category };
-    console.log('Обновлена существующая категория:', category.id);
+    console.log('Updated existing category:', category.id);
   } else {
     // Add new category with next available ID
     const maxId = Math.max(0, ...cachedCategories.map(c => c.id));
     const newCategory = { ...category, id: category.id || maxId + 1 };
     cachedCategories.push(newCategory);
-    console.log('Добавлена новая категория с ID:', newCategory.id);
+    console.log('Added new category with ID:', newCategory.id);
   }
   
-  // Обновляем исходный массив defaultCategories для сохранения между перезагрузками
+  // Update the original defaultCategories array for persistence between reloads
   try {
-    // Сначала очищаем массив
+    // First clear the array
     while (defaultCategories.length > 0) {
       defaultCategories.pop();
     }
     
-    // Затем добавляем все категории из кеша
+    // Then add all categories from cache
     cachedCategories.forEach(c => defaultCategories.push({...c}));
     
     // Save changes to source code
     updateCategoriesFile();
   } catch (error) {
-    console.error('Ошибка при обновлении исходного массива категорий:', error);
+    console.error('Error updating source categories array:', error);
   }
 };
 
@@ -81,10 +82,10 @@ export const deleteCategory = (categoryId: number): boolean => {
   const index = cachedCategories.findIndex(c => c.id === categoryId);
   if (index >= 0) {
     cachedCategories.splice(index, 1);
-    console.log('Удалена категория с ID:', categoryId);
+    console.log('Deleted category with ID:', categoryId);
     
     try {
-      // Обновляем исходный массив defaultCategories для сохранения между перезагрузками
+      // Update the original defaultCategories array
       while (defaultCategories.length > 0) {
         defaultCategories.pop();
       }
@@ -94,7 +95,7 @@ export const deleteCategory = (categoryId: number): boolean => {
       // Save changes to source code
       updateCategoriesFile();
     } catch (error) {
-      console.error('Ошибка при обновлении исходного массива категорий после удаления:', error);
+      console.error('Error updating source categories array after deletion:', error);
     }
     
     return true;
@@ -110,9 +111,9 @@ const updateCategoriesFile = () => {
   try {
     const content = `export interface Category {\n  id: number;\n  name: string;\n  slug: string;\n}\n\nexport const categories: Category[] = ${JSON.stringify(cachedCategories, null, 2)};`;
     
-    console.log('Сохраняем данные категорий в исходный код');
+    console.log('Saving categories data to source code');
     
-    fetch('/_lovable/sourcecode', {
+    fetch('/_lovable/source', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

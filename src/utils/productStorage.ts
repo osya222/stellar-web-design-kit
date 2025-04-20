@@ -6,7 +6,13 @@ import { products as initialProducts } from '@/data/products';
  * Get all products
  */
 export const getProducts = (): Product[] => {
-  return [...initialProducts];
+  try {
+    console.log('Getting products:', initialProducts.length);
+    return [...initialProducts];
+  } catch (error) {
+    console.error('Error getting products:', error);
+    return [];
+  }
 };
 
 /**
@@ -72,8 +78,8 @@ const updateProductsInSource = (products: Product[]) => {
     
     console.log('Saving product data to source code');
     
-    // Use the correct endpoint for source code updates in Lovable
-    fetch('/_lovable/sourcecode', {
+    // Use the proper endpoint to save source code in Lovable
+    fetch('/_lovable/source', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
