@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Product } from "@/types/product";
 import { Category } from "@/types/category";
@@ -11,6 +10,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ChevronDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
