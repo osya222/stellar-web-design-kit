@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -25,7 +26,7 @@ import {
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
 import { useToast } from '@/hooks/use-toast';
-import { createProduct, updateProduct, updateProductImage, getProductImage } from '@/utils/dataService';
+import { createProduct, updateProduct } from '@/utils/dataService';
 import type { Product } from '@/types/product';
 import { ProductImageUpload } from './ProductImageUpload';
 

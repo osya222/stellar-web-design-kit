@@ -110,7 +110,7 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
               // Configure multer with reduced file size (200KB) and strict validation
               const upload = multer({ 
                 storage,
-                limits: { fileSize: 200 * 1024 }, // Reduced to 200KB for better reliability
+                limits: { fileSize: 200 * 1024 }, // 200KB for better reliability
                 fileFilter: (req, file, cb) => {
                   // Only allow image files
                   if (!file.mimetype.startsWith('image/')) {

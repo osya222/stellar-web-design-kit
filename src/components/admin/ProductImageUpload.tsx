@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Upload, AlertTriangle, Info } from 'lucide-react';
@@ -75,7 +75,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
       return;
     }
 
-    // Strict size check - reduced to 200KB for better reliability
+    // Strict size check - 200KB limit
     if (file.size > 200 * 1024) {
       setFileSizeErrorOpen(true);
       toast({
