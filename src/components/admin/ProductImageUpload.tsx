@@ -39,13 +39,14 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
       
       uploadTimeoutRef.current = timeoutId;
       
+      console.log('Отправка запроса на /api/upload...');
       const response = await fetch('/api/upload', {
         method: 'POST',
         body: formData,
         signal: abortController.signal,
-        // Добавляем заголовки для решения CORS-проблем
         headers: {
           'Accept': 'application/json',
+          'X-Requested-With': 'XMLHttpRequest'
         }
       });
       
@@ -54,16 +55,23 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
         uploadTimeoutRef.current = null;
       }
       
+      console.log('Статус ответа:', response.status);
+      
       if (!response.ok) {
-        throw new Error(`Ошибка загрузки: ${response.status}`);
+        const errorText = await response.text();
+        console.error('Ошибка загрузки, ответ сервера:', errorText);
+        throw new Error(`Ошибка загрузки: ${response.status} - ${errorText}`);
       }
       
       const result = await response.json();
+      console.log('Ответ сервера:', result);
 
       if (result?.path) {
+        console.log('Путь к загруженному изображению:', result.path);
         return result.path as string;
       } else {
-        throw new Error(result?.error || 'Ошибка загрузки');
+        console.error('Ошибка в ответе сервера:', result);
+        throw new Error(result?.error || 'Ошибка загрузки: неверный формат ответа');
       }
     } catch (error: any) {
       console.error('Ошибка при загрузке файла:', error);
@@ -107,31 +115,57 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
     }
 
     setIsUploading(true);
+    
     try {
       // Создаем превью изображения
       const reader = new FileReader();
+      
       reader.onload = async (ev) => {
-        const preview = ev.target?.result as string || '/placeholder.svg';
-        setImagePreview(preview);
-        
-        // Загружаем файл на сервер
-        const imagePath = await uploadFile(file);
-        if (imagePath) {
-          onImageChange(imagePath, preview);
-          toast({
-            title: "Готово",
-            description: "Изображение загружено",
-          });
-        } else {
-          // Если загрузка не удалась, восстанавливаем предыдущее превью
+        try {
+          const preview = ev.target?.result as string || '/placeholder.svg';
+          
+          // Показываем превью сразу после выбора файла
+          setImagePreview(preview);
+          
+          // Загружаем файл на сервер
+          console.log('Начинаем загрузку файла на сервер...');
+          const imagePath = await uploadFile(file);
+          
+          if (imagePath) {
+            console.log('Файл успешно загружен, путь:', imagePath);
+            // Обновляем данные продукта с новым путем к изображению
+            onImageChange(imagePath, preview);
+            toast({
+              title: "Готово",
+              description: "Изображение успешно загружено",
+            });
+          } else {
+            // Если загрузка не удалась, восстанавливаем предыдущее превью
+            console.error('Загрузка не удалась, восстанавливаем превью');
+            setImagePreview(imageUrl || initialPreview || '/placeholder.svg');
+            toast({
+              title: "Ошибка",
+              description: "Не удалось загрузить изображение на сервер",
+              variant: "destructive"
+            });
+          }
+        } catch (error) {
+          console.error('Ошибка в обработчике загрузки превью:', error);
           setImagePreview(imageUrl || initialPreview || '/placeholder.svg');
-          toast({
-            title: "Ошибка",
-            description: "Не удалось загрузить изображение на сервер",
-            variant: "destructive"
-          });
         }
       };
+      
+      reader.onerror = () => {
+        console.error('Ошибка чтения файла');
+        toast({
+          title: "Ошибка",
+          description: "Не удалось прочитать файл изображения",
+          variant: "destructive"
+        });
+        setImagePreview(imageUrl || initialPreview || '/placeholder.svg');
+      };
+      
+      // Запускаем чтение файла для создания превью
       reader.readAsDataURL(file);
     } catch (error) {
       console.error("Ошибка при загрузке изображения:", error);

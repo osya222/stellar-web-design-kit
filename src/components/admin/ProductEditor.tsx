@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -104,17 +103,21 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
   }, [product]);
 
   const handleImageChange = (imagePath: string, preview: string) => {
+    console.log('Изображение изменено:', imagePath, 'превью длина:', preview.length);
+    
     form.setValue('imageUrl', imagePath);
     setImagePreview(preview);
     
-    // Cache the preview image
-    if (form.getValues('id')) {
-      cacheProductImage(form.getValues('id'), preview);
+    const productId = form.getValues('id');
+    if (productId) {
+      console.log('Кеширование превью для п��одукта:', productId);
+      cacheProductImage(productId, preview);
     }
   };
 
   const onSubmit = async (data: ProductFormValues) => {
     try {
+      console.log('Сохранение продукта:', data);
       let savedProduct: Product;
 
       if (product) {
@@ -122,21 +125,25 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
           ...data,
           id: product.id
         });
+        console.log('Продукт обновлен:', savedProduct);
+        
+        if (data.imageUrl !== product.imageUrl) {
+          console.log('Обновление изображения продукта:', data.imageUrl);
+          await updateProductImage(savedProduct.id, data.imageUrl);
+        }
+        
         toast({
           title: "Успешно",
           description: "Продукт обновлен",
         });
       } else {
         savedProduct = await createProduct(data);
+        console.log('Продукт создан:', savedProduct);
+        
         toast({
           title: "Успешно",
           description: "Продукт создан",
         });
-      }
-
-      // Обновить изображение, если data.imageUrl отличается от product?.imageUrl
-      if (imagePreview !== '/placeholder.svg' && data.imageUrl !== product?.imageUrl) {
-        await updateProductImage(savedProduct.id, data.imageUrl);
       }
 
       onSaveComplete();

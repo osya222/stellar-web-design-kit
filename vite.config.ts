@@ -28,7 +28,7 @@ const storage = multer.diskStorage({
     // Уникальное имя файла на основе времени и оригинального имени
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
     const ext = path.extname(file.originalname);
-    cb(null, uniqueSuffix + ext);
+    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
   }
 });
 
@@ -78,7 +78,7 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
           // Устанавливаем CORS заголовки
           res.setHeader('Access-Control-Allow-Origin', '*');
           res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-          res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
+          res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept, X-Requested-With');
           
           // Обработка OPTIONS запроса
           if (req.method === 'OPTIONS') {
@@ -90,7 +90,7 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
           // Обработка POST запроса для загрузки файла
           if (req.method === 'POST') {
             try {
-              console.log("Обработка POST запроса на загрузку");
+              console.log("Обработка POST запроса на загрузку файла");
               
               // Используем multer для обработки загрузки одного файла
               const uploadSingle = upload.single('image');
