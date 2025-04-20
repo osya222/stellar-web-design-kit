@@ -11,19 +11,10 @@ window.fetch = async (input, init) => {
   
   try {
     // Check if this is an API request
-    const routeEntries = Object.entries(apiRoutes);
-    for (const [route, handler] of routeEntries) {
-      if (url.includes(route) && typeof handler === 'function') {
-        console.log(`Intercepting API request to ${route}`);
-        
-        // Create a new request object
-        const request = new Request(url, init);
-        console.log("Request method:", request.method);
-        
-        const response = await handler(request);
-        console.log(`Response from handler ${route}:`, response.status);
-        return response;
-      }
+    const isUploadRequest = url.includes(apiRoutes.upload);
+    if (isUploadRequest) {
+      console.log(`Intercepting API request to ${url}`);
+      // For now, just log the request and pass it through
     }
     
     // Handle requests for image files
