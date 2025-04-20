@@ -36,12 +36,24 @@ export const uploadFile = async (file: File): Promise<string> => {
       let errorMessage = `Ошибка загрузки: ${response.status} ${response.statusText}`;
       
       try {
-        const errorData = await response.json();
-        if (errorData && errorData.message) {
-          errorMessage = errorData.message;
+        // Пытаемся прочитать тело ответа, если есть
+        const text = await response.text();
+        if (text) {
+          try {
+            const errorData = JSON.parse(text);
+            if (errorData && errorData.message) {
+              errorMessage = errorData.message;
+            }
+          } catch (jsonError) {
+            console.error('Не удалось распарсить ответ сервера:', jsonError);
+            // Если не JSON, используем текст как есть
+            if (text.length > 0) {
+              errorMessage += ` - ${text}`;
+            }
+          }
         }
-      } catch (jsonError) {
-        console.error('Не удалось распарсить ответ сервера:', jsonError);
+      } catch (textError) {
+        console.error('Не удалось прочитать ответ сервера:', textError);
       }
       
       throw new Error(errorMessage);
@@ -57,7 +69,7 @@ export const uploadFile = async (file: File): Promise<string> => {
     
     // В демонстрационных целях для отображения загруженных изображений
     // мы будем использовать placeholder, поскольку у нас нет настоящего сервера
-    return `/placeholder.svg?filename=${encodeURIComponent(data.filePath)}`;
+    return data.filePath;
   } catch (error: any) {
     console.error('Ошибка загрузки файла:', error);
     throw error;

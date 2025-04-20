@@ -43,9 +43,9 @@ export async function handleFileUpload(request: Request): Promise<Response> {
     const fileExtension = file.name.split('.').pop() || 'jpg';
     const fileName = `${uuidv4()}.${fileExtension}`;
     
-    // В демонстрационных целях создаем URL для предпросмотра файла
     // В реальном приложении здесь была бы загрузка на сервер
-    const filePath = `/uploads/${fileName}`;
+    // В демонстрационных целях просто возвращаем путь
+    const filePath = `/lovable-uploads/${fileName}`;
     
     // Возвращаем успешный ответ с путем к файлу
     return new Response(

@@ -16,6 +16,16 @@ export default defineConfig(({ mode }) => ({
       // Настройка API роутов для загрузки файлов
       server.middlewares.use('/api/upload', async (req: Connect.IncomingMessage, res: any) => {
         try {
+          if (req.method === 'OPTIONS') {
+            // Handle preflight requests
+            res.statusCode = 204;
+            res.setHeader('Access-Control-Allow-Origin', '*');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+            res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+            res.end();
+            return;
+          }
+          
           // Конвертируем стандартный запрос в Request из Fetch API
           const url = new URL(req.url || '', `http://${req.headers.host || 'localhost'}`);
           const headers = new Headers();
