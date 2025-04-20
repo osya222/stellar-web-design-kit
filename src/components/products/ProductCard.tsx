@@ -6,6 +6,8 @@ import { formatPrice } from "@/lib/formatters";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/context/CartContext";
 import { ShoppingCart } from "lucide-react";
+import ImageUpload from "@/components/shared/ImageUpload";
+import { saveProduct } from "@/utils/dataService";
 
 interface ProductCardProps {
   product: Product;
@@ -20,7 +22,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, category, onEdit }) 
     addToCart(product);
   };
 
-  // Функция для обработки ошибок загрузки изображений
+  const handleImageUploaded = (imagePath: string) => {
+    const updatedProduct = { ...product, image: imagePath };
+    saveProduct(updatedProduct);
+  };
+
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     console.warn(`Не удалось загрузить изображение: ${product.image}`);
     e.currentTarget.src = "/placeholder.svg";
@@ -29,6 +35,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, category, onEdit }) 
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col transition-all hover:shadow-md group">
       <div className="aspect-square w-full relative bg-white p-4">
+        <ImageUpload
+          onImageUploaded={handleImageUploaded}
+          currentImage={product.image}
+          className="w-full h-full"
+        />
         {product.image ? (
           <img
             src={product.image}

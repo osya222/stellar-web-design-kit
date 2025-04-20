@@ -1,8 +1,8 @@
-
 import React from 'react';
 import Logo from "@/components/layout/Logo";
 import { ArrowDown } from "lucide-react";
-import { getProducts } from "@/utils/dataService";
+import { getProducts, saveProduct } from "@/utils/dataService";
+import ImageUpload from "@/components/shared/ImageUpload";
 import {
   Carousel,
   CarouselContent,
@@ -22,6 +22,14 @@ const Hero = () => {
   const popularProducts = getProducts()
     .sort((a, b) => b.price - a.price)
     .slice(0, 5);
+
+  const handleImageUploaded = (productId: number) => async (imagePath: string) => {
+    const product = popularProducts.find(p => p.id === productId);
+    if (product) {
+      const updatedProduct = { ...product, image: imagePath };
+      saveProduct(updatedProduct);
+    }
+  };
 
   return (
     <section className="relative py-20 bg-gradient-to-b from-blue-50 to-white">
@@ -47,6 +55,12 @@ const Hero = () => {
                     <div className="p-2">
                       <div className="rounded-lg overflow-hidden shadow-md bg-white">
                         <div className="aspect-square relative bg-gray-100">
+                          <ImageUpload
+                            onImageUploaded={handleImageUploaded(product.id)}
+                            currentImage={product.image}
+                            className="w-full h-full"
+                            size="sm"
+                          />
                           {product.image && (
                             <img
                               src={product.image}

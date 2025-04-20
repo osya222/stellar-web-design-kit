@@ -1,20 +1,18 @@
-
 import { useEffect, useState } from "react";
 import { Product } from "@/types/product";
 import { Category } from "@/types/category";
-import { getProducts, getCategories } from "@/utils/dataService";
+import { getProducts, getCategories, saveCategory } from "@/utils/dataService";
 import ProductCard from "./ProductCard";
 import ProductSearch from "./ProductSearch";
+import ImageUpload from "@/components/shared/ImageUpload";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { ChevronDown } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import ProductForm from "@/components/admin/products/ProductForm";
 
 interface ProductGridProps {
   showAdmin?: boolean;
@@ -63,6 +61,18 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
     setFilteredProducts(filtered);
   };
 
+  const handleCategoryImageUploaded = (categoryId: number) => async (imagePath: string) => {
+    const category = categories.find(c => c.id === categoryId);
+    if (category) {
+      const updatedCategory = { ...category, image: imagePath };
+      saveCategory(updatedCategory);
+      const updatedCategories = categories.map(c => 
+        c.id === categoryId ? updatedCategory : c
+      );
+      setCategories(updatedCategories);
+    }
+  };
+
   const groupProductsByCategory = () => {
     return categories.map(category => ({
       ...category,
@@ -107,13 +117,21 @@ const ProductGrid = ({ showAdmin = false }: ProductGridProps) => {
                 >
                   <AccordionTrigger className="px-6 py-4 hover:no-underline [&[data-state=open]>div>img]:opacity-100 bg-blue-50">
                     <div className="flex items-center w-full gap-5">
-                      {category.image && (
-                        <img
-                          src={category.image}
-                          alt={category.name}
-                          className="w-16 h-16 rounded-lg object-cover opacity-90 transition-opacity duration-200 shadow-sm"
+                      <div className="relative w-16 h-16">
+                        <ImageUpload
+                          onImageUploaded={handleCategoryImageUploaded(category.id)}
+                          currentImage={category.image}
+                          className="w-full h-full"
+                          size="sm"
                         />
-                      )}
+                        {category.image && (
+                          <img
+                            src={category.image}
+                            alt={category.name}
+                            className="w-16 h-16 rounded-lg object-cover opacity-90 transition-opacity duration-200 shadow-sm"
+                          />
+                        )}
+                      </div>
                       <div className="flex items-center justify-between flex-1">
                         <h3 className="text-xl font-bold text-blue-800">
                           {category.name}
