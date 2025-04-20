@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
 
 const Hero = () => {
   return (
@@ -14,19 +13,12 @@ const Hero = () => {
           <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
             Поставляем свежую рыбу и морепродукты для ресторанов, магазинов и оптовых покупателей в Москве и области
           </p>
-          <div className="flex justify-center space-x-4">
+          <div className="flex justify-center">
             <Button 
               asChild 
-              className="bg-blue-500 text-white px-8 py-3 rounded-lg text-lg hover:bg-blue-600"
+              className="bg-blue-500 text-white px-8 py-3 rounded-lg text-lg hover:bg-blue-600 w-full max-w-xs"
             >
               <a href="#products">Смотреть каталог</a>
-            </Button>
-            <Button 
-              asChild 
-              variant="outline"
-              className="text-blue-500 border-blue-500 px-8 py-3 rounded-lg text-lg hover:bg-blue-50"
-            >
-              <Link to="/cart">Оформить заказ</Link>
             </Button>
           </div>
         </div>
