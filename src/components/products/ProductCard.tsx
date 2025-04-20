@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { formatPrice } from '@/lib/formatters';
@@ -17,6 +18,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const { toast } = useToast();
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
+  const [uploadedImageUrl, setUploadedImageUrl] = useState<string | null>(null);
   
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -63,43 +65,37 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
 
       console.log('Response status:', response.status);
       
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Error response:', errorText);
-        
-        let errorMessage = 'Ошибка загрузки';
-        try {
-          const errorData = JSON.parse(errorText);
-          errorMessage = errorData.error || errorMessage;
-        } catch (e) {
-          console.error('Failed to parse error response:', e);
-        }
-        
-        throw new Error(errorMessage);
-      }
-      
-      // Try to get response as text first
+      // Get response text regardless of status
       const responseText = await response.text();
-      console.log('Response text:', responseText);
+      console.log('Raw response text:', responseText);
       
-      // If empty response, throw error
-      if (!responseText.trim()) {
+      // Check if response is empty
+      if (!responseText || responseText.trim() === '') {
         throw new Error('Сервер вернул пустой ответ');
       }
       
-      // Parse JSON response
+      // Try to parse JSON response
       let data;
       try {
         data = JSON.parse(responseText);
+        console.log('Parsed response data:', data);
       } catch (e) {
-        console.error('Response is not valid JSON:', e);
+        console.error('Failed to parse response as JSON:', e);
         throw new Error('Сервер вернул неверный формат ответа');
+      }
+      
+      // Check for non-200 status or error in response
+      if (!response.ok || !data.success) {
+        const errorMessage = data.error || 'Неизвестная ошибка';
+        console.error('Upload failed:', errorMessage, data);
+        throw new Error(errorMessage);
       }
 
       console.log('Upload successful:', data);
       
-      if (!data.success) {
-        throw new Error(data.error || 'Неизвестная ошибка');
+      // Update displayed image
+      if (data.path) {
+        setUploadedImageUrl(data.path);
       }
       
       toast({
@@ -108,18 +104,23 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       });
 
       // Copy path to clipboard for convenience
-      await navigator.clipboard.writeText(data.path);
-      toast({
-        title: "Путь скопирован",
-        description: "Путь к изображению скопирован в буфер обмена",
-      });
+      try {
+        await navigator.clipboard.writeText(data.path);
+        toast({
+          title: "Путь скопирован",
+          description: "Путь к изображению скопирован в буфер обмена",
+        });
+      } catch (clipboardError) {
+        console.error('Failed to copy to clipboard:', clipboardError);
+      }
 
     } catch (error) {
       console.error('Upload error:', error);
-      setUploadError((error as Error).message || 'Не удалось загрузить изображение');
+      const errorMessage = (error as Error).message || 'Не удалось загрузить изображение';
+      setUploadError(errorMessage);
       toast({
         title: "Ошибка",
-        description: (error as Error).message || "Не удалось загрузить изображение",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
@@ -127,11 +128,14 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     }
   };
 
+  // Determine which image URL to use
+  const displayImageUrl = uploadedImageUrl || product.imageUrl || '/placeholder.svg';
+
   return (
     <Card className="overflow-hidden hover:shadow-lg transition-shadow group">
       <AspectRatio ratio={4/3} className="relative">
         <img 
-          src={product.imageUrl || '/placeholder.svg'} 
+          src={displayImageUrl} 
           alt={product.name}
           className="object-cover w-full h-full"
           onError={(e) => {

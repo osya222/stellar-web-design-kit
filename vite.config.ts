@@ -8,7 +8,7 @@ import multer from 'multer';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import type { ServerResponse, IncomingMessage } from 'http';
-import type { Request } from 'express';
+import type { Request, Response } from 'express';
 import type { NextFunction } from 'connect';
 import type { ConfigEnv, ProxyOptions } from 'vite';
 
@@ -17,7 +17,7 @@ const __dirname = dirname(__filename);
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
+  destination: function (req: Express.Request, file: Express.Multer.File, cb: (error: Error | null, destination: string) => void) {
     const uploadPath = path.join(__dirname, 'public/images/products');
     // Ensure the directory exists
     if (!fs.existsSync(uploadPath)) {
@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
     }
     cb(null, uploadPath);
   },
-  filename: function (req, file, cb) {
+  filename: function (req: Express.Request, file: Express.Multer.File, cb: (error: Error | null, filename: string) => void) {
     cb(null, file.originalname);
   }
 });
@@ -56,45 +56,58 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
         handle: (req: IncomingMessage, res: ServerResponse) => {
           if (req.url === '/api/upload' && req.method === 'POST') {
             try {
-              // Set correct content type for JSON responses
+              console.log("Handling upload request");
+              
+              // Set content type for all responses to ensure JSON is properly returned
               res.setHeader('Content-Type', 'application/json');
               
-              // Use multer to handle the file upload
-              const uploadSingle = upload.single('image');
-              
-              uploadSingle(req as unknown as Request, res as any, (err) => {
-                if (err) {
-                  console.error("Upload error:", err);
+              // Create a simplified handler that doesn't rely on middleware chaining
+              const handleUpload = () => {
+                try {
+                  // Process the form with multer
+                  upload.single('image')(req as unknown as Request, res as unknown as Response, (err: any) => {
+                    if (err) {
+                      console.error("Multer error:", err);
+                      res.statusCode = 500;
+                      res.end(JSON.stringify({ error: 'Ошибка загрузки файла', details: err.message }));
+                      return;
+                    }
+                    
+                    const file = (req as any).file;
+                    if (!file) {
+                      console.error("No file uploaded");
+                      res.statusCode = 400;
+                      res.end(JSON.stringify({ error: 'Файл не был загружен' }));
+                      return;
+                    }
+                    
+                    console.log("File uploaded successfully:", file.filename);
+                    
+                    // Return success as JSON
+                    res.statusCode = 200;
+                    const responseData = { 
+                      success: true,
+                      path: `/images/products/${file.filename}` 
+                    };
+                    const responseJson = JSON.stringify(responseData);
+                    console.log("Sending response:", responseJson);
+                    res.end(responseJson);
+                  });
+                } catch (innerError) {
+                  console.error("Inner error during upload:", innerError);
                   res.statusCode = 500;
-                  res.end(JSON.stringify({ error: 'Ошибка загрузки файла' }));
-                  return;
+                  res.end(JSON.stringify({ error: 'Внутренняя ошибка сервера', details: (innerError as Error).message }));
                 }
-                
-                // @ts-ignore: multer adds file property to req
-                const file = (req as any).file;
-                if (!file) {
-                  res.statusCode = 400;
-                  res.end(JSON.stringify({ error: 'Файл не был загружен' }));
-                  return;
-                }
-
-                console.log("File uploaded successfully:", file.filename);
-                
-                // Return success response with the file path
-                res.statusCode = 200;
-                res.end(JSON.stringify({ 
-                  success: true,
-                  path: `/images/products/${file.filename}` 
-                }));
-              });
+              };
               
+              handleUpload();
               return true;
             } catch (error) {
               console.error("Server error:", error);
               // Ensure error response is also JSON
               res.statusCode = 500;
               res.setHeader('Content-Type', 'application/json');
-              res.end(JSON.stringify({ error: 'Ошибка сервера' }));
+              res.end(JSON.stringify({ error: 'Ошибка сервера', details: (error as Error).message }));
               return true;
             }
           }
