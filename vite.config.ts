@@ -32,7 +32,21 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ storage: storage });
+// Добавляем ограничения по размеру и типу файлов
+const upload = multer({ 
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB макс размер
+  },
+  fileFilter: (req, file, cb) => {
+    // Принимаем только изображения
+    if (file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Только изображения могут быть загружены!') as any, false);
+    }
+  }
+});
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }: ConfigEnv) => ({
@@ -64,7 +78,7 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
           // Устанавливаем CORS заголовки
           res.setHeader('Access-Control-Allow-Origin', '*');
           res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-          res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+          res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
           
           // Обработка OPTIONS запроса
           if (req.method === 'OPTIONS') {

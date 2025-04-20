@@ -141,6 +141,7 @@ export const ProductEditor: React.FC<ProductEditorProps> = ({
 
       onSaveComplete();
     } catch (error) {
+      console.error('Ошибка при сохранении продукта:', error);
       toast({
         title: "Ошибка",
         description: "Не удалось сохранить продукт",

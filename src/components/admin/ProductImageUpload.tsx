@@ -43,6 +43,10 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
         method: 'POST',
         body: formData,
         signal: abortController.signal,
+        // Добавляем заголовки для решения CORS-проблем
+        headers: {
+          'Accept': 'application/json',
+        }
       });
       
       if (uploadTimeoutRef.current) {
@@ -50,14 +54,19 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
         uploadTimeoutRef.current = null;
       }
       
+      if (!response.ok) {
+        throw new Error(`Ошибка загрузки: ${response.status}`);
+      }
+      
       const result = await response.json();
 
-      if (response.ok && result?.path) {
+      if (result?.path) {
         return result.path as string;
       } else {
         throw new Error(result?.error || 'Ошибка загрузки');
       }
     } catch (error: any) {
+      console.error('Ошибка при загрузке файла:', error);
       if (error.name === 'AbortError') {
         toast({
           title: "Ошибка",
@@ -99,21 +108,31 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
 
     setIsUploading(true);
     try {
-      // Для превью: сжимаем локально чтобы отображать, но в продукт кладем только путь
+      // Создаем превью изображения
       const reader = new FileReader();
       reader.onload = async (ev) => {
-        setImagePreview(ev.target?.result as string || '/placeholder.svg');
+        const preview = ev.target?.result as string || '/placeholder.svg';
+        setImagePreview(preview);
+        
+        // Загружаем файл на сервер
+        const imagePath = await uploadFile(file);
+        if (imagePath) {
+          onImageChange(imagePath, preview);
+          toast({
+            title: "Готово",
+            description: "Изображение загружено",
+          });
+        } else {
+          // Если загрузка не удалась, восстанавливаем предыдущее превью
+          setImagePreview(imageUrl || initialPreview || '/placeholder.svg');
+          toast({
+            title: "Ошибка",
+            description: "Не удалось загрузить изображение на сервер",
+            variant: "destructive"
+          });
+        }
       };
       reader.readAsDataURL(file);
-
-      const imagePath = await uploadFile(file);
-      if (imagePath) {
-        onImageChange(imagePath, URL.createObjectURL(file));
-        toast({
-          title: "Готово",
-          description: "Изображение загружено",
-        });
-      }
     } catch (error) {
       console.error("Ошибка при загрузке изображения:", error);
       toast({
@@ -121,6 +140,7 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
         description: "Произошла ошибка при загрузке изображения",
         variant: "destructive"
       });
+      setImagePreview(imageUrl || initialPreview || '/placeholder.svg');
     } finally {
       setIsUploading(false);
     }
