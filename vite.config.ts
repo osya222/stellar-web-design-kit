@@ -7,7 +7,7 @@ import fs from 'fs';
 import multer from 'multer';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import type { ServerResponse } from 'http';
+import type { ServerResponse, IncomingMessage } from 'http';
 import type { Request } from 'express';
 import type { NextFunction } from 'connect';
 import type { ConfigEnv, ProxyOptions } from 'vite';
@@ -53,13 +53,13 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
             }
           });
         },
-        handle: (req, res) => {
+        handle: (req: IncomingMessage, res: ServerResponse) => {
           if (req.url === '/api/upload' && req.method === 'POST') {
             try {
               // Set correct content type before handling the upload
               res.setHeader('Content-Type', 'application/json');
               
-              upload.single('image')(req as any, res as any, (err) => {
+              upload.single('image')(req as unknown as Request, res as any, (err) => {
                 if (err) {
                   console.error("Upload error:", err);
                   res.statusCode = 500;
