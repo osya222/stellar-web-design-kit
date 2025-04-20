@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -74,9 +75,14 @@ const ProductForm = ({ existingProduct, onSuccess }: ProductFormProps) => {
         }
       }
       
+      // Make sure all required fields have values (not undefined or optional)
       const productData: Product = {
         id: existingProduct?.id || Date.now(),
-        ...data,
+        name: data.name, // Ensure name is always provided
+        price: data.price,
+        category: data.category,
+        manufacturer: data.manufacturer,
+        description: data.description,
         image: imageName || undefined,
       };
 
