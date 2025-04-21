@@ -31,7 +31,7 @@ const ProductEditForm: React.FC<ProductEditFormProps> = ({
             ? String(editForm.localImage)
             : (editForm.image as string) || undefined
         }
-        imageAlt="Фото"
+        imageAlt={editForm.name || "Фото товара"}
         serverPath={editForm.image as string}
         isUploading={isUploading}
         onFileChange={onFileChange}
@@ -43,6 +43,8 @@ const ProductEditForm: React.FC<ProductEditFormProps> = ({
         name="name"
         value={editForm.name || ""}
         onChange={onInputChange}
+        placeholder="Название товара"
+        disabled={isUploading}
       />
     </td>
     <td>
@@ -51,6 +53,8 @@ const ProductEditForm: React.FC<ProductEditFormProps> = ({
         name="category"
         value={editForm.category || ""}
         onChange={onInputChange}
+        placeholder="Категория"
+        disabled={isUploading}
       />
     </td>
     <td>
@@ -60,6 +64,8 @@ const ProductEditForm: React.FC<ProductEditFormProps> = ({
         type="number"
         value={editForm.price || ""}
         onChange={onInputChange}
+        placeholder="0.00"
+        disabled={isUploading}
       />
     </td>
     <td>
@@ -68,6 +74,8 @@ const ProductEditForm: React.FC<ProductEditFormProps> = ({
         name="manufacturer"
         value={editForm.manufacturer || ""}
         onChange={onInputChange}
+        placeholder="Производитель"
+        disabled={isUploading}
       />
     </td>
     <td className="space-x-2">
