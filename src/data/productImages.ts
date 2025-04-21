@@ -1,4 +1,3 @@
-
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
     "default": "/lovable-uploads/0d6e972e-0353-45aa-907b-5f193220c4bb.png",
@@ -14,10 +13,8 @@ export const productImages: Record<string, Record<string, string>> = {
   },
   "Морепродукты": {
     "default": "/lovable-uploads/9d283ac4-5a1a-45f8-b15b-f6e5d2812d1b.png",
-    // Новое фото для панцирной креветки для всех вариантов (основного и с id)
-    "КРЕВЕТКА ваннамей свежая в панцире б/г": "/lovable-uploads/83269629-036b-4a88-92a6-cde1d0bd479e.png",
-    "6_КРЕВЕТКА ваннамей свежая в панцире б/г": "/lovable-uploads/83269629-036b-4a88-92a6-cde1d0bd479e.png",
-    // Остальные варианты
+    "КРЕВЕТКА ваннамей свежая в панцире б/г": "/images/products/shrimp_shellon.png",
+    "6_КРЕВЕТКА ваннамей свежая в панцире б/г": "/images/products/shrimp_shellon.png",
     "КРЕВЕТКА ваннамей свежая очищенная б/г": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "7_КРЕВЕТКА ваннамей свежая очищенная б/г": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "8_КРЕВЕТКА ваннамей свежая очищенная б/г": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
@@ -51,4 +48,3 @@ export function getProductImage(product: { category: string; name: string; id?: 
   return productImages[product.category]?.[product.name] ||
          productImages[product.category]?.["default"];
 }
-
