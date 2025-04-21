@@ -13,12 +13,12 @@ interface ProductListingProps {
 
 const ProductListing: React.FC<ProductListingProps> = ({ 
   selectedCategory, 
-  filteredProducts, 
-  categories 
+  filteredProducts = [], // Provide default empty array
+  categories = [] // Provide default empty array
 }) => {
   const isMobile = useIsMobile();
   
-  if (filteredProducts.length === 0) {
+  if (!filteredProducts || filteredProducts.length === 0) {
     return (
       <div className="text-center py-10 text-gray-500">
         Товары не найдены. Пожалуйста, измените параметры поиска.
@@ -30,7 +30,7 @@ const ProductListing: React.FC<ProductListingProps> = ({
     <>
       {selectedCategory === 'all' ? (
         // Если не выбрана конкретная категория, группируем товары по категориям
-        categories.map(category => {
+        (categories || []).map(category => {
           const categoryProducts = filteredProducts.filter(p => p.category === category);
           if (categoryProducts.length > 0) {
             return <ProductsByCategory key={category} category={category} products={categoryProducts} />;

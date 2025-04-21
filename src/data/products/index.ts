@@ -7,12 +7,12 @@ import { fishFilletProducts } from './fishFillets';
 import { getCategoryByName } from './types';
 
 // This file combines all product data and exports it
-// Combine all products
+// Combine all products with safeguards against undefined arrays
 export const products: Product[] = [
-  ...salmonProducts,
-  ...troutProducts,
-  ...shrimpProducts,
-  ...fishFilletProducts
+  ...(salmonProducts || []),
+  ...(troutProducts || []),
+  ...(shrimpProducts || []),
+  ...(fishFilletProducts || [])
 ];
 
 // Export individual category products

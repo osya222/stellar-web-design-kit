@@ -17,12 +17,15 @@ const ProductCatalog: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [showFilters, setShowFilters] = useState(false);
   
+  // Ensure products is defined before proceeding
+  const safeProducts = products || [];
+  
   // Получаем уникальные категории и производителей для фильтрации
-  const categories = Array.from(new Set(products.map(product => product.category)));
-  const manufacturers = Array.from(new Set(products.map(product => product.manufacturer).filter(Boolean)));
+  const categories = Array.from(new Set(safeProducts.map(product => product.category)));
+  const manufacturers = Array.from(new Set(safeProducts.map(product => product.manufacturer).filter(Boolean)));
   
   // Фильтруем продукты на основе поисковой строки и выбранных фильтров
-  const filteredProducts = products.filter(product => {
+  const filteredProducts = safeProducts.filter(product => {
     return (
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (selectedManufacturer === 'all' || product.manufacturer === selectedManufacturer) &&

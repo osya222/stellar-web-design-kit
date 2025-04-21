@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { products } from "@/data/products/index";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -8,9 +9,9 @@ import { getProductImage } from '@/data/productImages';
 const ProductShowcase: React.FC = () => {
   const isMobile = useIsMobile();
 
-  // Extract unique categories from products array
+  // Ensure products is defined before extracting categories
   const productCategories = Array.from(
-    new Set(products.map(product => product.category))
+    new Set((products || []).map(product => product.category))
   ).map(name => ({ 
     id: name.toLowerCase().replace(/\s+/g, '-'), 
     name,
