@@ -37,7 +37,7 @@ const AdminPanel: React.FC = () => {
     reader.onload = (ev) => {
       // Генерируем виртуальный путь для загруженного изображения
       const fileName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-      const relativePath = `/images/products/${fileName}`;
+      const relativePath = `/lovable-uploads/${fileName}`; // здесь путь изменен
       setEditForm((prev) => ({
         ...prev,
         localImage: ev.target?.result, // Показываем превью
@@ -184,7 +184,7 @@ const AdminPanel: React.FC = () => {
       </div>
       <p className="mt-6 text-xs text-muted-foreground">
         <b>Внимание:</b> новые фото доступны только для просмотра и сохраняются виртуально! <br />
-        Физически загрузить картинки в папку <code>public/images/products/</code> может только сервер/разработчик.
+        Физически загрузить картинки в папку <code>public/lovable-uploads/</code> может только сервер/разработчик.
       </p>
     </div>
   );
