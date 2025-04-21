@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Loader2, Image as ImageIcon, FileImage, AlertCircle, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
@@ -21,12 +21,22 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 }) => {
   const [error, setError] = useState<string | null>(null);
   
+  // Debug log when component mounts or props change
+  useEffect(() => {
+    console.log("ImageUploader received imageUrl:", imageUrl);
+    console.log("ImageUploader received serverPath:", serverPath);
+  }, [imageUrl, serverPath]);
+  
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError(null);
     try {
+      if (e.target.files && e.target.files[0]) {
+        console.log("Selected file for upload:", e.target.files[0].name);
+      }
       onFileChange(e);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Произошла ошибка при выборе файла');
+      console.error("Error during file selection:", err);
     }
   };
   
@@ -77,7 +87,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         
         {/* Путь на сервере */}
         {serverPath && (
-          <span className="block mt-1 text-[10px] text-gray-400 break-all">
+          <span className="block mt-1 text-xs text-gray-400 break-all">
             <FileImage className="inline w-3 h-3 mr-1" />
             {serverPath}
           </span>

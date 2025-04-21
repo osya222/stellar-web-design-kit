@@ -21,72 +21,79 @@ const ProductEditForm: React.FC<ProductEditFormProps> = ({
   onFileChange,
   onSave,
   onCancel,
-}) => (
-  <>
-    <td>{editForm.id}</td>
-    <td>
-      <ImageUploader
-        imageUrl={
-          editForm.localImage
-            ? String(editForm.localImage)
-            : (editForm.image as string) || undefined
-        }
-        imageAlt={editForm.name || "Фото товара"}
-        serverPath={editForm.image as string}
-        isUploading={isUploading}
-        onFileChange={onFileChange}
-      />
-    </td>
-    <td>
-      <input
-        className="border px-2 py-1 rounded w-full"
-        name="name"
-        value={editForm.name || ""}
-        onChange={onInputChange}
-        placeholder="Название товара"
-        disabled={isUploading}
-      />
-    </td>
-    <td>
-      <input
-        className="border px-2 py-1 rounded w-full"
-        name="category"
-        value={editForm.category || ""}
-        onChange={onInputChange}
-        placeholder="Категория"
-        disabled={isUploading}
-      />
-    </td>
-    <td>
-      <input
-        className="border px-2 py-1 rounded w-full"
-        name="price"
-        type="number"
-        value={editForm.price || ""}
-        onChange={onInputChange}
-        placeholder="0.00"
-        disabled={isUploading}
-      />
-    </td>
-    <td>
-      <input
-        className="border px-2 py-1 rounded w-full"
-        name="manufacturer"
-        value={editForm.manufacturer || ""}
-        onChange={onInputChange}
-        placeholder="Производитель"
-        disabled={isUploading}
-      />
-    </td>
-    <td className="space-x-2">
-      <Button variant="default" size="sm" onClick={onSave} disabled={isUploading}>
-        <Save className="w-4 h-4 mr-1" /> Сохранить
-      </Button>
-      <Button variant="outline" size="sm" onClick={onCancel} disabled={isUploading}>
-        <X className="w-4 h-4 mr-1" />
-        Отмена
-      </Button>
-    </td>
-  </>
-);
+}) => {
+  // For debugging
+  console.log("Current image path in editForm:", editForm.image);
+  console.log("Current localImage path:", editForm.localImage);
+  
+  return (
+    <>
+      <td>{editForm.id}</td>
+      <td>
+        <ImageUploader
+          imageUrl={
+            editForm.localImage
+              ? String(editForm.localImage)
+              : (editForm.image as string) || undefined
+          }
+          imageAlt={editForm.name || "Фото товара"}
+          serverPath={editForm.image as string}
+          isUploading={isUploading}
+          onFileChange={onFileChange}
+        />
+      </td>
+      <td>
+        <input
+          className="border px-2 py-1 rounded w-full"
+          name="name"
+          value={editForm.name || ""}
+          onChange={onInputChange}
+          placeholder="Название товара"
+          disabled={isUploading}
+        />
+      </td>
+      <td>
+        <input
+          className="border px-2 py-1 rounded w-full"
+          name="category"
+          value={editForm.category || ""}
+          onChange={onInputChange}
+          placeholder="Категория"
+          disabled={isUploading}
+        />
+      </td>
+      <td>
+        <input
+          className="border px-2 py-1 rounded w-full"
+          name="price"
+          type="number"
+          value={editForm.price || ""}
+          onChange={onInputChange}
+          placeholder="0.00"
+          disabled={isUploading}
+        />
+      </td>
+      <td>
+        <input
+          className="border px-2 py-1 rounded w-full"
+          name="manufacturer"
+          value={editForm.manufacturer || ""}
+          onChange={onInputChange}
+          placeholder="Производитель"
+          disabled={isUploading}
+        />
+      </td>
+      <td className="space-x-2">
+        <Button variant="default" size="sm" onClick={onSave} disabled={isUploading}>
+          <Save className="w-4 h-4 mr-1" /> Сохранить
+        </Button>
+        <Button variant="outline" size="sm" onClick={onCancel} disabled={isUploading}>
+          <X className="w-4 h-4 mr-1" />
+          Отмена
+        </Button>
+      </td>
+    </>
+  );
+};
+
 export default ProductEditForm;
