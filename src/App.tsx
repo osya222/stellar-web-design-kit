@@ -1,46 +1,36 @@
 
-import { useEffect } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import Index from './pages/Index'
-import NotFound from './pages/NotFound'
-import PublicOffer from './pages/PublicOffer'
-import Cart from './pages/Cart'
-import Admin from './pages/Admin'
-import { CartProvider } from './context/CartContext'
-import { Toaster } from './components/ui/toaster'
-import './App.css'
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import Index from "./pages/Index";
+import NotFound from "./pages/NotFound";
+import Cart from "./pages/Cart";
+import PublicOffer from "./pages/PublicOffer";
+import { CartProvider } from "./context/CartContext";
 
-// Create a client
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      refetchOnWindowFocus: false,
-    },
-  },
-})
+const queryClient = new QueryClient();
 
-function App() {
-  return (
-    <div className='app'>
-      <QueryClientProvider client={queryClient}>
+const App = () => (
+  <QueryClientProvider client={queryClient}>
+    <TooltipProvider>
+      <CartProvider>
+        <Toaster />
+        <Sonner />
         <BrowserRouter>
-          <CartProvider>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/cart" element={<Cart />} />
-              <Route path="/admin" element={<Admin />} />
-              <Route path="/public-offer" element={<PublicOffer />} />
-              <Route path="/privacy-policy" element={<PublicOffer />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-            <Toaster />
-          </CartProvider>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/privacy-policy" element={<PublicOffer />} />
+            <Route path="/public-offer" element={<PublicOffer />} />
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
         </BrowserRouter>
-      </QueryClientProvider>
-    </div>
-  )
-}
+      </CartProvider>
+    </TooltipProvider>
+  </QueryClientProvider>
+);
 
-export default App
+export default App;

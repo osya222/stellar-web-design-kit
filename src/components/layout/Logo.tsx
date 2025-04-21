@@ -10,7 +10,7 @@ const Logo: React.FC<LogoProps> = ({ size = 'md' }) => {
   const sizeClasses = {
     sm: 'h-8',
     md: 'h-10',
-    lg: 'h-14'
+    lg: 'h-12'
   };
 
   return (
@@ -60,7 +60,7 @@ const Logo: React.FC<LogoProps> = ({ size = 'md' }) => {
       <span className={`font-bold tracking-tight ${
         size === 'sm' ? 'text-xl' : size === 'md' ? 'text-2xl' : 'text-3xl'
       }`}>
-        рыба.shop
+        РыбАртель
       </span>
     </div>
   );

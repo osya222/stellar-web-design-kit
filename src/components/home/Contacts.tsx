@@ -1,70 +1,49 @@
-
-import React from 'react';
-import { Mail, Phone, MapPin, Clock } from 'lucide-react';
+import { Phone, Mail, MapPin, Building } from "lucide-react";
 
 const Contacts = () => {
   return (
-    <section id="contacts" className="py-16 bg-gradient-to-b from-blue-50 to-white">
-      <div className="container mx-auto px-4">
-        <h2 className="text-4xl font-bold text-center mb-12 text-blue-900">
-          Наши контакты
-        </h2>
-        
-        <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="border border-blue-100 rounded-lg shadow hover:shadow-lg transition-shadow duration-300 bg-white overflow-hidden">
-            <div className="p-4 bg-blue-50">
-              <h3 className="flex items-center gap-2 text-xl font-semibold text-blue-800">
-                <Phone className="w-5 h-5" />
-                Связаться с нами
-              </h3>
-            </div>
-            <div className="p-6 space-y-4">
-              <div className="flex items-center gap-3">
-                <Phone className="w-5 h-5 text-blue-600" />
+    <section className="section-padding bg-white" id="contacts">
+      <div className="container-custom">
+        <h2 className="text-3xl font-bold mb-8 text-center text-blue-800">Контакты</h2>
+        <div className="max-w-4xl mx-auto bg-gradient-to-br from-blue-50 to-blue-100 p-8 rounded-2xl shadow-lg">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+              <h3 className="text-xl font-semibold mb-4 text-blue-800">Связаться с нами</h3>
+              <div className="flex items-start mb-4">
+                <Phone className="w-5 h-5 text-blue-600 mr-3 mt-1" />
                 <div>
-                  <p className="font-medium text-gray-700">Телефон:</p>
-                  <a href="tel:+79779941427" className="text-blue-600 hover:text-blue-800 transition-colors">
-                    +7 977 994 14 27
-                  </a>
+                  <p className="font-medium">Телефон:</p>
+                  <p className="text-lg">+7 977 994 14 27</p>
                 </div>
               </div>
-              
-              <div className="flex items-center gap-3">
-                <Mail className="w-5 h-5 text-blue-600" />
+              <div className="flex items-start mb-4">
+                <Mail className="w-5 h-5 text-blue-600 mr-3 mt-1" />
                 <div>
-                  <p className="font-medium text-gray-700">Email:</p>
-                  <a href="mailto:riba@рыба.shop" className="text-blue-600 hover:text-blue-800 transition-colors">
-                    riba@рыба.shop
-                  </a>
+                  <p className="font-medium">Электронная почта:</p>
+                  <p className="text-lg">Statiy.info@bk.ru</p>
+                </div>
+              </div>
+              <div className="flex items-start mb-4">
+                <MapPin className="w-5 h-5 text-blue-600 mr-3 mt-1" />
+                <div>
+                  <p className="font-medium">Адрес:</p>
+                  <p className="text-lg">111123, г. Москва, Электродный проезд, д. 6</p>
+                </div>
+              </div>
+              <div className="flex items-start">
+                <Building className="w-5 h-5 text-blue-600 mr-3 mt-1" />
+                <div>
+                  <p className="font-medium">Юридическая информация:</p>
+                  <p className="text-lg">ООО "СИТЕКС"</p>
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className="border border-blue-100 rounded-lg shadow hover:shadow-lg transition-shadow duration-300 bg-white overflow-hidden">
-            <div className="p-4 bg-blue-50">
-              <h3 className="flex items-center gap-2 text-xl font-semibold text-blue-800">
-                <MapPin className="w-5 h-5" />
-                Как нас найти
-              </h3>
-            </div>
-            <div className="p-6 space-y-4">
-              <div className="flex items-start gap-3">
-                <MapPin className="w-5 h-5 text-blue-600 mt-1" />
-                <div>
-                  <p className="font-medium text-gray-700">Адрес:</p>
-                  <p className="text-gray-600">Москва, Электродный проезд, д. 6</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start gap-3">
-                <Clock className="w-5 h-5 text-blue-600 mt-1" />
-                <div>
-                  <p className="font-medium text-gray-700">Режим работы:</p>
-                  <p className="text-gray-600">Пн-Пт: 9:00 - 18:00</p>
-                  <p className="text-gray-600">Сб: 10:00 - 15:00</p>
-                  <p className="text-gray-600">Вс: Выходной</p>
-                </div>
+            <div>
+              <h3 className="text-xl font-semibold mb-4 text-blue-800">Время работы</h3>
+              <div className="bg-white p-6 rounded-xl shadow">
+                <p className="mb-2"><span className="font-medium">Пн-Пт:</span> 9:00 - 18:00</p>
+                <p className="mb-2"><span className="font-medium">Сб:</span> 10:00 - 15:00</p>
+                <p><span className="font-medium">Вс:</span> Выходной</p>
               </div>
             </div>
           </div>

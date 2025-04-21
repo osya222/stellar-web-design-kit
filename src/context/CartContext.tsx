@@ -2,6 +2,7 @@
 import React, { createContext, useState, useContext } from 'react';
 import { Product } from '@/types/product';
 import { toast } from '@/hooks/use-toast';
+import { getProductImage } from '@/data/productImages';
 
 interface CartItem {
   product: Product;
@@ -11,9 +12,9 @@ interface CartItem {
 interface CartContextType {
   items: CartItem[];
   addToCart: (product: Product) => void;
-  removeFromCart: (productId: string) => void;
-  increaseQuantity: (productId: string) => void;
-  decreaseQuantity: (productId: string) => void;
+  removeFromCart: (productId: number) => void;
+  increaseQuantity: (productId: number) => void;
+  decreaseQuantity: (productId: number) => void;
   clearCart: () => void;
   getTotalItems: () => number;
   getTotalPrice: () => number;
@@ -25,6 +26,11 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
 
   const addToCart = (product: Product) => {
+    // Если у продукта нет изображения, попробуем его получить
+    const productWithImage = product.image 
+      ? product 
+      : { ...product, image: getProductImage(product) };
+
     setItems(currentItems => {
       const existingItem = currentItems.find(item => item.product.id === product.id);
       
@@ -43,12 +49,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         toast({
           description: `"${product.name}" добавлен в корзину`,
         });
-        return [...currentItems, { product, quantity: 1 }];
+        return [...currentItems, { product: productWithImage, quantity: 1 }];
       }
     });
   };
 
-  const removeFromCart = (productId: string) => {
+  const removeFromCart = (productId: number) => {
     setItems(currentItems => {
       const itemToRemove = currentItems.find(item => item.product.id === productId);
       if (itemToRemove) {
@@ -60,7 +66,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     });
   };
 
-  const increaseQuantity = (productId: string) => {
+  const increaseQuantity = (productId: number) => {
     setItems(currentItems => 
       currentItems.map(item => 
         item.product.id === productId 
@@ -70,7 +76,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     );
   };
 
-  const decreaseQuantity = (productId: string) => {
+  const decreaseQuantity = (productId: number) => {
     setItems(currentItems => {
       const existingItem = currentItems.find(item => item.product.id === productId);
       
