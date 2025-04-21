@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { ShoppingCart } from "lucide-react";
@@ -6,8 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
 const Header = () => {
-  const { cartItems } = useCart();
-  const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const { items } = useCart();
+  const totalItems = items.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -18,7 +19,6 @@ const Header = () => {
           </Link>
         </div>
         <nav className="flex-1 flex items-center justify-end gap-x-4">
-          {/* ... существующие ссылки ... */}
           <Link
             to="/admin"
             className="text-sm font-medium text-blue-700 hover:text-blue-900 underline"
