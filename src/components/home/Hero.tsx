@@ -43,7 +43,7 @@ const Hero = () => {
         </h2>
         <div className="bg-gray-100/70 backdrop-blur-sm p-6 rounded-xl shadow-lg max-w-3xl mx-auto mb-8">
           <p className="text-xl text-gray-700 leading-relaxed">
-            Широкий ассортимент качественной морской продукции с доставкой по Москве и МО. Работаем с ресторанами, магазинами и оптовыми покупателями.
+            Широкий ассортимент качественной морской продукции с доставкой по Москве и МО. Работаем с ресторанами, магазинами и оптовыми покупателями. Интернет-магазин <strong>рыба.shop</strong>
           </p>
         </div>
         <button 
@@ -59,3 +59,4 @@ const Hero = () => {
 };
 
 export default Hero;
+
