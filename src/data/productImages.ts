@@ -14,8 +14,10 @@ export const productImages: Record<string, Record<string, string>> = {
   },
   "Морепродукты": {
     "default": "/lovable-uploads/9d283ac4-5a1a-45f8-b15b-f6e5d2812d1b.png",
-    "КРЕВЕТКА ваннамей свежая в панцире б/г": "/lovable-uploads/28f45583-b7ad-44af-bc02-abcd1b66cd99.png",
-    "6_КРЕВЕТКА ваннамей свежая в панцире б/г": "/lovable-uploads/28f45583-b7ad-44af-bc02-abcd1b66cd99.png",
+    // Новое фото для панцирной креветки для всех вариантов (основного и с id)
+    "КРЕВЕТКА ваннамей свежая в панцире б/г": "/lovable-uploads/83269629-036b-4a88-92a6-cde1d0bd479e.png",
+    "6_КРЕВЕТКА ваннамей свежая в панцире б/г": "/lovable-uploads/83269629-036b-4a88-92a6-cde1d0bd479e.png",
+    // Остальные варианты
     "КРЕВЕТКА ваннамей свежая очищенная б/г": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "7_КРЕВЕТКА ваннамей свежая очищенная б/г": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "8_КРЕВЕТКА ваннамей свежая очищенная б/г": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
@@ -46,6 +48,7 @@ export function getProductImage(product: { category: string; name: string; id?: 
     const imageWithId = productImages[product.category]?.[idKey];
     if (imageWithId) return imageWithId;
   }
-  return productImages[product.category]?.[product.name] || 
+  return productImages[product.category]?.[product.name] ||
          productImages[product.category]?.["default"];
 }
+
