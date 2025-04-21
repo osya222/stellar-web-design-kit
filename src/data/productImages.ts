@@ -1,3 +1,4 @@
+
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
     "default": "/lovable-uploads/0d6e972e-0353-45aa-907b-5f193220c4bb.png",
@@ -13,8 +14,8 @@ export const productImages: Record<string, Record<string, string>> = {
   },
   "Морепродукты": {
     "default": "/lovable-uploads/9d283ac4-5a1a-45f8-b15b-f6e5d2812d1b.png",
-    "КРЕВЕТКА ваннамей свежая в панцире б/г": "/images/products/shrimp_shellon.png",
-    "6_КРЕВЕТКА ваннамей свежая в панцире б/г": "/images/products/shrimp_shellon.png",
+    "КРЕВЕТКА ваннамей свежая в панцире б/г": "/lovable-uploads/593e21ca-7363-4edf-989c-cdd1e5844856.png",
+    "6_КРЕВЕТКА ваннамей свежая в панцире б/г": "/lovable-uploads/593e21ca-7363-4edf-989c-cdd1e5844856.png",
     "КРЕВЕТКА ваннамей свежая очищенная б/г": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "7_КРЕВЕТКА ваннамей свежая очищенная б/г": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "8_КРЕВЕТКА ваннамей свежая очищенная б/г": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
