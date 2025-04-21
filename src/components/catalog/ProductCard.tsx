@@ -20,7 +20,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [imageUrl, setImageUrl] = useState('');
   
   useEffect(() => {
-    // Get image URL from product or compute it
+    // Сбрасываем состояние ошибки, когда продукт меняется
+    setImageError(false);
+    
+    // Либо берем продукт.image напрямую, либо используем утилиту getProductImage
     const productImage = product.image || getProductImage({ 
       category: product.category, 
       name: product.name, 
@@ -29,7 +32,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     
     console.log(`Loading image for ${product.name}:`, productImage);
     setImageUrl(productImage);
-    setImageError(false); // Reset error state when product changes
   }, [product]);
 
   const handleAddToCart = () => {

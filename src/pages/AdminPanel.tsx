@@ -5,6 +5,7 @@ import { Product } from "@/types/product";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Pencil, Save } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 type EditableProduct = Product & { localImage?: string | ArrayBuffer | null };
 
@@ -12,6 +13,7 @@ const AdminPanel: React.FC = () => {
   const [products, setProducts] = useState<EditableProduct[]>(initialProducts);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState<Partial<EditableProduct>>({});
+  const { toast } = useToast();
 
   const handleEditClick = (product: EditableProduct) => {
     setEditingId(product.id);
@@ -28,37 +30,57 @@ const AdminPanel: React.FC = () => {
     setEditForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Сохраняем путь для локального превью (в памяти браузера),
-  // и сохраняем относительный путь для будущих фото
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    
     const reader = new FileReader();
     reader.onload = (ev) => {
-      // Генерируем виртуальный путь для загруженного изображения
+      // Генерируем имя файла, очищая от спецсимволов
       const fileName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-      const relativePath = `/lovable-uploads/${fileName}`; // здесь путь изменен
+      const relativePath = `/lovable-uploads/${fileName}`;
+      
+      // Сохраняем данные для предпросмотра и для сохранения
       setEditForm((prev) => ({
         ...prev,
-        localImage: ev.target?.result, // Показываем превью
-        image: relativePath,           // Для таблицы и вывода
+        localImage: ev.target?.result, // Локальное превью
+        image: relativePath,           // Путь для хранения
       }));
+      
+      console.log(`Фото загружено: ${relativePath}`);
     };
     reader.readAsDataURL(file);
   };
 
   const handleSave = () => {
+    if (!editForm.name || !editForm.category) {
+      toast({
+        title: "Ошибка",
+        description: "Название и категория обязательны",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     setProducts((prev) =>
       prev.map((prod) =>
         prod.id === editingId
           ? {
               ...prod,
               ...editForm,
+              // Важно: сохраняем image только если он был предоставлен в форме
               image: editForm.image || prod.image,
             }
           : prod
       )
     );
+    
+    // Уведомляем пользователя
+    toast({
+      title: "Сохранено",
+      description: "Товар успешно обновлен",
+    });
+    
     setEditingId(null);
     setEditForm({});
   };
