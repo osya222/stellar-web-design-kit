@@ -1,5 +1,4 @@
 
-// Define product image paths by category and product name
 export const productImages: Record<string, Record<string, string>> = {
   "Лосось (Чили)": {
     "default": "/lovable-uploads/0d6e972e-0353-45aa-907b-5f193220c4bb.png",
@@ -15,7 +14,7 @@ export const productImages: Record<string, Record<string, string>> = {
   },
   "Морепродукты": {
     "default": "/lovable-uploads/9d283ac4-5a1a-45f8-b15b-f6e5d2812d1b.png",
-    "КРЕВЕТКА ваннамей свежая в панцире б/г": "/lovable-uploads/0fa26d3b-9843-48d7-afaf-e69bddbee7b5.png",
+    "КРЕВЕТКА ваннамей свежая в панцире б/г": "/images/products/72087ff3-f896-455a-befa-296383927467.png",
     "КРЕВЕТКА ваннамей свежая очищенная б/г": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "7_КРЕВЕТКА ваннамей свежая очищенная б/г": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
     "8_КРЕВЕТКА ваннамей свежая очищенная б/г": "/lovable-uploads/12dc6093-23e2-46dc-adcb-b77884b15aae.png",
@@ -42,13 +41,11 @@ export const productImages: Record<string, Record<string, string>> = {
 // Simple getter function for product images
 export function getProductImage(product: { category: string; name: string; id?: number }): string | undefined {
   if (product.id) {
-    // Try to get image with ID prefix first for items with duplicate names
     const idKey = `${product.id}_${product.name}`;
     const imageWithId = productImages[product.category]?.[idKey];
     if (imageWithId) return imageWithId;
   }
-  
-  // Fall back to name-only lookup
   return productImages[product.category]?.[product.name] || 
          productImages[product.category]?.["default"];
 }
+
