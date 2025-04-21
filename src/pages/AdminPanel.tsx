@@ -4,7 +4,7 @@ import { products as initialProducts } from "@/data/products";
 import { Product } from "@/types/product";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Pencil, Save, Upload } from "lucide-react";
+import { Pencil, Save } from "lucide-react";
 
 type EditableProduct = Product & { localImage?: string | ArrayBuffer | null };
 
@@ -28,12 +28,21 @@ const AdminPanel: React.FC = () => {
     setEditForm((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Сохраняем путь для локального превью (в памяти браузера),
+  // и сохраняем относительный путь для будущих фото
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (ev) => {
-      setEditForm((prev) => ({ ...prev, localImage: ev.target?.result }));
+      // Генерируем виртуальный путь для загруженного изображения
+      const fileName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
+      const relativePath = `/images/products/${fileName}`;
+      setEditForm((prev) => ({
+        ...prev,
+        localImage: ev.target?.result, // Показываем превью
+        image: relativePath,           // Для таблицы и вывода
+      }));
     };
     reader.readAsDataURL(file);
   };
@@ -45,9 +54,7 @@ const AdminPanel: React.FC = () => {
           ? {
               ...prod,
               ...editForm,
-              image: editForm.localImage
-                ? String(editForm.localImage)
-                : editForm.image,
+              image: editForm.image || prod.image,
             }
           : prod
       )
@@ -96,6 +103,11 @@ const AdminPanel: React.FC = () => {
                         className="block w-full mt-1"
                         onChange={handleFileChange}
                       />
+                      {editForm.image && (
+                        <span className="block mt-1 text-[10px] text-gray-400 break-all">
+                          {editForm.image}
+                        </span>
+                      )}
                     </label>
                   </TableCell>
                   <TableCell>
@@ -171,7 +183,8 @@ const AdminPanel: React.FC = () => {
         </Table>
       </div>
       <p className="mt-6 text-xs text-muted-foreground">
-        <b>Внимание:</b> все изменения работают только в памяти браузера, без сохранения на сервере!
+        <b>Внимание:</b> новые фото доступны только для просмотра и сохраняются виртуально! <br />
+        Физически загрузить картинки в папку <code>public/images/products/</code> может только сервер/разработчик.
       </p>
     </div>
   );
