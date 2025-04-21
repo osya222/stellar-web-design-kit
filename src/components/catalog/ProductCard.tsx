@@ -23,7 +23,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
     // Сбрасываем состояние ошибки, когда продукт меняется
     setImageError(false);
     
-    // Либо берем продукт.image напрямую, либо используем утилиту getProductImage
+    // Используем путь изображения из продукта или получаем его из утилиты
     const productImage = product.image || getProductImage({ 
       category: product.category, 
       name: product.name, 

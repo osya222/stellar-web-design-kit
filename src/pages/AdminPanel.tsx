@@ -4,8 +4,9 @@ import { products as initialProducts } from "@/data/products";
 import { Product } from "@/types/product";
 import { Table, TableHeader, TableBody, TableRow, TableHead, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Pencil, Save } from "lucide-react";
+import { Pencil, Save, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { mockUploadImage } from "@/services/uploadService";
 
 type EditableProduct = Product & { localImage?: string | ArrayBuffer | null };
 
@@ -13,6 +14,7 @@ const AdminPanel: React.FC = () => {
   const [products, setProducts] = useState<EditableProduct[]>(initialProducts);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editForm, setEditForm] = useState<Partial<EditableProduct>>({});
+  const [isUploading, setIsUploading] = useState(false);
   const { toast } = useToast();
 
   const handleEditClick = (product: EditableProduct) => {
@@ -30,26 +32,39 @@ const AdminPanel: React.FC = () => {
     setEditForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      // Генерируем имя файла, очищая от спецсимволов
-      const fileName = file.name.replace(/[^a-zA-Z0-9.\-_]/g, "_");
-      const relativePath = `/lovable-uploads/${fileName}`;
+    try {
+      setIsUploading(true);
+      
+      // Вызываем функцию загрузки файла (в данном случае используем мок)
+      // В реальном проекте здесь можно использовать uploadImageWithPreview
+      const { localUrl, serverUrl } = await mockUploadImage(file);
       
       // Сохраняем данные для предпросмотра и для сохранения
       setEditForm((prev) => ({
         ...prev,
-        localImage: ev.target?.result, // Локальное превью
-        image: relativePath,           // Путь для хранения
+        localImage: localUrl, // Локальное превью
+        image: serverUrl,     // Путь для хранения
       }));
       
-      console.log(`Фото загружено: ${relativePath}`);
-    };
-    reader.readAsDataURL(file);
+      toast({
+        title: "Файл загружен",
+        description: "Изображение успешно загружено на сервер",
+      });
+      
+      console.log(`Фото загружено: ${serverUrl}`);
+    } catch (error) {
+      toast({
+        title: "Ошибка",
+        description: error instanceof Error ? error.message : "Не удалось загрузить изображение",
+        variant: "destructive"
+      });
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const handleSave = () => {
@@ -119,12 +134,20 @@ const AdminPanel: React.FC = () => {
                     />
                     <label className="flex flex-col items-start mt-2">
                       <span className="text-xs text-gray-500">Загрузить фото</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        className="block w-full mt-1"
-                        onChange={handleFileChange}
-                      />
+                      <div className="relative w-full">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className={`block w-full mt-1 ${isUploading ? "opacity-50" : ""}`}
+                          onChange={handleFileChange}
+                          disabled={isUploading}
+                        />
+                        {isUploading && (
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <Loader2 className="w-5 h-5 animate-spin text-primary" />
+                          </div>
+                        )}
+                      </div>
                       {editForm.image && (
                         <span className="block mt-1 text-[10px] text-gray-400 break-all">
                           {editForm.image}
@@ -166,10 +189,10 @@ const AdminPanel: React.FC = () => {
                     />
                   </TableCell>
                   <TableCell className="space-x-2">
-                    <Button variant="default" size="sm" onClick={handleSave}>
+                    <Button variant="default" size="sm" onClick={handleSave} disabled={isUploading}>
                       <Save className="w-4 h-4 mr-1" />Сохранить
                     </Button>
-                    <Button variant="outline" size="sm" onClick={handleCancelEdit}>
+                    <Button variant="outline" size="sm" onClick={handleCancelEdit} disabled={isUploading}>
                       Отмена
                     </Button>
                   </TableCell>
@@ -205,8 +228,8 @@ const AdminPanel: React.FC = () => {
         </Table>
       </div>
       <p className="mt-6 text-xs text-muted-foreground">
-        <b>Внимание:</b> новые фото доступны только для просмотра и сохраняются виртуально! <br />
-        Физически загрузить картинки в папку <code>public/lovable-uploads/</code> может только сервер/разработчик.
+        <b>Демо-режим:</b> В этой версии изображения загружаются в память и имитируется отправка на сервер. <br/>
+        Для полноценной работы необходимо подключить реальный API загрузки через <code>uploadService.ts</code>.
       </p>
     </div>
   );
