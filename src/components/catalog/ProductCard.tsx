@@ -20,18 +20,13 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   const [imageUrl, setImageUrl] = useState('');
   
   useEffect(() => {
-    // Сбрасываем состояние ошибки, когда продукт меняется
-    setImageError(false);
-    
-    // Используем путь изображения из продукта или получаем его из утилиты
-    const productImage = product.image || getProductImage({ 
+    const productImage = getProductImage({ 
       category: product.category, 
       name: product.name, 
       id: product.id 
     }) || '';
-    
-    console.log(`Loading image for ${product.name}:`, productImage);
     setImageUrl(productImage);
+    setImageError(false); // Reset error state when product changes
   }, [product]);
 
   const handleAddToCart = () => {
@@ -43,7 +38,6 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   const handleImageError = () => {
-    console.error(`Error loading image for ${product.name}:`, imageUrl);
     setImageError(true);
   };
 
@@ -59,7 +53,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
           <img 
             src={imageUrl} 
             alt={product.name} 
-            className="object-contain w-full h-full"
+            className="object-cover w-full h-full"
             onError={handleImageError}
           />
         )}

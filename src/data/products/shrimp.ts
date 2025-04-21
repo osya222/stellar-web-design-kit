@@ -1,3 +1,4 @@
+
 import { Product } from '@/types/product';
 import { getProductImage } from '../productImages';
 
@@ -44,7 +45,7 @@ export const shrimpProducts: Product[] = [
     packaging: "10*1 кг", 
     catchDate: "Апрель",
     manufacturer: "Индия", 
-    image: getProductImage({ category: "Морепродукты", name: "КРЕВЕТКА ваннамей вареная очищенная б/г" }),
+    image: getProductImage({ category: "Морепродукты", name: "КРЕВЕТКА ваннамей вареная очищенная б/г", id: 9 }),
     price: 1240.9
   },
   { 
