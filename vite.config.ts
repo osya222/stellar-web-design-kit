@@ -62,7 +62,9 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
       strict: false,
     },
     watch: {
-      usePolling: false,
+      usePolling: true,
+      interval: 1000, // Check for changes every second
+      binaryInterval: 3000, // Check binary files less frequently
       ignored: ['**/node_modules/**', '**/dist/**', '**/.git/**', '**/public/images/**'],
     },
     hmr: {
@@ -73,6 +75,7 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
       '/api/upload': {
         target: 'http://localhost:8080',
         changeOrigin: false,
+        selfHandleResponse: true, // This is important for custom responses
         configure: (proxy, _options) => {
           proxy.on('error', (err, _req, res) => {
             console.error('Proxy error:', err);
@@ -110,23 +113,40 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
               // Always set JSON content type for any response
               res.setHeader('Content-Type', 'application/json');
               
-              const handleUpload = () => new Promise<boolean>((resolve) => {
-                const uploadTimeout = setTimeout(() => {
-                  console.error("Upload timeout reached");
-                  if (!res.headersSent) {
-                    res.statusCode = 408;
-                    res.end(JSON.stringify({ 
-                      error: 'Upload timeout', 
-                      details: 'Request took too long to process' 
-                    }));
-                  }
-                  resolve(true);
-                }, 15000); // 15 seconds timeout
+              // Use a more robust promise-based approach with proper cleanup
+              return new Promise<boolean>((resolve) => {
+                let isResolved = false;
                 
+                // Handle timeout
+                const uploadTimeout = setTimeout(() => {
+                  if (!isResolved) {
+                    console.error("Upload timeout reached");
+                    isResolved = true;
+                    
+                    if (!res.headersSent) {
+                      res.statusCode = 408;
+                      res.end(JSON.stringify({ 
+                        error: 'Upload timeout', 
+                        details: 'Request took too long to process' 
+                      }));
+                    }
+                    resolve(true);
+                  }
+                }, 10000); // 10 seconds timeout
+                
+                // Handle upload
                 upload(req as unknown as Request, res as unknown as Response, (err: any) => {
+                  // Clear timeout as we got a response
                   clearTimeout(uploadTimeout);
                   
-                  // Always ensure response is JSON
+                  if (isResolved) {
+                    // Request already handled by timeout
+                    return;
+                  }
+                  
+                  isResolved = true;
+                  
+                  // Make sure response is JSON
                   res.setHeader('Content-Type', 'application/json');
                   
                   if (err) {
@@ -168,11 +188,10 @@ export default defineConfig(({ mode }: ConfigEnv) => ({
                     
                     res.end(JSON.stringify(responseData));
                   }
+                  
                   return resolve(true);
                 });
               });
-              
-              return handleUpload();
             } catch (error) {
               console.error("Critical error processing upload:", error);
               if (!res.headersSent) {

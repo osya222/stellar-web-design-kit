@@ -1,5 +1,5 @@
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Upload, AlertCircle } from 'lucide-react';
@@ -30,120 +30,150 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
   const abortControllerRef = useRef<AbortController | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const uploadTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const maxRetries = 3;
+  const [retryCount, setRetryCount] = useState(0);
 
   // Cleanup on component unmount
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
+      // Clean up any pending requests
       if (abortControllerRef.current) {
         abortControllerRef.current.abort();
       }
       
+      // Clear any timeouts
       if (uploadTimeoutRef.current) {
         clearTimeout(uploadTimeoutRef.current);
       }
     };
   }, []);
 
-  // Function to send file to server
+  // Function to send file to server with retries
   const uploadFile = async (file: File): Promise<string | null> => {
     const formData = new FormData();
     formData.append('image', file);
-
-    try {
-      // Create new abort controller for each request
-      if (abortControllerRef.current) {
-        abortControllerRef.current.abort();
-      }
-      
-      abortControllerRef.current = new AbortController();
-      
-      // Set upload timeout
-      const timeoutId = setTimeout(() => {
-        if (abortControllerRef.current) {
-          console.log('Aborting request due to timeout');
-          abortControllerRef.current.abort();
-          setUploadError('Upload timeout exceeded');
-          toast({
-            title: "Error",
-            description: "Upload timeout exceeded",
-            variant: "destructive"
-          });
-        }
-      }, 10000); // 10 seconds timeout
-      
-      uploadTimeoutRef.current = timeoutId;
-      
-      console.log('Sending request to /api/upload...');
-      const response = await fetch('/api/upload', {
-        method: 'POST',
-        body: formData,
-        signal: abortControllerRef.current.signal,
-        headers: {
-          'Accept': 'application/json',
-          'X-Requested-With': 'XMLHttpRequest'
-        }
-      });
-      
-      // Clear timeout after response received
-      clearTimeout(timeoutId);
-      uploadTimeoutRef.current = null;
-      
-      console.log('Response status:', response.status);
-      console.log('Response headers:', response.headers);
-      
-      // Check content type to handle possible non-JSON responses
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        console.error('Unexpected response content type:', contentType);
-        const textResponse = await response.text();
-        console.error('Raw response:', textResponse);
-        throw new Error(`Server returned non-JSON response. Status: ${response.status}`);
-      }
-      
-      // Try to parse JSON response
-      let result;
+    
+    let currentRetry = 0;
+    
+    while (currentRetry <= maxRetries) {
       try {
-        result = await response.json();
-        console.log('Server response:', result);
-      } catch (parseError) {
-        console.error('JSON parse error:', parseError);
-        const textResponse = await response.text();
-        console.error('Raw response that failed to parse:', textResponse);
-        throw new Error('Failed to parse server response as JSON');
-      }
-      
-      // Check for success
-      if (result?.success && result?.path) {
-        console.log('Image path:', result.path);
-        setUploadError(null);
-        return result.path as string;
-      } else {
-        console.error('Unexpected response format:', result);
-        throw new Error(result?.error || 'Server returned invalid response format');
-      }
-    } catch (error: any) {
-      // Handle different error types
-      if (error.name === 'AbortError') {
-        console.log('Request was aborted');
+        // Create new abort controller for each request
+        if (abortControllerRef.current) {
+          abortControllerRef.current.abort();
+        }
+        
+        abortControllerRef.current = new AbortController();
+        
+        // Set upload timeout
+        const timeoutId = setTimeout(() => {
+          if (abortControllerRef.current) {
+            console.log('Aborting request due to timeout');
+            abortControllerRef.current.abort();
+            throw new Error('Upload timeout exceeded');
+          }
+        }, 8000); // 8 seconds timeout
+        
+        uploadTimeoutRef.current = timeoutId;
+        
+        console.log(`Sending request to /api/upload (attempt ${currentRetry + 1})...`);
+        const response = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+          signal: abortControllerRef.current.signal,
+          headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        });
+        
+        // Clear timeout after response received
+        clearTimeout(timeoutId);
+        uploadTimeoutRef.current = null;
+        
+        console.log('Response status:', response.status);
+        
+        // Handle non-success status codes
+        if (response.status !== 200) {
+          console.error(`Server returned status ${response.status}`);
+          const errorData = await response.json().catch(() => ({ 
+            error: `HTTP error ${response.status}`,
+            details: 'Could not parse error response'
+          }));
+          
+          throw new Error(errorData.details || errorData.error || `Server returned status ${response.status}`);
+        }
+        
+        // Try to parse JSON response
+        let result;
+        try {
+          result = await response.json();
+          console.log('Server response:', result);
+        } catch (parseError) {
+          console.error('JSON parse error:', parseError);
+          throw new Error('Failed to parse server response as JSON');
+        }
+        
+        // Check for success
+        if (result?.success && result?.path) {
+          console.log('Image upload successful:', result.path);
+          setRetryCount(0); // Reset retry counter on success
+          setUploadError(null);
+          return result.path as string;
+        } else {
+          console.error('Unexpected response format:', result);
+          throw new Error(result?.error || 'Server returned invalid response format');
+        }
+      } catch (error: any) {
+        // Clear timeout if still active
+        if (uploadTimeoutRef.current) {
+          clearTimeout(uploadTimeoutRef.current);
+          uploadTimeoutRef.current = null;
+        }
+        
+        // Handle abort/timeout errors
+        if (error.name === 'AbortError') {
+          console.log('Request was aborted');
+          setUploadError('Upload request timed out. Please try again.');
+          
+          if (currentRetry < maxRetries) {
+            currentRetry++;
+            console.log(`Retrying upload (${currentRetry}/${maxRetries})...`);
+            continue;
+          }
+          
+          throw new Error('Upload timed out after multiple retries');
+        }
+        
+        // For network errors, retry
+        if (error.message.includes('network') || error.message.includes('fetch')) {
+          console.error('Network error:', error.message);
+          
+          if (currentRetry < maxRetries) {
+            currentRetry++;
+            console.log(`Retrying upload (${currentRetry}/${maxRetries})...`);
+            // Add exponential backoff
+            await new Promise(r => setTimeout(r, 1000 * Math.pow(2, currentRetry)));
+            continue;
+          }
+        }
+        
+        // For other errors, report and exit
+        console.error('Upload error:', error.message);
+        setUploadError(error.message || 'Unknown upload error');
+        setRetryCount(prev => prev + 1);
+        
+        toast({
+          title: "Error",
+          description: error.message || "Failed to upload image",
+          variant: "destructive"
+        });
+        
         return null;
       }
-      
-      if (error.name === 'SyntaxError') {
-        console.error('JSON parse error:', error.message);
-        setUploadError('Server returned invalid JSON response');
-      } else {
-        console.error('Upload error:', error);
-        setUploadError(error.message || 'Unknown upload error');
-      }
-      
-      toast({
-        title: "Error",
-        description: error.message || "Failed to upload image",
-        variant: "destructive"
-      });
-      
-      return null;
     }
+    
+    // If we've exhausted retries
+    throw new Error('Upload failed after multiple attempts');
   };
 
   const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -190,20 +220,31 @@ export const ProductImageUpload: React.FC<ProductImageUploadProps> = ({
       
       // Upload file to server
       console.log('Starting server upload...');
-      const imagePath = await uploadFile(file);
       
-      if (imagePath) {
-        console.log('Upload successful, path:', imagePath);
-        // Update product with new image path
-        onImageChange(imagePath, preview);
-        toast({
-          title: "Success",
-          description: "Image uploaded successfully",
-        });
-      } else {
-        // Restore previous preview if upload failed
-        console.error('Upload failed, restoring preview');
+      try {
+        const imagePath = await uploadFile(file);
+        
+        if (imagePath) {
+          console.log('Upload successful, path:', imagePath);
+          // Update product with new image path
+          onImageChange(imagePath, preview);
+          toast({
+            title: "Success",
+            description: "Image uploaded successfully",
+          });
+        } else {
+          // Restore previous preview if upload failed
+          console.error('Upload failed, restoring preview');
+          setImagePreview(imageUrl || initialPreview || '/placeholder.svg');
+          
+          if (retryCount >= 3) {
+            setUploadError('Multiple upload attempts failed. There might be a server issue.');
+          }
+        }
+      } catch (uploadError: any) {
+        console.error('Upload error:', uploadError.message);
         setImagePreview(imageUrl || initialPreview || '/placeholder.svg');
+        setUploadError(uploadError.message || 'Failed to upload image');
       }
     } catch (error) {
       console.error('Critical image handling error:', error);
