@@ -21,7 +21,7 @@ const Contacts = () => {
                 <Mail className="w-5 h-5 text-blue-600 mr-3 mt-1" />
                 <div>
                   <p className="font-medium">Электронная почта:</p>
-                  <p className="text-lg">Statiy.info@bk.ru</p>
+                  <p className="text-lg">riba@рыба.shop</p>
                 </div>
               </div>
               <div className="flex items-start mb-4">
